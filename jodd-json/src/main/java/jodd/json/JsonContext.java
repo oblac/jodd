@@ -27,11 +27,12 @@ package jodd.json;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.Wildcard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static jodd.util.StringPool.NULL;
 
@@ -47,13 +48,17 @@ public class JsonContext extends JsonWriter {
 	protected int bagSize = 0;
 	protected final Path path;
 	protected final boolean excludeNulls;
+	protected final boolean excludeEmpty;
+	protected final Function<Object, TypeJsonSerializer> serializerResolver;
 
-	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable, boolean excludeNulls) {
-		super(appendable);
+	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable) {
+		super(appendable, jsonSerializer.strictStringEncoding);
 		this.jsonSerializer = jsonSerializer;
 		this.bag = new ArrayList<>();
 		this.path = new Path();
-		this.excludeNulls = excludeNulls;
+		this.excludeNulls = jsonSerializer.excludeNulls;
+		this.excludeEmpty = jsonSerializer.excludeEmpty;
+		this.serializerResolver = jsonSerializer.serializerResolver;
 	}
 
 	/**
@@ -64,10 +69,14 @@ public class JsonContext extends JsonWriter {
 	}
 
 	/**
-	 * Returns <code>true</code> if null values have to be excluded.
+	 * Returns <code>true</code> if <code>null</code> values have to be excluded.
 	 */
 	public boolean isExcludeNulls() {
 		return excludeNulls;
+	}
+
+	public boolean isExcludeEmpty() {
+		return excludeEmpty;
 	}
 
 	// ---------------------------------------------------------------- path and value context
@@ -78,7 +87,7 @@ public class JsonContext extends JsonWriter {
 	 * Returns <code>true</code> if object has been already processed during the serialization.
 	 * Used to prevent circular dependencies. Objects are matched by identity.
 	 */
-	public boolean pushValue(Object value) {
+	public boolean pushValue(final Object value) {
 		for (int i = 0; i < bagSize; i++) {
 			JsonValueContext valueContext = bag.get(i);
 			if (valueContext.getValue() == value) {
@@ -133,7 +142,7 @@ public class JsonContext extends JsonWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void pushName(String name, boolean withComma) {
+	public void pushName(final String name, final boolean withComma) {
 		JsonValueContext valueContext = peekValueContext();
 
 		if (valueContext != null) {
@@ -163,7 +172,7 @@ public class JsonContext extends JsonWriter {
 	 * Serializes the object using {@link jodd.json.TypeJsonSerializer type serializer}.
 	 * Returns <code>true</code> if object was written, otherwise returns <code>false</code>.
 	 */
-	public boolean serialize(Object object) {
+	public boolean serialize(final Object object) {
 		if (object == null) {
 			write(NULL);
 
@@ -172,24 +181,33 @@ public class JsonContext extends JsonWriter {
 
 		TypeJsonSerializer typeJsonSerializer = null;
 
-		// + read paths map
+		// callback
 
-		if (jsonSerializer.pathSerializersMap != null) {
-			typeJsonSerializer = jsonSerializer.pathSerializersMap.get(path);
+		if (serializerResolver != null) {
+			typeJsonSerializer = serializerResolver.apply(object);
 		}
-
-		Class type = object.getClass();
-
-		// + read types map
-
-		if (jsonSerializer.typeSerializersMap != null) {
-			typeJsonSerializer = jsonSerializer.typeSerializersMap.lookup(type);
-		}
-
-		// + globals
 
 		if (typeJsonSerializer == null) {
-			typeJsonSerializer = JoddJson.defaultSerializers.lookup(type);
+
+			// + read paths map
+
+			if (jsonSerializer.pathSerializersMap != null) {
+				typeJsonSerializer = jsonSerializer.pathSerializersMap.get(path);
+			}
+
+			final Class type = object.getClass();
+
+			// + read local types map
+
+			if (jsonSerializer.typeSerializersMap != null) {
+				typeJsonSerializer = jsonSerializer.typeSerializersMap.lookup(type);
+			}
+
+			// + globals
+
+			if (typeJsonSerializer == null) {
+				typeJsonSerializer = TypeJsonSerializerMap.get().lookup(type);
+			}
 		}
 
 		return typeJsonSerializer.serialize(this, object);
@@ -200,14 +218,14 @@ public class JsonContext extends JsonWriter {
 	/**
 	 * Matches property types that are ignored by default.
 	 */
-	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean excludeMaps, boolean include) {
+	public boolean matchIgnoredPropertyTypes(final Class propertyType, final boolean excludeMaps, final boolean include) {
 		if (!include) {
 			return false;
 		}
 
 		if (propertyType != null) {
 			if (!jsonSerializer.deep) {
-				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
+				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.get().lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {
 					return false;
@@ -226,16 +244,9 @@ public class JsonContext extends JsonWriter {
 
 			// + excluded types
 
-			if (JoddJson.excludedTypes != null) {
-				for (Class excludedType : JoddJson.excludedTypes) {
-					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
-						return false;
-					}
-				}
-			}
 			if (jsonSerializer.excludedTypes != null) {
 				for (Class excludedType : jsonSerializer.excludedTypes) {
-					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
+					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
 				}
@@ -243,15 +254,8 @@ public class JsonContext extends JsonWriter {
 
 			// + exclude type names
 
-			String propertyTypeName = propertyType.getName();
+			final String propertyTypeName = propertyType.getName();
 
-			if (JoddJson.excludedTypeNames != null) {
-				for (String excludedTypeName : JoddJson.excludedTypeNames) {
-					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
-						return false;
-					}
-				}
-			}
 			if (jsonSerializer.excludedTypeNames != null) {
 				for (String excludedTypeName : jsonSerializer.excludedTypeNames) {
 					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
@@ -264,12 +268,11 @@ public class JsonContext extends JsonWriter {
 		return true;
 	}
 
-
 	/**
 	 * Matched current path to queries. If match is found, provided include
 	 * value may be changed.
 	 */
-	public boolean matchPathToQueries(boolean include) {
+	public boolean matchPathToQueries(final boolean include) {
 		return jsonSerializer.rules.apply(path, include);
 	}
 

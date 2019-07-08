@@ -25,15 +25,15 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WildcardTest {
+class WildcardTest {
 
 	@Test
-	public void testMatch() {
+	void testMatch() {
 		assertTrue(Wildcard.match("CfgOptions.class", "C*class"));
 		assertFalse(Wildcard.match("CfgOptions.class", "C*clas"));
 		assertFalse(Wildcard.match("C*r*class", "CfgOptions.class"));
@@ -80,7 +80,7 @@ public class WildcardTest {
 	 * as escape character is equal to one of the path characters..
 	 */
 	@Test
-	public void testMatchEscapedWildcards() {
+	void testMatchEscapedWildcards() {
 		assertFalse(Wildcard.match("CfgOptions.class", "*gOpti\\*c?ass"));
 		assertTrue(Wildcard.match("CfgOpti*class", "*gOpti\\*class"));
 		assertTrue(Wildcard.match("CfgOpti*class", "*gOpti\\*c?ass"));
@@ -93,7 +93,7 @@ public class WildcardTest {
 	}
 
 	@Test
-	public void testMatchPath1() {
+	void testMatchPath1() {
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "C*class"));
 		assertFalse(Wildcard.matchPath("CfgOptions.class", "C*clas"));
 		assertFalse(Wildcard.matchPath("C*r*class", "CfgOptions.class"));
@@ -136,14 +136,14 @@ public class WildcardTest {
 	}
 
 	@Test
-	public void testMatchWildcard() {
+	void testMatchWildcard() {
 		assertTrue(Wildcard.match("app.nfo", "app*"));
 		assertFalse(Wildcard.match("\\app.nfo", "app*"));
 		assertTrue(Wildcard.match("\\app.nfo", "\\\\app*"));
 	}
 
 	@Test
-	public void testMatchPath2() {
+	void testMatchPath2() {
 		assertTrue(Wildcard.matchPath("/foo", "/fo*"));
 		assertTrue(Wildcard.matchPath("/foo", "/**"));
 		assertTrue(Wildcard.matchPath("/foo", "**"));
@@ -170,7 +170,7 @@ public class WildcardTest {
 	}
 
 	@Test
-	public void testDifferences() {
+	void testDifferences() {
 		assertTrue(Wildcard.match("/uphea", "*/uphea*"));
 		assertTrue(Wildcard.match("/prj/uphea-app.jar", "*/uphea*"));
 
@@ -190,7 +190,7 @@ public class WildcardTest {
 	}
 
 	@Test
-	public void testMore() {
+	void testMore() {
 		assertTrue(Wildcard.matchPath("/a/b/c/d", "**/b/**"));
 		assertTrue(Wildcard.matchPath("/a/b/c", "**/b/**"));
 		assertTrue(Wildcard.matchPath("/a/b/c/d", "**/c/**"));

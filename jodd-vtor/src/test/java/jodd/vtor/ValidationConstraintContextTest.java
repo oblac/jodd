@@ -25,17 +25,17 @@
 
 package jodd.vtor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ValidationConstraintContextTest {
+class ValidationConstraintContextTest {
 
     @Test
-    public void testConstructor() throws Exception {
+    void testConstructor() throws Exception {
         Vtor vtor = mock(Vtor.class);
         Object target = new Object();
         ValidationConstraintContext context = new ValidationConstraintContext(vtor, target, "niceConstraint");
@@ -45,7 +45,7 @@ public class ValidationConstraintContextTest {
     }
 
     @Test
-    public void testValidateWithin() throws Exception {
+    void testValidateWithin() throws Exception {
         Vtor vtor = mock(Vtor.class);
         Object target = new Object();
         ValidationConstraintContext context = new ValidationConstraintContext(vtor, target, "niceConstraint");

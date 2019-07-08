@@ -26,8 +26,9 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.ColumnAliasType;
-import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.ArraysUtil;
@@ -76,9 +77,18 @@ public class ColumnsSelectChunk extends SqlChunk {
 	protected final String[] columnRefArr;
 	protected final int includeColumns;
 	protected final String hint;
+	protected final String columnAliasSeparator;
 
-	protected ColumnsSelectChunk(String tableRef, String columnRef,String[] columnRefArr, int includeColumns, String hint) {
-		super(CHUNK_SELECT_COLUMNS);
+	private ColumnsSelectChunk(
+			final DbEntityManager dbEntityManager,
+			final String columnAliasSeparator,
+			final String tableRef,
+			final String columnRef,
+			final String[] columnRefArr,
+			final int includeColumns,
+			final String hint) {
+		super(dbEntityManager, CHUNK_SELECT_COLUMNS);
+		this.columnAliasSeparator = columnAliasSeparator;
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
 		this.columnRefArr = columnRefArr;
@@ -86,20 +96,20 @@ public class ColumnsSelectChunk extends SqlChunk {
 		this.hint = hint;
 	}
 
-	public ColumnsSelectChunk(String tableRef, String columnRef) {
-		this(tableRef, columnRef, null, COLS_NA, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final String columnRef) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, columnRef, null, COLS_NA, null);
 	}
 	
-	public ColumnsSelectChunk(String tableRef, String... columnRefArr) {
-		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final String... columnRefArr) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, null, columnRefArr, COLS_NA_MULTI, null);
 	}
 
-	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
-		this(tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final boolean includeAll) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
-	public ColumnsSelectChunk(String reference) {
-		super(CHUNK_SELECT_COLUMNS);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, String reference) {
+		super(dbEntityManager, CHUNK_SELECT_COLUMNS);
 		reference = reference.trim();
 		int dotNdx = reference.lastIndexOf('.');
 		if (dotNdx == -1) {
@@ -159,6 +169,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.includeColumns = COLS_NA;
 			}
 		}
+		this.columnAliasSeparator = columnAliasSeparator;
 	}
 
 	// ---------------------------------------------------------------- process
@@ -168,7 +179,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	 * Counts actual real hints.
 	 */
 	@Override
-	public void init(TemplateData templateData) {
+	public void init(final TemplateData templateData) {
 		super.init(templateData);
 		if (hint != null) {
 			templateData.incrementHintsCount();
@@ -176,7 +187,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		// hints
 		if (templateData.hasHints()) {
 			templateData.registerHint(hint == null ? tableRef : hint);
@@ -220,24 +231,23 @@ public class ColumnsSelectChunk extends SqlChunk {
 				templateData.lastColumnDec = dec;
 
 				if (useTableReference) {
-					appendColumnName(out, ded, dec.getColumnName());
+					appendColumnName(out, ded, dec);
 				} else {
-					appendAlias(out, ded, dec.getColumnName());
+					appendAlias(out, ded, dec);
 				}
 				count++;
 			}
 		} else {
-			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
-			templateData.lastColumnDec = dec;
-			String columnName = dec == null ? null : dec.getColumnName();
-			//String columnName = ded.getColumnName(columnRef);
-			if (columnName == null) {
-				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
+			final DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
+			if (dec == null) {
+				throw new DbSqlBuilderException("Invalid column reference: [" + tableRef + '.' + columnRef + "]");
 			}
+
+			templateData.lastColumnDec = dec;
 			if (useTableReference) {
-				appendColumnName(out, ded, columnName);
+				appendColumnName(out, ded, dec);
 			} else {
-				appendAlias(out, ded, columnName);
+				appendAlias(out, ded, dec);
 			}
 		}
 	}
@@ -245,46 +255,56 @@ public class ColumnsSelectChunk extends SqlChunk {
 	/**
 	 * Appends alias.
 	 */
-	protected void appendAlias(StringBuilder query, DbEntityDescriptor ded, String column) {
-		String tableName = ded.getTableName();
-
-		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
-		String columnAliasSeparator = templateData.getDbOomManager().getColumnAliasSeparator();
+	protected void appendAlias(final StringBuilder query, final DbEntityDescriptor ded, final DbEntityColumnDescriptor dec) {
+		final ColumnAliasType columnAliasType = templateData.getColumnAliasType();
 
 		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
+			final String tableName = ded.getTableName();
+			final String columnName = dec.getColumnNameForQuery();
 			templateData.registerColumnDataForTableRef(tableRef, tableName);
-			query.append(tableRef).append(columnAliasSeparator).append(column);
+			query.append(tableRef).append(columnAliasSeparator).append(columnName);
 		} else
 		if (columnAliasType == ColumnAliasType.COLUMN_CODE) {
-			String code = templateData.registerColumnDataForColumnCode(tableName, column);
+			final String tableName = ded.getTableName();
+			final String columnName = dec.getColumnName();
+			final String code = templateData.registerColumnDataForColumnCode(tableName, columnName);
 			query.append(code);
 		} else
 		if (columnAliasType == ColumnAliasType.TABLE_NAME) {
-			query.append(tableName).append(columnAliasSeparator).append(column);
+			final String tableName = ded.getTableNameForQuery();
+			final String columnName = dec.getColumnNameForQuery();
+			query.append(tableName).append(columnAliasSeparator).append(columnName);
 		}
 	}
 
 	/**
 	 * Simply appends column name with optional table reference and alias.
 	 */
-	protected void appendColumnName(StringBuilder query, DbEntityDescriptor ded, String column) {
-		query.append(resolveTable(tableRef, ded)).append('.').append(column);
+	protected void appendColumnName(final StringBuilder query, final DbEntityDescriptor ded, final DbEntityColumnDescriptor dec) {
+		query.append(resolveTable(tableRef, ded)).append('.').append(dec.getColumnName());
 		
 		if (templateData.getColumnAliasType() != null) {     // create column aliases
-			String tableName = ded.getTableName();
+
 			query.append(AS);
+
 			switch (templateData.getColumnAliasType()) {
-				case TABLE_NAME:
-					query.append(tableName).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
+				case TABLE_NAME: {
+					final String tableName = ded.getTableNameForQuery();
+					query.append(tableName).append(columnAliasSeparator).append(dec.getColumnNameForQuery());
 					break;
-				case TABLE_REFERENCE:
+				}
+				case TABLE_REFERENCE: {
+					final String tableName = ded.getTableName();
 					templateData.registerColumnDataForTableRef(tableRef, tableName);
-					query.append(tableRef).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
+					query.append(tableRef).append(columnAliasSeparator).append(dec.getColumnNameForQuery());
 					break;
-				case COLUMN_CODE:
-					String code = templateData.registerColumnDataForColumnCode(tableName, column);
+				}
+				case COLUMN_CODE: {
+					final String tableName = ded.getTableName();
+					final String code = templateData.registerColumnDataForColumnCode(tableName, dec.getColumnName());
 					query.append(code);
 					break;
+				}
 			}
 		}
 	}

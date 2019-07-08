@@ -26,12 +26,14 @@
 package jodd.typeconverter.impl;
 
 import jodd.io.FileUtil;
+import jodd.io.StreamUtil;
+import jodd.io.upload.FileUpload;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
-import jodd.util.ArraysUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Converts given object into the <code>File</code>.
@@ -49,18 +51,8 @@ import java.io.IOException;
  */
 public class FileConverter implements TypeConverter<File> {
 
-	protected TypeConverter<File>[] addonFileConverters;
-
-	@SuppressWarnings("unchecked")
-	public void registerAddonConverter(TypeConverter<File> fileTypeConverter) {
-		if (addonFileConverters == null) {
-			addonFileConverters = new TypeConverter[0];
-		}
-
-		addonFileConverters = ArraysUtil.append(addonFileConverters, fileTypeConverter);
-	}
-
-	public File convert(Object value) {
+	@Override
+	public File convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -69,17 +61,6 @@ public class FileConverter implements TypeConverter<File> {
 			return (File) value;
 		}
 
-		if (addonFileConverters != null) {
-			for (TypeConverter<File> addonFileConverter : addonFileConverters) {
-				File file = addonFileConverter.convert(value);
-
-				if (file != null) {
-					return file;
-				}
-			}
-		}
-
-/*
 		if (value instanceof FileUpload) {
 			FileUpload fileUpload = (FileUpload) value;
 
@@ -95,7 +76,6 @@ public class FileConverter implements TypeConverter<File> {
 				StreamUtil.close(in);
 			}
 		}
-*/
 
 		Class type = value.getClass();
 		if (type == byte[].class) {

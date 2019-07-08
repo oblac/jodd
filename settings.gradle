@@ -1,5 +1,6 @@
 include 'distribution'
 
+include 'jodd-all'
 include 'jodd-bean'
 include 'jodd-core'
 include 'jodd-db'
@@ -17,8 +18,6 @@ include 'jodd-petite'
 include 'jodd-props'
 include 'jodd-proxetta'
 include 'jodd-servlet'
-include 'jodd-swingspy'
-include 'jodd-upload'
 include 'jodd-vtor'
 
 include 'jodd-bom'

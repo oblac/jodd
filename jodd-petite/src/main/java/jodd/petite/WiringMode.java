@@ -26,19 +26,40 @@
 package jodd.petite;
 
 /**
- * Different wiring modes.
+ * Wiring modes for Petite beans.
  */
 public enum WiringMode {
 
-	DEFAULT(-1),	// wiring mode is set by container
-	NONE(0),		// no wiring at all
-	STRICT(1),		// throws an exception if injection failed
-	OPTIONAL(2),	// ignores unsuccessful injections
-	AUTOWIRE(3);	// auto-wire
+	/**
+	 * Default wiring mode is set by the container.
+	 */
+	DEFAULT(-1),
+
+	/**
+	 * No wiring at all. Petite beans are not injected even when there is an
+	 * explicit definition of injection.
+	 */
+	NONE(0),
+	/**
+	 * Explicit and strict wiring. Wires explicitly defined injection points.
+	 * Throws an exception if wiring can not be satisfied.
+	 */
+	STRICT(1),
+	/**
+	 * Explicit and loose wiring. Wires only explicitly defined injection points.
+	 * Does not throw exception if wiring can not be satisfied.
+	 */
+	OPTIONAL(2),
+	/**
+	 * Auto-wires beans. Beans will be injected for defined injection points
+	 * and in all places where naming convention is satisfied.
+	 * No exception is thrown if wiring ca not be satisfied.
+	 */
+	AUTOWIRE(3);
 
 	private final int value;
 
-	WiringMode(int value) {
+	WiringMode(final int value) {
 		this.value = value;
 	}
 

@@ -25,23 +25,23 @@
 
 package jodd.http;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class HttpMultiMapTest {
+class HttpMultiMapTest {
 
 	@Test
-	public void testAdd() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitveMap();
+	void testAdd() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitiveMap();
 
 		mm.add("One", "one");
 		mm.add("Two", "two");
@@ -52,8 +52,8 @@ public class HttpMultiMapTest {
 	}
 
 	@Test
-	public void testAddSameName() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitveMap();
+	void testAddSameName() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitiveMap();
 
 		mm.add("One", "one");
 		mm.add("one", "two");
@@ -75,15 +75,15 @@ public class HttpMultiMapTest {
 	}
 
 	@Test
-	public void testMissing() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitveMap();
+	void testMissing() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitiveMap();
 
 		assertNull(mm.get("xxx"));
 	}
 
 	@Test
-	public void testIterator() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitveMap();
+	void testIterator() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitiveMap();
 
 		mm.add("One", "one");
 		mm.add("one", "two");
@@ -103,7 +103,7 @@ public class HttpMultiMapTest {
 
 		try {
 			i.next();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {}
 
 		mm.clear();
@@ -113,8 +113,8 @@ public class HttpMultiMapTest {
 
 
 	@Test
-	public void testNullValues() {
-		HttpMultiMap<String> hmm = HttpMultiMap.newCaseInsensitveMap();
+	void testNullValues() {
+		HttpMultiMap<String> hmm = HttpMultiMap.newCaseInsensitiveMap();
 
 		assertFalse(hmm.contains("one"));
 
@@ -135,8 +135,8 @@ public class HttpMultiMapTest {
 	}
 
 	@Test
-	public void testParametersNumber() {
-		HttpMultiMap<String> hmm = HttpMultiMap.newCaseInsensitveMap();
+	void testParametersNumber() {
+		HttpMultiMap<String> hmm = HttpMultiMap.newCaseInsensitiveMap();
 
 		for (int i = 0; i < 30; i++) {
 			hmm.add(String.valueOf(i), "!" + i);
@@ -146,8 +146,8 @@ public class HttpMultiMapTest {
 	}
 
 	@Test
-	public void testLetterCaseInsensitive() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitveMap();
+	void testLetterCaseInsensitive() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseInsensitiveMap();
 
 		mm.add("one", "1.1");
 		mm.add("one", "1.1.1");
@@ -168,8 +168,8 @@ public class HttpMultiMapTest {
 	}
 
 	@Test
-	public void testLetterCaseSensitive() {
-		HttpMultiMap<String> mm = HttpMultiMap.newCaseSensitveMap();
+	void testLetterCaseSensitive() {
+		HttpMultiMap<String> mm = HttpMultiMap.newCaseSensitiveMap();
 
 		mm.add("one", "1.1");
 		mm.add("one", "1.1.1");

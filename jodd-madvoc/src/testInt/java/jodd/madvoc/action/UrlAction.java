@@ -36,7 +36,7 @@ public class UrlAction {
 	 * Action mapped to '/foo/hello'
 	 * Result mapped to '/foo/hello.ok.jsp'
 	 */
-	@Action(value = "/foo/hello", extension = "notused")
+	@Action(value = "/foo/hello")
 	public String one() {
 		return "ok";
 	}

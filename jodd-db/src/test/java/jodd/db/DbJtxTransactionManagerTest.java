@@ -25,31 +25,42 @@
 
 package jodd.db;
 
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.db.pool.CoreConnectionPool;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
+class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
-	@After
-	public void tearDown() {
-		DbManager.resetAll();
+	@Override
+	@AfterEach
+	protected void tearDown() {
+		DbOom.get().shutdown();
 	}
 
 	@Test
-	public void testSessionProvider() {
+	void testSessionProvider() {
 		// prepare
+		DbOom.get().shutdown(); // since we are creating a new one, kill default
+		cp = new CoreConnectionPool();
+		super.setupPool(cp);
+
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
-		DbManager.getInstance().setSessionProvider(sessionProvider);
+
+		DbOom.create()
+			.withConnectionProvider(cp)
+			.withSessionProvider(sessionProvider)
+			.get().connect();
 
 		for (int i = 0; i < 2; i++) {
 
@@ -57,7 +68,7 @@ public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 			assertEquals(0, jtxManager.totalTransactions());
 
 			// start transaction
-			jtxManager.requestTransaction(new JtxTransactionMode());
+			jtxManager.requestTransaction(JtxTransactionMode.PROPAGATION_SUPPORTS_READ_ONLY);
 
 			// get session from provider!
 			DbSession dbSession = sessionProvider.getDbSession();
@@ -73,7 +84,7 @@ public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 			assertSame(dbSession, dbSession2);
 
 			// create query, session is get from provider, the very same one
-			DbQuery dbQuery = new DbQuery("SELECT 173 FROM (VALUES(0))");
+			DbQuery dbQuery = DbQuery.query("SELECT 173 FROM (VALUES(0))");
 			long value = dbQuery.executeCount();
 			assertEquals(173, value);
 			assertSame(dbSession, dbQuery.getSession());

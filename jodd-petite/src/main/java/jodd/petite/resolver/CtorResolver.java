@@ -28,11 +28,9 @@ package jodd.petite.resolver;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
-import jodd.petite.CtorInjectionPoint;
-import jodd.petite.InjectionPointFactory;
 import jodd.petite.PetiteException;
-import jodd.petite.PetiteUtil;
-import jodd.petite.meta.PetiteInject;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.CtorInjectionPoint;
 
 import java.lang.reflect.Constructor;
 
@@ -41,10 +39,10 @@ import java.lang.reflect.Constructor;
  */
 public class CtorResolver {
 
-	protected final InjectionPointFactory injectionPointFactory;
+	protected final ReferencesResolver referencesResolver;
 
-	public CtorResolver(InjectionPointFactory injectionPointFactory) {
-		this.injectionPointFactory = injectionPointFactory;
+	public CtorResolver(final ReferencesResolver referencesResolver) {
+		this.referencesResolver = referencesResolver;
 	}
 
 	/**
@@ -54,47 +52,61 @@ public class CtorResolver {
 	 * constructors exist, the default one will be used as injection point. Otherwise, exception
 	 * is thrown.
 	 */
-	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+	public CtorInjectionPoint resolve(final Class type, final boolean useAnnotation) {
+		// lookup methods
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
 		Constructor foundedCtor = null;
 		Constructor defaultCtor = null;
-		String refValues = null;
+		BeanReferences[] references = null;
 
 		for (CtorDescriptor ctorDescriptor : allCtors) {
 			Constructor<?> ctor = ctorDescriptor.getConstructor();
 
 			Class<?>[] paramTypes = ctor.getParameterTypes();
 			if (paramTypes.length == 0) {
-				defaultCtor = ctor;	// detects default ctors
+				defaultCtor = ctor;     // detects default ctors
 			}
+
 			if (!useAnnotation) {
 				continue;
 			}
-			PetiteInject ref = ctor.getAnnotation(PetiteInject.class);
-			if (ref == null) {
+
+			BeanReferences[] ctorReferences = referencesResolver.readAllReferencesFromAnnotation(ctor);
+
+			if (ctorReferences == null) {
 				continue;
 			}
 			if (foundedCtor != null) {
-				throw new PetiteException("Two or more constructors are annotated as injection points in bean: " + type.getName());
+				throw new PetiteException("Two or more constructors are annotated as injection points in the bean: " + type.getName());
 			}
+
 			foundedCtor = ctor;
-			refValues = ref.value().trim();
+			references = ctorReferences;
 		}
+
 		if (foundedCtor == null) {
+			// there is no annotated constructor
 			if (allCtors.length == 1) {
 				foundedCtor = allCtors[0].getConstructor();
 			} else {
 				foundedCtor = defaultCtor;
 			}
-		}
-		if (foundedCtor == null) {
-			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + type.getName());
+
+			if (foundedCtor == null) {
+				// no matching ctor found
+				// still this is not an error if bean is already instantiated.
+				return CtorInjectionPoint.EMPTY;
+			}
+
+			references = referencesResolver.readAllReferencesFromAnnotation(foundedCtor);
+
+			if (references == null) {
+				references = new BeanReferences[0];
+			}
 		}
 
-		String[][] references = PetiteUtil.convertAnnValueToReferences(refValues);
-
-		return injectionPointFactory.createCtorInjectionPoint(foundedCtor, references);
+		return new CtorInjectionPoint(foundedCtor, references);
 	}
 
 }

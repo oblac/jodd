@@ -25,28 +25,99 @@
 
 package jodd.madvoc.result;
 
+import jodd.io.FileNameUtil;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.RenderWith;
-import jodd.util.MimeTypes;
+import jodd.util.StringPool;
+import jodd.net.MimeTypes;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * Raw data for raw results.
+ * Raw data to download.
  */
-@RenderWith(RawResult.class)
-public class RawData extends RawResultData  {
+@RenderWith(RawActionResult.class)
+public class RawData {
 
-	public RawData(InputStream inputStream, String mimeType, int length) {
-		super(inputStream, null, mimeType, length);
+	protected final InputStream inputStream;
+	protected final int length;
+
+	protected String downloadFileName;
+	protected String mimeType = MimeTypes.MIME_APPLICATION_OCTET_STREAM;
+
+	public static RawData of(final byte[] bytes) {
+		return new RawData(new ByteArrayInputStream(bytes), bytes.length);
 	}
 
-	public RawData(byte[] bytes, String mimeType) {
-		super(new ByteArrayInputStream(bytes), null, mimeType, bytes.length);
+	public static RawData of(final File file) {
+		return new RawData(createFileInputStream(file), (int) file.length()).downloadableAs(file.getName());
 	}
 
-	public RawData(byte[] bytes) {
-		this(bytes, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
+	public RawData(final InputStream inputStream, final int length) {
+		this.inputStream = inputStream;
+		this.length = length;
+	}
+
+	/**
+	 * Defines mime type by providing real mime type or just extension!
+	 */
+	public RawData as(final String mimeOrExtension) {
+		if (mimeOrExtension.contains(StringPool.SLASH)) {
+			this.mimeType = mimeOrExtension;
+		}
+		else {
+			this.mimeType = MimeTypes.getMimeType(mimeOrExtension);
+		}
+		return this;
+	}
+
+	public RawData asHtml() {
+		this.mimeType = MimeTypes.MIME_TEXT_HTML;
+		return this;
+	}
+	public RawData asText() {
+		this.mimeType = MimeTypes.MIME_TEXT_PLAIN;
+		return this;
+	}
+
+	/**
+	 * Defines download file name and mime type from the name extension.
+	 */
+	public RawData downloadableAs(final String downloadFileName) {
+		this.downloadFileName = downloadFileName;
+		this.mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(downloadFileName));
+		return this;
+	}
+
+
+	// ---------------------------------------------------------------- getter
+
+	public InputStream contentInputStream() {
+		return inputStream;
+	}
+
+	public String mimeType() {
+		return mimeType;
+	}
+
+	public String downloadFileName() {
+		return downloadFileName;
+	}
+
+	public int contentLength() {
+		return length;
+	}
+
+	private static FileInputStream createFileInputStream(final File file) {
+		try {
+			return new FileInputStream(file);
+		} catch (FileNotFoundException fis) {
+			throw new MadvocException(fis);
+		}
 	}
 
 }

@@ -28,16 +28,17 @@ package jodd.petite;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllRealMethodsPointcut;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ProxettaAwareContainerTest {
+class ProxettaAwareContainerTest {
 
 	@PetiteBean
 	public static class SecretService {
@@ -88,20 +89,20 @@ public class ProxettaAwareContainerTest {
 	}
 
 	@Test
-	public void testProxyProxetta() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+	void testProxyProxetta() {
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(
 			new ProxyAspect(AddStringAdvice.class, new AllRealMethodsPointcut()));
 
 		PetiteContainer papc = new ProxettaAwarePetiteContainer(proxetta);
 
-		papc.registerPetiteBean(SecretService.class, null, null, null, false);
-		BeanDefinition beanDefinition = papc.registerPetiteBean(PublicService.class, null, null, null, false);
-		papc.registerPetiteBean(PublicService2.class, null, null, null, false);
-		papc.registerPetiteBean(PublicService3.class, null, null, null, false);
+		papc.registerPetiteBean(SecretService.class, null, null, null, false, null);
+		BeanDefinition beanDefinition = papc.registerPetiteBean(PublicService.class, null, null, null, false, null);
+		papc.registerPetiteBean(PublicService2.class, null, null, null, false, null);
+		papc.registerPetiteBean(PublicService3.class, null, null, null, false, null);
 
-		assertNotEquals(PublicService.class, beanDefinition.getType());
+		assertNotEquals(PublicService.class, beanDefinition.type());
 
-		PublicService publicService = (PublicService) papc.getBean(beanDefinition.getName());
+		PublicService publicService = papc.getBean(beanDefinition.name());
 		assertNotNull(publicService.secretService);
 		assertEquals("Hello World! And Universe, too!", publicService.hello());
 

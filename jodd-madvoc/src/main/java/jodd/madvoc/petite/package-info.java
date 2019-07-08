@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Madvoc using Petite.
+ * Madvoc extension that uses Petite.
  */
 package jodd.madvoc.petite;

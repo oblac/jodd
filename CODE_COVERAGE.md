@@ -4,21 +4,38 @@ To generate the code coverage report, execute the following command:
 
 Windows:
 
-	gradlew jacocoReport
+	gradlew.bat codeCoverageReport
 
 Linux/Unix/OSX:
 
-	./gradlew jacocoReport
+	./gradlew codeCoverageReport
 
-This will generate code coverage report for all the modules, located here:
+This will generate the code coverage report for **ALL** the modules.
 
-	build/reports/coverage/index.html
+_NOTE_: since the code coverage task runs the integration tests, be sure that testing docker containers are up and running:
 
-In order to view the report for a single module, open the following file:
+	cd docker
+	docker-compose -f docker-compose-test.yml up  
 
-	build/reports/coverage/MODULE_NAME/index.html
+### Reports location
 
+Code Coverage report is located here:
+
+	build/reports/jacoco/codeCoverageReport/html/index.html
+	
+## Code Coverage for a single module :star:
+
+Run:
+
+	./gradlew :<MODULE>:codeCoverage
+
+The result is located in:
+
+	MODULE/build/reports/jacoco/index.html
+	
 For example:
 
-* `build/reports/coverage/jodd-decora/index.html`
-* `build/reports/coverage/jodd-log/index.html`
+	./gradlew :jodd-core:codeCoverage
+	open jodd-core/build/reports/jacoco/index.html
+	
+_NOTE_: Package `jodd.asm6` is _excluded_ from code coverage, but still reported locally.

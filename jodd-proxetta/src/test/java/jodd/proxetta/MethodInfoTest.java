@@ -25,63 +25,61 @@
 
 package jodd.proxetta;
 
-import jodd.mutable.ValueHolder;
-import jodd.mutable.ValueHolderWrapper;
-import jodd.proxetta.data.Foo;
-import jodd.proxetta.data.FooAnn;
-import jodd.proxetta.data.FooProxyAdvice;
+import jodd.mutable.Value;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooAnn;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
-import org.junit.Test;
+import jodd.proxetta.impl.ProxyProxettaFactory;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MethodInfoTest {
+class MethodInfoTest {
 
 	@Test
-	public void testMethodInfo() {
+	void testMethodInfo() {
 
-		final ValueHolder<MethodInfo> valueHolder = ValueHolderWrapper.create();
+		final Value<MethodInfo> value = Value.of(null);
 
 		ProxyAspect proxyAspect = new ProxyAspect(
 				FooProxyAdvice.class,
-				new ProxyPointcut() {
-					public boolean apply(MethodInfo methodInfo) {
-						if (methodInfo.getMethodName().equals("p1")) {
-							valueHolder.value(methodInfo);
-							return true;
-						}
-						return false;
+				methodInfo -> {
+					if (methodInfo.getMethodName().equals("p1")) {
+						value.set(methodInfo);
+						return true;
 					}
-		});
+					return false;
+				}
+		);
 
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(proxyAspect);
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(proxyAspect);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta888");
-		ProxyProxettaBuilder pb = proxyProxetta.builder();
+		ProxyProxettaFactory pb = proxyProxetta.proxy();
 		pb.setTarget(Foo.class);
 		Foo foo = (Foo) pb.newInstance();
 
 		assertNotNull(foo);
 
-		MethodInfo mi = valueHolder.value();
+		MethodInfo mi = value.get();
 
 		assertEquals("p1", mi.getMethodName());
 		assertEquals(Foo.class.getName().replace('.', '/'), mi.getClassname());
-		assertEquals("(java.lang.String)", mi.getDeclaration());
+		assertEquals("(java.lang.String)java.lang.String", mi.getDeclaration());
 		assertEquals("(Ljava/lang/String;)Ljava/lang/String;", mi.getDescription());
-		assertEquals("java.lang.String", mi.getReturnType());
-		assertEquals("Ljava/lang/String;", mi.getReturnTypeName());
+		assertEquals("java.lang.String", mi.getReturnType().getType());
+		assertEquals("Ljava/lang/String;", mi.getReturnType().getName());
 
 		assertEquals("java.lang.String p1(java.lang.String)", mi.getSignature());
 
 		assertEquals(1, mi.getArgumentsCount());
-		assertEquals("Ljava/lang/String;", mi.getArgumentTypeName(1));
+		assertEquals("Ljava/lang/String;", mi.getArgument(1).getName());
 
 		assertTrue(mi.isTopLevelMethod());
 
-		AnnotationInfo[] anns = mi.getArgumentAnnotations(0);
+		AnnotationInfo[] anns = mi.getArgument(1).getAnnotations();
 
 		assertNotNull(anns);
 		assertEquals(1, anns.length);

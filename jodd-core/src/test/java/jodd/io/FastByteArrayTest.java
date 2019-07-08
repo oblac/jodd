@@ -25,17 +25,17 @@
 
 package jodd.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FastByteArrayTest {
+class FastByteArrayTest {
 
 	@Test
-	public void testFbat() throws IOException {
+	void testFbat() throws IOException {
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 
 		fbaos.write(173);
@@ -49,7 +49,7 @@ public class FastByteArrayTest {
 	}
 
 	@Test
-	public void testFbat2() throws IOException {
+	void testFbat2() throws IOException {
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream(2);
 
 		fbaos.write(173);
@@ -63,7 +63,7 @@ public class FastByteArrayTest {
 	}
 
 	@Test
-	public void testFbatSingle() throws IOException {
+	void testFbatSingle() throws IOException {
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream(2);
 
 		fbaos.write(73);

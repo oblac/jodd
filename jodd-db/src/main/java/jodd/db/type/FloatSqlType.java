@@ -35,7 +35,7 @@ public class FloatSqlType extends NullAwareSqlType<Float> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Float get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Float get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Float.valueOf(rs.getFloat(index));
 	}
 
@@ -43,7 +43,7 @@ public class FloatSqlType extends NullAwareSqlType<Float> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Float value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Float value, final int dbSqlType) throws SQLException {
 		st.setFloat(index, value.floatValue());
 	}
 

@@ -37,6 +37,8 @@ abstract class BaseNamingStrategy {
 	protected boolean changeCase = true;
 	protected boolean uppercase = true;
 	protected boolean strictAnnotationNames = true;
+	protected boolean alwaysQuoteNames = false;
+	protected char quoteChar = 0;
 
 	public boolean isSplitCamelCase() {
 		return splitCamelCase;
@@ -46,7 +48,7 @@ abstract class BaseNamingStrategy {
 	 * Specifies if camel case name has to be split.
 	 * If set to <code>false</code>, then name is passed unchanged.
 	 */
-	public void setSplitCamelCase(boolean splitCamelCase) {
+	public void setSplitCamelCase(final boolean splitCamelCase) {
 		this.splitCamelCase = splitCamelCase;
 	}
 
@@ -58,7 +60,7 @@ abstract class BaseNamingStrategy {
 	 * Separator character, when camel case names
 	 * are {@link #setSplitCamelCase(boolean) split}.
 	 */
-	public void setSeparatorChar(char separatorChar) {
+	public void setSeparatorChar(final char separatorChar) {
 		this.separatorChar = separatorChar;
 	}
 
@@ -70,7 +72,7 @@ abstract class BaseNamingStrategy {
 	 * Specifies if database names should be convert to
 	 * uppercase or lowercase.
 	 */
-	public void setChangeCase(boolean changeCase) {
+	public void setChangeCase(final boolean changeCase) {
 		this.changeCase = changeCase;
 	}
 
@@ -83,7 +85,7 @@ abstract class BaseNamingStrategy {
 	 * Table names includes prefix and suffix. Otherwise, table name
 	 * will be converted to lowercase.
 	 */
-	public void setUppercase(boolean uppercase) {
+	public void setUppercase(final boolean uppercase) {
 		this.uppercase = uppercase;
 	}
 
@@ -95,7 +97,7 @@ abstract class BaseNamingStrategy {
 	 * Alternative property to {@link #setUppercase(boolean)}.
 	 * Does just the opposite.
 	 */
-	public void setLowercase(boolean lowercase) {
+	public void setLowercase(final boolean lowercase) {
 		this.uppercase = !lowercase;
 	}
 
@@ -107,14 +109,36 @@ abstract class BaseNamingStrategy {
 	 * Defines if annotation names are strict, or if all the naming
 	 * rules should apply on them, too.
 	 */
-	public void setStrictAnnotationNames(boolean strictAnnotationNames) {
+	public void setStrictAnnotationNames(final boolean strictAnnotationNames) {
 		this.strictAnnotationNames = strictAnnotationNames;
+	}
+
+	public boolean isAlwaysQuoteNames() {
+		return alwaysQuoteNames;
+	}
+
+	/**
+	 * Defines if all table and column names should be quoted.
+	 */
+	public void setAlwaysQuoteNames(final boolean alwaysQuoteNames) {
+		this.alwaysQuoteNames = alwaysQuoteNames;
+	}
+
+	public char getQuoteChar() {
+		return quoteChar;
+	}
+
+	/**
+	 * Defines quote char.
+	 */
+	public void setQuoteChar(final char quoteChar) {
+		this.quoteChar = quoteChar;
 	}
 
 	// ---------------------------------------------------------------- util methods
 
-	protected static StringBuilder toUppercase(StringBuilder string) {
-		int strLen = string.length();
+	protected static StringBuilder toUppercase(final StringBuilder string) {
+		final int strLen = string.length();
 
 		for (int i = 0; i < strLen; i++) {
 			char c = string.charAt(i);
@@ -127,8 +151,8 @@ abstract class BaseNamingStrategy {
 		return string;
 	}
 
-	protected static StringBuilder toLowercase(StringBuilder string) {
-		int strLen = string.length();
+	protected static StringBuilder toLowercase(final StringBuilder string) {
+		final int strLen = string.length();
 
 		for (int i = 0; i < strLen; i++) {
 			char c = string.charAt(i);

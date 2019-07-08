@@ -25,16 +25,16 @@
 
 package jodd.db.type;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class ByteArraySqlType extends SqlType<byte[]> {
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public byte[] get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getBytes(index);
 	}
 
@@ -42,7 +42,7 @@ public class ByteArraySqlType extends SqlType<byte[]> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, byte[] value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final byte[] value, final int dbSqlType) throws SQLException {
 		st.setBytes(index, value);
 	}
 

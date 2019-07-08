@@ -32,15 +32,15 @@ import jodd.proxetta.ProxettaException;
  */
 public class MethrefException extends ProxettaException {
 
-	public MethrefException(Throwable throwable) {
+	public MethrefException(final Throwable throwable) {
 		super(throwable);
 	}
 
-	public MethrefException(String string) {
+	public MethrefException(final String string) {
 		super(string);
 	}
 
-	public MethrefException(String string, Throwable throwable) {
+	public MethrefException(final String string, final Throwable throwable) {
 		super(string, throwable);
 	}
 

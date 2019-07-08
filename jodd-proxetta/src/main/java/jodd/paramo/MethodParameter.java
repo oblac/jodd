@@ -25,6 +25,8 @@
 
 package jodd.paramo;
 
+import java.lang.reflect.Parameter;
+
 /**
  * Resolved method parameter from bytecode.
  * It consist of parameter name and parameter bytecode signature
@@ -34,13 +36,14 @@ public class MethodParameter {
 
 	public static final MethodParameter[] EMPTY_ARRAY = new MethodParameter[0];
 
-	protected final String name;
+	private final String name;
+	private final String signature;
+	private final Parameter parameter;
 
-	protected final String signature;
-
-	public MethodParameter(String name, String signature) {
+	public MethodParameter(final String name, final String signature, final Parameter parameter) {
 		this.name = name;
 		this.signature = signature;
+		this.parameter = parameter;
 	}
 
 	/**
@@ -58,5 +61,10 @@ public class MethodParameter {
 		return signature;
 	}
 
-
+	/**
+	 * Returns parameter.
+	 */
+	public Parameter getParameter() {
+		return parameter;
+	}
 }

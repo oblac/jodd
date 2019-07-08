@@ -26,7 +26,7 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CsvUtil;
 
 import java.lang.reflect.Array;
@@ -50,15 +50,16 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 	public static final char[] NUMBER_DELIMITERS = new char[] {',', ';', '\n'};
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 	protected final Class<T> targetComponentType;
 
-	public ArrayConverter(TypeConverterManagerBean typeConverterManagerBean, Class<T> targetComponentType) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public ArrayConverter(final TypeConverterManager typeConverterManager, final Class<T> targetComponentType) {
+		this.typeConverterManager = typeConverterManager;
 		this.targetComponentType = targetComponentType;
 	}
 
-	public T[] convert(Object value) {
+	@Override
+	public T[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -77,8 +78,8 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected T convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, targetComponentType);
+	protected T convertType(final Object value) {
+		return typeConverterManager.convertType(value, targetComponentType);
 	}
 
 	/**
@@ -86,14 +87,14 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * Default implementation uses reflection to create
 	 * an array of target type. Override it for better performances.
 	 */
-	protected T[] createArray(int length) {
+	protected T[] createArray(final int length) {
 		return (T[]) Array.newInstance(targetComponentType, length);
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected T[] convertToSingleElementArray(Object value) {
+	protected T[] convertToSingleElementArray(final Object value) {
 		T[] singleElementArray = createArray(1);
 
 		singleElementArray[0] = convertType(value);
@@ -106,19 +107,7 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected T[] convertValueToArray(Object value) {
-		if (value instanceof List) {
-			List list = (List) value;
-			T[] target = createArray(list.size());
-
-			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
+	protected T[] convertValueToArray(final Object value) {
 		if (value instanceof Collection) {
 			Collection collection = (Collection) value;
 			T[] target = createArray(collection.size());
@@ -157,14 +146,14 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * Converts string to array, for the {@link #convertValueToArray(Object)} method.
 	 * By default, the string is converted into an array using {@link jodd.util.CsvUtil}.
 	 */
-	protected String[] convertStringToArray(String value) {
+	protected String[] convertStringToArray(final String value) {
 		return CsvUtil.toStringArray(value);
 	}
 
 	/**
 	 * Converts array value to array.
 	 */
-	protected T[] convertArrayToArray(Object value) {
+	protected T[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == targetComponentType) {
@@ -194,7 +183,7 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * Converts primitive array to target array.
 	 */
 	@SuppressWarnings("AutoBoxing")
-	protected T[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected T[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		T[] result = null;
 
 		if (primitiveComponentType == int.class) {

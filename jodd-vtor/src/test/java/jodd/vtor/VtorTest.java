@@ -25,128 +25,119 @@
 
 package jodd.vtor;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-public class VtorTest extends VtorTestSupport {
+class VtorTest extends VtorTestSupport {
 
     @Test
-    public void testCreate() throws Exception {
+    void testCreate() throws Exception {
         Vtor vtor = Vtor.create();
         assertNotNull(vtor);
     }
 
     @Test
-    public void testSetSeverity() throws Exception {
+    void testSetSeverity() throws Exception {
         Vtor vtor = new Vtor();
         vtor.setSeverity(1);
         assertEquals(vtor.severity, 1);
     }
 
     @Test
-    public void testValidateAllProfilesByDefault() throws Exception {
+    void testValidateAllProfilesByDefault() throws Exception {
         Vtor vtor = new Vtor();
         vtor.setValidateAllProfilesByDefault(true);
         assertTrue(vtor.isValidateAllProfilesByDefault());
     }
 
     @Test
-    public void testHasViolations() throws Exception {
+    void testHasViolations() throws Exception {
         Vtor vtor = new Vtor();
-        assertFalse("method must return false when violations list is empty", vtor.hasViolations());
+        assertFalse(vtor.hasViolations(), "method must return false when violations list is empty");
 
         vtor.addViolation(mock(Violation.class));
-        assertTrue("method must return true when add some violation", vtor.hasViolations());
+        assertTrue(vtor.hasViolations(), "method must return true when add some violation");
     }
 
     @Test
-    public void testAddViolation_withNullValue() throws Exception {
+    void testAddViolation_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.addViolation(null);
-        assertNull("list of violations must be null when add only null violation", vtor.getViolations());
+        assertNull(vtor.getViolations());
     }
 
     @Test
-    public void testAddViolation_withTwoDifferentValues() throws Exception {
+    void testAddViolation_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         Violation violation1 = mock(Violation.class);
         vtor.addViolation(violation1);
         Violation violation2 = mock(Violation.class);
         vtor.addViolation(violation2);
-        assertEquals("size of list with violations must be 2 when add two violation", vtor.getViolations().size(), 2);
-        assertEquals("first violation must be equal to first added violation", vtor.getViolations().get(0), violation1);
-        assertEquals("second violation must be equal to second added violation", vtor.getViolations().get(1), violation2);
+        assertEquals(2, vtor.getViolations().size());
+        assertEquals(violation1, vtor.getViolations().get(0));
+        assertEquals(violation2, vtor.getViolations().get(1));
 
         //when
         vtor.addViolation(null);
 
         //then
-        assertEquals("list of violations must not be changed when add a null violation", vtor.getViolations().size(), 2);
+        assertEquals(2, vtor.getViolations().size());
     }
 
     @Test
-    public void testUseProfile_withNullValue() throws Exception {
+    void testUseProfile_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.useProfile(null);
-        assertNull("list of enabled profiles must be null when add only null profile", vtor.enabledProfiles);
+        assertNull(vtor.enabledProfiles);
     }
 
     @Test
-    public void testUseProfile_withTwoDifferentValues() throws Exception {
+    void testUseProfile_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.useProfile("testProfile");
-        assertEquals("size of list with profiles must be 1 when add one profile", vtor.enabledProfiles.size(), 1);
-        assertTrue("first element of enabled profiles must be testProfile when use testProfile", new ArrayList<String>(vtor.enabledProfiles).contains("testProfile"));
+        assertEquals(1, vtor.enabledProfiles.size());
+        assertTrue(new ArrayList<>(vtor.enabledProfiles).contains("testProfile"), "first element of enabled profiles must be testProfile when use testProfile");
 
         //when
         vtor.useProfile(null);
 
         //then
-        assertEquals("size of list with profiles must not be changed when use null profile", vtor.enabledProfiles.size(), 1);
+        assertEquals(1, vtor.enabledProfiles.size());
     }
 
     @Test
-    public void testUseProfiles_withNullValue() throws Exception {
+    void testUseProfiles_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.useProfiles(null);
-        assertNull("list of enabled profiles must be null when add only null profile", vtor.enabledProfiles);
+        assertNull(vtor.enabledProfiles);
     }
 
     @Test
-    public void testUseProfiles_withTwoDifferentValues() throws Exception {
+    void testUseProfiles_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.useProfiles("testProfile1", "testProfile2");
-        assertEquals("size of list with profiles must be 2 when add two profile", vtor.enabledProfiles.size(), 2);
-        ArrayList<String> enabledProfileList = new ArrayList<String>(vtor.enabledProfiles);
-        assertTrue("first element must be equal to first added profile", enabledProfileList.contains("testProfile1"));
-        assertTrue("second element must be equal to second added profile", enabledProfileList.contains("testProfile2"));
+        assertEquals(2, vtor.enabledProfiles.size());
+        ArrayList<String> enabledProfileList = new ArrayList<>(vtor.enabledProfiles);
+        assertTrue(enabledProfileList.contains("testProfile1"), "first element must be equal to first added profile");
+        assertTrue(enabledProfileList.contains("testProfile2"), "second element must be equal to second added profile");
 
         //when
         vtor.useProfile(null);
 
         //then
-        assertEquals("size of list with profiles must not be changed when add null profile", vtor.enabledProfiles.size(), 2);
+        assertEquals(2, vtor.enabledProfiles.size());
     }
 
     private Map<String, List<Check>> createValidateFldHasCheckerTestConstraints(ValidationConstraint testCheck1Constraint) {
@@ -158,11 +149,11 @@ public class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testValidateFldHasChecker_isValidFalse() throws Exception {
+    void testValidateFldHasChecker_isValidFalse() throws Exception {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
-        stub(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).toReturn(false);
+        when(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).thenReturn(false);
         Map<String, List<Check>> constraints = createValidateFldHasCheckerTestConstraints(testCheck1Constraint);
 
         //when validate an object with field testField
@@ -171,15 +162,15 @@ public class VtorTest extends VtorTestSupport {
         //then
         //isValid for ValidationConstraint mast be invoked
         verify(testCheck1Constraint).isValid(any(ValidationConstraintContext.class), eq("testValue"));
-        assertEquals("result must contain one violation when constraint check returns false", violations.size(), 1);
+        assertEquals(1, violations.size());
     }
 
     @Test
-    public void testValidateFldHasChecker_isValidTrue() throws Exception {
+    void testValidateFldHasChecker_isValidTrue() throws Exception {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
-        stub(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).toReturn(true);
+        when(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).thenReturn(true);
         Map<String, List<Check>> constraints = createValidateFldHasCheckerTestConstraints(testCheck1Constraint);
 
         //when validate an object with field testField
@@ -188,11 +179,11 @@ public class VtorTest extends VtorTestSupport {
         //then
         //isValid for ValidationConstraint mast be invoked
         verify(testCheck1Constraint).isValid(any(ValidationConstraintContext.class), eq("testValue"));
-        assertNull("result must not contain any violation when constraint check returns true", validate);
+        assertNull(validate);
     }
 
     @Test
-    public void testValidateCheckForDifferentProfile() throws Exception {
+    void testValidateCheckForDifferentProfile() throws Exception {
         //given a list of constraints with different profiles, one check has same profile as Vtor
         Vtor vtor = new Vtor();
         vtor.useProfile("profil1");
@@ -210,14 +201,14 @@ public class VtorTest extends VtorTestSupport {
         List<Violation> violations = vtor.validate(mockValidationContext(constraints), new ValidateTestObject("testValue"), "testField");
 
         //then
-        assertEquals("result must contain one violation", violations.size(), 1);
-        assertEquals("result must contain one violation with check for profile1", violations.get(0).getCheck().getProfiles()[0], "profil1");
+        assertEquals(1, violations.size());
+        assertEquals("profil1", violations.get(0).getCheck().getProfiles()[0]);
         verify(testCheck1Constraint).isValid(any(ValidationConstraintContext.class), eq("testValue"));
         verify(testCheck2Constraint, never()).isValid(any(ValidationConstraintContext.class), eq("testValue"));
     }
 
     @Test
-    public void testValidateCheckSeverity() throws Exception {
+    void testValidateCheckSeverity() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.setSeverity(10);
@@ -239,8 +230,8 @@ public class VtorTest extends VtorTestSupport {
         List<Violation> violations = vtor.validate(mockValidationContext(constraints), new ValidateTestObject("testValue"), "testField");
 
         //then
-        assertEquals("list of violations must have size 1 when validate two checks with severity 5 and 15", violations.size(), 1);
-        assertEquals("list of violations must contain check1 with severity 15 when validate two checks with severity 5 and 15", violations.get(0).getCheck(), ch1);
+        assertEquals(1, violations.size());
+        assertEquals(ch1, violations.get(0).getCheck());
         verify(testCheck1Constraint).isValid(any(ValidationConstraintContext.class), eq("testValue"));
         verify(testCheck2Constraint, never()).isValid(any(ValidationConstraintContext.class), eq("testValue"));
     }

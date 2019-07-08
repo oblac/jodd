@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -33,17 +33,19 @@ public class AssertFalseConstraint implements ValidationConstraint<AssertFalse> 
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(AssertFalse annotation) {
+	@Override
+	public void configure(final AssertFalse annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value);
 	}
 
-	public static boolean validate(Object value) {
-		return !Convert.toBooleanValue(value, false);
+	public static boolean validate(final Object value) {
+		return !Converter.get().toBooleanValue(value, false);
 	}
 
 }

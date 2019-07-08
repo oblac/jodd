@@ -44,11 +44,11 @@ import java.util.Iterator;
  */
 public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 
-	public LFUCache(int maxSize) {
+	public LFUCache(final int maxSize) {
 		this(maxSize, 0);
 	}
 
-	public LFUCache(int maxSize, long timeout) {
+	public LFUCache(final int maxSize, final long timeout) {
 		this.cacheSize = maxSize;
 		this.timeout = timeout;
 		cacheMap = new HashMap<>(maxSize + 1);
@@ -106,13 +106,6 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 			}
 		}
 		return count;
-	}
-
-	/**
-	 * Callback method invoked on cached object removal.
-	 * By default does nothing.
-	 */
-	protected void onRemove(K key, V cachedObject) {
 	}
 
 }

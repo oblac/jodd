@@ -25,29 +25,30 @@
 
 package jodd.lagarto;
 
-import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import static jodd.util.StringPool.NEWLINE;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class LagartoParserTest {
+class LagartoParserTest {
 
 	protected String testDataRoot;
 	protected String testDataRoot2;
 	protected String testLiveRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -62,19 +63,19 @@ public class LagartoParserTest {
 	}
 
 	@Test
-	public void testHtmls() throws IOException {
+	void testHtmls() throws IOException {
 		_testHtmls(testDataRoot);
 	}
 
 	@Test
-	public void testHtmls2() throws IOException {
+	void testHtmls2() throws IOException {
 		_testHtmls(testDataRoot2);
 	}
 
 	private void _testHtmls(String root) throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
-		JStopWatch jsw = new JStopWatch();
+
 		boolean processed = false;
 		while (reps-- > 0) {
 			ff.searchPath(root);
@@ -116,14 +117,14 @@ public class LagartoParserTest {
 			}
 		}
 		assertTrue(processed);
-		System.out.println(jsw);
+
 	}
 
 	/**
 	 * 13s
 	 */
 	@Test
-	public void testLiveHtmls() throws IOException {
+	void testLiveHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.html");
 		ff.searchPath(testLiveRoot);
 		File file;
@@ -144,7 +145,7 @@ public class LagartoParserTest {
 	}
 
 	private String _parseEmpty(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content, false);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.getConfig().setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
@@ -163,12 +164,15 @@ public class LagartoParserTest {
 
 		TagVisitor visitor = new TagVisitor() {
 
+			@Override
 			public void start() {
 			}
 
+			@Override
 			public void end() {
 			}
 
+			@Override
 			public void tag(Tag tag) {
 				result.append("tag:").append(tag.getName());
 				result.append(':').append(tag.getDeepLevel());
@@ -184,26 +188,22 @@ public class LagartoParserTest {
 						break;
 				}
 				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
+					tag.writeTo(result);
 				}
 				result.append(NEWLINE);
 			}
 
+			@Override
 			public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 				result.append("xml:").append(version).append(':').append(encoding).append(':').append(standalone);
 				result.append(NEWLINE);
 			}
 
+			@Override
 			public void script(Tag tag, CharSequence bodyM) {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
+					tag.writeTo(result);
 				}
 				String body = bodyM.toString();
 				body = StringUtil.removeChars(body, "\r\n\t\b");
@@ -211,23 +211,27 @@ public class LagartoParserTest {
 				result.append(NEWLINE);
 			}
 
+			@Override
 			public void comment(CharSequence commentM) {
 				String comment = commentM.toString();
 				comment = StringUtil.removeChars(comment, "\r\n\t\b");
 				result.append("com:[").append(comment).append(']').append(NEWLINE);
 			}
 
+			@Override
 			public void cdata(CharSequence cdataM) {
 				String cdata = cdataM.toString();
 				cdata = StringUtil.removeChars(cdata, "\r\n\t\b");
 				result.append("cdt:[").append(cdata).append(']').append(NEWLINE);
 			}
 
+			@Override
 			public void doctype(Doctype doctype) {
 				result.append("doc:[").append(doctype.getName()).append(' ');
 				result.append(doctype.getPublicIdentifier()).append(' ').append(doctype.getSystemIdentifier()).append(']').append(NEWLINE);
 			}
 
+			@Override
 			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 				result.append(isStartingTag ? "CC" : "cc").append(isHidden ? 'H' : 'S');
 				result.append(isHiddenEndTag ? "h" : "");
@@ -236,6 +240,7 @@ public class LagartoParserTest {
 
 			}
 
+			@Override
 			public void text(CharSequence text) {
 				String t = text.toString();
 				t = StringUtil.removeChars(t, "\r\n\t\b");
@@ -244,13 +249,14 @@ public class LagartoParserTest {
 				}
 			}
 
+			@Override
 			public void error(String message) {
 				result.append("wrn:[").append(message).append(NEWLINE);
 			}
 		};
 
 
-		LagartoParser lagartoParser = new LagartoParser(content, false);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.getConfig().setCalculatePosition(true);
 
 		if (isXml) {

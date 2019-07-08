@@ -25,17 +25,18 @@
 
 package jodd.props;
 
-import org.junit.Test;
+import jodd.util.StringPool;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class Props141Test extends BasePropsTest {
+class Props141Test extends BasePropsTest {
 
 	@Test
-	public void test141Simple() throws IOException {
+	void test141Simple() throws IOException {
 		Props props = new Props();
 		String data = readDataFile("i141.props");
 		props.load(data);
@@ -48,15 +49,15 @@ public class Props141Test extends BasePropsTest {
 	}
 
 	@Test
-	public void test141Complex() throws IOException {
+	void test141Complex() throws IOException {
 		Props props = new Props();
 		String data = readDataFile("i141-2.props");
 		props.load(data);
 
 		// Without profile, and using ERROR profile
-		assertEquals("NOT AN ERROR 1", props.getValue("code", null));
-		assertEquals("NOT AN ERROR 2", props.getValue("label", null));
-		assertEquals("NOT AN ERROR 3", props.getValue("details", null));
+		assertEquals("NOT AN ERROR 1", props.getValue("code", StringPool.EMPTY));
+		assertEquals("NOT AN ERROR 2", props.getValue("label", StringPool.EMPTY));
+		assertEquals("NOT AN ERROR 3", props.getValue("details", StringPool.EMPTY));
 
 		assertEquals("#UNDEFINED", props.getValue("code", "ERROR"));
 		assertEquals("UNDEFINED LABEL", props.getValue("label", "ERROR"));

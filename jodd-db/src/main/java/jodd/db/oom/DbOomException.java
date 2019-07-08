@@ -33,23 +33,23 @@ import jodd.db.DbSqlException;
  */
 public class DbOomException extends DbSqlException {
 
-	public DbOomException(Throwable t) {
+	public DbOomException(final Throwable t) {
 		super(t);
 	}
 
-	public DbOomException(String message) {
+	public DbOomException(final String message) {
 		super(message);
 	}
 
-	public DbOomException(DbQuery dbQuery, String message) {
+	public DbOomException(final DbQuery dbQuery, final String message) {
 		super(dbQuery, message);
 	}
 
-	public DbOomException(String message, Throwable t) {
+	public DbOomException(final String message, final Throwable t) {
 		super(message, t);
 	}
 
-	public DbOomException(DbQuery dbQuery, String message, Throwable t) {
+	public DbOomException(final DbQuery dbQuery, final String message, final Throwable t) {
 		super(dbQuery, message, t);
 	}
 

@@ -41,18 +41,18 @@ public class BeanWalker extends BeanVisitorImplBase<BeanWalker> {
 		void visitProperty(String name, Object value);
 	}
 
-	public BeanWalker(BeanWalkerCallback callback) {
+	public BeanWalker(final BeanWalkerCallback callback) {
 		this.callback = callback;
 	}
 
 	/**
 	 * Static ctor.
 	 */
-	public static BeanWalker walk(BeanWalkerCallback callback) {
+	public static BeanWalker walk(final BeanWalkerCallback callback) {
 		return new BeanWalker(callback);
 	}
 
-	public void source(Object source) {
+	public void source(final Object source) {
 		this.source = source;
 
 		isSourceMap = (source instanceof Map);
@@ -60,13 +60,13 @@ public class BeanWalker extends BeanVisitorImplBase<BeanWalker> {
 		visit();
 	}
 
-	public void bean(Object bean) {
+	public void bean(final Object bean) {
 		this.source = bean;
 
 		visit();
 	}
 
-	public void map(Map map) {
+	public void map(final Map map) {
 		this.source = map;
 
 		this.isSourceMap = true;
@@ -75,7 +75,7 @@ public class BeanWalker extends BeanVisitorImplBase<BeanWalker> {
 	}
 
 	@Override
-	protected boolean visitProperty(String name, Object value) {
+	protected boolean visitProperty(final String name, final Object value) {
 		callback.visitProperty(name, value);
 		return true;
 	}

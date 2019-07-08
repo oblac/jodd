@@ -26,17 +26,17 @@
 package jodd.typeconverter;
 
 import jodd.bean.BeanUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class SilentTest {
+class SilentTest {
 
 	public static class Bean {
 		protected Data data = new Data();
@@ -109,7 +109,7 @@ public class SilentTest {
 	}
 
 	@Test
-	public void testSetPropertySilent() {
+	void testSetPropertySilent() {
 		Bean bean = new Bean();
 
 		try {
@@ -142,7 +142,7 @@ public class SilentTest {
 	}
 
 	@Test
-	public void testGetPropertySilent() {
+	void testGetPropertySilent() {
 		Bean bean = new Bean();
 
 		assertNull(BeanUtil.silent.getProperty(bean, "miss"));
@@ -155,7 +155,7 @@ public class SilentTest {
 	}
 
 	@Test
-	public void testSetPropertyForcedSilent() {
+	void testSetPropertyForcedSilent() {
 		Bean bean = new Bean();
 
 		try {

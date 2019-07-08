@@ -26,17 +26,22 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.LongArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static jodd.typeconverter.TypeConverterTestHelper.arrd;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arro;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class LongArrayConverterTest {
+class LongArrayConverterTest {
 
 	@Test
-	public void testConversion() {
-		LongArrayConverter longArrayConverter = (LongArrayConverter) TypeConverterManager.lookup(long[].class);
+	void testConversion() {
+		LongArrayConverter longArrayConverter = (LongArrayConverter) TypeConverterManager.get().lookup(long[].class);
 
 		assertNull(longArrayConverter.convert(null));
 

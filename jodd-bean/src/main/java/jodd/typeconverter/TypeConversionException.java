@@ -32,23 +32,23 @@ import jodd.exception.UncheckedException;
  */
 public class TypeConversionException extends UncheckedException {
 
-	public TypeConversionException(Throwable t) {
+	public TypeConversionException(final Throwable t) {
 		super(t);
 	}
 
-	public TypeConversionException(String message) {
+	public TypeConversionException(final String message) {
 		super(message);
 	}
 
-	public TypeConversionException(String message, Throwable t) {
+	public TypeConversionException(final String message, final Throwable t) {
 		super(message, t);
 	}
 
-	public TypeConversionException(Object value) {
+	public TypeConversionException(final Object value) {
 		this("Conversion failed: " + value);
 	}
 
-	public TypeConversionException(Object value, Throwable t) {
+	public TypeConversionException(final Object value, final Throwable t) {
 		this("Conversion failed: " + value, t);
 	}
 }

@@ -26,19 +26,19 @@
 package jodd.vtor;
 
 import jodd.vtor.constraint.TimeAfterConstraint;
-import jodd.vtor.data.Tad;
-import jodd.vtor.data.Woo;
-import org.junit.Test;
+import jodd.vtor.fixtures.Tad;
+import jodd.vtor.fixtures.Woo;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AnnotationTest {
+class AnnotationTest {
 
 	@Test
-	public void testAnn() {
+	void testAnn() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Woo());
 		List<Violation> v = vtor.getViolations();
@@ -58,7 +58,7 @@ public class AnnotationTest {
 	}
 
 	@Test
-	public void testTime() {
+	void testTime() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Tad());
 

@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Jodd = tools + ioc + mvc + db + aop + tx + html {@literal <} 1.1M
+ * Jodd = tools + ioc + mvc + db + aop + tx + json + html {@literal <} 1.7Mb
  */
 package jodd;

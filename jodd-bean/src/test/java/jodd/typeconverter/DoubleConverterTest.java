@@ -26,16 +26,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.DoubleConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DoubleConverterTest {
+class DoubleConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		DoubleConverter doubleConverter = new DoubleConverter();
 
 		assertNull(doubleConverter.convert(null));
@@ -50,7 +50,7 @@ public class DoubleConverterTest {
 
 		try {
 			doubleConverter.convert("aaaa");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

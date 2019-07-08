@@ -25,19 +25,19 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
-import org.junit.Test;
+import jodd.util.ClassUtil;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class IntrospectorGenericsTest {
+class IntrospectorGenericsTest {
 
 	public static class MethodParameterType<A> {
 		List<A> f;
@@ -54,8 +54,8 @@ public class IntrospectorGenericsTest {
 	public static class Foo extends MethodParameterType<Integer> {}
 
 	@Test
-	public void testFields() throws NoSuchFieldException {
-		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
+	void testFields() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(4, cd.getAllFieldDescriptors().length);
@@ -87,7 +87,7 @@ public class IntrospectorGenericsTest {
 		assertEquals(Long.class, fd4.getRawComponentType());
 
 		// impl
-		cd = ClassIntrospector.lookup(Foo.class);
+		cd = ClassIntrospector.get().lookup(Foo.class);
 
 		fd = cd.getFieldDescriptor("f", true);
 		fd2 = cd.getFieldDescriptor("f2", true);
@@ -101,12 +101,12 @@ public class IntrospectorGenericsTest {
 
 		assertEquals(Map.class, fd3.getRawType());
 		assertEquals(Integer.class, fd3.getRawComponentType());
-		assertEquals(String.class, ReflectUtil.getComponentTypes(fd3.getField().getGenericType(), cd.getType())[0]);
+		assertEquals(String.class, ClassUtil.getComponentTypes(fd3.getField().getGenericType(), cd.getType())[0]);
 	}
 
 	@Test
-	public void testMethods() throws NoSuchMethodException {
-		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
+	void testMethods() throws NoSuchMethodException {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(5, cd.getAllMethodDescriptors().length);
@@ -131,44 +131,44 @@ public class IntrospectorGenericsTest {
 		MethodDescriptor md1 = cd.getMethodDescriptor("m", params, true);
 		assertNotNull(md1);
 		assertEquals(m, md1.getMethod());
-		assertArrayEquals(params, md1.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md1));
 		assertEquals(void.class, md1.getRawReturnType());
 		assertNull(md1.getRawReturnComponentType());
 
 		MethodDescriptor md2 = cd.getMethodDescriptor("m2", params, true);
 		assertNotNull(md2);
-		assertArrayEquals(params, md2.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md2));
 		assertEquals(List.class, md2.getRawReturnType());
 		assertEquals(List.class, md2.getRawReturnComponentType());
 
 		MethodDescriptor md3 = cd.getMethodDescriptor("m3", params, true);
 		assertNotNull(md3);
-		assertArrayEquals(params, md3.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md3));
 		assertEquals(List.class, md3.getRawReturnType());
 		assertEquals(Object.class, md3.getRawReturnComponentType());
 
 		MethodDescriptor md4 = cd.getMethodDescriptor("m4", new Class[] {List.class}, true);
 		assertNotNull(md4);
-		assertArrayEquals(new Class[] {List.class}, md4.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md4));
 		assertEquals(List.class, md4.getRawReturnType());
 		assertEquals(Byte.class, md4.getRawReturnComponentType());
-		assertEquals(List.class, md4.getSetterRawType());
-		assertEquals(Long.class, md4.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md4).getSetterRawType());
+		assertEquals(Long.class, Setter.of(md4).getSetterRawComponentType());
 
 		MethodDescriptor md5 = cd.getMethodDescriptor("m5", new Class[] {List.class}, true);
 		assertNotNull(md5);
-		assertArrayEquals(new Class[] {List.class}, md5.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Object.class, md5.getRawReturnComponentType());
-		assertEquals(List.class, md5.getSetterRawType());
-		assertEquals(Object.class, md5.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md5).getSetterRawType());
+		assertEquals(Object.class, Setter.of(md5).getSetterRawComponentType());
 
 
 		// impl
 
 		Class[] params2 = new Class[] {Integer.class, String.class, List.class, List.class, List.class};
 
-		ClassDescriptor cd1 = ClassIntrospector.lookup(Foo.class);
+		ClassDescriptor cd1 = ClassIntrospector.get().lookup(Foo.class);
 
 		assertEquals(0, Foo.class.getDeclaredMethods().length);
 
@@ -179,20 +179,31 @@ public class IntrospectorGenericsTest {
 		md3 = cd1.getMethodDescriptor("m", params, true);
 		assertNotNull(md3);
 
-		assertArrayEquals(params2, md3.getRawParameterTypes());
+		assertArrayEquals(params2, getRawParameterTypes(md3));
 
 		md3 = cd1.getMethodDescriptor("m3", params, true);
 		assertNotNull(md3);
-		assertArrayEquals(params2, md3.getRawParameterTypes());
+		assertArrayEquals(params2, getRawParameterTypes(md3));
 		assertEquals(List.class, md3.getRawReturnType());
 		assertEquals(Integer.class, md3.getRawReturnComponentType());
 
 		md5 = cd1.getMethodDescriptor("m5", new Class[] {List.class}, true);
 		assertNotNull(md5);
-		assertArrayEquals(new Class[] {List.class}, md5.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Integer.class, md5.getRawReturnComponentType());
-		assertEquals(List.class, md5.getSetterRawType());
-		assertEquals(Integer.class, md5.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md5).getSetterRawType());
+		assertEquals(Integer.class, Setter.of(md5).getSetterRawComponentType());
+	}
+
+	private Class[] getRawParameterTypes(MethodDescriptor md) {
+		MethodParamDescriptor[] params = md.getParameters();
+		Class[] out = new Class[params.length];
+
+		for (int i = 0; i < params.length; i++) {
+			out[i] = params[i].getRawType();
+		}
+
+		return out;
 	}
 }

@@ -1,13 +1,11 @@
-/dist/
-/out/
+*/dist/
+*/out/
+*/build
 *.iml
 .idea
 /user.*
-.gitignore
 .gradle
-build
 target
-/classes/
 /gradle.properties
 /jodd-bom/jodd-bom.txt.asc
 
@@ -15,4 +13,4 @@ target
 .classpath
 .settings
 /.coveralls.yml
-bin
+build

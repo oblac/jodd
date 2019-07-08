@@ -37,7 +37,7 @@ public abstract class KeyValueJsonSerializer<T> extends ValueJsonSerializer<T> {
 	/**
 	 * Serializes key and a value.
 	 */
-	protected int serializeKeyValue(JsonContext jsonContext, Path currentPath, Object key, Object value, int count) {
+	protected int serializeKeyValue(final JsonContext jsonContext, final Path currentPath, final Object key, final Object value, int count) {
 		if ((value == null) && jsonContext.isExcludeNulls()) {
 			return count;
 		}

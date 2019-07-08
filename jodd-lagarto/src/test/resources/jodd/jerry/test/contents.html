@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <p>Nothing to see! <span class="contents">A<em>B</em>C</span></p>
+  <p>Still here: <span class="children">A<em>B</em>C</span></p>
+  <p class="count">1<!-- 2 --><em>3</em></p>
+<script>$("span.contents").contents().remove();</script>
+<script>$("span.children").children().remove();</script>
+<script>$(".count").text($(".count").contents().length);</script>
+
+</body>
+</html>

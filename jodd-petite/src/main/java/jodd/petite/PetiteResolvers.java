@@ -25,12 +25,20 @@
 
 package jodd.petite;
 
+import jodd.petite.def.CtorInjectionPoint;
+import jodd.petite.def.DestroyMethodPoint;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.ProviderDefinition;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.resolver.CtorResolver;
 import jodd.petite.resolver.DestroyMethodResolver;
 import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
 import jodd.petite.resolver.PropertyResolver;
 import jodd.petite.resolver.ProviderResolver;
+import jodd.petite.resolver.ReferencesResolver;
 import jodd.petite.resolver.SetResolver;
 
 /**
@@ -38,22 +46,24 @@ import jodd.petite.resolver.SetResolver;
  */
 public class PetiteResolvers {
 
-	protected CtorResolver ctorResolver;
-	protected PropertyResolver propertyResolver;
-	protected MethodResolver methodResolver;
-	protected SetResolver setResolver;
-	protected InitMethodResolver initMethodResolver;
-	protected DestroyMethodResolver destroyMethodResolver;
-	protected ProviderResolver providerResolver;
+	protected final ReferencesResolver referencesResolver;
+	protected final CtorResolver ctorResolver;
+	protected final PropertyResolver propertyResolver;
+	protected final MethodResolver methodResolver;
+	protected final SetResolver setResolver;
+	protected final InitMethodResolver initMethodResolver;
+	protected final DestroyMethodResolver destroyMethodResolver;
+	protected final ProviderResolver providerResolver;
 
-	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
-		ctorResolver = new CtorResolver(injectionPointFactory);
-		propertyResolver = new PropertyResolver(injectionPointFactory);
-		methodResolver = new MethodResolver(injectionPointFactory);
-		setResolver = new SetResolver(injectionPointFactory);
-		initMethodResolver = new InitMethodResolver();
-		destroyMethodResolver = new DestroyMethodResolver();
-		providerResolver = new ProviderResolver();
+	public PetiteResolvers(final ReferencesResolver referencesResolver) {
+		this.referencesResolver = referencesResolver;
+		this.ctorResolver = new CtorResolver(referencesResolver);
+		this.methodResolver = new MethodResolver(referencesResolver);
+		this.propertyResolver = new PropertyResolver(referencesResolver);
+		this.setResolver = new SetResolver();
+		this.initMethodResolver = new InitMethodResolver();
+		this.destroyMethodResolver = new DestroyMethodResolver();
+		this.providerResolver = new ProviderResolver();
 	}
 
 	// ---------------------------------------------------------------- delegates
@@ -61,50 +71,50 @@ public class PetiteResolvers {
 	/**
 	 * Resolves constructor injection point.
 	 */
-	public CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
+	public CtorInjectionPoint resolveCtorInjectionPoint(final Class type) {
 		return ctorResolver.resolve(type, true);
 	}
 
 	/**
 	 * Resolves property injection points.
 	 */
-	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
+	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(final Class type, final boolean autowire) {
 		return propertyResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves method injection points.
 	 */
-	public MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
+	public MethodInjectionPoint[] resolveMethodInjectionPoint(final Class type) {
 		return methodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves set injection points.
 	 */
-	public SetInjectionPoint[] resolveSetInjectionPoint(Class type, boolean autowire) {
+	public SetInjectionPoint[] resolveSetInjectionPoint(final Class type, final boolean autowire) {
 		return setResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves init method points.
 	 */
-	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
-		return initMethodResolver.resolve(bean);
+	public InitMethodPoint[] resolveInitMethodPoint(final Class type) {
+		return initMethodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves destroy method points.
 	 */
-	public DestroyMethodPoint[] resolveDestroyMethodPoint(Object bean) {
-		return destroyMethodResolver.resolve(bean);
+	public DestroyMethodPoint[] resolveDestroyMethodPoint(final Class type) {
+		return destroyMethodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves provider definition defined in a bean.
 	 */
-	public ProviderDefinition[] resolveProviderDefinitions(BeanDefinition beanDefinition) {
-		return providerResolver.resolve(beanDefinition);
+	public ProviderDefinition[] resolveProviderDefinitions(final Class type, final String name) {
+		return providerResolver.resolve(type, name);
 	}
 
 }

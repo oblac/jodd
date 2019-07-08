@@ -26,21 +26,28 @@
 package jodd.joy.auth;
 
 /**
- * User AUTH data.
+ * Template for the user authentication service.
  */
-public interface UserAuth {
+public interface UserAuth<T> {
 
 	/**
-	 * Returns users ID used for authentication.
-	 * Usually it is the same as users own ID.
+	 * Authenticate user with given principal and credentials and returns the token.
 	 */
-	public long getUserAuthId();
+	T login(final String principal, final String credentials);
 
 	/**
-	 * Returns hashed password.
-	 * Usually this is the value that is
-	 * stored in the database.
+	 * Validates the token. Returns auth token when token is
+	 * valid, otherwise returns {@code null}.
 	 */
-	public String getHashedPassword();
+	T validateToken(final String token);
 
+	/**
+	 * Rotates the token. It is allowed to return input instance if token is not changed.
+	 */
+	T rotateToken(T authToken);
+
+	/**
+	 * Returns token String value.
+	 */
+	String tokenValue(T authToken);
 }

@@ -25,25 +25,24 @@
 
 package jodd.htmlstapler;
 
+import jodd.crypt.DigestEngine;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
+import jodd.system.SystemUtil;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.RandomString;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -107,11 +106,11 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Creates new instance and initialize it.
 	 */
-	public HtmlStaplerBundlesManager(String contextPath, String webRoot, Strategy strategy) {
+	public HtmlStaplerBundlesManager(final String contextPath, final String webRoot, final Strategy strategy) {
 		this.contextPath = contextPath;
 		this.webRoot = webRoot;
 		this.strategy = strategy;
-		this.bundleFolder = SystemUtil.tempDir();
+		this.bundleFolder = SystemUtil.info().getTempDir();
 
 		if (strategy == Strategy.ACTION_MANAGED) {
 			actionBundles = new HashMap<>();
@@ -122,7 +121,7 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Starts bundle usage by creating new {@link BundleAction}.
 	 */
-	public BundleAction start(String servletPath, String bundleName) {
+	public BundleAction start(final String servletPath, final String bundleName) {
 		return new BundleAction(this, servletPath, bundleName);
 	}
 
@@ -149,7 +148,7 @@ public class HtmlStaplerBundlesManager {
 	 * Sets the resources sorting before bundle id (i.e. a digest)
 	 * is created.
 	 */
-	public void setSortResources(boolean sortResources) {
+	public void setSortResources(final boolean sortResources) {
 		this.sortResources = sortResources;
 	}
 
@@ -170,7 +169,7 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Sets bundle folder.
 	 */
-	public void setBundleFolder(String bundleFolder) {
+	public void setBundleFolder(final String bundleFolder) {
 		this.bundleFolder = bundleFolder;
 	}
 
@@ -185,7 +184,7 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Sets stapler path.
 	 */
-	public void setStaplerPath(String staplerPath) {
+	public void setStaplerPath(final String staplerPath) {
 		this.staplerPath = staplerPath;
 	}
 
@@ -199,7 +198,7 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Sets local files encoding.
 	 */
-	public void setLocalFilesEncoding(String localFilesEncoding) {
+	public void setLocalFilesEncoding(final String localFilesEncoding) {
 		this.localFilesEncoding = localFilesEncoding;
 	}
 
@@ -215,7 +214,7 @@ public class HtmlStaplerBundlesManager {
 	 * Specifies local address and port for downloading
 	 * local resources. By default its "http://localhost:8080".
 	 */
-	public void setLocalAddressAndPort(String localAddressAndPort) {
+	public void setLocalAddressAndPort(final String localAddressAndPort) {
 		this.localAddressAndPort = localAddressAndPort;
 	}
 
@@ -230,7 +229,7 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Sets if local resource files should be downloaded or loaded from file system.
 	 */
-	public void setDownloadLocal(boolean downloadLocal) {
+	public void setDownloadLocal(final boolean downloadLocal) {
 		this.downloadLocal = downloadLocal;
 	}
 
@@ -246,7 +245,7 @@ public class HtmlStaplerBundlesManager {
 	 * Sets if exception should be thrown when some resource is not found.
 	 * If not enabled, the error will be logged as a warning.
 	 */
-	public void setNotFoundExceptionEnabled(boolean notFoundExceptionEnabled) {
+	public void setNotFoundExceptionEnabled(final boolean notFoundExceptionEnabled) {
 		this.notFoundExceptionEnabled = notFoundExceptionEnabled;
 	}
 
@@ -270,7 +269,7 @@ public class HtmlStaplerBundlesManager {
 	 * JS and CSS files, so that changes in those files will be downloaded by the
 	 * browser.
 	 */
-	public void setRandomDigestChars(int randomDigestChars) {
+	public void setRandomDigestChars(final int randomDigestChars) {
 		this.randomDigestChars = randomDigestChars;
 
 		if (randomDigestChars == 0) {
@@ -287,7 +286,7 @@ public class HtmlStaplerBundlesManager {
 	 * Creates bundle file in bundleFolder/staplerPath. Only file object
 	 * is created, not the file content.
 	 */
-	protected File createBundleFile(String bundleId) {
+	protected File createBundleFile(final String bundleId) {
 		File folder = new File(bundleFolder, staplerPath);
 		if (!folder.exists()) {
 			folder.mkdirs();
@@ -313,7 +312,7 @@ public class HtmlStaplerBundlesManager {
 	 * Locates gzipped version of bundle file. If gzip file
 	 * does not exist, it will be created.
 	 */
-	public File lookupGzipBundleFile(File file) throws IOException {
+	public File lookupGzipBundleFile(final File file) throws IOException {
 		String path = file.getPath() + ZipUtil.GZIP_EXT;
 		File gzipFile = new File(path);
 
@@ -332,7 +331,7 @@ public class HtmlStaplerBundlesManager {
 	 * Returns <code>null</code> if action still has no bundle.
 	 * Returns an empty string if action has an empty bundle.
 	 */
-	public String lookupBundleId(String actionPath) {
+	public String lookupBundleId(final String actionPath) {
 		return actionBundles.get(actionPath);
 	}
 
@@ -352,7 +351,7 @@ public class HtmlStaplerBundlesManager {
 	 * Registers new bundle that consist of provided list of source paths.
 	 * Returns the real bundle id, as provided one is just a temporary bundle id.
 	 */
-	public synchronized String registerBundle(String contextPath, String actionPath, String tempBundleId, String bundleContentType, List<String> sources) {
+	public synchronized String registerBundle(final String contextPath, final String actionPath, final String tempBundleId, final String bundleContentType, final List<String> sources) {
 
 		if (tempBundleId == null || sources.isEmpty()) {
 			if (strategy == Strategy.ACTION_MANAGED) {
@@ -363,7 +362,7 @@ public class HtmlStaplerBundlesManager {
 		}
 
 		// create unique digest from the collected sources
-		String[] sourcesArray = sources.toArray(new String[sources.size()]);
+		String[] sourcesArray = sources.toArray(new String[0]);
 		for (int i = 0, sourcesArrayLength = sourcesArray.length; i < sourcesArrayLength; i++) {
 			sourcesArray[i] = sourcesArray[i].trim().toLowerCase();
 		}
@@ -397,15 +396,11 @@ public class HtmlStaplerBundlesManager {
 	 * Creates digest i.e. bundle id from given string.
 	 * Returned digest must be filename safe, for all platforms.
 	 */
-	protected String createDigest(String source) {
-		MessageDigest shaDigester;
-		try {
-			shaDigester = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException nsaex) {
-			throw new HtmlStaplerException(nsaex);
-		}
+	protected String createDigest(final String source) {
+		final DigestEngine digestEngine = DigestEngine.sha256();
 
-		byte[] bytes = shaDigester.digest(CharUtil.toSimpleByteArray(source));
+		final byte[] bytes = digestEngine.digest(CharUtil.toSimpleByteArray(source));
+
 		String digest = Base32.encode(bytes);
 
 		if (uniqueDigestKey != null) {
@@ -419,8 +414,8 @@ public class HtmlStaplerBundlesManager {
 	 * Creates bundle file by loading resource files content. If bundle file already
 	 * exist it will not be recreated!
 	 */
-	protected void createBundle(String contextPath, String actionPath, String bundleId, List<String>sources) throws IOException {
-		File bundleFile = createBundleFile(bundleId);
+	protected void createBundle(final String contextPath, final String actionPath, final String bundleId, final List<String>sources) throws IOException {
+		final File bundleFile = createBundleFile(bundleId);
 		if (bundleFile.exists()) {
 			return;
 		}
@@ -432,17 +427,7 @@ public class HtmlStaplerBundlesManager {
 			}
 			String content;
 			if (isExternalResource(src)) {
-				try {
-					content = NetUtil.downloadString(src, localFilesEncoding);
-				} catch (IOException ioex) {
-					if (notFoundExceptionEnabled) {
-						throw ioex;
-					}
-					if (log.isWarnEnabled()) {
-						log.warn("Download failed: " + src + "; " + ioex.getMessage());
-					}
-					content = null;
-				}
+				content = downloadString(src);
 			} else {
 				if (!downloadLocal) {
 					// load local resource from file system
@@ -487,17 +472,7 @@ public class HtmlStaplerBundlesManager {
 						localUrl += contextPath + FileNameUtil.getPath(actionPath) + '/' + src;
 					}
 
-					try {
-						content = NetUtil.downloadString(localUrl, localFilesEncoding);
-					} catch (IOException ioex) {
-						if (notFoundExceptionEnabled) {
-							throw ioex;
-						}
-						if (log.isWarnEnabled()) {
-							log.warn("Download failed: " + localUrl + "; " + ioex.getMessage());
-						}
-						content = null;
-					}
+					content = downloadString(localUrl);
 				}
 
 				if (content != null) {
@@ -520,12 +495,28 @@ public class HtmlStaplerBundlesManager {
 		}
 	}
 
+	private String downloadString(final String localUrl) throws IOException {
+		String content;
+		try {
+			content = NetUtil.downloadString(localUrl, localFilesEncoding);
+		} catch (IOException ioex) {
+			if (notFoundExceptionEnabled) {
+				throw ioex;
+			}
+			if (log.isWarnEnabled()) {
+				log.warn("Download failed: " + localUrl + "; " + ioex.getMessage());
+			}
+			content = null;
+		}
+		return content;
+	}
+
 	/**
 	 * Returns <code>true</code> if resource link has to be downloaded.
 	 * By default, if resource link starts with "http://" or with "https://"
 	 * it will be considered as external resource.
 	 */
-	protected boolean isExternalResource(String link) {
+	protected boolean isExternalResource(final String link) {
 		return link.startsWith("http://") || (link.startsWith("https://"));
 	}
 
@@ -535,7 +526,7 @@ public class HtmlStaplerBundlesManager {
 	 * compressing, cleaning etc. By default it just returns unmodified
 	 * content.
 	 */
-	protected String onResourceContent(String content) {
+	protected String onResourceContent(final String content) {
 		return content;
 	}
 
@@ -546,7 +537,7 @@ public class HtmlStaplerBundlesManager {
 	 * When some URLs are dynamically created, many different links points
 	 * to the same page. Use this to prevent memory leaking.
 	 */
-	protected String resolveRealActionPath(String actionPath) {
+	protected String resolveRealActionPath(final String actionPath) {
 		return actionPath;
 	}
 
@@ -561,8 +552,8 @@ public class HtmlStaplerBundlesManager {
 			mirrors.clear();
 		}
 
-		FindFile ff = new FindFile();
-		ff.setIncludeDirs(false);
+		final FindFile ff = new FindFile();
+		ff.includeDirs(false);
 		ff.searchPath(new File(bundleFolder, staplerPath));
 
 		File f;
@@ -582,7 +573,7 @@ public class HtmlStaplerBundlesManager {
 	 * Returns <code>true</code> if resource is CSS, so the
 	 * CSS urls can be fixed.
 	 */
-	protected boolean isCssResource(String src) {
+	protected boolean isCssResource(final String src) {
 		return src.endsWith(".css");
 	}
 
@@ -591,20 +582,27 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Returns the content with all relative URLs fixed.
 	 */
-	protected String fixCssRelativeUrls(String content, String src) {
+	protected String fixCssRelativeUrls(final String content, final String src) {
+		final String path = FileNameUtil.getPath(src);
 
-		String path = FileNameUtil.getPath(src);
+		final Matcher matcher = CSS_URL_PATTERN.matcher(content);
 
-		Matcher matcher = CSS_URL_PATTERN.matcher(content);
-
-		StringBuilder sb = new StringBuilder(content.length());
+		final StringBuilder sb = new StringBuilder(content.length());
 
 		int start = 0;
 
 		while (matcher.find()) {
-			sb.append(content.substring(start, matcher.start()));
+			sb.append(content, start, matcher.start());
 
-			String url = fixRelativeUrl(matcher.group(1), path);
+			final String matchedUrl = StringUtil.removeChars(matcher.group(1), "'\"");
+
+			final String url;
+			if (matchedUrl.startsWith("https://") || matchedUrl.startsWith("http://") || matchedUrl.startsWith("data:")) {
+				url = "url('" + matchedUrl + "')";
+			}
+			else {
+				url = fixRelativeUrl(matchedUrl, path);
+			}
 
 			sb.append(url);
 
@@ -620,11 +618,8 @@ public class HtmlStaplerBundlesManager {
 	 * For a given URL (optionally quoted), produces CSS URL
 	 * where relative paths are fixed and prefixed with offsetPath.
 	 */
-	protected String fixRelativeUrl(String url, String offsetPath) {
-
-		url = StringUtil.removeChars(url, "'\"");   // remove quotes
-
-		StringBuilder res = new StringBuilder();
+	protected String fixRelativeUrl(final String url, final String offsetPath) {
+		final StringBuilder res = new StringBuilder();
 		res.append("url('");
 
 		if (!url.startsWith(StringPool.SLASH)) {

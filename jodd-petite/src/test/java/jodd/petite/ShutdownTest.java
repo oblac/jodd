@@ -25,13 +25,13 @@
 
 package jodd.petite;
 
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Ses;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.scope.SessionScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Ses;
-import jodd.petite.tst.Zoo;
 import jodd.servlet.RequestContextListener;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -42,21 +42,21 @@ import static jodd.petite.ServletsMockitoUtil.createHttpSessionBindingEvent;
 import static jodd.petite.ServletsMockitoUtil.createRequest;
 import static jodd.petite.ServletsMockitoUtil.createServletRequestEvent;
 import static jodd.petite.ServletsMockitoUtil.createSession;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ShutdownTest {
+class ShutdownTest {
 
 	public static final String ATTR_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
 
 	@Test
-	public void testSingletonDestroyMethods() {
+	void testSingletonDestroyMethods() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
 
 		Boo boo = (Boo) pc.getBean("boo");
 		assertEquals(0, boo.getCount2());
@@ -67,7 +67,7 @@ public class ShutdownTest {
 	}
 
 	@Test
-	public void testSessionExpired() {
+	void testSessionExpired() {
 		// http session
 		HttpSession session = createSession("S1");
 		HttpServletRequest request = createRequest(session);
@@ -82,7 +82,7 @@ public class ShutdownTest {
 
 		// petite
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Ses.class, null, null, null, false);
+		pc.registerPetiteBean(Ses.class, null, null, null, false, null);
 
 		// callback not yet added
 		SessionScope.SessionBeans sessionBeans = (SessionScope.SessionBeans) session.getAttribute(ATTR_NAME);
@@ -108,7 +108,7 @@ public class ShutdownTest {
 	}
 
 	@Test
-	public void testSessionShutdown() {
+	void testSessionShutdown() {
 		// http session
 		HttpSession session = createSession("S2");
 		HttpServletRequest request = createRequest(session);
@@ -123,7 +123,7 @@ public class ShutdownTest {
 
 		// petite
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Ses.class, null, null, null, false);
+		pc.registerPetiteBean(Ses.class, null, null, null, false, null);
 
 		Ses ses = (Ses) pc.getBean("ses");
 		assertNotNull(ses);

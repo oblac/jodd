@@ -32,23 +32,23 @@ import jodd.exception.UncheckedException;
  */
 public class BeanException extends UncheckedException {
 
-	public BeanException(Throwable t) {
+	public BeanException(final Throwable t) {
 		super(t);
 	}
 
-	public BeanException(String message) {
+	public BeanException(final String message) {
 		super(message);
 	}
 
-	public BeanException(String message, BeanProperty bp) {
+	public BeanException(final String message, final BeanProperty bp) {
 		super(message + ". Invalid property: " + bp);
 	}
 
-	public BeanException(String message, Throwable t) {
+	public BeanException(final String message, final Throwable t) {
 		super(message, t);
 	}
 
-	public BeanException(String message, BeanProperty bp, Throwable t) {
+	public BeanException(final String message, final BeanProperty bp, final Throwable t) {
 		super(message + ". Invalid property: " + bp, t);
 	}
 

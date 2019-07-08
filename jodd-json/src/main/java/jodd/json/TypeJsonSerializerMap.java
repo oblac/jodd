@@ -25,7 +25,7 @@
 
 package jodd.json;
 
-import jodd.datetime.JDateTime;
+import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.json.impl.ArraysJsonSerializer;
@@ -38,30 +38,51 @@ import jodd.json.impl.CharacterJsonSerializer;
 import jodd.json.impl.ClassJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.DoubleArrayJsonSerializer;
+import jodd.json.impl.DoubleJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
 import jodd.json.impl.FileJsonSerializer;
 import jodd.json.impl.FloatArrayJsonSerializer;
+import jodd.json.impl.FloatJsonSerializer;
 import jodd.json.impl.IntArrayJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
-import jodd.json.impl.JDateTimeSerializer;
+import jodd.json.impl.JsonArraySerializer;
+import jodd.json.impl.JsonObjectSerializer;
+import jodd.json.impl.JulianDateSerializer;
+import jodd.json.impl.LocalDateSerializer;
+import jodd.json.impl.LocalDateTimeSerializer;
+import jodd.json.impl.LocalTimeSerializer;
 import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
-import jodd.util.collection.ClassMap;
+import jodd.json.impl.UUIDJsonSerializer;
+import jodd.time.JulianDate;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Map of {@link jodd.json.TypeJsonSerializer json type serializers}.
  */
 public class TypeJsonSerializerMap {
+
+	private static final TypeJsonSerializerMap TYPE_JSON_SERIALIZER_MAP = new TypeJsonSerializerMap();
+
+	/**
+	 * Returns default instance.
+	 */
+	public static TypeJsonSerializerMap get() {
+		return TYPE_JSON_SERIALIZER_MAP;
+	}
 
 	private final TypeJsonSerializerMap defaultSerializerMap;
 
@@ -76,12 +97,12 @@ public class TypeJsonSerializerMap {
 	/**
 	 * Creates new empty serializer map with given defaults map.
 	 */
-	public TypeJsonSerializerMap(TypeJsonSerializerMap defaultSerializerMap) {
+	public TypeJsonSerializerMap(final TypeJsonSerializerMap defaultSerializerMap) {
 		this.defaultSerializerMap = defaultSerializerMap;
 	}
 
-	protected final ClassMap<TypeJsonSerializer> map = new ClassMap<>();
-	protected final ClassMap<TypeJsonSerializer> cache = new ClassMap<>();
+	protected final TypeCache<TypeJsonSerializer> map = TypeCache.createDefault();
+	protected final TypeCache<TypeJsonSerializer> cache = TypeCache.createDefault();
 
 	/**
 	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.
@@ -94,6 +115,9 @@ public class TypeJsonSerializerMap {
 		map.put(Map.class, new MapJsonSerializer());
 		map.put(Iterable.class, new IterableJsonSerializer());
 
+		map.put(JsonObject.class, new JsonObjectSerializer());
+		map.put(JsonArray.class, new JsonArraySerializer());
+
 		// arrays
 		map.put(int[].class, new IntArrayJsonSerializer());
 		map.put(long[].class, new LongArrayJsonSerializer());
@@ -104,23 +128,23 @@ public class TypeJsonSerializerMap {
 
 		map.put(Integer[].class, new ArraysJsonSerializer<Integer>() {
 			@Override
-			protected int getLength(Integer[] array) {
+			protected int getLength(final Integer[] array) {
 				return array.length;
 			}
 
 			@Override
-			protected Integer get(Integer[] array, int index) {
+			protected Integer get(final Integer[] array, final int index) {
 				return array[index];
 			}
 		});
 		map.put(Long[].class, new ArraysJsonSerializer<Long>() {
 			@Override
-			protected int getLength(Long[] array) {
+			protected int getLength(final Long[] array) {
 				return array.length;
 			}
 
 			@Override
-			protected Long get(Long[] array, int index) {
+			protected Long get(final Long[] array, final int index) {
 				return array[index];
 			}
 		});
@@ -146,11 +170,13 @@ public class TypeJsonSerializerMap {
 		map.put(Long.class, jsonSerializer);
 		map.put(long.class, jsonSerializer);
 
-		map.put(Double.class, jsonSerializer);
-		map.put(double.class, jsonSerializer);
+		DoubleJsonSerializer doubleJsonSerializer = new DoubleJsonSerializer();
+		map.put(Double.class, doubleJsonSerializer);
+		map.put(double.class, doubleJsonSerializer);
 
-		map.put(Float.class, jsonSerializer);
-		map.put(float.class, jsonSerializer);
+		FloatJsonSerializer floatJsonSerializer = new FloatJsonSerializer();
+		map.put(Float.class, floatJsonSerializer);
+		map.put(float.class, floatJsonSerializer);
 
 		map.put(BigInteger.class, jsonSerializer);
 		map.put(BigDecimal.class, jsonSerializer);
@@ -158,18 +184,24 @@ public class TypeJsonSerializerMap {
 		// other
 
 		map.put(Boolean.class, new BooleanJsonSerializer());
+		map.put(boolean.class, new BooleanJsonSerializer());
 		map.put(Date.class, new DateJsonSerializer());
 		map.put(Calendar.class, new CalendarJsonSerializer());
-		map.put(JDateTime.class, new JDateTimeSerializer());
+		map.put(JulianDate.class, new JulianDateSerializer());
+		map.put(LocalDateTime.class, new LocalDateTimeSerializer());
+		map.put(LocalDate.class, new LocalDateSerializer());
+		map.put(LocalTime.class, new LocalTimeSerializer());
 		map.put(Enum.class, new EnumJsonSerializer());
 		map.put(File.class, new FileJsonSerializer(FileJsonSerializer.Type.PATH));
 
-		//map.put(Collection.class, new CollectionJsonSerializer());
+		//map.putUnsafe();(Collection.class, new CollectionJsonSerializer());
 
 		jsonSerializer = new CharacterJsonSerializer();
 
 		map.put(Character.class, jsonSerializer);
 		map.put(char.class, jsonSerializer);
+
+		map.put(UUID.class, new UUIDJsonSerializer());
 
 		map.put(Class.class, new ClassJsonSerializer());
 
@@ -180,7 +212,7 @@ public class TypeJsonSerializerMap {
 	/**
 	 * Registers new serializer.
 	 */
-	public void register(Class type, TypeJsonSerializer typeJsonSerializer) {
+	public void register(final Class type, final TypeJsonSerializer typeJsonSerializer) {
 		map.put(type, typeJsonSerializer);
 		cache.clear();
 	}
@@ -190,37 +222,27 @@ public class TypeJsonSerializerMap {
 	 * If serializer not found, then all interfaces and subclasses of the type are checked.
 	 * Finally, if no serializer is found, object's serializer is returned.
 	 */
-	public TypeJsonSerializer lookup(Class type) {
-		TypeJsonSerializer tjs = cache.unsafeGet(type);
-
-		if (tjs != null) {
-			return tjs;
-		}
-
-		tjs = _lookup(type);
-
-		cache.put(type, tjs);
-
-		return tjs;
+	public TypeJsonSerializer lookup(final Class type) {
+		return cache.get(type, () -> _lookup(type));
 	}
 
 	/**
 	 * Get type serializer from map. First the current map is used.
 	 * If element is missing, default map will be used, if exist.
 	 */
-	protected TypeJsonSerializer lookupSerializer(Class type) {
-		TypeJsonSerializer tjs = map.unsafeGet(type);
+	protected TypeJsonSerializer lookupSerializer(final Class type) {
+		TypeJsonSerializer tjs = map.get(type);
 
 		if (tjs == null) {
 			if (defaultSerializerMap != null) {
-				tjs = defaultSerializerMap.map.unsafeGet(type);
+				tjs = defaultSerializerMap.map.get(type);
 			}
 		}
 
 		return tjs;
 	}
 
-	protected TypeJsonSerializer _lookup(Class type) {
+	protected TypeJsonSerializer _lookup(final Class type) {
 		synchronized (map) {
 			TypeJsonSerializer tjs = lookupSerializer(type);
 
@@ -228,7 +250,7 @@ public class TypeJsonSerializerMap {
 				return tjs;
 			}
 
-			ClassDescriptor cd = ClassIntrospector.lookup(type);
+			ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 			// check array
 

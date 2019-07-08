@@ -26,53 +26,86 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.config.ManualMadvocConfigurator;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.result.TextResult;
-import jodd.madvoc.tst.BooAction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ManualRegistrationTest {
+class ManualRegistrationTest {
 
-	public static class ManualRegistration extends ManualMadvocConfigurator {
-		public void configure() {
-			result(TextResult.class);
-			action()
-					.path("/hello")
-					.mapTo(BooAction.class, "foo1")
-					.bind();
+	public static class ManualRegistration extends MadvocRouter {
+		@Override
+		public void start() {
+			route()
+				.path("/hello")
+				.mapTo(BooAction.class, "foo1")
+				.bind();
 
-			action()
-					.path("/world")
-					.mapTo(BooAction.class, "foo2")
-					.interceptBy(EchoInterceptor.class)
-					.bind();
+			route()
+				.path("/world")
+				.mapTo(BooAction.class, "foo2")
+				.interceptBy(EchoInterceptor.class)
+				.bind();
 
-			interceptor(EchoInterceptor.class).setPrefixIn("====> ");
+			interceptor(EchoInterceptor.class, i -> i.setPrefixIn("====> "));     // additional interceptor configuration
 		}
 	}
 
 	@Test
-	public void testManualAction() {
-		Madvoc madvoc = new Madvoc();
-		madvoc.setMadvocConfiguratorClass(ManualRegistration.class);
-		madvoc.startNewWebApplication(null);
+	void testManualAction_asComponent() {
+		WebApp webApp = WebApp
+			.createWebApp()
+			.registerComponent(ManualRegistration.class)
+			.start();
 
-		ActionsManager actionsManager = madvoc.getWebApplication().getComponent(ActionsManager.class);
+		ActionsManager actionsManager = webApp.madvocContainer().requestComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 
-		ActionConfig actionConfig = actionsManager.lookup("/hello", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo1", actionConfig.actionClassMethod.getName());
+		ActionRuntime actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/hello"));
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.getActionClassMethod().getName());
 
-		actionConfig = actionsManager.lookup("/world", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo2", actionConfig.actionClassMethod.getName());
+		actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/world"));
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.getActionClassMethod().getName());
+	}
+
+	@Test
+	void testManualAction_asArgument() {
+		WebApp webApp = WebApp
+			.createWebApp()
+			.start(madvoc -> madvoc
+				.route()
+					.path("/hello")
+					.mapTo(BooAction.class, "foo1")
+					.bind()
+				.route()
+					.path("/world")
+					.mapTo(BooAction.class, "foo2")
+					.interceptBy(EchoInterceptor.class)
+					.bind()
+				.interceptor(EchoInterceptor.class, i->i.setPrefixIn("====> ")
+				)
+			);
+
+		ActionsManager actionsManager = webApp.madvocContainer().requestComponent(ActionsManager.class);
+
+		assertEquals(2, actionsManager.getActionsCount());
+
+		ActionRuntime actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/hello"));
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.getActionClassMethod().getName());
+
+		actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/world"));
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.getActionClassMethod().getName());
 	}
 }

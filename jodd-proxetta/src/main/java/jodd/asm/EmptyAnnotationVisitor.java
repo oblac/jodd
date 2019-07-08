@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm5.AnnotationVisitor;
-import jodd.asm5.Opcodes;
+import jodd.asm7.AnnotationVisitor;
+import jodd.asm7.Opcodes;
 
 /**
  * Empty annotation visitor.
@@ -34,7 +34,7 @@ import jodd.asm5.Opcodes;
 public abstract class EmptyAnnotationVisitor extends AnnotationVisitor {
 
 	protected EmptyAnnotationVisitor() {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM6);
 	}
 
 }

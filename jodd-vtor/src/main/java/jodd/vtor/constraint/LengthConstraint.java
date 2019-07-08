@@ -33,7 +33,7 @@ public class LengthConstraint implements ValidationConstraint<Length> {
 	public LengthConstraint() {
 	}
 
-	public LengthConstraint(int min, int max) {
+	public LengthConstraint(final int min, final int max) {
 		this.min = min;
 		this.max = max;
 	}
@@ -47,7 +47,7 @@ public class LengthConstraint implements ValidationConstraint<Length> {
 		return min;
 	}
 
-	public void setMin(int min) {
+	public void setMin(final int min) {
 		this.min = min;
 	}
 
@@ -55,24 +55,26 @@ public class LengthConstraint implements ValidationConstraint<Length> {
 		return max;
 	}
 
-	public void setMax(int max) {
+	public void setMax(final int max) {
 		this.max = max;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(Length annotation) {
+	@Override
+	public void configure(final Length annotation) {
 		this.min = annotation.min();
 		this.max = annotation.max();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, min, max);
 	}
 
-	public static boolean validate(Object value, int min, int max) {
+	public static boolean validate(final Object value, final int min, final int max) {
 		if (value == null) {
 			return true;
 		}

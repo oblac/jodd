@@ -25,15 +25,14 @@
 
 package jodd.jtx;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
-import static jodd.jtx.JtxIsolationLevel.*;
-import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
-
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
+import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
 
 /**
  * {@link JtxTransaction} manager is responsible for handling transaction
@@ -52,7 +51,7 @@ public class JtxTransactionManager {
 	protected boolean oneResourceManager;
 	protected boolean validateExistingTransaction;
 	protected boolean ignoreScope;
-	protected Map<Class, JtxResourceManager> resourceManagers;
+	protected TypeCache<JtxResourceManager> resourceManagers;
 
 	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<>();
 
@@ -61,7 +60,7 @@ public class JtxTransactionManager {
 	 */
 	public JtxTransactionManager() {
 		this.maxResourcesPerTransaction = -1;
-		this.resourceManagers = new HashMap<>();
+		this.resourceManagers = TypeCache.createDefault();
 	}
 
 	// ---------------------------------------------------------------- config
@@ -76,7 +75,7 @@ public class JtxTransactionManager {
 	/**
 	 * Sets max number of resources per transaction.
 	 */
-	public void setMaxResourcesPerTransaction(int maxResourcesPerTransaction) {
+	public void setMaxResourcesPerTransaction(final int maxResourcesPerTransaction) {
 		this.maxResourcesPerTransaction = maxResourcesPerTransaction;
 	}
 
@@ -97,7 +96,7 @@ public class JtxTransactionManager {
 	 * isolation level and read-only settings on the inner transaction definition
 	 * and reject participation accordingly through throwing a corresponding exception.
 	 */
-	public void setValidateExistingTransaction(boolean validateExistingTransaction) {
+	public void setValidateExistingTransaction(final boolean validateExistingTransaction) {
 		this.validateExistingTransaction = validateExistingTransaction;
 	}
 
@@ -110,7 +109,7 @@ public class JtxTransactionManager {
 	/**
 	 * Specifies if transaction manager works with just one resource.
 	 */
-	public void setSingleResourceManager(boolean oneResourceManager) {
+	public void setSingleResourceManager(final boolean oneResourceManager) {
 		this.oneResourceManager = oneResourceManager;
 	}
 
@@ -126,7 +125,7 @@ public class JtxTransactionManager {
 	 * there may be more then one transaction in one scope.
 	 * Scopes may be ignored if set to <code>null</code>
 	 */
-	public void setIgnoreScope(boolean ignoreScope) {
+	public void setIgnoreScope(final boolean ignoreScope) {
 		this.ignoreScope = ignoreScope;
 	}
 
@@ -146,7 +145,7 @@ public class JtxTransactionManager {
 	/**
 	 * Returns total number of transactions of the specified status associated with current thread.
 	 */
-	public int totalThreadTransactionsWithStatus(JtxStatus status) {
+	public int totalThreadTransactionsWithStatus(final JtxStatus status) {
 		ArrayList<JtxTransaction> txlist = txStack.get();
 		if (txlist == null) {
 			return 0;
@@ -171,7 +170,7 @@ public class JtxTransactionManager {
 	 * Returns <code>true</code> if provided transaction
 	 * is associated with current thread.
 	 */
-	public boolean isAssociatedWithThread(JtxTransaction tx) {
+	public boolean isAssociatedWithThread(final JtxTransaction tx) {
 		ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
@@ -187,7 +186,7 @@ public class JtxTransactionManager {
 	 * before removing from current thread.
 	 * Also removes thread list from this thread.
 	 */
-	protected boolean removeTransaction(JtxTransaction tx) {
+	protected boolean removeTransaction(final JtxTransaction tx) {
 		ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
@@ -225,7 +224,7 @@ public class JtxTransactionManager {
 	/**
 	 * Associate transaction to current thread.
 	 */
-	protected void associateTransaction(JtxTransaction tx) {
+	protected void associateTransaction(final JtxTransaction tx) {
 		totalTransactions++;
 		ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
@@ -251,14 +250,14 @@ public class JtxTransactionManager {
 	 * Custom implementations of manager may override this method for
 	 * creating custom transaction instances.
 	 */
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object scope, boolean active) {
+	protected JtxTransaction createNewTransaction(final JtxTransactionMode tm, final Object scope, final boolean active) {
 		return new JtxTransaction(this, tm, scope, active);
 	}
 
 
 	// ---------------------------------------------------------------- propagation
 
-	public JtxTransaction requestTransaction(JtxTransactionMode mode) {
+	public JtxTransaction requestTransaction(final JtxTransactionMode mode) {
 		return requestTransaction(mode, null);
 	}
 
@@ -268,7 +267,7 @@ public class JtxTransactionManager {
 	 * Only one transaction can be opened over one scope.
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
-	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object scope) {
+	public JtxTransaction requestTransaction(final JtxTransactionMode mode, final Object scope) {
 		if (log.isDebugEnabled()) {
 			log.debug("Requesting TX " + mode.toString());
 		}
@@ -290,7 +289,7 @@ public class JtxTransactionManager {
 	/**
 	 * Returns <code>true</code> if scope is specified and it is different then of existing transaction.
 	 */
-	protected boolean isNewTxScope(JtxTransaction currentTx, Object destScope) {
+	protected boolean isNewTxScope(final JtxTransaction currentTx, final Object destScope) {
 		if (ignoreScope) {
 			return true;
 		}
@@ -310,7 +309,7 @@ public class JtxTransactionManager {
 	 * Check if propagation of a transaction is possible, due to source and destination transaction modes.
 	 * @see #setValidateExistingTransaction(boolean) 
 	 */
-	protected void continueTx(JtxTransaction sourceTx, JtxTransactionMode destMode) {
+	protected void continueTx(final JtxTransaction sourceTx, final JtxTransactionMode destMode) {
 		if (!validateExistingTransaction) {
 			return;
 		}
@@ -336,7 +335,7 @@ public class JtxTransactionManager {
 	 * T1   -> T1 (cont.)
 	 * }</pre>
 	 */
-	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propRequired(JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction())) {
 			currentTx = createNewTransaction(mode, scope, true);
 		} else {
@@ -353,7 +352,7 @@ public class JtxTransactionManager {
 	 * }</pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected JtxTransaction propRequiresNew(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propRequiresNew(final JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		return createNewTransaction(mode, scope, true);
 	}
 
@@ -364,7 +363,7 @@ public class JtxTransactionManager {
 	 * T1   -> T1 (cont.)
 	 * }</pre>
 	 */
-	protected JtxTransaction propSupports(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propSupports(JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		if ((currentTx != null) && (!currentTx.isNoTransaction())) {
 			continueTx(currentTx, mode);
 		}
@@ -382,7 +381,7 @@ public class JtxTransactionManager {
 	 * }</pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propMandatory(final JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction())) {
 			throw new JtxException("No existing TX found for TX marked with propagation 'mandatory'");
 		}
@@ -397,7 +396,7 @@ public class JtxTransactionManager {
 	 * T1   -> None
 	 * }</pre>
 	 */
-	protected JtxTransaction propNotSupported(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propNotSupported(final JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		if (currentTx == null) {
 			return createNewTransaction(mode, scope, false);
 		}
@@ -414,7 +413,7 @@ public class JtxTransactionManager {
 	 * T1   -> Error
 	 * }</pre>
 	 */
-	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+	protected JtxTransaction propNever(JtxTransaction currentTx, final JtxTransactionMode mode, final Object scope) {
 		if ((currentTx != null) && (!currentTx.isNoTransaction())) {
 			throw new JtxException("Existing TX found for TX marked with propagation 'never'");
 		}
@@ -429,7 +428,7 @@ public class JtxTransactionManager {
 	/**
 	 * Registers new {@link JtxResourceManager resource manager}.
 	 */
-	public void registerResourceManager(JtxResourceManager resourceManager) {
+	public void registerResourceManager(final JtxResourceManager resourceManager) {
 		if ((oneResourceManager) && (!resourceManagers.isEmpty())) {
 			throw new JtxException("TX manager allows only one resource manager");
 		}
@@ -439,7 +438,7 @@ public class JtxTransactionManager {
 	/**
 	 * Lookups resource manager for provided type. Throws an exception if provider doesn't exists.
 	 */
-	protected <E> JtxResourceManager<E> lookupResourceManager(Class<E> resourceType) {
+	protected <E> JtxResourceManager<E> lookupResourceManager(final Class<E> resourceType) {
 		//noinspection unchecked
 		JtxResourceManager<E> resourceManager = this.resourceManagers.get(resourceType);
 		if (resourceManager == null) {
@@ -456,13 +455,13 @@ public class JtxTransactionManager {
 	 * will be closed.
 	 */
 	public void close() {
-		for (JtxResourceManager resourceManager : this.resourceManagers.values()) {
+		this.resourceManagers.forEachValue(resourceManager -> {
 			try {
 				resourceManager.close();
 			} catch (Exception ex) {
 				// ignore
 			}
-		}
+		});
 		resourceManagers.clear();
 	}
 

@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.Opcodes;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Opcodes;
 
 /**
  * Empty method visitor.
@@ -34,7 +34,7 @@ import jodd.asm5.Opcodes;
 public abstract class EmptyMethodVisitor extends MethodVisitor {
 
 	protected EmptyMethodVisitor() {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM7);
 	}
 
 }

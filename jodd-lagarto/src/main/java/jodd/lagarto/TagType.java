@@ -51,7 +51,7 @@ public enum TagType {
 	private final boolean isStarting;
 	private final boolean isEnding;
 
-	TagType(String startString, String endString) {
+	TagType(final String startString, final String endString) {
 		this.startString = startString;
 		this.endString = endString;
 		isStarting = startString.length() == 1;

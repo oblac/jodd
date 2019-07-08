@@ -37,7 +37,7 @@ public class SizeConstraint implements ValidationConstraint<Size> {
 	public SizeConstraint() {
 	}
 
-	public SizeConstraint(int min, int max) {
+	public SizeConstraint(final int min, final int max) {
 		this.min = min;
 		this.max = max;
 	}
@@ -51,7 +51,7 @@ public class SizeConstraint implements ValidationConstraint<Size> {
 		return min;
 	}
 
-	public void setMin(int min) {
+	public void setMin(final int min) {
 		this.min = min;
 	}
 
@@ -59,24 +59,24 @@ public class SizeConstraint implements ValidationConstraint<Size> {
 		return max;
 	}
 
-	public void setMax(int max) {
+	public void setMax(final int max) {
 		this.max = max;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(Size annotation) {
+	public void configure(final Size annotation) {
 		this.min = annotation.min();
 		this.max = annotation.max();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, min, max);
 	}
 
-	public static boolean validate(Object value, int min, int max) {
+	public static boolean validate(final Object value, final int min, final int max) {
 		if (value == null) {
 			return true;
 		}

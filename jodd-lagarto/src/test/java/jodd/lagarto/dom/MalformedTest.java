@@ -27,24 +27,24 @@ package jodd.lagarto.dom;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MalformedTest {
+class MalformedTest {
 
 	protected String testDataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -53,7 +53,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testOneNode() {
+	void testOneNode() {
 		String content = "<body><div>test<span>sss</span></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -62,7 +62,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testOneNodeWithBlanks() {
+	void testOneNodeWithBlanks() {
 		String content = "<body><div>   <span>sss</span></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -71,7 +71,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTwoNodes() {
+	void testTwoNodes() {
 		String content = "<body><div>test<span><form>xxx</form></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -80,7 +80,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTwoNodes2() {
+	void testTwoNodes2() {
 		String content = "<body><div>test<span><form>xxx</body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -89,7 +89,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testPeterSimple1() {
+	void testPeterSimple1() {
 		String content = "<div><h1>FORELE</h1><p>dicuss<div>xxx</div></div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -98,7 +98,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testPeterSimple2() {
+	void testPeterSimple2() {
 		String content = "<div><h1>FORELE</h1><p>dicuss<div><h2>HAB</h2><p>AMONG</div></div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -107,7 +107,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testPeterSimple3WithSpaces() {
+	void testPeterSimple3WithSpaces() {
 		String content = "<div> <h1>FORELE</h1> <p>dicuss <div> <h2>HAB</h2> <p>AMONG </div> </div>".toUpperCase();
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -116,7 +116,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testPeterFull() {
+	void testPeterFull() {
 		String content = "<DIV class=\"section\" id=\"forest-elephants\" >\n" +
 				"<H1>Forest elephants</H1>\n" +
 				"<P>In this section, we discuss the lesser known forest elephants.\n" +
@@ -146,7 +146,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testEof() {
+	void testEof() {
 		String content = "<body><div>test";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -155,7 +155,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testEof2() {
+	void testEof2() {
 		String content = "<body><div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -164,7 +164,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testSpanDivOverTable() {
+	void testSpanDivOverTable() {
 		String content = "<span><div><table><tr><td>text</span>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -173,7 +173,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testDivSpanOverTable() {
+	void testDivSpanOverTable() {
 		String content = "<div><span><table><tr><td>text</div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
@@ -182,7 +182,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTableInTableInTable() throws IOException {
+	void testTableInTableInTable() throws IOException {
 		String html = read("tableInTable.html", false);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -195,7 +195,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testFormClosesAll() throws IOException {
+	void testFormClosesAll() throws IOException {
 		String html = read("formClosesAll.html", false);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -216,7 +216,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testFoster1() {
+	void testFoster1() {
 		String html = "A<table>B<tr>C</tr>D</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.getConfig().setUseFosterRules(true);
@@ -227,7 +227,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testFoster2() {
+	void testFoster2() {
 		String html = "A<table><tr> B</tr> C</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.getConfig().setUseFosterRules(true);
@@ -238,7 +238,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testBodyEnd() {
+	void testBodyEnd() {
 		String html = "<body><p>111</body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
@@ -250,7 +250,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testBodyEndWithError() {
+	void testBodyEndWithError() {
 		String html = "<body><p>111<h1>222</body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
@@ -263,7 +263,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testEOF() {
+	void testEOF() {
 		String html = "<body><p>111";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
@@ -275,7 +275,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testEOFWithError() {
+	void testEOFWithError() {
 		String html = "<body><p>111<h1>222";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
@@ -288,7 +288,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testCrazySpan() throws IOException {
+	void testCrazySpan() throws IOException {
 		String html = read("spancrazy.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableHtmlPlusMode();
@@ -303,7 +303,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testFosterForm() throws IOException {
+	void testFosterForm() throws IOException {
 		String html = read("fosterForm.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableHtmlPlusMode();
@@ -318,7 +318,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testListCrazy() throws IOException {
+	void testListCrazy() throws IOException {
 		String html = read("listcrazy.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableHtmlPlusMode();
@@ -333,7 +333,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTable1() throws IOException {
+	void testTable1() throws IOException {
 		String html = read("table1.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableHtmlPlusMode();
@@ -347,7 +347,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTable2() throws IOException {
+	void testTable2() throws IOException {
 		String html = read("table2.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableHtmlPlusMode();
@@ -383,7 +383,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testDecodingQuotes() throws IOException {
+	void testDecodingQuotes() throws IOException {
 		String html = read("decode.html", false);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -416,7 +416,7 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testQuotes() throws IOException {
+	void testQuotes() throws IOException {
 		String html = read("quotes.html", false);
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 

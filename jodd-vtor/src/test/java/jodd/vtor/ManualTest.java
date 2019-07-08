@@ -27,18 +27,18 @@ package jodd.vtor;
 
 import jodd.vtor.constraint.AssertValidConstraint;
 import jodd.vtor.constraint.MinLengthConstraint;
-import jodd.vtor.data.Boo;
-import jodd.vtor.data.Foo;
-import org.junit.Test;
+import jodd.vtor.fixtures.Boo;
+import jodd.vtor.fixtures.Foo;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ManualTest {
+class ManualTest {
 
 	@Test
-	public void testManualConfig() {
+	void testManualConfig() {
 
 		ValidationContext vctx = new ValidationContext();
 		vctx.add(new Check("string", new MinLengthConstraint(2)));
@@ -82,7 +82,7 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualAddViolation() {
+	void testManualAddViolation() {
 
 		ValidationContext vctx = new ValidationContext();
 		vctx.add(new Check("string", new MinLengthConstraint(2)));

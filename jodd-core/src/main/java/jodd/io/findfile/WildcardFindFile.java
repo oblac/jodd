@@ -25,8 +25,8 @@
 
 package jodd.io.findfile;
 
-import jodd.util.InExRuleMatcher;
-import jodd.util.InExRules;
+import jodd.inex.InExRuleMatcher;
+import jodd.inex.InExRules;
 
 /**
  * {@link FindFile} that matches file names using <code>*</code>, <code>?</code>
@@ -34,10 +34,14 @@ import jodd.util.InExRules;
  *
  * @see jodd.io.findfile.RegExpFindFile
  */
-public class WildcardFindFile extends FindFile<WildcardFindFile> {
+public class WildcardFindFile extends FindFile {
+
+	public static WildcardFindFile create() {
+		return new WildcardFindFile();
+	}
 
 	@Override
-	protected InExRules createRulesEngine() {
+	protected InExRules<String, String, String> createRulesEngine() {
 		return new InExRules<>(InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER);
 	}
 

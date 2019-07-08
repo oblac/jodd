@@ -25,16 +25,17 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.result.Redirect;
 
 @MadvocAction
 public class ExcAction {
 
 	@Action
-	@InterceptedBy({ExcInterceptor.class, DefaultWebAppInterceptors.class})
+	@InterceptedBy({ExcInterceptor.class, ServletConfigInterceptor.class})
 	public void view() {
 		int a = 0;
 		int b = 4 / a;
@@ -42,8 +43,8 @@ public class ExcAction {
 	}
 
 	@Action
-	public String red() {
-		return "redirect:/500.html";
+	public Redirect red() {
+		return Redirect.to("/500.html");
 	}
 
 }

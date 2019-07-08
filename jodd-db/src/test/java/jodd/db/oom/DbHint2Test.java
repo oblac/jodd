@@ -25,25 +25,27 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.tst.Boy4;
-import jodd.db.oom.tst.Girl4;
-import jodd.db.oom.tst.Room;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Boy4;
+import jodd.db.oom.fixtures.Girl4;
+import jodd.db.oom.fixtures.Room;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DbHint2Test extends DbHsqldbTestCase {
+class DbHint2Test extends DbHsqldbTestCase {
 
+	@AfterEach
 	@Override
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		DbSession session = new DbSession(cp);
 
 		executeUpdate(session, "drop table GIRL if exists");
@@ -55,7 +57,8 @@ public class DbHint2Test extends DbHsqldbTestCase {
 		super.tearDown();
 	}
 
-	protected void createTables(DbSession session) {
+	@Override
+	protected void initDb(DbSession session) {
 		executeUpdate(session, "drop table ROOM if exists");
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
@@ -93,39 +96,39 @@ public class DbHint2Test extends DbHsqldbTestCase {
 	}
 
 
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Boy4.class);
-		dbOom.registerEntity(Girl4.class);
-		dbOom.registerEntity(Room.class);
+		dbEntityManager.registerEntity(Boy4.class);
+		dbEntityManager.registerEntity(Girl4.class);
+		dbEntityManager.registerEntity(Room.class);
 	}
 
 	@Test
-	public void testHint() {
+	void testHint() {
 		DbSession dbSession = new DbThreadSession(cp);
 
 		// prepare data
 
-		assertEquals(1, DbEntitySql.insert(new Room(1, "Room1")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Room(2, "Room2")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Room(1, "Room1")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Room(2, "Room2")).query().executeUpdate());
 
-		assertEquals(1, DbEntitySql.insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
 
-		assertEquals(1, DbEntitySql.insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
 
 
 		// select
 
-		DbOomQuery dbOomQuery = new DbOomQuery(sql(
+		DbOomQuery dbOomQuery = DbOomQuery.query(sql(
 			"select $C{room.*}, $C{boy.*}, $C{girl.*} " +
 				"from $T{Room room} join $T{Boy4 boy} on $room.id=$boy.roomId " +
 				"join $T{Girl4 girl} on $boy.id=$girl.boyId " +
@@ -143,7 +146,7 @@ public class DbHint2Test extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- hints
 
-		dbOomQuery = new DbOomQuery(sql(
+		dbOomQuery = DbOomQuery.query(sql(
 			"select $C{room.*}, $C{room.boys:boy.*}, $C{room.boys.girl:girl.*} " +
 				"from $T{Room room} join $T{Boy4 boy} on $room.id=$boy.roomId " +
 				"join $T{Girl4 girl} on $boy.id=$girl.boyId " +

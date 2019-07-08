@@ -25,15 +25,15 @@
 
 package jodd.json;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PathQueryTest {
+class PathQueryTest {
 
 	@Test
-	public void testPathMatching() {
+	void testPathMatching() {
 		assertTrue(new PathQuery("hello", true).matches(Path.parse("hello")));
 		assertFalse(new PathQuery("hello", true).matches(Path.parse("boom")));
 		assertTrue(new PathQuery("hello.world", true).matches(Path.parse("hello.world")));
@@ -50,7 +50,7 @@ public class PathQueryTest {
 	}
 
 	@Test
-	public void testPathMatchingDifferences() {
+	void testPathMatchingDifferences() {
 		assertTrue(new PathQuery("one.two", true).matches(Path.parse("one")));
 		assertTrue(new PathQuery("one.two.three", true).matches(Path.parse("one")));
 		assertTrue(new PathQuery("one.two", true).matches(Path.parse("one.two")));

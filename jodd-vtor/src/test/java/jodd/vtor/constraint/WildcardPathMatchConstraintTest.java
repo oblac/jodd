@@ -25,53 +25,53 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class WildcardPathMatchConstraintTest extends ConstraintTestBase {
+class WildcardPathMatchConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         assertNull(wildcardPathMatchConstraint.getPattern());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint("foo");
         assertEquals(wildcardPathMatchConstraint.getPattern(), "foo");
     }
 
     @Test
-    public void testSetPattern() {
+    void testSetPattern() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         String pattern = "foo";
         wildcardPathMatchConstraint.setPattern(pattern);
 
-        assertEquals("method must return the same pattern as was given to set method", wildcardPathMatchConstraint.getPattern(), pattern);
+        assertEquals(pattern, wildcardPathMatchConstraint.getPattern());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         WildcardPathMatch annotation = mock(WildcardPathMatch.class);
         String pattern = "foo";
-        stub(annotation.value()).toReturn(pattern);
+        when(annotation.value()).thenReturn(pattern);
 
         wildcardPathMatchConstraint.configure(annotation);
-        assertEquals("method must return the same pattern as was set to annotation when configure", wildcardPathMatchConstraint.getPattern(), pattern);
+        assertEquals(pattern, wildcardPathMatchConstraint.getPattern());
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(WildcardPathMatchConstraint.validate(null, "*"));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertTrue(new WildcardPathMatchConstraint("/dir/**").isValid(mockContext(), "/dir/abc"));
         assertFalse(new WildcardPathMatchConstraint("/dir/abz").isValid(mockContext(), "/dir/abc"));
     }

@@ -44,7 +44,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 	 * Parses content using Lagarto and {@link LagartoParsingProcessor}.
 	 */
 	@Override
-	protected final char[] parse(char[] content, HttpServletRequest request) {
+	protected final char[] parse(final char[] content, final HttpServletRequest request) {
 
 		LagartoParsingProcessor lpp = createParsingProcessor();
 
@@ -71,18 +71,13 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		protected LagartoParser lagartoParser;
 		protected FastCharArrayWriter fastCharArrayWriter;
 		protected TagWriter tagWriter;
-		protected boolean emitStrings;
-
-		protected LagartoParsingProcessor(boolean emitStrings) {
-			this.emitStrings = emitStrings;
-		}
 
 		/**
 		 * Initialize processor by creating new Lagarto and root TagWriter.
 		 */
-		public void init(char[] content) {
+		public void init(final char[] content) {
 			// create Lagarto
-			lagartoParser = new LagartoParser(content, emitStrings);
+			lagartoParser = new LagartoParser(content);
 
 			// prepare root tag writer
 			fastCharArrayWriter = new FastCharArrayWriter();
@@ -93,7 +88,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		 * Parses given and return adapted content.
 		 * Delegates call to {@link #parse(jodd.lagarto.TagWriter, javax.servlet.http.HttpServletRequest)}
 		 */
-		public char[] parse(HttpServletRequest request) {
+		public char[] parse(final HttpServletRequest request) {
 			return parse(tagWriter, request);
 		}
 
@@ -109,7 +104,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		 * Invokes Lagarto parser with provided set of adapters
 		 * and returns processed content.
 		 */
-		public char[] invokeLagarto(TagAdapter tagAdapter) {
+		public char[] invokeLagarto(final TagAdapter tagAdapter) {
 			lagartoParser.parse(tagAdapter);
 			return fastCharArrayWriter.toCharArray();
 		}

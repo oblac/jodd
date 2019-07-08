@@ -25,12 +25,12 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.oom.DbEntityDescriptor;
+import jodd.bean.BeanUtil;
 import jodd.db.oom.DbEntityColumnDescriptor;
-import jodd.db.oom.DbOomUtil;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.util.StringUtil;
-import jodd.bean.BeanUtil;
 
 /**
  * Renders condition part of the sql query based on values in provided entity object.
@@ -50,24 +50,29 @@ public class MatchChunk extends SqlChunk {
 	protected final String objectRef;
 	protected final int includeColumns;
 
-	public MatchChunk(String tableRef, Object data, int includeColumns) {
-		this(tableRef, null, data, includeColumns);
+	public MatchChunk(final DbEntityManager dbEntityManager, final String tableRef, final Object data, final int includeColumns) {
+		this(dbEntityManager, tableRef, null, data, includeColumns);
 	}
 
-	public MatchChunk(String tableRef, String objectRef, int includeColumns) {
-		this(tableRef, objectRef, null, includeColumns);
+	public MatchChunk(final DbEntityManager dbEntityManager, final String tableRef, final String objectRef, final int includeColumns) {
+		this(dbEntityManager, tableRef, objectRef, null, includeColumns);
 	}
 
-	protected MatchChunk(String tableRef, String objectRef, Object data, int includeColumns) {
-		super(CHUNK_MATCH);
+	private MatchChunk(
+			final DbEntityManager dbEntityManager,
+			final String tableRef,
+			final String objectRef,
+			final Object data,
+			final int includeColumns) {
+		super(dbEntityManager, CHUNK_MATCH);
 		this.tableRef = tableRef;
 		this.objectRef = objectRef;
 		this.data = data;
 		this.includeColumns = includeColumns;
 	}
 
-	public MatchChunk(String expression) {
-		super(CHUNK_MATCH);
+	public MatchChunk(final DbEntityManager dbEntityManager, String expression) {
+		super(dbEntityManager, CHUNK_MATCH);
 		expression = expression.trim();
 		int lastNdx = expression.length();
 		if (expression.endsWith(DOT_STAR)) {
@@ -88,11 +93,15 @@ public class MatchChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		if (objectRef != null) {
 			data = templateData.lookupObject(objectRef);
 		}
-		DbEntityDescriptor ded = lookupTableRef(tableRef);
+
+		DbEntityDescriptor ded = tableRef != null ?
+			lookupTableRef(tableRef) :
+			lookupType(resolveClass(data));
+
 		String table = resolveTable(tableRef, ded);
 		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 		String typeName = StringUtil.uncapitalize(ded.getEntityName());
@@ -112,7 +121,7 @@ public class MatchChunk extends SqlChunk {
 			}
 
 			if (includeColumns == COLS_ONLY_EXISTING) {
-				if (DbOomUtil.isEmptyColumnValue(dec, value)) {
+				if (isEmptyColumnValue(dec, value)) {
 					continue;
 				}
 			}
@@ -120,7 +129,7 @@ public class MatchChunk extends SqlChunk {
 				out.append(AND);
 			}
 			count++;
-			out.append(table).append('.').append(dec.getColumnName()).append('=');
+			out.append(table).append('.').append(dec.getColumnNameForQuery()).append('=');
 
 			String propertyName = objectRef != null ? objectRef : typeName;
 			propertyName += '.' + property;

@@ -26,13 +26,21 @@
 package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.ProxyPointcut;
 
 /**
  * Pointcut on all <b>public</b> methods.
  */
-public class AllMethodsPointcut extends ProxyPointcutSupport {
+public class AllMethodsPointcut implements ProxyPointcut {
 
-	public boolean apply(MethodInfo methodInfo) {
-		return isPublic(methodInfo);
+	private static final AllMethodsPointcut INSTANCE = new AllMethodsPointcut();
+
+	public static AllMethodsPointcut get() {
+		return INSTANCE;
+	}
+
+	@Override
+	public boolean apply(final MethodInfo methodInfo) {
+		return methodInfo.isPublicMethod();
 	}
 }

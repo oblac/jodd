@@ -25,21 +25,21 @@
 
 package jodd.pathref;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static jodd.pathref.Pathref.ALL;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PathRefTest {
+class PathRefTest {
 
 	public static class User {
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(final String name) {
 			this.name = name;
 		}
 
@@ -47,7 +47,7 @@ public class PathRefTest {
 			return address;
 		}
 
-		public void setAddress(Address address) {
+		public void setAddress(final Address address) {
 			this.address = address;
 		}
 
@@ -55,7 +55,7 @@ public class PathRefTest {
 			return friends;
 		}
 
-		public void setFriends(List<User> friends) {
+		public void setFriends(final List<User> friends) {
 			this.friends = friends;
 		}
 
@@ -63,7 +63,7 @@ public class PathRefTest {
 			return bestFriend;
 		}
 
-		public void setBestFriend(User bestFriend) {
+		public void setBestFriend(final User bestFriend) {
 			this.bestFriend = bestFriend;
 		}
 
@@ -78,7 +78,7 @@ public class PathRefTest {
 			return street;
 		}
 
-		public void setStreet(String street) {
+		public void setStreet(final String street) {
 			this.street = street;
 		}
 
@@ -86,23 +86,23 @@ public class PathRefTest {
 	}
 
 	@Test
-	public void testPathCollection() {
-		Pathref<User> p = Pathref.on(User.class);
+	void testPathCollection() {
+		final Pathref<User> p = Pathref.of(User.class);
 
-		assertEquals("address", p.path(p.to().getAddress()));
-		assertEquals("address.street", p.path(p.to().getAddress().getStreet()));
-		assertEquals("friends[0].address.street", p.path(p.to().getFriends().get(0).getAddress().getStreet()));
+		assertEquals("address", p.path(p.get().getAddress()));
+		assertEquals("address.street", p.path(p.get().getAddress().getStreet()));
+		assertEquals("friends[0].address.street", p.path(p.get().getFriends().get(0).getAddress().getStreet()));
 		assertEquals("bestFriend.bestFriend.bestFriend.friends[123].address.street",
-			p.path(p.to().getBestFriend().getBestFriend().getBestFriend().getFriends().get(123).getAddress().getStreet()));
+			p.path(p.get().getBestFriend().getBestFriend().getBestFriend().getFriends().get(123).getAddress().getStreet()));
 	}
 
 	@Test
-	public void testPathAll() {
-		Pathref<User> p = Pathref.on(User.class);
+	void testPathAll() {
+		final Pathref<User> p = Pathref.of(User.class);
 
-		assertEquals("address", p.path(p.to().getAddress()));
-		assertEquals("address.street", p.path(p.to().getAddress().getStreet()));
-		assertEquals("friends.address.street", p.path(p.to().getFriends().get(ALL).getAddress().getStreet()));
+		assertEquals("address", p.path(p.get().getAddress()));
+		assertEquals("address.street", p.path(p.get().getAddress().getStreet()));
+		assertEquals("friends.address.street", p.path(p.get().getFriends().get(ALL).getAddress().getStreet()));
 
 	}
 

@@ -25,59 +25,66 @@
 
 package jodd.json;
 
-import org.junit.Test;
+import jodd.json.fixtures.JsonParsers;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class LooseTest {
+class LooseTest {
 
 	@Test
-	public void testInvalidEscape() {
-		try {
-			assertEquals("ABC\\D", new JsonParser().parse("\"ABC\\D\""));
-			fail();
-		} catch (JsonException ignore) {
-		}
-		assertEquals("ABC\\D", new JsonParser().looseMode(true).parse("\"ABC\\D\""));
+	void testInvalidEscape() {
+		JsonParsers.forEachParser(jsonParser -> {
+			try {
+				assertEquals("ABC\\D", jsonParser.parse("\"ABC\\D\""));
+				fail("error");
+			} catch (JsonException ignore) {
+			}
+			assertEquals("ABC\\D", jsonParser.looseMode(true).parse("\"ABC\\D\""));
 
-//		Map<String, Object> map = new JsonParser().looseMode(true).parse("{\"foo\": \"bar\\\"}");
-//		assertEquals(1, map.size());
-//		assertEquals("bar\\", map.get("foo"));
+			//		Map<String, Object> map = new JsonParser().looseMode(true).parse("{\"foo\": \"bar\\\"}");
+			//		assertEquals(1, map.size());
+			//		assertEquals("bar\\", map.get("foo"));
+		});
 	}
 
 	@Test
-	public void testQuotes() {
-		try {
-			assertEquals("ABC", new JsonParser().parse("'ABC'"));
-			fail();
-		} catch (JsonException ignore) {
-		}
+	void testQuotes() {
+		JsonParsers.forEachParser(jsonParser -> {
+			try {
+				assertEquals("ABC", jsonParser.parse("'ABC'"));
+				fail("error");
+			} catch (JsonException ignore) {
+			}
 
-		assertEquals("ABC", new JsonParser().looseMode(true).parse("'ABC'"));
-		assertEquals("AB'C", new JsonParser().looseMode(true).parse("'AB\\'C'"));
+			assertEquals("ABC", jsonParser.looseMode(true).parse("'ABC'"));
+			assertEquals("AB'C", jsonParser.looseMode(true).parse("'AB\\'C'"));
 
-		Map<String, Object> map = new JsonParser().looseMode(true).parse("{'foo':'BAR'}");
+			Map<String, Object> map = jsonParser.looseMode(true).parse("{'foo':'BAR'}");
 
-		assertEquals(1, map.size());
-		assertEquals("BAR", map.get("foo"));
+			assertEquals(1, map.size());
+			assertEquals("BAR", map.get("foo"));
+		});
 	}
 
 	@Test
-	public void testUnquotes() {
-		Map<String, Object> map = new JsonParser().looseMode(true).parse("{foo: BAR , who : me}");
+	void testUnquotes() {
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> map = jsonParser.looseMode(true).parse("{foo: BAR , who : me}");
 
-		assertEquals(2, map.size());
-		assertEquals("BAR", map.get("foo"));
-		assertEquals("me", map.get("who"));
+			assertEquals(2, map.size());
+			assertEquals("BAR", map.get("foo"));
+			assertEquals("me", map.get("who"));
 
-		try {
-			new JsonParser().looseMode(true).parse("{foo: BAR , who : m\te}");
-			fail();
-		} catch (JsonException ignore) {
-		}
+			try {
+				jsonParser.looseMode(true).parse("{foo: BAR , who : m\te}");
+				fail("error");
+			} catch (JsonException ignore) {
+			}
+		});
 	}
 
 }

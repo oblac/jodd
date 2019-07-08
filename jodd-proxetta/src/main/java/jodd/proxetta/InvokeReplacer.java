@@ -35,11 +35,11 @@ public class InvokeReplacer {
 	protected final String owner;
 	protected final String methodName;
 
-	public InvokeReplacer(Class target, String methodName) {
+	public InvokeReplacer(final Class target, final String methodName) {
 		this(target.getCanonicalName(), methodName);
 	}
 
-	public InvokeReplacer(String classCanonicalName, String methodName) {
+	public InvokeReplacer(final String classCanonicalName, final String methodName) {
 		this.owner = classCanonicalName.replace('.', '/');
 		this.methodName = methodName;
 	}
@@ -49,11 +49,11 @@ public class InvokeReplacer {
 		this.methodName = null;
 	}
 
-	public static InvokeReplacer with(String classCanonicalName, String methodName) {
+	public static InvokeReplacer with(final String classCanonicalName, final String methodName) {
 		return new InvokeReplacer(classCanonicalName, methodName);
 	}
 
-	public static InvokeReplacer with(Class target, String methodName) {
+	public static InvokeReplacer with(final Class target, final String methodName) {
 		return new InvokeReplacer(target, methodName);
 	}
 
@@ -79,11 +79,11 @@ public class InvokeReplacer {
 		return passOwnerName;
 	}
 
-	public void setPassOwnerName(boolean passOwnerName) {
+	public void setPassOwnerName(final boolean passOwnerName) {
 		this.passOwnerName = passOwnerName;
 	}
 
-	public InvokeReplacer passOwnerName(boolean passOwnerName) {
+	public InvokeReplacer passOwnerName(final boolean passOwnerName) {
 		this.passOwnerName = passOwnerName;
 		return this;
 	}
@@ -92,11 +92,11 @@ public class InvokeReplacer {
 		return passMethodName;
 	}
 
-	public void setPassMethodName(boolean passMethodName) {
+	public void setPassMethodName(final boolean passMethodName) {
 		this.passMethodName = passMethodName;
 	}
 
-	public InvokeReplacer passMethodName(boolean passMethodName) {
+	public InvokeReplacer passMethodName(final boolean passMethodName) {
 		this.passMethodName = passMethodName;
 		return this;
 	}
@@ -105,11 +105,11 @@ public class InvokeReplacer {
 		return passMethodSignature;
 	}
 
-	public void setPassMethodSignature(boolean passMethodSignature) {
+	public void setPassMethodSignature(final boolean passMethodSignature) {
 		this.passMethodSignature = passMethodSignature;
 	}
 
-	public InvokeReplacer passMethodSignature(boolean passMethodSignature) {
+	public InvokeReplacer passMethodSignature(final boolean passMethodSignature) {
 		this.passMethodSignature = passMethodSignature;
 		return this;
 	}
@@ -118,11 +118,11 @@ public class InvokeReplacer {
 		return passThis;
 	}
 
-	public void setPassThis(boolean passThis) {
+	public void setPassThis(final boolean passThis) {
 		this.passThis = passThis;
 	}
 
-	public InvokeReplacer passThis(boolean passThis) {
+	public InvokeReplacer passThis(final boolean passThis) {
 		this.passThis = passThis;
 		return this;
 	}
@@ -131,11 +131,11 @@ public class InvokeReplacer {
 		return passTargetClass;
 	}
 
-	public void setPassTargetClass(boolean passTargetClass) {
+	public void setPassTargetClass(final boolean passTargetClass) {
 		this.passTargetClass = passTargetClass;
 	}
 
-	public InvokeReplacer passTargetClass(boolean passTargetClass) {
+	public InvokeReplacer passTargetClass(final boolean passTargetClass) {
 		this.passTargetClass = passTargetClass;
 		return this;
 	}

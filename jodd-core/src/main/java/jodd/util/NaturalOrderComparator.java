@@ -29,134 +29,172 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Compares two strings in natural, alphabetical, way.
+ * Probably the best natural strings comparator.
  */
 public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
-	private static final long serialVersionUID = 1;
+
+	/* copied from Perl6 code */
+	private static final char[] ACCENT_CHARS = new char[]{
+		'À', 'A', 'Á', 'A', 'Â', 'A', 'Ã', 'A', 'Ä', 'A', 'Å', 'A',
+		'à', 'a', 'á', 'a', 'â', 'a', 'ã', 'a', 'ä', 'a', 'å', 'a',
+		'Ç', 'C', 'ç', 'c',
+		'È', 'E', 'É', 'E', 'Ê', 'E', 'Ë', 'E',
+		'è', 'e', 'é', 'e', 'ê', 'e', 'ë', 'e',
+		'Ì', 'I', 'Í', 'I', 'Î', 'I', 'Ï', 'I',
+		'ì', 'i', 'í', 'i', 'î', 'i', 'ï', 'i',
+		'Ò', 'O', 'Ó', 'O', 'Ô', 'O', 'Õ', 'O', 'Ö', 'O',
+		'Ø', 'O', 'ò', 'o', 'ó', 'o', 'ô', 'o', 'õ', 'o', 'ö', 'o', 'ø', 'o',
+		'Ñ', 'N', 'ñ', 'n',
+		'Ù', 'U', 'Ú', 'U', 'Û', 'U', 'Ü', 'U', 'ù', 'u', 'ú', 'u', 'û', 'u', 'ü', 'u',
+		'Ý', 'Y', 'ÿ', 'y', 'ý', 'y',
+	};
 
 	protected final boolean ignoreCase;
+	protected final boolean ignoreAccents;
+	protected final boolean skipSpaces;
 
 	public NaturalOrderComparator() {
-		ignoreCase = false;
+		this(false, true, true);
 	}
 
-	public NaturalOrderComparator(boolean ignoreCase) {
+	public NaturalOrderComparator(final boolean ignoreCase, final boolean ignoreAccents, final boolean skipSpaces) {
 		this.ignoreCase = ignoreCase;
+		this.ignoreAccents = ignoreAccents;
+		this.skipSpaces = skipSpaces;
 	}
 
 	/**
 	 * Compare digits at certain position in two strings.
 	 * The longest run of digits wins. That aside, the greatest
 	 * value wins.
+	 * @return if numbers are different, only 1 element is returned.
 	 */
-	protected int compareDigits(String str1, int ndx1, String str2, int ndx2) {
-		int bias = 0;
+	protected int[] compareDigits(final String str1, int ndx1, final String str2, int ndx2) {
+		// iterate all digits in the first string
 
-		while (true) {
-			char char1 = charAt(str1, ndx1);
-			char char2 = charAt(str2, ndx2);
-
-			boolean isDigitChar1 = CharUtil.isDigit(char1);
-			boolean isDigitChar2 = CharUtil.isDigit(char2);
-
-			if (!isDigitChar1 && !isDigitChar2) {
-				return bias;
-			}
-			if (!isDigitChar1) {
-				return -1;
-			}
-			if (!isDigitChar2) {
-				return 1;
-			}
-
-			if (char1 < char2) {
-				if (bias == 0) {
-					bias = -1;
-				}
-			} else if (char1 > char2) {
-				if (bias == 0) {
-					bias = 1;
-				}
-			} else if (char1 == 0 && char2 == 0) {
-				return bias;
-			}
-
+		int zeroCount1 = 0;
+		while (charAt(str1, ndx1) == '0') {
+			zeroCount1++;
 			ndx1++;
+		}
+
+		int len1 = 0;
+		while (true) {
+			final char char1 = charAt(str1, ndx1);
+			final boolean isDigitChar1 = CharUtil.isDigit(char1);
+			if (!isDigitChar1) {
+				break;
+			}
+			len1++;
+			ndx1++;
+		}
+
+		// iterate all digits in the second string and compare with the first
+
+		int zeroCount2 = 0;
+		while (charAt(str2, ndx2) == '0') {
+			zeroCount2++;
 			ndx2++;
 		}
+
+		int len2 = 0;
+
+		int ndx1_new = ndx1 - len1;
+		int equalNumbers = 0;
+
+		while (true) {
+			final char char2 = charAt(str2, ndx2);
+			final boolean isDigitChar2 = CharUtil.isDigit(char2);
+			if (!isDigitChar2) {
+				break;
+			}
+			if (equalNumbers == 0 && (ndx1_new < ndx1)) {
+				equalNumbers = charAt(str1, ndx1_new++) - char2;
+			}
+			len2++;
+			ndx2++;
+		}
+
+		// compare
+
+		if (len1 != len2) {
+			// numbers are not equals size
+			return new int[] {len1 - len2};
+		}
+
+		if (equalNumbers != 0) {
+			return new int[] {equalNumbers};
+		}
+
+		// numbers are equal, but number of zeros is different
+		return new int[] {0, zeroCount1 - zeroCount2, ndx1, ndx2};
 	}
 
-	public int compare(T o1, T o2) {
+	@Override
+	public int compare(final T o1, final T o2) {
 		String str1 = o1.toString();
 		String str2 = o2.toString();
 
-		int ndx1 = 0, ndx2 = 0;
-		int zeroCount1, zeroCount2;
-		char char1, char2;
+		if (ignoreAccents) {
+			str1 = StringUtil.replace(str1, "ß", "ss");
+			str2 = StringUtil.replace(str2, "ß", "ss");
 
-		int result;
+			str1 = StringUtil.replace(str1, "æ", "ae");
+			str2 = StringUtil.replace(str2, "æ", "ae");
+
+			str1 = StringUtil.replace(str1, "Æ", "AE");
+			str2 = StringUtil.replace(str2, "Æ", "AE");
+		}
+
+		int ndx1 = 0, ndx2 = 0;
+		char char1, char2;
+		int lastZeroDifference = 0;
 
 		while (true) {
-			// only count the number of zeroes leading the last number compared
-			zeroCount1 = zeroCount2 = 0;
-
 			char1 = charAt(str1, ndx1);
 			char2 = charAt(str2, ndx2);
 
-			// skip over leading spaces or zeros in both strings
-
-			while (Character.isSpaceChar(char1) || char1 == '0') {
-				if (char1 == '0') {
-					zeroCount1++;
-				} else {
-					zeroCount1 = 0;	// counts only last 0 prefixes, space char interrupts the array of 0s
+			// skip over spaces in both strings
+			if (skipSpaces) {
+				while (Character.isSpaceChar(char1)) {
+					ndx1++;
+					char1 = charAt(str1, ndx1);
 				}
-				ndx1++;
-				char1 = charAt(str1, ndx1);
+
+				while (Character.isSpaceChar(char2)) {
+					ndx2++;
+					char2 = charAt(str2, ndx2);
+				}
 			}
 
-			while (Character.isSpaceChar(char2) || char2 == '0') {
-				if (char2 == '0') {
-					zeroCount2++;
-				} else {
-					zeroCount2 = 0;
-				}
-				ndx2++;
-				char2 = charAt(str2, ndx2);
-			}
+			// check for numbers
 
-			// process digits
-
-			boolean isDigitChar1 = CharUtil.isDigit(char1);
-			boolean isDigitChar2 = CharUtil.isDigit(char2);
+			final boolean isDigitChar1 = CharUtil.isDigit(char1);
+			final boolean isDigitChar2 = CharUtil.isDigit(char2);
 
 			if (isDigitChar1 && isDigitChar2) {
-				result = compareDigits(str1, ndx1, str2, ndx2);
-				if (result != 0) {
+				// numbers detected!
+
+				final int[] result = compareDigits(str1, ndx1, str2, ndx2);
+
+				if (result[0] != 0) {
 					// not equals, return
-					return result;
+					return result[0];
 				}
-				// equal numbers
-				if (zeroCount1 != zeroCount2) {
-					return zeroCount1 - zeroCount2;
+
+				// equals, save zero difference if not already saved
+				if (lastZeroDifference == 0) {
+					lastZeroDifference = result[1];
 				}
+
+				ndx1 = result[2];
+				ndx2 = result[3];
+				continue;
 			}
 
 			if (char1 == 0 && char2 == 0) {
-				// the end; the strings are the same, maybe compare ascii?
-				return zeroCount1 - zeroCount2;
-			}
-
-			// check when one of the numbers is just zeros
-			if (isDigitChar1 || isDigitChar2) {
-				if (zeroCount1 != zeroCount2) {
-					return zeroCount2 - zeroCount1;
-				}
-			}
-
-			// checks when both numbers are zero
-			if (zeroCount1 != zeroCount2) {
-				return zeroCount1 - zeroCount2;
+				// both strings end; the strings are the same
+				return lastZeroDifference;
 			}
 
 			// compare chars
@@ -164,6 +202,12 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 				char1 = Character.toLowerCase(char1);
 				char2 = Character.toLowerCase(char2);
 			}
+
+			if (ignoreAccents) {
+				char1 = fixAccent(char1);
+				char2 = fixAccent(char2);
+			}
+
 			if (char1 < char2) {
 				return -1;
 			}
@@ -177,12 +221,25 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	}
 
 	/**
-	 * Safe charAt.
+	 * Fixes accent char.
 	 */
-	private static char charAt(String s, int i) {
-		if (i >= s.length()) {
+	private char fixAccent(final char c) {
+		for (int i = 0; i < ACCENT_CHARS.length; i+=2) {
+			final char accentChar = ACCENT_CHARS[i];
+			if (accentChar == c) {
+				return ACCENT_CHARS[i + 1];
+			}
+		}
+		return c;
+	}
+
+	/**
+	 * Safe {@code charAt} that returns 0 when ndx is out of boundaries.
+	 */
+	private static char charAt(final String string, final int ndx) {
+		if (ndx >= string.length()) {
 			return 0;
 		}
-		return s.charAt(i);
+		return string.charAt(ndx);
 	}
 }

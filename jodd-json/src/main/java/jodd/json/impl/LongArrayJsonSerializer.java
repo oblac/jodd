@@ -34,7 +34,11 @@ import jodd.json.TypeJsonSerializer;
 public class LongArrayJsonSerializer implements TypeJsonSerializer<long[]> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, long[] array) {
+	public boolean serialize(final JsonContext jsonContext, final long[] array) {
+		if (array.length == 0 && jsonContext.isExcludeEmpty()) {
+			return true;
+		}
+
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {

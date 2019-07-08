@@ -27,9 +27,8 @@ package jodd.servlet.filter;
 
 import jodd.io.FastByteArrayOutputStream;
 
-import java.io.IOException;
-
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 
 /**
  * Implementation of <code>ServletOutputStream</code> that buffers
@@ -43,6 +42,15 @@ public class FastByteArrayServletOutputStream extends ServletOutputStream {
 		wrapped = new FastByteArrayOutputStream();
 	}
 
+	@Override
+	public boolean isReady() {
+		return false;
+	}
+
+	@Override
+	public void setWriteListener(final WriteListener writeListener) {
+	}
+
 	/**
 	 * Returns wrapped output stream.
 	 */
@@ -54,7 +62,7 @@ public class FastByteArrayServletOutputStream extends ServletOutputStream {
 	 * Writes to wrapped buffer.
 	 */
 	@Override
-	public void write(int i) throws IOException {
+	public void write(final int i) {
 		wrapped.write(i);
 	}
 

@@ -34,24 +34,24 @@ import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeSelector;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class JerryMiscTest {
+class JerryMiscTest {
 
 	@Test
-	public void testTextContentDecoding() {
+	void testTextContentDecoding() {
 		String html = "<html><body><div>&#1054;&#1076;&#1112;&#1072;&#1074;&#1080; &#1089;&#1077;</div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
-		Jerry div = doc.$("div");
+		Jerry div = doc.s("div");
 
 		assertEquals(9, div.text().length());
 		assertEquals("Одјави се", div.text());
@@ -59,11 +59,11 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testTextContentDecoding2() {
+	void testTextContentDecoding2() {
 		String html = "<html><body><div></div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
-		Jerry div = doc.$("div");
+		Jerry div = doc.s("div");
 		assertEquals(0, div.text().length());
 		div.text("Одјави се");
 		assertEquals(9, div.text().length());
@@ -72,14 +72,14 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend1() {
+	void testAppend1() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -87,14 +87,14 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend2() {
+	void testAppend2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -102,14 +102,14 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend3() {
+	void testAppend3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXhtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -117,31 +117,31 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testNullForEmpty() {
+	void testNullForEmpty() {
 		Jerry doc = Jerry.jerry().parse("<html></html>");
 
-		assertNull(doc.$("#not-a-valid-id").attr("someAttribute"));
+		assertNull(doc.s("#not-a-valid-id").attr("someAttribute"));
 
-		assertNull(doc.$("#not-a-valid-id").css("name"));
+		assertNull(doc.s("#not-a-valid-id").css("name"));
 
-		assertNull(doc.$("#not-a-valid-id").html());
+		assertNull(doc.s("#not-a-valid-id").html());
 	}
 
 	@Test
-	public void testFirstNotDirectly() {
+	void testFirstNotDirectly() {
 		Jerry doc = Jerry.jerry().parse("<html><div>one</div><p>two</p><div>three</div><p>four</p></html>");
 
-		assertEquals(2, doc.$("div").size());
-		assertEquals(2, doc.$("p").size());
-		assertEquals("one", doc.$("div").first().text());
-		assertEquals("two", doc.$("p").first().text());
+		assertEquals(2, doc.s("div").size());
+		assertEquals(2, doc.s("p").size());
+		assertEquals("one", doc.s("div").first().text());
+		assertEquals("two", doc.s("p").first().text());
 
-		assertEquals("four", doc.$("p").last().text());
-		assertEquals("three", doc.$("div").last().text());
+		assertEquals("four", doc.s("p").last().text());
+		assertEquals("three", doc.s("div").last().text());
 	}
 
 	@Test
-	public void testIterator1() {
+	void testIterator1() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 
 		Iterator<Jerry> iterator = doc.find(".foo").iterator();
@@ -156,7 +156,7 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testIterator2() {
+	void testIterator2() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 
 		Iterator<Jerry> iterator = doc.find(".notfound").iterator();
@@ -171,10 +171,10 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testHtmlNodesOwner() {
+	void testHtmlNodesOwner() {
 		Jerry doc = Jerry.jerry().parse("<div>1<div id='x'>2</div>3</div>");
 
-		doc.$("#x").html("<span>wow</span>");
+		doc.s("#x").html("<span>wow</span>");
 
 		assertEquals("<div>1<div id=\"x\"><span>wow</span></div>3</div>", doc.html());
 
@@ -188,23 +188,23 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		Jerry doc = Jerry.jerry().parse("<body>aaa<p>foo 401(k) bar</p>xxx</body>");
 
-		Jerry p = doc.$("p:contains('401(k)')");
+		Jerry p = doc.s("p:contains('401(k)')");
 		assertEquals(1, p.size());
 
-		p = doc.$("p:contains('402(k)')");
+		p = doc.s("p:contains('402(k)')");
 		assertEquals(0, p.size());
 	}
 
 	@Test
-	public void testCustomPseudoClass() {
+	void testCustomPseudoClass() {
 		PseudoClassSelector.registerPseudoClass(MyPseudoClass.class);
 
 		Jerry doc = Jerry.jerry().parse("<body><p jodd-attr='1'>found</p><p>not found</p></body>");
 
-		Jerry p = doc.$("p:jjjjj");
+		Jerry p = doc.s("p:jjjjj");
 		assertEquals(1, p.size());
 		assertEquals("found", p.text());
 	}
@@ -222,12 +222,12 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testCustomPseudoFunction() {
+	void testCustomPseudoFunction() {
 		PseudoFunctionSelector.registerPseudoFunction(MyPseudoFunction.class);
 
 		Jerry doc = Jerry.jerry().parse("<body><p>not found</p><div>This!</div></body>");
 
-		Jerry p = doc.$(":super-fn(3)");
+		Jerry p = doc.s(":super-fn(3)");
 		assertEquals(1, p.size());
 		assertEquals("This!", p.text());
 	}
@@ -251,28 +251,26 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testCreateElementError() {
+	void testCreateElementError() {
 		Jerry j = Jerry.jerry("1<span>2</span>3<span></span>4");
 
 		j.attr("id", "test");
 		assertEquals("1<span>2</span>3<span></span>4", j.html());
 
-		j.$("*").attr("id", "test");
+		j.s("*").attr("id", "test");
 
 		assertEquals("1<span id=\"test\">2</span>3<span id=\"test\"></span>4", j.html());
 	}
 
 	@Test
-	public void testCustomerDetails() {
+	void testCustomerDetails() {
 		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
 
-		doc.$("p").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				String innerHtml = $this.html();
-				innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
-				$this.html(innerHtml);
-				return true;
-			}
+		doc.s("p").each(($this, index) -> {
+			String innerHtml = $this.html();
+			innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
+			$this.html(innerHtml);
+			return true;
 		});
 
 		String newHtml = doc.html();
@@ -280,7 +278,7 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		String html = null;
 		Jerry jerry = Jerry.jerry(html);
 
@@ -295,7 +293,7 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void test233() {
+	void test233() {
 		String html = "<div><span>name</span>value</div>";
 
 		Jerry $ = Jerry.jerry(html);
@@ -314,7 +312,7 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testEmptyClassAttribute() {
+	void testEmptyClassAttribute() {
 		Jerry doc = Jerry.jerry("<div class></div>");
 
 		try {
@@ -325,7 +323,7 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void test250() {
+	void test250() {
 		String html = "<html>\n" +
 			"  <body>\n" +
 			"    <a href=\"/go?to=foobar&index=null\" title=\"Choice 1\">link</a>\n" +
@@ -342,19 +340,34 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void test279() {
+	void test279() {
 		String html = "<html><body><div>x</div></body></html>";
 
 		Jerry $ = Jerry.jerry(html);
 
-		$.$("body").html("");
+		$.s("body").html("");
 		assertEquals("<html><body></body></html>", $.html());
 
-		$.$("body").append("");
+		$.s("body").append("");
 		assertEquals("<html><body></body></html>", $.html());
 
-		$.$("body").before("");
+		$.s("body").before("");
 		assertEquals("<html><body></body></html>", $.html());
+	}
+
+	@Test
+	void test321() {
+		String html = "<head><title>test &amp; blah</title><body><h1>test &amp; blah<b>bold</b></h1></body>";
+
+		Jerry doc = Jerry.jerry(html);
+		Jerry title = doc.s("title");
+
+		assertEquals("test &amp; blah", title.eq(0).html());
+		assertEquals("test & blah", title.eq(0).text());
+
+		Jerry h1 = doc.s("h1");
+		assertEquals("test &amp; blah<b>bold</b>", h1.eq(0).html());
+		assertEquals("test & blahbold", h1.eq(0).text());
 	}
 
 }

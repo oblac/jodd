@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * {@link jodd.proxetta.Proxetta} and {@link jodd.proxetta.ProxettaBuilder} implementations.
+ * {@link jodd.proxetta.Proxetta} and {@link jodd.proxetta.ProxettaFactory} implementations.
  */
 package jodd.proxetta.impl;

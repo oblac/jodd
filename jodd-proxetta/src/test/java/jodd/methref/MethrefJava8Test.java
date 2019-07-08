@@ -25,11 +25,11 @@
 
 package jodd.methref;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MethrefJava8Test {
+class MethrefJava8Test {
 
 	public static interface Foo {
 
@@ -42,7 +42,8 @@ public class MethrefJava8Test {
 
 	public static class Chuck implements Foo {
 
-		public void hello(int i) {
+		@Override
+		public void hello(final int i) {
 			System.out.println(i);
 		}
 
@@ -53,19 +54,19 @@ public class MethrefJava8Test {
 
 	public static class Sara extends Chuck {
 		@Override
-		public void hello(int i) {
+		public void hello(final int i) {
 			super.hello(i);
 		}
 	}
 
 	@Test
-	public void testMethrefOnInterfaceWithDefaultMethod() {
-		Methref<Sara> methref = Methref.on(Sara.class);
+	void testMethrefOnInterfaceWithDefaultMethod() {
+		final Methref<Sara> methref = Methref.of(Sara.class);
 
-		methref.to().hello(123);
+		methref.get().hello(123);
 		assertEquals("hello", methref.ref());
 
-		methref.to().nerd();
+		methref.get().nerd();
 		assertEquals("nerd", methref.ref());
 
 //		methref.to().hey();

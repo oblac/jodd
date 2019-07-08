@@ -25,39 +25,45 @@
 
 package jodd.typeconverter;
 
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arrc;
+import static jodd.typeconverter.TypeConverterTestHelper.arrd;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arro;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import jodd.typeconverter.impl.StringArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-public class StringArrayConverterTest {
+class StringArrayConverterTest {
+	
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
-	public void testConversion() {
-		StringArrayConverter stringArrayConverter = (StringArrayConverter) TypeConverterManager.lookup(String[].class);
+	void testConversion() {
+		StringArrayConverter stringArrayConverter = (StringArrayConverter) typeConverterManager.lookup(String[].class);
 
 		assertNull(stringArrayConverter.convert(null));
 
-		assertEq(arrs(Double.class.getName()), stringArrayConverter.convert(Double.class));
-		assertEq(arrs("173"), stringArrayConverter.convert("173"));
-		assertEq(arrs("173", "1022"), stringArrayConverter.convert("173,1022"));
-		assertEq(arrs("173", " 1022"), stringArrayConverter.convert("173, 1022"));
-		assertEq(arrs("173", "1022"), stringArrayConverter.convert(arrs("173", "1022")));
-		assertEq(arrs("1", "7", "3"), stringArrayConverter.convert(arri(1, 7, 3)));
-		assertEq(arrs("1", "7", "3"), stringArrayConverter.convert(arrl(1, 7, 3)));
-		assertEq(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrd(1, 7, 3)));
-		assertEq(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrf(1, 7, 3)));
-		assertEq(arrs("173", "true"), stringArrayConverter.convert(arro("173", Boolean.TRUE)));
-		assertEq(arrs("173", "java.lang.String"), stringArrayConverter.convert(arro("173", String.class)));
+		assertArrayEquals(arrs(Double.class.getName()), stringArrayConverter.convert(Double.class));
+		assertArrayEquals(arrs("173"), stringArrayConverter.convert("173"));
+		assertArrayEquals(arrs("173", "1022"), stringArrayConverter.convert("173,1022"));
+		assertArrayEquals(arrs("173", " 1022"), stringArrayConverter.convert("173, 1022"));
+		assertArrayEquals(arrs("173", "1022"), stringArrayConverter.convert(arrs("173", "1022")));
+		assertArrayEquals(arrs("1", "7", "3"), stringArrayConverter.convert(arri(1, 7, 3)));
+		assertArrayEquals(arrs("1", "7", "3"), stringArrayConverter.convert(arrl(1, 7, 3)));
+		assertArrayEquals(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrd(1, 7, 3)));
+		assertArrayEquals(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrf(1, 7, 3)));
+		assertArrayEquals(arrs("173", "true"), stringArrayConverter.convert(arro("173", Boolean.TRUE)));
+		assertArrayEquals(arrs("173", "java.lang.String"), stringArrayConverter.convert(arro("173", String.class)));
+		assertArrayEquals(arrs("173.0", "654.7834"), stringArrayConverter.convert(arrd(173D, 654.7834D)));
+		assertArrayEquals(arrs("72", "-21"), stringArrayConverter.convert(arrs(72, -21)));
+		assertArrayEquals(arrs("72", "-21"), stringArrayConverter.convert(arrb(72, -21)));
+		assertArrayEquals(arrs("J","O","D","D"), stringArrayConverter.convert(arrc('J', 'O', 'D', 'D')));
+		assertArrayEquals(arrs("true","true","false","false"), stringArrayConverter.convert(arrl(true,true,false,false)));
 	}
-
-	private void assertEq(String[] arr1, String[] arr2) {
-		assertEquals(arr1.length, arr2.length);
-		for (int i = 0; i < arr1.length; i++) {
-			assertEquals(arr1[i], arr2[i]);
-		}
-	}
-
 }

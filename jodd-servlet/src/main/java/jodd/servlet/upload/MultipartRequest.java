@@ -26,9 +26,9 @@
 package jodd.servlet.upload;
 
 import jodd.core.JoddCore;
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.MultipartStreamParser;
 import jodd.servlet.ServletUtil;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.MultipartStreamParser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class MultipartRequest extends MultipartStreamParser {
 	 * @param encoding	form encoding or <code>null</code>
 	 * @param fileUploadFactory	file factory, or <code>null</code> for default factory
 	 */
-	public MultipartRequest(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) {
+	public MultipartRequest(final HttpServletRequest request, final FileUploadFactory fileUploadFactory, final String encoding) {
 		super(fileUploadFactory);
 		this.request = request;
 		if (encoding != null) {
@@ -124,7 +124,7 @@ public class MultipartRequest extends MultipartStreamParser {
 	/**
 	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
+	public static MultipartRequest getInstance(final HttpServletRequest request, final FileUploadFactory fileUploadFactory, final String encoding) throws IOException {
 		MultipartRequest mreq = (MultipartRequest) request.getAttribute(MREQ_ATTR_NAME);
 		if (mreq == null) {
 			mreq = new MultipartRequest(request, fileUploadFactory, encoding);
@@ -139,7 +139,7 @@ public class MultipartRequest extends MultipartStreamParser {
 	/**
 	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getInstance(HttpServletRequest request) throws IOException {
+	public static MultipartRequest getInstance(final HttpServletRequest request) throws IOException {
 		return getInstance(request, null, null);
 	}
 

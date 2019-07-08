@@ -28,7 +28,7 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
-import jodd.util.MimeTypes;
+import jodd.madvoc.result.TextResult;
 
 @MadvocAction
 public class RawResultAction {
@@ -41,14 +41,14 @@ public class RawResultAction {
 	};
 
 
-	@Action("/${:method}")
+	@Action("/{:name}")
 	public RawData madvocRawImage() {
-		return new RawData(SMALLEST_GIF, MimeTypes.lookupMimeType("gif"));
+		return RawData.of(SMALLEST_GIF).as("gif");
 	}
 
-	@Action("/${:method}")
-	public String madvocEncoding() {
-		return "text:this text contents chinese chars 中文";
+	@Action("/{:name}")
+	public TextResult madvocEncoding() {
+		return TextResult.of("this text contents chinese chars 中文");
 	}
 
 }

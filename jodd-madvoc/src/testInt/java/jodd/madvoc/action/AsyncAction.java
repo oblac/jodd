@@ -26,6 +26,7 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.Async;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 
@@ -35,7 +36,8 @@ public class AsyncAction {
 	@Out
 	String task;
 
-	@Action(async = true)
+	@Async
+	@Action
 	public void view() {
 		task = "TASK";
 	}

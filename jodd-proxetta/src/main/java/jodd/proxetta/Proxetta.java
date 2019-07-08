@@ -25,6 +25,15 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.impl.InvokeProxetta;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.impl.WrapperProxetta;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
  * <p>
@@ -48,10 +57,36 @@ package jodd.proxetta;
  * <li> foo. (ending with a dot) - proxy package is set, proxy simple name is create from target simple class name.</li>
  * <li> foo.Foo - full proxy class name is specified.</li>
  * </ul>
- * @see ProxettaBuilder
+ * @see ProxettaFactory
  */
-@SuppressWarnings("unchecked")
-public abstract class Proxetta<T extends Proxetta> {
+public abstract class Proxetta<T extends Proxetta, A> {
+
+	/**
+	 * Creates a new instance of {@link WrapperProxetta}.
+	 */
+	public static WrapperProxetta wrapperProxetta() {
+		return new WrapperProxetta();
+	}
+
+	/**
+	 * Creates a new instance of {@link ProxyProxetta}.
+	 */
+	public static ProxyProxetta proxyProxetta() {
+		return new ProxyProxetta();
+	}
+
+	/**
+	 * Creates a new instance of {@link InvokeProxetta}.
+	 */
+	public static InvokeProxetta invokeProxetta() {
+		return new InvokeProxetta();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
 
 	// ---------------------------------------------------------------- properties
 
@@ -59,16 +94,36 @@ public abstract class Proxetta<T extends Proxetta> {
 	protected ClassLoader classLoader;
 	protected boolean variableClassName;
 	protected String classNameSuffix;
-	protected String debugFolder;
+	protected File debugFolder;
+	protected final List<A> proxyAspectList = new ArrayList<>();
+
+	// ---------------------------------------------------------------- aspects
+
+	/**
+	 * Adds an aspect.
+	 */
+	public T withAspect(final A proxyAspect) {
+		proxyAspectList.add(proxyAspect);
+		return _this();
+	}
+
+	public T withAspects(final A... aspects) {
+		Collections.addAll(proxyAspectList, aspects);
+		return _this();
+	}
+
+	public A[] getAspects(final A[] array) {
+		return proxyAspectList.toArray(array);
+	}
 
 	/**
 	 * Specifies 'forced' mode. If <code>true</code>, new proxy class will be created even if there are no
 	 * matching pointcuts. If <code>false</code>, new proxy class will be created only if there is at least one
 	 * matching pointcut - otherwise, original class will be returned.
 	 */
-	public T setForced(boolean forced) {
+	public T setForced(final boolean forced) {
 		this.forced = forced;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isForced() {
@@ -80,9 +135,9 @@ public abstract class Proxetta<T extends Proxetta> {
 	 * Specifies classloaders for loading created classes.
 	 * If classloader not specified, default one will be used.
 	 */
-	public T setClassLoader(ClassLoader classLoader) {
+	public T setClassLoader(final ClassLoader classLoader) {
 		this.classLoader = classLoader;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -93,7 +148,6 @@ public abstract class Proxetta<T extends Proxetta> {
 		return classLoader;
 	}
 
-
 	/**
 	 * Sets variable proxy class name so every time when new proxy class is created
 	 * its name will be different,so one classloader may load it without a problem.
@@ -102,9 +156,9 @@ public abstract class Proxetta<T extends Proxetta> {
 	 * <p>
 	 * This prevents "<code>java.lang.LinkageError: duplicate class definition</code>" errors.
 	 */
-	public T setVariableClassName(boolean variableClassName) {
+	public T setVariableClassName(final boolean variableClassName) {
 		this.variableClassName = variableClassName;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isVariableClassName() {
@@ -117,9 +171,9 @@ public abstract class Proxetta<T extends Proxetta> {
 	 * Warning: when class name suffix is not used, full classname has to be
 	 * specified that differs from target class name.
 	 */
-	public T setClassNameSuffix(String suffix) {
+	public T setClassNameSuffix(final String suffix) {
 		this.classNameSuffix = suffix;
-		return (T) this;
+		return _this();
 	}
 
 	public String getClassNameSuffix() {
@@ -130,20 +184,28 @@ public abstract class Proxetta<T extends Proxetta> {
 	 * Specifies the debug folder where all created classes will be
 	 * written to, for debugging purposes.
 	 */
-	public T setDebugFolder(String debugFolder) {
-		this.debugFolder = debugFolder;
-		return (T) this;
+	public T setDebugFolder(final String debugFolder) {
+		this.debugFolder = new File(debugFolder);
+		return _this();
 	}
 
-	public String getDebugFolder() {
+	public T setDebugFolder(final File debugFolder) {
+		this.debugFolder = debugFolder;
+		return _this();
+	}
+
+	/**
+	 * Returns debug folder or {@code null} if debug folder does not exist.
+	 */
+	public File getDebugFolder() {
 		return debugFolder;
 	}
 
 	// ---------------------------------------------------------------- builder
 
 	/**
-	 * Creates {@link ProxettaBuilder} with current options.
+	 * Creates {@link ProxettaFactory} with of this Proxetta.
 	 */
-	public abstract ProxettaBuilder builder();
+	public abstract ProxettaFactory proxy();
 
 }

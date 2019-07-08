@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Some helper Madvoc actions.
+ * Action configuration and other action-related stuff.
  */
 package jodd.madvoc.action;

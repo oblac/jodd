@@ -1,4 +1,5 @@
 // Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,9 +26,8 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.path.RestResourcePath;
-import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.action.RestActionConfig;
+import jodd.madvoc.path.RestActionNamingStrategy;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -37,12 +37,13 @@ import java.lang.annotation.Target;
 
 /**
  * Extension of {@link jodd.madvoc.meta.Action} for REST resources
- * that uses {@link jodd.madvoc.path.RestResourcePath different naming}
+ * that uses {@link RestActionNamingStrategy different naming}
  * convention.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@ActionConfiguredBy(RestActionConfig.class)
 public @interface RestAction {
 
 	/**
@@ -51,34 +52,9 @@ public @interface RestAction {
 	 */
 	String value() default "";
 
-	//String extension() default "";
-
 	/**
 	 * Defines alias.
 	 */
 	String alias() default "";
-
-	/**
-	 * Defines action method (such as HTTP request method: GET, POST....).
-	 * Ignore it or use {@link Action#ANY} to ignore the method.
-	 */
-	String method() default "";
-
-	/**
-	 * Defines if action has to be called asynchronously
-	 * using Servlets 3.0 API.
-	 */
-	boolean async() default false;
-
-	/**
-	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
-	 * that is going to render the result object.
-	 */
-	Class<? extends ActionResult> result() default ActionResult.class;
-
-	/**
-	 * Defines the way how mapping is done: using {@link jodd.madvoc.path.RestResourcePath}.
-	 */
-	Class<? extends ActionNamingStrategy> path() default RestResourcePath.class;
 
 }

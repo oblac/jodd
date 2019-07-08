@@ -25,32 +25,36 @@
 
 package jodd.petite;
 
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.RequestScope;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Zoo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Semaphore;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ScopeTest {
+class ScopeTest {
 
 	@Test
-	public void testThreadLocalScope() throws InterruptedException {
+	void testThreadLocalScope() throws InterruptedException {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Foo.class, "foo", null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false);
+		pc.registerPetiteBean(Foo.class, "foo", null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false, null);
 
-		assertEquals(3, pc.getTotalBeans());
-		assertEquals(2, pc.getTotalScopes());
+		assertEquals(3, pc.beansCount());
+		assertEquals(2, pc.scopesCount());
 
 		final Boo boo = (Boo) pc.getBean("boo");
 		final Foo foo = (Foo) pc.getBean("foo");
@@ -77,7 +81,7 @@ public class ScopeTest {
 	}
 
 	@Test
-	public void testScopeAccept() {
+	void testScopeAccept() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		SingletonScope singletonScope = pc.resolveScope(SingletonScope.class);
@@ -86,7 +90,7 @@ public class ScopeTest {
 		RequestScope requestScope = pc.resolveScope(RequestScope.class);
 
 		assertTrue(singletonScope.accept(singletonScope));
-		assertFalse(singletonScope.accept(protoScope));
+		assertTrue(singletonScope.accept(protoScope));
 		assertFalse(singletonScope.accept(sessionScope));
 		assertFalse(singletonScope.accept(requestScope));
 
@@ -96,12 +100,12 @@ public class ScopeTest {
 		assertTrue(protoScope.accept(requestScope));
 
 		assertTrue(sessionScope.accept(singletonScope));
-		assertFalse(sessionScope.accept(protoScope));
+		assertTrue(sessionScope.accept(protoScope));
 		assertTrue(sessionScope.accept(sessionScope));
 		assertFalse(sessionScope.accept(requestScope));
 
 		assertTrue(requestScope.accept(singletonScope));
-		assertFalse(requestScope.accept(protoScope));
+		assertTrue(requestScope.accept(protoScope));
 		assertTrue(requestScope.accept(sessionScope));
 		assertTrue(requestScope.accept(requestScope));
 	}

@@ -121,15 +121,15 @@ public class PageData<T> {
 		this(1, 0, PageRequest.defaultPageSize, null);
 	}
 
-	public PageData(int page, int size) {
+	public PageData(final int page, final int size) {
 		this(page, size, PageRequest.defaultPageSize, null);
 	}
 
-	public PageData(int page, int size, int pageSize) {
+	public PageData(final int page, final int size, final int pageSize) {
 		this(page, size, pageSize, null);
 	}
 
-	public PageData(PageRequest req, int size, List<T> items) {
+	public PageData(final PageRequest req, final int size, final List<T> items) {
 		this(req.getPage(), size, req.getSize(), items);
 	}
 
@@ -140,7 +140,7 @@ public class PageData<T> {
 	 * @param pageSize number of items per page
 	 * @param items list of fetched items
 	 */
-	public PageData(int page, int size, int pageSize, List<T> items) {
+	public PageData(int page, final int size, int pageSize, final List<T> items) {
 		if (pageSize <= 0) {
 			pageSize = PageRequest.defaultPageSize;
 		}
@@ -215,14 +215,14 @@ public class PageData<T> {
 	/**
 	 * Calculates page number that contains some item.
 	 */
-	public static int calcPageOfItem(int itemIndex, int pageSize) {
+	public static int calcPageOfItem(final int itemIndex, final int pageSize) {
 		return itemIndex / pageSize + 1;
 	}
 
 	/**
 	 * Calculates the first item index of requested page.
 	 */
-	public static int calcFirstItemIndexOfPage(int page, int pageSize, int total) {
+	public static int calcFirstItemIndexOfPage(int page, final int pageSize, final int total) {
 		if (total == 0) {
 			return 0;
 		}
@@ -239,7 +239,7 @@ public class PageData<T> {
 	/**
 	 * Calculates first item index of the page.
 	 */
-	public static int calcFirstItemIndexOfPage(PageRequest pageRequest, int total) {
+	public static int calcFirstItemIndexOfPage(final PageRequest pageRequest, final int total) {
 		return calcFirstItemIndexOfPage(pageRequest.getPage(), pageRequest.getSize(), total);
 	}
 }

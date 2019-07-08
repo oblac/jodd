@@ -30,6 +30,7 @@ import jodd.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.lagarto.dom.NodeListFilter;
+import jodd.util.ClassUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,10 +63,10 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Registers pseudo function.
 	 */
-	public static void registerPseudoFunction(Class<? extends PseudoFunction> pseudoFunctionType) {
+	public static void registerPseudoFunction(final Class<? extends PseudoFunction> pseudoFunctionType) {
 		PseudoFunction pseudoFunction;
 		try {
-			pseudoFunction = pseudoFunctionType.newInstance();
+			pseudoFunction = ClassUtil.newInstance(pseudoFunctionType);
 		} catch (Exception ex) {
 			throw new CSSellyException(ex);
 		}
@@ -75,7 +76,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Lookups pseudo function for given pseudo function name.
 	 */
-	public static PseudoFunction<?> lookupPseudoFunction(String pseudoFunctionName) {
+	public static PseudoFunction<?> lookupPseudoFunction(final String pseudoFunctionName) {
 		PseudoFunction pseudoFunction = PSEUDO_FUNCTION_MAP.get(pseudoFunctionName);
 		if (pseudoFunction == null) {
 			throw new CSSellyException("Unsupported pseudo function: " + pseudoFunctionName);
@@ -94,7 +95,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	 * Creates pseudo function selector for given function and expression.
 	 */
 	@SuppressWarnings("unchecked")
-	public PseudoFunctionSelector(String functionName, String expression) {
+	public PseudoFunctionSelector(final String functionName, final String expression) {
 		super(Type.PSEUDO_FUNCTION);
 		this.pseudoFunction = (PseudoFunction<E>) lookupPseudoFunction(functionName.trim());
 		this.expression = expression;
@@ -125,14 +126,16 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Matches nodes with this pseudo function selector.
 	 */
-	public boolean accept(Node node) {
+	@Override
+	public boolean accept(final Node node) {
 		return pseudoFunction.match(node, parsedExpression);
 	}
 
 	/**
 	 * Accepts node within selected results. Invoked after results are matched.
 	 */
-	public boolean accept(List<Node> currentResults, Node node, int index) {
+	@Override
+	public boolean accept(final List<Node> currentResults, final Node node, final int index) {
 		return pseudoFunction.match(currentResults, node, index, parsedExpression);
 	}
 

@@ -37,7 +37,7 @@ public class ContentTypeHeaderResolver {
 	private final String type;
 	private final String encoding;
 
-	public ContentTypeHeaderResolver(String fullContentType) {
+	public ContentTypeHeaderResolver(final String fullContentType) {
 		int charsetNdx = fullContentType.lastIndexOf("charset=");
 
 		encoding = charsetNdx != -1 ? extractContentTypeValue(fullContentType, charsetNdx + 8) : null;
@@ -45,7 +45,7 @@ public class ContentTypeHeaderResolver {
 		type = extractContentTypeValue(fullContentType, 0);
 	}
 
-	private String extractContentTypeValue(String type, int startIndex) {
+	private String extractContentTypeValue(final String type, int startIndex) {
 
 		// skip spaces
 		while (startIndex < type.length() && type.charAt(startIndex) == ' ') {

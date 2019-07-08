@@ -26,27 +26,35 @@
 package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.ProxyPointcut;
 
 /**
  * Pointcut on all public methods that are <b>not</b> getters or setters
  */
-public class AllRealMethodsPointcut extends ProxyPointcutSupport {
+public class AllRealMethodsPointcut implements ProxyPointcut {
 
-	public boolean apply(MethodInfo methodInfo) {
+	private static final AllRealMethodsPointcut INSTANCE = new AllRealMethodsPointcut();
 
-		if (hasReturnValue(methodInfo)
-				&& (matchMethodName(methodInfo, "get*") || (matchMethodName(methodInfo, "is*")))
-				&& hasNoArguments(methodInfo)) {
+	public static AllRealMethodsPointcut get() {
+		return INSTANCE;
+	}
+
+	@Override
+	public boolean apply(final MethodInfo methodInfo) {
+
+		if (methodInfo.hasReturnValue()
+				&& (methodInfo.matchMethodName("get*") || (methodInfo.matchMethodName("is*")))
+				&& methodInfo.hasNoArguments()) {
 			// getter
 			return false;
 		}
 
-		if (matchMethodName(methodInfo, "set*")
-				&& hasOneArgument(methodInfo)) {
+		if (methodInfo.matchMethodName("set*")
+				&& methodInfo.hasOneArgument()) {
 			// setter
 			return false;
 		}
 
-		return isPublic(methodInfo);
+		return methodInfo.isPublicMethod();
 	}
 }

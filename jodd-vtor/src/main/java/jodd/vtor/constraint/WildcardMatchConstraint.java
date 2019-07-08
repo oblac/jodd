@@ -34,7 +34,7 @@ public class WildcardMatchConstraint implements ValidationConstraint<WildcardMat
 	public WildcardMatchConstraint() {
 	}
 
-	public WildcardMatchConstraint(String pattern) {
+	public WildcardMatchConstraint(final String pattern) {
 		this.pattern = pattern;
 	}
 
@@ -46,23 +46,25 @@ public class WildcardMatchConstraint implements ValidationConstraint<WildcardMat
 		return pattern;
 	}
 
-	public void setPattern(String pattern) {
+	public void setPattern(final String pattern) {
 		this.pattern = pattern;
 	}
 
 	// ---------------------------------------------------------------- configure
 	
-	public void configure(WildcardMatch annotation) {
+	@Override
+	public void configure(final WildcardMatch annotation) {
 		pattern = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, pattern);
 	}
 
-	public static boolean validate(Object value, String pattern) {
+	public static boolean validate(final Object value, final String pattern) {
 		if (value == null) {
 			return true;
 		}

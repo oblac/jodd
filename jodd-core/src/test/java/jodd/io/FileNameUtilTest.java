@@ -25,18 +25,28 @@
 
 package jodd.io;
 
-import jodd.util.SystemUtil;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.io.File;
+import java.util.stream.Stream;
+
+import jodd.system.SystemUtil;
+import jodd.util.StringUtil;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @SuppressWarnings({"SimplifiableJUnitAssertion"})
-public class FileNameUtilTest {
+class FileNameUtilTest {
 
 	@Test
-	public void testPrefixLength() {
+	void testPrefixLength() {
 		assertEquals(0, FileNameUtil.getPrefixLength("a\\b\\c.txt"));
 		assertEquals(1, FileNameUtil.getPrefixLength("\\a\\b\\c.txt"));
 		assertEquals(2, FileNameUtil.getPrefixLength("C:a\\b\\c.txt"));
@@ -56,7 +66,7 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testNormalizeProblem() {
+	void testNormalizeProblem() {
 		assertEquals("//foo/bar", FileNameUtil.normalize("//foo/.///bar", true));
 		assertEquals("/bar", FileNameUtil.normalize("/./bar", true));
 		assertEquals("//foo//", FileNameUtil.normalize("//foo//", true));
@@ -65,7 +75,7 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testNormalize() {
+	void testNormalize() {
 		assertEquals("/foo/", FileNameUtil.normalize("/foo//", true));
 		assertEquals("/foo/", FileNameUtil.normalize("/foo/./", true));
 		assertEquals("/bar", FileNameUtil.normalize("/foo/../bar", true));
@@ -88,7 +98,7 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testNormalizeNoEndSeparator() {
+	void testNormalizeNoEndSeparator() {
 		assertEquals("/foo", FileNameUtil.normalizeNoEndSeparator("/foo//", true));
 		assertEquals("/foo", FileNameUtil.normalizeNoEndSeparator("/foo/./", true));
 		assertEquals("/bar", FileNameUtil.normalizeNoEndSeparator("/foo/../bar", true));
@@ -110,7 +120,7 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testConcat() {
+	void testConcat() {
 		assertEquals("/foo/bar", FileNameUtil.concat("/foo/", "bar", true));
 		assertEquals("\\foo\\bar", FileNameUtil.concat("/foo/", "bar", false));
 		assertEquals("/foo/bar", FileNameUtil.concat("/foo", "bar", true));
@@ -126,14 +136,14 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testGetPathNoEndSeparator() {
+	void testGetPathNoEndSeparator() {
 		assertEquals("", FileNameUtil.getPathNoEndSeparator("/hello.world.html"));
 		assertEquals("foo", FileNameUtil.getPathNoEndSeparator("/foo/hello.world.html"));
 		assertEquals("foo/bar", FileNameUtil.getPathNoEndSeparator("/foo/bar/hello.world.html"));
 	}
 
 	@Test
-	public void testExtension() {
+	void testExtension() {
 		assertEquals("foo", FileNameUtil.getExtension("/a/b/c.foo"));
 		assertEquals("doo", FileNameUtil.getExtension("/a/b/c.foo.doo"));
 		assertEquals("", FileNameUtil.getExtension("/a/b/c"));
@@ -144,11 +154,70 @@ public class FileNameUtilTest {
 	}
 
 	@Test
-	public void testResolveHome() {
+	void testResolveHome() {
 		assertEquals("qwe", FileNameUtil.resolveHome("qwe"));
 		assertEquals("", FileNameUtil.resolveHome(""));
-		assertEquals(SystemUtil.userHome(), FileNameUtil.resolveHome("~"));
-		assertEquals(SystemUtil.userHome() + "/", FileNameUtil.resolveHome("~/"));
-		assertEquals(SystemUtil.userHome() + "/foo", FileNameUtil.resolveHome("~/foo"));
+		assertEquals(SystemUtil.info().getHomeDir(), FileNameUtil.resolveHome("~"));
+		assertEquals(fixpath(SystemUtil.info().getHomeDir() + "/"), FileNameUtil.resolveHome(fixpath("~/")));
+		assertEquals(fixpath(SystemUtil.info().getHomeDir() + "/foo"), FileNameUtil.resolveHome(fixpath("~/foo")));
+	}
+
+	@Test
+	void testGetRelativePaths() {
+		assertEquals(fixpath("../../b/c"), FileNameUtil.relativePath("/a/b/c", "/a/x/y/"));
+		assertEquals(fixpath("../../b/c"), FileNameUtil.relativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/"));
+		assertEquals(fixpath("stuff/xyz.dat"), FileNameUtil.relativePath("/var/data/stuff/xyz.dat", "/var/data/"));
+		assertEquals(fixpath("../../../a/b/c"), FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
+	}
+
+	@Nested
+	@DisplayName(value = "tests for method split(String filename)")
+	class Split {
+		@Test
+		void filename_with_windows_syntax() {
+			final String filename = "c:\\temp\\jodd\\io\\a_very_stupid_filename.tmp.xml";
+			final String[] actual = FileNameUtil.split(filename);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(4, actual.length);
+			assertEquals("c:\\", actual[0]);
+			assertEquals("temp\\jodd\\io\\", actual[1]);
+			assertEquals("a_very_stupid_filename.tmp", actual[2]);
+			assertEquals("xml", actual[3]);
+		}
+
+		@Test
+		void filename_with_unix_syntax() {
+			final String filename = "/tmp/jodd/io/a_very_stupid_filename.tmp.xml";
+			final String[] actual = FileNameUtil.split(filename);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(4, actual.length);
+			assertEquals("/", actual[0]);
+			assertEquals("tmp/jodd/io/", actual[1]);
+			assertEquals("a_very_stupid_filename.tmp", actual[2]);
+			assertEquals("xml", actual[3]);
+		}
+	}
+
+	@ParameterizedTest
+	@MethodSource("createTestData_testEqualsOnSystem")
+	void testEqualsOnSystem(final boolean expected, final String filename1, final String filename2) {
+		assertEquals(expected, FileNameUtil.equalsOnSystem(filename1, filename2));
+	}
+
+	private static Stream<Arguments> createTestData_testEqualsOnSystem() {
+		return Stream.of(
+				Arguments.of(SystemUtil.info().isWindows(), "jodd_makes_fun.git", "jodd_MAKES_fUn.GiT"),
+				Arguments.of(false, "jodd.tmp", "j0dd.tmp"),
+				Arguments.of(true, null, null),
+				Arguments.of(false, "jodd.tmp", null)
+		);
+	}
+
+	private static String fixpath(String path) {
+		return StringUtil.replace(path, "/", File.separator);
 	}
 }

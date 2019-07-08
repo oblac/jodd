@@ -25,50 +25,31 @@
 
 package jodd.joy.db;
 
-import jodd.util.HashCode;
-
-import static jodd.util.HashCode.SEED;
+import java.util.Objects;
 
 /**
- * Abstract entity. It may be used when <code>@DbId</code> annotation is not used.
+ * Abstract entity.
  */
-public abstract class Entity implements DbEntity {
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isPersistent() {
-		return getEntityId() != 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void detach() {
-		setEntityId(0);
-	}
+public abstract class Entity<ID> implements DbEntity<ID> {
 
 	// ---------------------------------------------------------------- equals
 
 	@Override
 	public int hashCode() {
-		int hash = SEED;
-		hash = HashCode.hash(hash, getEntityId());
-		hash = HashCode.hash(hash, getClass());
-		return hash;
+		return Objects.hash(getEntityId(), getClass());
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o.getClass() != this.getClass()) {
 			return false;
 		}
-		Entity entity = (Entity) o;
+		final Entity entity = (Entity) o;
 
-		if (getEntityId() == 0 && entity.getEntityId() == 0) {
+		if (getEntityId() == null && entity.getEntityId() == null) {
 			return this == o;
 		}
 		return getEntityId() == entity.getEntityId();

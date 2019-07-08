@@ -25,17 +25,27 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CharUtilTest {
+class CharUtilTest {
 
 	@Test
-	public void testToSimpleByteArray() {
+	void testToSimpleByteArray() {
 		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toSimpleByteArray(src);
 
@@ -49,7 +59,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testToSimpleCharArray() {
+	void testToSimpleCharArray() {
 		byte[] src = new byte[]{0, 10, 65, 127, -128, -1};
 		char[] dest = CharUtil.toSimpleCharArray(src);
 
@@ -62,7 +72,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testToAsciiByteArray() {
+	void testToAsciiByteArray() {
 		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toAsciiByteArray(src);
 
@@ -76,7 +86,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testToRawByteArray() {
+	void testToRawByteArray() {
 		char[] src = new char[]{0, 'A', 255, 256, 0xFF7F};
 		byte[] dest = CharUtil.toRawByteArray(src);
 
@@ -99,7 +109,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testToRawCharArray() {
+	void testToRawCharArray() {
 		byte[] src = new byte[]{0, 0, 0, 65, 0, -1, 1, 0, -1};
 		char[] dest = CharUtil.toRawCharArray(src);
 
@@ -114,7 +124,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testToByte() throws UnsupportedEncodingException {
+	void testToByte() throws UnsupportedEncodingException {
 		char[] src = "tstč".toCharArray();
 		assertEquals(4, src.length);
 		assertEquals(269, src[3]);
@@ -146,7 +156,7 @@ public class CharUtilTest {
 	}
 
 	@Test
-	public void testHexToInt() {
+	void testHexToInt() {
 		assertEquals(0, CharUtil.hex2int('0'));
 		assertEquals(1, CharUtil.hex2int('1'));
 		assertEquals(2, CharUtil.hex2int('2'));
@@ -171,4 +181,205 @@ public class CharUtilTest {
 		assertEquals(15, CharUtil.hex2int('f'));
 	}
 
+	@ParameterizedTest (name = "{index} : CharUtil.toAscii({1}) == {0}")
+	@MethodSource("testdata_testToAscii")
+	void testToAscii(final int expected, final char input) {
+		assertEquals(expected, CharUtil.toAscii(input));
+	}
+
+	private static List<Arguments> testdata_testToAscii() {
+		// from https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
+		// The char data type is a single 16-bit Unicode character. It has a minimum value of '\u0000' (or 0) and a maximum value of '\uffff' (or 65,535 inclusive).
+		List<Arguments> params = new ArrayList<>();
+		// chars 0 - 255 -> ASCII chars
+		for (int c = 0; c <= 255; c++) {
+			params.add(Arguments.of(c, (char) c));
+		}
+		// chars > 255
+		params.add(Arguments.of(0x3F, (char)256));
+		params.add(Arguments.of(0x3F, (char)Integer.MAX_VALUE));
+		// chars < 0 => 65535 and smaller
+		params.add(Arguments.of(0x3F, (char)-1));
+		params.add(Arguments.of(0x3F, (char)-2));
+		params.add(Arguments.of(1, (char)-65535));
+
+		return params;
+	}
+
+	@ParameterizedTest (name = "{index} : CharUtil.toSimpleByteArray({1}) == {0}")
+	@MethodSource("testdata_testToSimpleByteArray_with_charsequence")
+	// Note : launch test method separatly via IntelliJ (2017.2.5) does not work properly
+	void testToSimpleByteArray_with_charsequence(final byte[] expected, final CharSequence input) {
+		assertArrayEquals(expected, CharUtil.toSimpleByteArray(input));
+	}
+
+	private static Stream<Arguments> testdata_testToSimpleByteArray_with_charsequence() {
+		return Stream.of(
+			Arguments.of(new byte[] {106}, "j"),
+			Arguments.of(new byte[] {106,111}, "jo"),
+			Arguments.of(new byte[] {106,111,100}, "jod"),
+			Arguments.of(new byte[] {106,111,100,100}, "jodd"),
+			Arguments.of(new byte[] {74}, "J"),
+			Arguments.of(new byte[] {74,79}, "JO"),
+			Arguments.of(new byte[] {74,79,68}, "JOD"),
+			Arguments.of(new byte[] {74,79,68,68}, "JODD")
+		);
+	}
+
+
+	@ParameterizedTest (name = "{index} : CharUtil.toAsciiByteArray({1}) == {0}")
+	@MethodSource({"testdata_testToSimpleByteArray_with_charsequence", "testdata_testToAsciiByteArray_with_charsequence"})
+		// Note : launch test method separatly via IntelliJ (2017.2.5) does not work properly
+	void testToAsciiByteArray_with_charsequence(final byte[] expected, final CharSequence input) {
+		assertArrayEquals(expected, CharUtil.toAsciiByteArray(input));
+	}
+
+	private static Stream<Arguments> testdata_testToAsciiByteArray_with_charsequence() {
+		return Stream.of(
+				Arguments.of(new byte[] {63}, new String(new char[]{256})) ,
+				Arguments.of(new byte[] {63, 63}, new String(new char[]{454, 276})) ,
+				Arguments.of(new byte[] {106, 111, 111, 100}, new String(new char[]{106, 111, 111, 100}))
+		);
+	}
+
+
+	@ParameterizedTest (name = "{index} : CharUtil.isUppercaseAlpha({1}) == {0}")
+	@MethodSource({"testdata_testIsUppercaseAlpha"})
+	void testIsUppercaseAlpha(final boolean expected, final char input) {
+		final boolean actual = CharUtil.isUppercaseAlpha(input);
+
+		if (expected) {
+			assertTrue(actual, "char '" + input + "' is no uppercase alpha but was expected.");
+		} else {
+			assertFalse(actual, "char '" + input + "' is uppercase alpha but was not expected.");
+		}
+	}
+
+	private static List<Arguments> testdata_testIsUppercaseAlpha() {
+		final List<Arguments> params = new ArrayList<>();
+
+		// chars 0 - 64 => non uppercase chars
+		for (int c = 0; c <= 64; c++) {
+			params.add(Arguments.of(false, (char)c));
+		}
+		// chars 65 - 90 => uppercase chars
+		for (int c = 65; c <= 90; c++) {
+			params.add(Arguments.of(true, (char)c));
+		}
+		// chars 91 - 255 => non uppercase chars
+		for (int c = 91; c <= 255; c++) {
+			params.add(Arguments.of(false, (char)c));
+		}
+
+		return params;
+	}
+
+	@ParameterizedTest (name = "{index} : CharUtil.isUppercaseAlpha({1}) == {0}")
+	@MethodSource({"testdata_testIsHexDigit"})
+	void testIsHexDigit(final boolean expected, final char input) {
+		final boolean actual = CharUtil.isHexDigit(input);
+
+		if (expected) {
+			assertTrue(actual, "char '" + input + "' is no hex digit char but was expected.");
+		} else {
+			assertFalse(actual, "char '" + input + "' is hex digit char but was not expected.");
+		}
+	}
+
+	private static List<Arguments> testdata_testIsHexDigit() {
+		final List<Arguments> params = new ArrayList<>();
+
+		final List<Integer> hexdigit_chars_as_integers =
+				Arrays.asList(
+						48,49,50,51,52,53,54,55,56,57, // 0-9
+						65,66,67,68,69,70, // A-F
+						97,98,99,100,101,102 // a-f
+				);
+
+		for (int c = 0; c <= 255; c++) {
+			params.add(Arguments.of(hexdigit_chars_as_integers.contains(c), (char)c));
+		}
+
+		return params;
+	}
+
+	@ParameterizedTest (name = "{index} : CharUtil.isGenericDelimiter({1}) == {0}")
+	@CsvSource({
+			// only generic delimiters
+			"true, :", "true, /", "true, ?", "true, #", "true, [", "true, ]", "true, @",
+			// few non generic delimters
+			"false, ','", "false, !", "false, +"
+		})
+	void testIsGenericDelimiter(final boolean expected, final char input) {
+		assertEquals(expected, CharUtil.isGenericDelimiter(input));
+	}
+
+	@ParameterizedTest (name = "{index} : CharUtil.isSubDelimiter({1}) == {0}")
+	@CsvSource({
+			// only generic delimiters
+			"true, !", "true, $", "true, &", "true, (", "true, )", "true, *", "true, +", "true, ','", "true, ;", "true, =",
+			// few non generic delimters
+			"false, #", "false, ]"
+		})
+	void testIsSubDelimiter(final boolean expected, final char input) {
+		assertEquals(expected, CharUtil.isSubDelimiter(input));
+	}
+
+	@Test
+	void testIsSubDelimiter_specialCase() {
+		// special case as I dont know how to add singletquote to the parameterized CsvSource
+		assertTrue(CharUtil.isSubDelimiter('\''));
+	}
+
+	@ParameterizedTest (name = "{index} : CharUtil.isLowercaseAlpha({1}) == {0}")
+	@MethodSource({"testdata_testIsLowercaseAlpha"})
+	void testIsLowercaseAlpha(final boolean expected, final char input) {
+		final boolean actual = CharUtil.isLowercaseAlpha(input);
+
+		if (expected) {
+			assertTrue(actual, "char '" + input + "' is no lowercase alpha char but was expected.");
+		} else {
+			assertFalse(actual, "char '" + input + "' is lowercase alpha char but was not expected.");
+		}
+	}
+
+	private static List<Arguments> testdata_testIsLowercaseAlpha() {
+		final List<Arguments> params = new ArrayList<>();
+
+		final List<Integer> hexdigit_chars_as_integers =
+				Arrays.asList(
+						// a-z
+						97,98,99,100,101,102,103,104,105,106,107,108,109,
+						110,111,112,113,114,115,116,117,118,119,120,121,122
+				);
+
+		for (int c = 0; c <= 255; c++) {
+			params.add(Arguments.of(hexdigit_chars_as_integers.contains(c), (char)c));
+		}
+
+		return params;
+	}
+
+	@ParameterizedTest (name = "{index} - CharUtil.isWhitespace({1}) == {0}")
+	@MethodSource({"testdata_testIsWhitespace"})
+	void testIsWhitespace(final boolean expected, final char input) {
+		assertEquals(expected, CharUtil.isWhitespace(input));
+	}
+
+	private static List<Arguments> testdata_testIsWhitespace() {
+		List<Arguments> params = new ArrayList<>();
+
+		// due to code -> char <= ' '
+		for (int c = 0; c <= 32; c++) {
+			params.add(Arguments.of(true, (char)c));
+		}
+		// few greater than 32
+		params.add(Arguments.of(false, (char)33));
+		params.add(Arguments.of(false, (char)43));
+		params.add(Arguments.of(false, (char)53));
+		params.add(Arguments.of(false, (char)63));
+		params.add(Arguments.of(false, (char)73));
+
+		return params;
+	}
 }

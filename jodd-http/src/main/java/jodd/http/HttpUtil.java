@@ -25,10 +25,11 @@
 
 package jodd.http;
 
+import jodd.net.URLCoder;
+import jodd.net.URLDecoder;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
-import jodd.util.URLCoder;
-import jodd.util.URLDecoder;
+import jodd.util.StringUtil;
 
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class HttpUtil {
 	/**
 	 * Builds a query string from given query map.
 	 */
-	public static String buildQuery(HttpMultiMap<?> queryMap, String encoding) {
+	public static String buildQuery(final HttpMultiMap<?> queryMap, final String encoding) {
 		if (queryMap.isEmpty()) {
 			return StringPool.EMPTY;
 		}
@@ -85,41 +86,43 @@ public class HttpUtil {
 	/**
 	 * Parses query from give query string. Values are optionally decoded.
 	 */
-	public static HttpMultiMap<String> parseQuery(String query, boolean decode) {
+	public static HttpMultiMap<String> parseQuery(final String query, final boolean decode) {
 
-		HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitveMap();
+		final HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitiveMap();
 
-		int ndx, ndx2 = 0;
-		while (true) {
-			ndx = query.indexOf('=', ndx2);
-			if (ndx == -1) {
-				if (ndx2 < query.length()) {
-					queryMap.add(query.substring(ndx2), null);
-				}
-				break;
-			}
-			String name = query.substring(ndx2, ndx);
-			if (decode) {
-				name = URLDecoder.decodeQuery(name);
-			}
+		if (StringUtil.isBlank(query)) {
+			return queryMap;
+		}
 
-			ndx2 = ndx + 1;
-
-			ndx = query.indexOf('&', ndx2);
-
+		int lastNdx = 0;
+		while (lastNdx < query.length()) {
+			int ndx = query.indexOf('&', lastNdx);
 			if (ndx == -1) {
 				ndx = query.length();
 			}
 
-			String value = query.substring(ndx2, ndx);
+			final String paramAndValue = query.substring(lastNdx, ndx);
 
-			if (decode) {
-				value = URLDecoder.decodeQuery(value);
+			ndx = paramAndValue.indexOf('=');
+
+			if (ndx == -1) {
+				queryMap.add(paramAndValue, null);
 			}
+			else {
+				String name = paramAndValue.substring(0, ndx);
+				if (decode) {
+					name = URLDecoder.decodeQuery(name);
+				}
 
-			queryMap.add(name, value);
+				String value = paramAndValue.substring(ndx + 1);
 
-			ndx2 = ndx + 1;
+				if (decode) {
+					value = URLDecoder.decodeQuery(value);
+				}
+
+				queryMap.add(name, value);
+			}
+			lastNdx += paramAndValue.length() + 1;
 		}
 
 		return queryMap;
@@ -130,7 +133,7 @@ public class HttpUtil {
 	/**
 	 * Makes nice header names.
 	 */
-	public static String prepareHeaderParameterName(String headerName) {
+	public static String prepareHeaderParameterName(final String headerName) {
 
 		// special cases
 
@@ -170,7 +173,7 @@ public class HttpUtil {
 	/**
 	 * Extracts media-type from value of "Content Type" header.
 	 */
-	public static String extractMediaType(String contentType) {
+	public static String extractMediaType(final String contentType) {
 		int index = contentType.indexOf(';');
 
 		if (index == -1) {
@@ -183,7 +186,7 @@ public class HttpUtil {
 	/**
 	 * @see #extractHeaderParameter(String, String, char)
 	 */
-	public static String extractContentTypeCharset(String contentType) {
+	public static String extractContentTypeCharset(final String contentType) {
 		return extractHeaderParameter(contentType, "charset", ';');
 	}
 
@@ -192,11 +195,11 @@ public class HttpUtil {
 	/**
 	 * Extract keep-alive timeout.
 	 */
-	public static String extractKeepAliveTimeout(String keepAlive) {
+	public static String extractKeepAliveTimeout(final String keepAlive) {
 		return extractHeaderParameter(keepAlive, "timeout", ',');
 	}
 
-	public static String extractKeepAliveMax(String keepAlive) {
+	public static String extractKeepAliveMax(final String keepAlive) {
 		return extractHeaderParameter(keepAlive, "max", ',');
 	}
 
@@ -206,7 +209,7 @@ public class HttpUtil {
 	 * Extracts header parameter. Returns <code>null</code>
 	 * if parameter not found.
 	 */
-	public static String extractHeaderParameter(String header, String parameter, char separator) {
+	public static String extractHeaderParameter(final String header, final String parameter, final char separator) {
 		int index = 0;
 
 		while (true) {
@@ -219,7 +222,7 @@ public class HttpUtil {
 			index++;
 
 			// skip whitespaces
-			while (header.charAt(index) == ' ') {
+			while (index < header.length() && header.charAt(index) == ' ') {
 				index++;
 			}
 

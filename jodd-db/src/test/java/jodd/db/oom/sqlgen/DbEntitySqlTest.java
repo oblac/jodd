@@ -25,31 +25,39 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.DbOomManager;
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.BadGirl;
-import jodd.db.oom.tst.Boy;
-import jodd.db.oom.tst.Girl;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.DbOom;
+import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.BadGirl;
+import jodd.db.oom.fixtures.Boy;
+import jodd.db.oom.fixtures.Girl;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DbEntitySqlTest {
+class DbEntitySqlTest {
 
-	@Before
-	public void setUp() throws Exception {
+	private DbOom dbOom;
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+	@BeforeEach
+	void setUp() {
+		dbOom = DbOom.create().get();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		dbOom.registerType(Boy.class);
-		dbOom.registerType(BadBoy.class);
-		dbOom.registerType(BadGirl.class);
-		dbOom.registerType(Girl.class);
+		dbEntityManager.registerType(Boy.class);
+		dbEntityManager.registerType(BadBoy.class);
+		dbEntityManager.registerType(BadGirl.class);
+		dbEntityManager.registerType(Girl.class);
+	}
+
+	@AfterEach
+	void tearDown() {
+		DbOom.get().shutdown();
 	}
 
 	protected void checkGirl(DbSqlBuilder b) {
@@ -94,36 +102,36 @@ public class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		Girl g = new Girl(1, "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.insert(g);
+		DbSqlBuilder b = dbOom.entities().insert(g);
 		assertEquals("insert into GIRL (ID, NAME, SPECIALITY) values (:girl.id, :girl.name, :girl.speciality)", b.generateQuery());
 		checkGirl(b);
 	}
 
 	@Test
-	public void testTruncate() {
+	void testTruncate() {
 		Girl g = new Girl(1, "sanja", "c++");
-		assertEquals("delete from GIRL", DbEntitySql.truncate(g).generateQuery());
-		assertEquals("delete from GIRL", DbEntitySql.truncate(Girl.class).generateQuery());
+		assertEquals("delete from GIRL", dbOom.entities().truncate(g).generateQuery());
+		assertEquals("delete from GIRL", dbOom.entities().truncate(Girl.class).generateQuery());
 	}
 
 	@Test
-	public void testUpdate() {
+	void testUpdate() {
 		Girl g = new Girl(1, "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.update(g);
+		DbSqlBuilder b = dbOom.entities().update(g);
 		assertEquals("update GIRL Girl_ set ID=:girl.id, NAME=:girl.name, SPECIALITY=:girl.speciality  where (1=1)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl(Integer.valueOf(2), null, ".net");
-		b = DbEntitySql.update(bg);
+		b = dbOom.entities().update(bg);
 		assertEquals(
 				"update GIRL BadGirl_ set ID=:badGirl.fooid, SPECIALITY=:badGirl.foospeciality  where (BadGirl_.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
-		b = DbEntitySql.updateAll(bg);
+		b = dbOom.entities().updateAll(bg);
 		assertEquals(
 				"update GIRL BadGirl_ set ID=:badGirl.fooid, NAME=:badGirl.fooname, SPECIALITY=:badGirl.foospeciality  where (BadGirl_.ID=:badGirl.fooid)",
 				b.generateQuery());
@@ -131,9 +139,9 @@ public class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testUpdateColumn() {
+	void testUpdateColumn() {
 		BadGirl bg = new BadGirl(Integer.valueOf(1), "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.updateColumn(bg, "fooname", "Anja");
+		DbSqlBuilder b = dbOom.entities().updateColumn(bg, "fooname", "Anja");
 		assertEquals(
 				"update GIRL BadGirl_ set NAME=:p0 where (BadGirl_.ID=:badGirl.fooid)",
 				b.generateQuery());
@@ -144,33 +152,33 @@ public class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testDelete() {
+	void testDelete() {
 		Girl g = new Girl(1, "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.delete(g);
+		DbSqlBuilder b = dbOom.entities().delete(g);
 		assertEquals("delete from GIRL where (GIRL.ID=:girl.id and GIRL.NAME=:girl.name and GIRL.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl(Integer.valueOf(2), null, ".net");
-		b = DbEntitySql.delete(bg);
+		b = dbOom.entities().delete(bg);
 		assertEquals(
 				"delete from GIRL where (GIRL.ID=:badGirl.fooid and GIRL.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
-		b = DbEntitySql.deleteByAll(bg);
+		b = dbOom.entities().deleteByAll(bg);
 		assertEquals(
 				"delete from GIRL where (GIRL.ID=:badGirl.fooid and GIRL.NAME=:badGirl.fooname and GIRL.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl2(b);
 
-		b = DbEntitySql.deleteById(bg);
+		b = dbOom.entities().deleteById(bg);
 		assertEquals(
 				"delete from GIRL where (GIRL.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl3(b);
 
-		b = DbEntitySql.deleteById(bg, 2);
+		b = dbOom.entities().deleteById(bg, 2);
 		assertEquals(
 				"delete from GIRL where GIRL.ID=:p0",
 				b.generateQuery());
@@ -178,107 +186,107 @@ public class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testFrom() {
+	void testFrom() {
 		Girl g = new Girl(1, "sanja", "c++");
 
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ ",
-				DbEntitySql.from(g).generateQuery());
+				dbOom.entities().from(g).generateQuery());
 
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ ",
-				DbEntitySql.from(BadGirl.class).generateQuery());
+				dbOom.entities().from(BadGirl.class).generateQuery());
 
 		assertEquals("select ggg.ID, ggg.NAME, ggg.SPECIALITY from GIRL ggg ",
-				DbEntitySql.from(BadGirl.class, "ggg").generateQuery());
+				dbOom.entities().from(BadGirl.class, "ggg").generateQuery());
 	}
 
 	@Test
-	public void testFind() {
+	void testFind() {
 		Girl g = new Girl(1, "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.find(g);
+		DbSqlBuilder b = dbOom.entities().find(g);
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id and Girl_.NAME=:girl.name and Girl_.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
-		b = DbEntitySql.findByAll(g);
+		b = dbOom.entities().findByAll(g);
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id and Girl_.NAME=:girl.name and Girl_.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl(Integer.valueOf(2), null, ".net");
-		b = DbEntitySql.find(bg);
+		b = dbOom.entities().find(bg);
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.ID=:badGirl.fooid and BadGirl_.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
-		b = DbEntitySql.findByAll(bg);
+		b = dbOom.entities().findByAll(bg);
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.ID=:badGirl.fooid and BadGirl_.NAME=:badGirl.fooname and BadGirl_.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl2(b);
 
-		b = DbEntitySql.findByColumn(Girl.class, "name", "sanja");
+		b = dbOom.entities().findByColumn(Girl.class, "name", "sanja");
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where Girl_.NAME=:p0",
 				b.generateQuery());
 		checkGirl1(b);
 
-		b = DbEntitySql.findByColumn(BadGirl.class, "fooname", "sanja");
+		b = dbOom.entities().findByColumn(BadGirl.class, "fooname", "sanja");
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where BadGirl_.NAME=:p0",
 				b.generateQuery());
 		checkGirl1(b);
 
-		b = DbEntitySql.findForeign(BadBoy.class, bg);
+		b = dbOom.entities().findForeign(BadBoy.class, bg);
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=:p0",
 				b.generateQuery());
 		checkBadGirl4(b);
 
-		b = DbEntitySql.findById(bg);
+		b = dbOom.entities().findById(bg);
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl3(b);
 
-		b = DbEntitySql.findById(bg, 2);
+		b = dbOom.entities().findById(bg, 2);
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where BadGirl_.ID=:p0",
 				b.generateQuery());
 		checkBadGirl4(b);
 	}
 
 	@Test
-	public void testCount() {
+	void testCount() {
 
 		Girl g = new Girl(1, "sanja", "c++");
-		DbSqlBuilder b = DbEntitySql.count(g);
+		DbSqlBuilder b = dbOom.entities().count(g);
 		assertEquals("select count(*) from GIRL Girl_ where (Girl_.ID=:girl.id and Girl_.NAME=:girl.name and Girl_.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl();
-		b = DbEntitySql.count(bg);
+		b = dbOom.entities().count(bg);
 		assertEquals("select count(*) from GIRL BadGirl_ where (1=1)",
 				b.generateQuery());
 
 		bg = new BadGirl(Integer.valueOf(2), null, ".net");
-		b = DbEntitySql.count(bg);
+		b = dbOom.entities().count(bg);
 		assertEquals("select count(*) from GIRL BadGirl_ where (BadGirl_.ID=:badGirl.fooid and BadGirl_.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
-		b = DbEntitySql.countAll(bg);
+		b = dbOom.entities().countAll(bg);
 		assertEquals("select count(*) from GIRL BadGirl_ where (BadGirl_.ID=:badGirl.fooid and BadGirl_.NAME=:badGirl.fooname and BadGirl_.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl2(b);
 
-		b = DbEntitySql.count(BadGirl.class);
+		b = dbOom.entities().count(BadGirl.class);
 		assertEquals("select count(*) from GIRL BadGirl_",
 				b.generateQuery());
 
 	}
 
 	@Test
-	public void testIncreaseDecrease() {
-		DbSqlBuilder b = DbEntitySql.increaseColumn(BadBoy.class, 1, "nejm", 5, true);
+	void testIncreaseDecrease() {
+		DbSqlBuilder b = dbOom.entities().increaseColumn(BadBoy.class, 1, "nejm", 5, true);
 		assertEquals("update BOY set NAME=NAME+:p0 where BOY.ID=:p1",
 				b.generateQuery());
 
-		b = DbEntitySql.increaseColumn(BadBoy.class, 1, "nejm", 5, false);
+		b = dbOom.entities().increaseColumn(BadBoy.class, 1, "nejm", 5, false);
 		assertEquals("update BOY set NAME=NAME-:p0 where BOY.ID=:p1",
 				b.generateQuery());
 

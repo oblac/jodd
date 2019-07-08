@@ -25,17 +25,20 @@
 
 package jodd.proxetta;
 
+import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.advice.DelegateAdvice;
+import jodd.proxetta.fixtures.data.Action;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
-import org.junit.Test;
+import jodd.proxetta.impl.WrapperProxettaFactory;
+import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static jodd.proxetta.ProxyTarget.createArgumentsClassArray;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class GenericsTest {
-
+class GenericsTest {
 	public static class Bar<T> {
 	}
 
@@ -46,21 +49,23 @@ public class GenericsTest {
 
 	public static class Foo implements IFoo {
 		private String id;
+		@Override
 		public String getId() {
 			return id;
 		}
 		// remove the generic and it works
+		@Override
 		public Bar<Foo> getFoo() {
 			return null;
 		}
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueWrapper() {
+	void testClassesWithGenericsAsReturnValueWrapper() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			WrapperProxetta proxetta = WrapperProxetta.withAspects(aspect);
-			WrapperProxettaBuilder builder = proxetta.builder(Foo.class, IFoo.class);
+			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
+			WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(aspect);
+			WrapperProxettaFactory builder = proxetta.proxy().setTarget(Foo.class).setTargetInterface(IFoo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
@@ -69,16 +74,100 @@ public class GenericsTest {
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueProxy() {
+	void testClassesWithGenericsAsReturnValueProxy() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
-			ProxyProxettaBuilder builder = proxetta.builder(Foo.class);
+			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(Foo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 			fail(ex.toString());
 		}
+	}
+
+	// ---------------------------------------------------------------- daos
+
+
+	public static class JoyDao<T, Id> {
+		public T foo(Id[] val) {
+			return null;
+		}
+	}
+	public static class RoomDao extends JoyDao<RoomDao, Long>{
+	}
+	public static class IncompleteDao<T> extends JoyDao<T, Long> {}
+	public static class FinalDao extends IncompleteDao<RoomDao> {}
+
+	@Test
+	void testClassesWithGenericsAsReturnValueProxy_array1() {
+		RoomDao dao;
+		try {
+			ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(RoomDao.class);
+			dao = (RoomDao) builder.newInstance();
+
+			ClassIntrospector.get().lookup(dao.getClass()).getAllMethodDescriptors();
+			dao.foo(null);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			fail(ex.toString());
+		}
+	}
+
+	@Test
+	void testClassesWithGenericsAsReturnValueProxy_array2() {
+		FinalDao dao;
+		try {
+			ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(FinalDao.class);
+			dao = (FinalDao) builder.newInstance();
+
+			ClassIntrospector.get().lookup(dao.getClass()).getAllMethodDescriptors();
+			dao.foo(null);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			fail(ex.toString());
+		}
+	}
+
+
+	// ---------------------------------------------------------------- misc
+
+	public static class Boo<T> {
+		@Action
+		public void save(T t) {
+		}
+	}
+
+	public static class MyBoo extends Boo<Foo> {
+	}
+
+	public static class LogAdvice implements ProxyAdvice {
+
+		@Override
+		public Object execute() {
+			System.out.println(ProxyTarget.targetMethodName());
+
+			Class[] methodArgsTypes = createArgumentsClassArray();
+
+			System.out.println(methodArgsTypes);
+
+			return ProxyTarget.invoke();
+		}
+	}
+
+	@Test
+	void testExtendingGenerics() {
+		ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+		ProxyProxettaFactory builder = proxetta.proxy().setTarget(MyBoo.class);
+		Boo boo = (Boo) builder.newInstance();
+		boo.save(new Foo());
 	}
 }

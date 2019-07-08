@@ -25,11 +25,13 @@
 
 package jodd.lagarto.form;
 
+import jodd.bean.BeanUtil;
 import jodd.lagarto.LagartoParser;
-import jodd.servlet.JspResolver;
+import jodd.servlet.ServletUtil;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
@@ -55,11 +57,7 @@ public class FormTag extends BodyTagSupport {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
 
-		String bodytext = populateForm(body.getString(), new FormFieldResolver() {
-			public Object value(String name) {
-				return JspResolver.value(name, pageContext);
-			}
-		});
+		String bodytext = populateForm(body.getString(), name -> value(name, pageContext));
 
 		try {
 			out.print(bodytext);
@@ -69,6 +67,23 @@ public class FormTag extends BodyTagSupport {
 		return SKIP_BODY;
 	}
 
+	protected Object value(final String name, final PageContext pageContext) {
+		String thisRef = BeanUtil.pojo.extractThisReference(name);
+		Object value = ServletUtil.value(pageContext, thisRef);
+		if (value == null) {
+			return ServletUtil.value(pageContext, name);
+		}
+
+		if (thisRef.equals(name)) {
+			return value;
+		}
+
+		String propertyName = name.substring(thisRef.length() + 1);
+
+		return BeanUtil.declaredSilent.getProperty(value, propertyName);
+	}
+
+
 	/**
 	 * Ends the tag.
 	 */
@@ -77,8 +92,8 @@ public class FormTag extends BodyTagSupport {
 		return EVAL_PAGE;
 	}
 
-	protected String populateForm(String formHtml, FormFieldResolver resolver) {
-		LagartoParser lagartoParser = new LagartoParser(formHtml, true);
+	protected String populateForm(final String formHtml, final FormFieldResolver resolver) {
+		LagartoParser lagartoParser = new LagartoParser(formHtml);
 		StringBuilder result = new StringBuilder();
 
 		lagartoParser.parse(new FormProcessorVisitor(result, resolver));

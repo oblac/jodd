@@ -27,8 +27,8 @@ package jodd.madvoc.petite;
 
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.result.ActionResult;
-import jodd.petite.meta.PetiteInject;
 import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 
 /**
  * Petite-aware results manager.
@@ -39,7 +39,7 @@ public class PetiteResultsManager extends ResultsManager {
 	protected PetiteContainer petiteContainer;
 
 	@Override
-	protected ActionResult createResult(Class<? extends ActionResult> actionResultClass) {
+	protected ActionResult createResult(final Class<? extends ActionResult> actionResultClass) {
 		return petiteContainer.createBean(actionResultClass);
 	}
 }

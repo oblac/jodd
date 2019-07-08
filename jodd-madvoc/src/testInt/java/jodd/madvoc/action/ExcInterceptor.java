@@ -26,16 +26,18 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.Redirect;
 
-public class ExcInterceptor extends BaseActionInterceptor {
+public class ExcInterceptor implements ActionInterceptor {
 
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		try {
 			return actionRequest.invoke();
 		}
 		catch (ArithmeticException ex) {
-			return "redirect:/500.html";
+			return Redirect.to("/500.html");
 		}
 	}
 }

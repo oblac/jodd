@@ -25,20 +25,20 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("AutoBoxing")
-public class ArrayIteratorTest {
+class ArrayIteratorTest {
 
 	@Test
-	public void testArrayIteration() {
+	void testArrayIteration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<>(i);
@@ -53,14 +53,14 @@ public class ArrayIteratorTest {
 
 		try {
 			ae.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}
 		
 		try {
 			ae.remove();
-			fail();
+			fail("error");
 		} catch (UnsupportedOperationException nseex) {
 			// ignore
 		}
@@ -68,7 +68,7 @@ public class ArrayIteratorTest {
 	}
 
 	@Test
-	public void testArrayIterationFrom() {
+	void testArrayIterationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<>(i, 2, 2);
@@ -79,7 +79,7 @@ public class ArrayIteratorTest {
 
 		try {
 			ae.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}

@@ -26,9 +26,7 @@
 package jodd.servlet.filter;
 
 import jodd.core.JoddCore;
-import jodd.typeconverter.Convert;
-
-import java.io.IOException;
+import jodd.typeconverter.Converter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,6 +34,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -88,6 +87,7 @@ public class CharacterEncodingFilter implements Filter {
 	/**
 	 * Take this filter out of service.
 	 */
+	@Override
 	public void destroy() {
 		this.encoding = null;
 		this.filterConfig = null;
@@ -107,7 +107,8 @@ public class CharacterEncodingFilter implements Filter {
 	 * @exception ServletException
 	 *                   if a servlet error occurs
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	@Override
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 
 		// Conditionally select and set the character encoding to be used
 		if (ignore || (request.getCharacterEncoding() == null)) {
@@ -125,14 +126,15 @@ public class CharacterEncodingFilter implements Filter {
 	 *
 	 * @param filterConfig The filter configuration object
 	 */
-	public void init(FilterConfig filterConfig) throws ServletException {
+	@Override
+	public void init(final FilterConfig filterConfig) {
 
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");
 		if (this.encoding == null) {
 			this.encoding = JoddCore.encoding;
 		}
-		this.ignore = Convert.toBooleanValue(filterConfig.getInitParameter("ignore"), true);
+		this.ignore = Converter.get().toBooleanValue(filterConfig.getInitParameter("ignore"), true);
 	}
 
 	/**
@@ -147,7 +149,7 @@ public class CharacterEncodingFilter implements Filter {
 	 *
 	 * @param request The servlet request we are processing
 	 */
-	protected String selectEncoding(ServletRequest request) {
+	protected String selectEncoding(final ServletRequest request) {
 		return this.encoding;
 	}
 }

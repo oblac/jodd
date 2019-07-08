@@ -25,13 +25,17 @@
 
 package jodd.mail;
 
+import jodd.core.JoddCore;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
-import javax.mail.MessagingException;
-import javax.mail.Part;
+import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
-import java.io.UnsupportedEncodingException;
+import javax.mail.internet.MimeUtility;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Properties;
 
 /**
  * Email utilities.
@@ -39,43 +43,50 @@ import java.io.UnsupportedEncodingException;
 public class EmailUtil {
 
 	protected static final String ATTR_CHARSET = "charset=";
+	static final String NO_NAME = "no-name";
 
 	/**
-	 * Extracts mime type from parts content type.
+	 * Extracts MIME type from content type.
+	 *
+	 * @param contentType MIME type.
+	 * @return MIME type for the given content type.
 	 */
-	public static String extractMimeType(String contentType) {
-		int ndx = contentType.indexOf(';');
-		String mime;
+	//TODO: should this always return lowercase or always uppercase?
+	public static String extractMimeType(final String contentType) {
+		final int ndx = contentType.indexOf(';');
+		final String mime;
 		if (ndx != -1) {
 			mime = contentType.substring(0, ndx);
-		}
-		else {
+		} else {
 			mime = contentType;
 		}
 		return mime;
 	}
 
 	/**
-	 * Parses content type for encoding. May return <code>null</code>
-	 * if encoding is not specified in content type.
+	 * Extracts encoding from a given content type.
+	 *
+	 * @param contentType content type.
+	 * @return Encoding from the content type. May return {@code null} if encoding is not specified in content type.
 	 */
-	public static String extractEncoding(String contentType) {
+	//TODO: should this always return lowercase or always uppercase?
+	public static String extractEncoding(final String contentType) {
 		int ndx = contentType.indexOf(';');
-		String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
+		final String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
 		String encoding = null;
 
 		ndx = charset.indexOf(ATTR_CHARSET);
 		if (ndx != -1) {
 			ndx += ATTR_CHARSET.length();
-			int len = charset.length();
+			final int len = charset.length();
 
 			if (charset.charAt(ndx) == '"') {
 				ndx++;
 			}
-			int start = ndx;
+			final int start = ndx;
 
 			while (ndx < len) {
-				char c = charset.charAt(ndx);
+				final char c = charset.charAt(ndx);
 				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
 					break;
 				}
@@ -87,32 +98,100 @@ public class EmailUtil {
 	}
 
 	/**
+	 * Extracts encoding from a given content type.
+	 *
+	 * @param contentType     content type.
+	 * @param defaultEncoding Default encoding to be used if extract returns {@code null}.
+	 *                        If defaultEncoding is {@code null}, {@link JoddCore#encoding} will be used.
+	 * @return Encoding from the content type.
+	 * @see #extractEncoding(String)
+	 */
+	public static String extractEncoding(final String contentType, String defaultEncoding) {
+		String encoding = extractEncoding(contentType);
+
+		if (encoding == null) {
+			if (defaultEncoding == null) {
+				defaultEncoding = JoddCore.encoding;
+			}
+			encoding = defaultEncoding;
+		}
+		return encoding;
+	}
+
+	/**
 	 * Correctly resolves file name from the message part.
 	 * Thanx to: Flavio Pompermaier
+	 *
+	 * @param part {@link Part} to decode file name from.
+	 * @return String containing file name.
 	 */
-	public static String resolveFileName(Part part) throws MessagingException, UnsupportedEncodingException {
+	public static String resolveFileName(final Part part) throws MessagingException {
 		if (!(part instanceof MimeBodyPart)) {
 			return part.getFileName();
 		}
 
-		String contentType = part.getContentType();
-		String ret = null;
+		final String contentType = part.getContentType();
+		String ret;
 
 		try {
-			ret = javax.mail.internet.MimeUtility.decodeText(part.getFileName());
-		}
-		catch (Exception ex) {
-			String[] contentId = part.getHeader("Content-ID");
-			if (contentId != null && contentId.length > 0) {
-				ret = contentId[0];
+			ret = MimeUtility.decodeText(part.getFileName());
+		} catch (final Exception ex) {
+			// String[] contentId = part.getHeader("Content-ID");
+			// if (contentId != null && contentId.length > 0) {
+			final String contentId = ((MimeBodyPart) part).getContentID();
+			if (contentId != null) {
+				ret = contentId + contentTypeForFileName(contentType);
+			} else {
+				ret = defaultFileName(contentType);
 			}
-			if (contentId == null) {
-				ret = "no-name";
-			}
-			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
 		}
 
 		return ret;
+	}
+
+	private static String contentTypeForFileName(final String contentType) {
+		return StringPool.DOT + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+	}
+
+	private static String defaultFileName(final String contentType) {
+		return NO_NAME + contentTypeForFileName(contentType);
+	}
+
+	/**
+	 * @param protocol          Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
+	 * @param sessionProperties Session properties to use.
+	 * @param authenticator     Authenticator which contains necessary authentication for server.
+	 * @return {@link ReceiveMailSession}.
+	 */
+	public static ReceiveMailSession createSession(final String protocol, final Properties sessionProperties, final Authenticator authenticator, final File attachmentStorage) {
+		final Session session = Session.getInstance(sessionProperties, authenticator);
+		final Store store;
+		try {
+			store = session.getStore(protocol);
+		} catch (final NoSuchProviderException nspex) {
+			final String errMsg = String.format("Failed to create %s session", protocol);
+			throw new MailException(errMsg, nspex);
+		}
+		return new ReceiveMailSession(session, store, attachmentStorage);
+	}
+
+	/**
+	 * Check whether flags is a empty flags
+	 * @param flags a flags of message to check
+	 * @return whether the flags is empty
+	 */
+	public static boolean isEmptyFlags(Flags flags) {
+		if (flags == null) return true;
+		Flags.Flag[] systemFlags = flags.getSystemFlags();
+		if (systemFlags != null && systemFlags.length > 0) {
+			return false;
+		}
+		String[] userFlags = flags.getUserFlags();
+		if (userFlags != null && userFlags.length > 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

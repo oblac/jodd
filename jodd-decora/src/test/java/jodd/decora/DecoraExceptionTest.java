@@ -25,32 +25,23 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.reflect.Whitebox.getInternalState;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import jodd.decora.DecoraException;
+class DecoraExceptionTest {
 
-public class DecoraExceptionTest {
-
-	private Throwable throwableMock;
 	private final String TEST_STRING = "TEST";
-
-	@Before
-	public void setUp() {
-		throwableMock = mock(Throwable.class);
-	}
 
 	@Test
 	public final void testDecoraExceptionThrowable() {
 		// when
-		DecoraException decoraException = new DecoraException(throwableMock);
+		Exception cause = new Exception();
+		DecoraException decoraException = new DecoraException(cause);
 
 		// then
-		assertEquals("Cause field must be set.", throwableMock, getInternalState(decoraException, "cause"));
+		assertEquals(cause, decoraException.getCause());
 	}
 
 	@Test
@@ -59,17 +50,18 @@ public class DecoraExceptionTest {
 		DecoraException decoraException = new DecoraException(TEST_STRING);
 
 		// then
-		assertEquals("DetailMessage field must be set.", TEST_STRING, getInternalState(decoraException, "detailMessage"));
+		assertEquals(TEST_STRING, decoraException.getMessage());
 	}
 
 	@Test
 	public final void testDecoraExceptionStringThrowable() {
 		// when
-		DecoraException decoraException = new DecoraException(TEST_STRING, throwableMock);
+		Exception cause = new Exception();
+		DecoraException decoraException = new DecoraException(TEST_STRING, cause);
 
 		// then
-		assertEquals("Cause field must be set.", throwableMock, getInternalState(decoraException, "cause"));
-		assertEquals("DetailMessage field must be set.", TEST_STRING, getInternalState(decoraException, "detailMessage"));
+		assertEquals(cause, decoraException.getCause());
+		assertTrue(decoraException.getMessage().contains(TEST_STRING));
 	}
 
 }

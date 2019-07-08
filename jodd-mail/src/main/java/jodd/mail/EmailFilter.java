@@ -26,7 +26,9 @@
 package jodd.mail;
 
 import javax.mail.Flags;
-import javax.mail.Message;
+import javax.mail.Flags.Flag;
+import javax.mail.Header;
+import javax.mail.Message.RecipientType;
 import javax.mail.search.AndTerm;
 import javax.mail.search.BodyTerm;
 import javax.mail.search.FlagTerm;
@@ -42,6 +44,7 @@ import javax.mail.search.SearchTerm;
 import javax.mail.search.SentDateTerm;
 import javax.mail.search.SizeTerm;
 import javax.mail.search.SubjectTerm;
+import java.util.Date;
 
 /**
  * <code>EmailFilter</code> helps in building boolean queries of search terms.
@@ -70,109 +73,141 @@ public class EmailFilter {
 		return new EmailFilter();
 	}
 
+	/**
+	 * The {@link SearchTerm} to be used.
+	 */
 	protected SearchTerm searchTerm;
 
 	/**
 	 * Defines filter for SUBJECT field.
+	 *
+	 * @param subject The SUBJECT.
+	 * @return this
 	 */
-	public EmailFilter subject(String subject) {
-		SearchTerm subjectTerm = new SubjectTerm(subject);
+	public EmailFilter subject(final String subject) {
+		final SearchTerm subjectTerm = new SubjectTerm(subject);
 		concat(subjectTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for message id.
+	 *
+	 * @param messageId The message ID.
+	 * @return this
 	 */
-	public EmailFilter messageId(String messageId) {
-		SearchTerm msgIdTerm = new MessageIDTerm(messageId);
+	public EmailFilter messageId(final String messageId) {
+		final SearchTerm msgIdTerm = new MessageIDTerm(messageId);
 		concat(msgIdTerm);
 		return this;
 	}
 
 	/**
-	 * Defines message number filter.
+	 * Defines filteer for message number.
+	 *
+	 * @param messageNumber The message number.
+	 * @return this
 	 */
-	public EmailFilter messageNumber(int messageNumber) {
-		SearchTerm msgIdTerm = new MessageNumberTerm(messageNumber);
+	public EmailFilter messageNumber(final int messageNumber) {
+		final SearchTerm msgIdTerm = new MessageNumberTerm(messageNumber);
 		concat(msgIdTerm);
 		return this;
-	}
-
-	/**
-	 * Defines filter for message id.
-	 */
-	public EmailFilter messageId(int messageId) {
-		return messageId(String.valueOf(messageId));
 	}
 
 	/**
 	 * Defines filter for FROM field.
+	 *
+	 * @param fromAddress The FROM address
+	 * @return this
 	 */
-	public EmailFilter from(String fromAddress) {
-		SearchTerm fromTerm = new FromStringTerm(fromAddress);
+	public EmailFilter from(final String fromAddress) {
+		final SearchTerm fromTerm = new FromStringTerm(fromAddress);
 		concat(fromTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for TO field.
+	 *
+	 * @param toAddress The TO address.
+	 * @return this
 	 */
-	public EmailFilter to(String toAddress) {
-		SearchTerm toTerm = new RecipientStringTerm(Message.RecipientType.TO, toAddress);
+	public EmailFilter to(final String toAddress) {
+		final SearchTerm toTerm = new RecipientStringTerm(RecipientType.TO, toAddress);
 		concat(toTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for CC field.
+	 *
+	 * @param ccAddress CC addreses.
+	 * @return this
 	 */
-	public EmailFilter cc(String ccAddress) {
-		SearchTerm toTerm = new RecipientStringTerm(Message.RecipientType.CC, ccAddress);
+	public EmailFilter cc(final String ccAddress) {
+		final SearchTerm toTerm = new RecipientStringTerm(RecipientType.CC, ccAddress);
 		concat(toTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for BCC field.
+	 *
+	 * @param bccAddress BCC address.
+	 * @return this
 	 */
-	public EmailFilter bcc(String bccAddress) {
-		SearchTerm toTerm = new RecipientStringTerm(Message.RecipientType.BCC, bccAddress);
+	public EmailFilter bcc(final String bccAddress) {
+		final SearchTerm toTerm = new RecipientStringTerm(RecipientType.BCC, bccAddress);
 		concat(toTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for many flags at once.
+	 *
+	 * @param flags The {@link Flags} to filter on.
+	 * @param value The {@link Flag} setting to check for.
+	 * @return this
 	 */
-	public EmailFilter flags(Flags flags, boolean value) {
-		SearchTerm flagTerm = new FlagTerm(flags, value);
+	public EmailFilter flags(final Flags flags, final boolean value) {
+		final SearchTerm flagTerm = new FlagTerm(flags, value);
 		concat(flagTerm);
 		return this;
 	}
 
 	/**
 	 * Defines filter for single flag.
+	 *
+	 * @param flag  The flag to filter on.
+	 * @param value The {@link Flag} setting to check for.
+	 * @return this
 	 */
-	public EmailFilter flag(Flags.Flag flag, boolean value) {
-		Flags flags = new Flags();
+	public EmailFilter flag(final Flag flag, final boolean value) {
+		final Flags flags = new Flags();
 		flags.add(flag);
 		return flags(flags, value);
 	}
 
 	/**
 	 * Defines filter for received date.
+	 *
+	 * @return this
 	 */
-	public EmailFilter receivedDate(Operator operator, long milliseconds) {
-		SearchTerm term = new ReceivedDateTerm(operator.value, new java.util.Date(milliseconds));
+	public EmailFilter receivedDate(final Operator operator, final long milliseconds) {
+		final SearchTerm term = new ReceivedDateTerm(operator.value, new Date(milliseconds));
 		concat(term);
 		return this;
 	}
+
 	/**
 	 * Defines filter for sent date.
+	 *
+	 * @param operator     {@link Operator} to use.
+	 * @param milliseconds the milliseconds since January 1, 1970, 00:00:00 GMT.
+	 * @return this
 	 */
-	public EmailFilter sentDate(Operator operator, long milliseconds) {
-		SearchTerm term = new SentDateTerm(operator.value, new java.util.Date(milliseconds));
+	public EmailFilter sentDate(final Operator operator, final long milliseconds) {
+		final SearchTerm term = new SentDateTerm(operator.value, new Date(milliseconds));
 		concat(term);
 		return this;
 	}
@@ -180,27 +215,38 @@ public class EmailFilter {
 	/**
 	 * Defines filter on a message body.
 	 * All parts of the message that are of MIME type "text/*" are searched.
+	 *
+	 * @param pattern String pattern use in body.
+	 * @return this
 	 */
-	public EmailFilter text(String pattern) {
-		SearchTerm term = new BodyTerm(pattern);
+	public EmailFilter text(final String pattern) {
+		final SearchTerm term = new BodyTerm(pattern);
 		concat(term);
 		return this;
 	}
 
 	/**
-	 * Defines filter for header.
+	 * Defines filter for {@link Header}.
+	 *
+	 * @param headerName The name of the {@link Header}.
+	 * @param pattern    String pattern to use for headerName.
+	 * @return this
 	 */
-	public EmailFilter header(String headerName, String pattern) {
-		SearchTerm term = new HeaderTerm(headerName, pattern);
+	public EmailFilter header(final String headerName, final String pattern) {
+		final SearchTerm term = new HeaderTerm(headerName, pattern);
 		concat(term);
 		return this;
 	}
 
 	/**
 	 * Defines filter for message size.
+	 *
+	 * @param comparison {@link Operator}.
+	 * @param size       size of message.
+	 * @return this
 	 */
-	public EmailFilter size(Operator comparison, int size) {
-		SearchTerm term = new SizeTerm(comparison.value, size);
+	public EmailFilter size(final Operator comparison, final int size) {
+		final SearchTerm term = new SizeTerm(comparison.value, size);
 		concat(term);
 		return this;
 	}
@@ -218,7 +264,7 @@ public class EmailFilter {
 
 		private final int value;
 
-		Operator(int value) {
+		Operator(final int value) {
 			this.value = value;
 		}
 	}
@@ -227,13 +273,18 @@ public class EmailFilter {
 
 	/**
 	 * Changes concatenation mode to AND.
+	 *
+	 * @return this
 	 */
 	public EmailFilter and() {
 		this.operatorAnd = true;
 		return this;
 	}
+
 	/**
 	 * Changes concatenation mode to OR.
+	 *
+	 * @return this
 	 */
 	public EmailFilter or() {
 		this.operatorAnd = false;
@@ -242,6 +293,8 @@ public class EmailFilter {
 
 	/**
 	 * Marks next condition to be NOT.
+	 *
+	 * @return this
 	 */
 	public EmailFilter not() {
 		this.nextIsNot = true;
@@ -250,9 +303,12 @@ public class EmailFilter {
 
 	/**
 	 * Defines AND group of filters.
+	 *
+	 * @param emailFilters array of {@link EmailFilter}s to AND.
+	 * @return this
 	 */
-	public EmailFilter and(EmailFilter... emailFilters) {
-		SearchTerm[] searchTerms = new SearchTerm[emailFilters.length];
+	public EmailFilter and(final EmailFilter... emailFilters) {
+		final SearchTerm[] searchTerms = new SearchTerm[emailFilters.length];
 
 		for (int i = 0; i < emailFilters.length; i++) {
 			searchTerms[i] = emailFilters[i].searchTerm;
@@ -264,9 +320,12 @@ public class EmailFilter {
 
 	/**
 	 * Defines OR group of filters.
+	 *
+	 * @param emailFilters array of {@link EmailFilter}s to OR.
+	 * @return this
 	 */
-	public EmailFilter or(EmailFilter... emailFilters) {
-		SearchTerm[] searchTerms = new SearchTerm[emailFilters.length];
+	public EmailFilter or(final EmailFilter... emailFilters) {
+		final SearchTerm[] searchTerms = new SearchTerm[emailFilters.length];
 
 		for (int i = 0; i < emailFilters.length; i++) {
 			searchTerms[i] = emailFilters[i].searchTerm;
@@ -278,9 +337,12 @@ public class EmailFilter {
 
 	/**
 	 * Appends single filter as NOT.
+	 *
+	 * @param emailFilter {@link EmailFilter} to append.
+	 * @return this
 	 */
-	public EmailFilter not(EmailFilter emailFilter) {
-		SearchTerm searchTerm = new NotTerm(emailFilter.searchTerm);
+	public EmailFilter not(final EmailFilter emailFilter) {
+		final SearchTerm searchTerm = new NotTerm(emailFilter.searchTerm);
 		concat(searchTerm);
 		return this;
 	}
@@ -289,6 +351,10 @@ public class EmailFilter {
 
 	/**
 	 * Concatenates last search term with new one.
+	 *
+	 * @param searchTerm searchTerm {@link SearchTerm} concatenate.
+	 * @see #and(SearchTerm)
+	 * @see #or(SearchTerm)
 	 */
 	protected void concat(SearchTerm searchTerm) {
 		if (nextIsNot) {
@@ -302,7 +368,12 @@ public class EmailFilter {
 		}
 	}
 
-	protected void and(SearchTerm searchTerm) {
+	/**
+	 * Sets {@link AndTerm} as searchTerm.
+	 *
+	 * @param searchTerm {@link SearchTerm} to set as AND.
+	 */
+	protected void and(final SearchTerm searchTerm) {
 		if (this.searchTerm == null) {
 			this.searchTerm = searchTerm;
 			return;
@@ -311,7 +382,12 @@ public class EmailFilter {
 		this.searchTerm = new AndTerm(this.searchTerm, searchTerm);
 	}
 
-	protected void or(SearchTerm searchTerm) {
+	/**
+	 * Sets {@link OrTerm} searchTerm.
+	 *
+	 * @param searchTerm {@link SearchTerm} to set as OR.
+	 */
+	protected void or(final SearchTerm searchTerm) {
 		if (this.searchTerm == null) {
 			this.searchTerm = searchTerm;
 			return;
@@ -324,6 +400,8 @@ public class EmailFilter {
 
 	/**
 	 * Returns search term.
+	 *
+	 * @return {@link SearchTerm}.
 	 */
 	public SearchTerm getSearchTerm() {
 		return searchTerm;

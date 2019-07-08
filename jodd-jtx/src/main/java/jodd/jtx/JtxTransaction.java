@@ -28,12 +28,19 @@ package jodd.jtx;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
-import static jodd.jtx.JtxStatus.*;
-import static jodd.jtx.JtxTransactionMode.DEFAULT_TIMEOUT;
-
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
+
+import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
+import static jodd.jtx.JtxStatus.STATUS_COMMITTED;
+import static jodd.jtx.JtxStatus.STATUS_COMMITTING;
+import static jodd.jtx.JtxStatus.STATUS_MARKED_ROLLBACK;
+import static jodd.jtx.JtxStatus.STATUS_NO_TRANSACTION;
+import static jodd.jtx.JtxStatus.STATUS_ROLLEDBACK;
+import static jodd.jtx.JtxStatus.STATUS_ROLLING_BACK;
+import static jodd.jtx.JtxStatus.STATUS_UNKNOWN;
+import static jodd.jtx.JtxTransactionMode.DEFAULT_TIMEOUT;
 
 /**
  * Transaction is an unit of work that is performed by one or more resources.
@@ -80,7 +87,7 @@ public class JtxTransaction {
 	 * @param scope transaction live scope within the other transaction requests are ignored
 	 * @param active if <code>true</code> it is an active transaction, otherwise it's not
 	 */
-	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object scope, boolean active) {
+	public JtxTransaction(final JtxTransactionManager txManager, final JtxTransactionMode mode, final Object scope, final boolean active) {
 		this.txManager = txManager;
 		this.mode = mode;
 		this.scope = scope;
@@ -186,7 +193,7 @@ public class JtxTransaction {
 	 * Modify the transaction associated with the target object such that the only possible outcome
 	 * of the transaction is to roll back the transaction.
 	 */
-	public void setRollbackOnly(Throwable th) {
+	public void setRollbackOnly(final Throwable th) {
 		if (!isNoTransaction()) {
 			if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
 				throw new JtxException("TNo active TX that can be marked as rollback only");
@@ -307,7 +314,7 @@ public class JtxTransaction {
 	 * Rollbacks all attached resources. Resource will be closed. and detached from this transaction.
 	 * If exception occurs, it will be rethrown at the end.
 	 */
-	protected void rollbackAllResources(boolean wasForced) {
+	protected void rollbackAllResources(final boolean wasForced) {
 		status = STATUS_ROLLING_BACK;
 		Exception lastException = null;
 		Iterator<JtxResource> it = resources.iterator();
@@ -338,7 +345,7 @@ public class JtxTransaction {
 	/**
 	 * Requests a resource. If resource is not found, it will be created and new transaction will be started on it.
 	 */
-	public <E> E requestResource(Class<E> resourceType) {
+	public <E> E requestResource(final Class<E> resourceType) {
 		if (isCompleted()) {
 			throw new JtxException("TX is already completed, resource are not available after commit or rollback");
 		}
@@ -366,7 +373,7 @@ public class JtxTransaction {
 	 * Lookups for open resource. Returns <code>null</code> if resource not found.
 	 * Only open resources can be found.
 	 */
-	protected <E> E lookupResource(Class<E> resourceType) {
+	protected <E> E lookupResource(final Class<E> resourceType) {
 		for (JtxResource jtxResource : resources) {
 			if (jtxResource.isSameTypeAsResource(resourceType)) {
 				//noinspection unchecked

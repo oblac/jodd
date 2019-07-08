@@ -29,6 +29,7 @@ import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import java.io.File;
 import java.util.Properties;
 
 import static jodd.util.StringPool.TRUE;
@@ -36,111 +37,65 @@ import static jodd.util.StringPool.TRUE;
 /**
  * Represents simple plain POP server for sending emails.
  */
-public class Pop3Server implements ReceiveMailSessionProvider {
-
-	protected static final String MAIL_POP3_PORT = "mail.pop3.port";
-	protected static final String MAIL_POP3_HOST = "mail.pop3.host";
-	protected static final String MAIL_POP3_AUTH = "mail.pop3.auth";
+public class Pop3Server extends MailServer<ReceiveMailSession> {
 
 	protected static final String PROTOCOL_POP3 = "pop3";
 
+	/**
+	 * Default POP3 port.
+	 */
 	protected static final int DEFAULT_POP3_PORT = 110;
 
-	protected final String host;
-	protected final int port;
-	protected final Authenticator authenticator;
-	protected final Properties sessionProperties;
-
-	/**
-	 * POP3 server defined with its host and default port.
-	 */
-	public Pop3Server(String host) {
-		this(host, DEFAULT_POP3_PORT, null);
+	public Pop3Server(final Builder builder) {
+		super(builder, DEFAULT_POP3_PORT);
 	}
-	/**
-	 * POP3 server defined with its host and port.
-	 */
-	public Pop3Server(String host, int port) {
-		this(host, port, null);
+	protected Pop3Server(final Builder builder, final int defaultPort) {
+		super(builder, defaultPort);
 	}
 
-	public Pop3Server(String host, Authenticator authenticator) {
-		this(host, DEFAULT_POP3_PORT, authenticator);
-	}
-
-	public Pop3Server(String host, int port, String username, String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
-
-	/**
-	 * SMTP server defined with its host and authentication.
-	 */
-	public Pop3Server(String host, int port, Authenticator authenticator) {
-		this.host = host;
-		this.port = port;
-		this.authenticator = authenticator;
-		sessionProperties = createSessionProperties();
-	}
-
-	/**
-	 * Prepares mail session properties.
-	 */
+	@Override
 	protected Properties createSessionProperties() {
-		Properties props = new Properties();
+		final Properties props = super.createSessionProperties();
+
 		props.setProperty(MAIL_POP3_HOST, host);
 		props.setProperty(MAIL_POP3_PORT, String.valueOf(port));
+
 		if (authenticator != null) {
 			props.setProperty(MAIL_POP3_AUTH, TRUE);
 		}
-		return props;
-	}
 
-	public Pop3Server setProperty(String name, String value) {
-		sessionProperties.setProperty(name, value);
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ReceiveMailSession createSession() {
-		Session session = Session.getInstance(sessionProperties, authenticator);
-		Store store;
-		try {
-			store = getStore(session);
-		} catch (NoSuchProviderException nspex) {
-			throw new MailException("Failed to create POP3 session", nspex);
+		if (timeout > 0) {
+			final String timeoutValue = String.valueOf(timeout);
+			props.put(MAIL_POP3_CONNECTIONTIMEOUT, timeoutValue);
+			props.put(MAIL_POP3_TIMEOUT, timeoutValue);
 		}
-		return new ReceiveMailSession(session, store);
+
+		return props;
 	}
 
 	/**
 	 * Returns email store.
+	 *
+	 * @return {@link com.sun.mail.pop3.POP3Store}
+	 * @throws NoSuchProviderException If a provider for the given protocol is not found.
 	 */
-	protected Store getStore(Session session) throws NoSuchProviderException {
+	protected Store getStore(final Session session) throws NoSuchProviderException {
 		return session.getStore(PROTOCOL_POP3);
 	}
 
-	// ---------------------------------------------------------------- getters
-
 	/**
-	 * Returns POP host address.
+	 * {@inheritDoc}
+	 *
+	 * @return {@link ReceiveMailSession}
+	 * @see EmailUtil#createSession(String, Properties, Authenticator, File)
 	 */
-	public String getHost() {
-		return host;
+	@Override
+	public ReceiveMailSession createSession() {
+		return EmailUtil.createSession(
+			PROTOCOL_POP3,
+			createSessionProperties(),
+			authenticator,
+			attachmentStorage);
 	}
 
-	/**
-	 * Returns authenticator.
-	 */
-	public Authenticator getAuthenticator() {
-		return authenticator;
-	}
-
-	/**
-	 * Returns current port.
-	 */
-	public int getPort() {
-		return port;
-	}
 }

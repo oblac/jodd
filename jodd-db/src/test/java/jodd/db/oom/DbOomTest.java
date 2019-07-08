@@ -25,16 +25,21 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.QueryMapper;
-import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.BadGirl;
+import jodd.db.oom.fixtures.Boy;
+import jodd.db.oom.fixtures.Boy3;
+import jodd.db.oom.fixtures.Girl;
+import jodd.db.oom.fixtures.IdName;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,31 +50,36 @@ import java.util.Set;
 import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
 import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DbOomTest extends DbHsqldbTestCase {
+class DbOomTest extends DbHsqldbTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Girl.class);
-		dbOom.registerEntity(BadBoy.class);
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
+
+		dbEntityManager.registerEntity(Girl.class);
+		dbEntityManager.registerEntity(BadBoy.class);
 	}
 
 	@Test
-	public void testOrm() {
+	void testOrm() {
 		DbSession session = new DbThreadSession(cp);
 
 		// ---------------------------------------------------------------- insert
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
-		DbOomQuery q2 = new DbOomQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
+		DbOomQuery q2 = DbOomQuery.query(dbOom.entities().insert(new Girl(3, "Monica", null)));
 		q2.setDebugMode();
 		assertEquals("insert into GIRL (ID, NAME) values (:girl.id, :girl.name)", q2.getQueryString());
 		q2.init();
@@ -77,10 +87,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(1, q2.autoClose().executeUpdate());
 		assertTrue(q2.isClosed());
 
-		assertEquals(1, DbEntitySql.insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
-		DbQuery dq = new DbQuery("select count(*) from GIRL where id>:id");
+		DbQuery dq = DbQuery.query("select count(*) from GIRL where id>:id");
 		dq.setInteger("id", 1);
 		assertEquals(2, dq.executeCount());
 
@@ -94,13 +104,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- girl
 
-		DbOomQuery q = new DbOomQuery("select * from GIRL order by ID");
+		DbOomQuery q = DbOomQuery.query("select * from GIRL order by ID");
 
 		Girl girl = q.find(Girl.class);
 		checkGirl1(girl);
 		assertTrue(q.isActive());
 
 		girl = q.find(new QueryMapper<Girl>() {
+			@Override
 			public Girl process(ResultSet resultSet) throws SQLException {
 				Girl _girl = new Girl();
 				_girl.id = resultSet.getInt("ID");
@@ -130,6 +141,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		listGirl = q.list(
 			new QueryMapper<Girl>() {
+				@Override
 				public Girl process(ResultSet resultSet) throws SQLException {
 					Girl _girl = new Girl();
 					_girl.id = resultSet.getInt("ID");
@@ -247,7 +259,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- girl2
 
-		q = new DbOomQuery("select girl.*, girl.* from GIRL girl order by girl.ID");
+		q = DbOomQuery.query("select girl.*, girl.* from GIRL girl order by girl.ID");
 		list = q.list(Girl.class, Girl.class);
 		assertEquals(3, list.size());
 		assertEquals(2, ((Object[]) list.get(2)).length);
@@ -271,7 +283,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- boy
 
-		q = new DbOomQuery("select * from BOY order by ID");
+		q = DbOomQuery.query("select * from BOY order by ID");
 
 		BadBoy badBoy = q.find(BadBoy.class);
 		checkBoy(badBoy);
@@ -328,7 +340,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- join
 
 
-		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
+		q = DbOomQuery.query("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
 		girl = q.find(Girl.class);
 		checkGirl3(girl);
@@ -348,14 +360,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 		q.close();
 
 
-		q = new DbOomQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
+		q = DbOomQuery.query(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
 		badBoy = q.withHints("BadBoy.girl, BadBoy").find();
 		girl = badBoy.girl;
 		checkGirl3(girl);
 		checkBoy(badBoy);
 		q.close();
 
-		q = new DbOomQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
+		q = DbOomQuery.query(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
 		List<BadBoy> boys1 = q.withHints("BadBoy.girl, BadBoy").list(Girl.class, BadBoy.class);
 		assertEquals(1, boys1.size());
 		badBoy = boys1.get(0);
@@ -376,7 +388,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- join
 
 		//q = new DbOomQuery("select * from GIRL, BOY where BOY.GIRL_ID=GIRL.ID");
-		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
+		q = DbOomQuery.query("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
 		badBoy = q.find(BadBoy.class);
 		assertNull(badBoy);         // wrong mapping order, girl is first!
@@ -411,7 +423,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- left join
 
-		q = new DbOomQuery("select * from GIRL left join BOY on GIRL.ID=BOY.GIRL_ID order by GIRL.ID");
+		q = DbOomQuery.query("select * from GIRL left join BOY on GIRL.ID=BOY.GIRL_ID order by GIRL.ID");
 
 		list = q.list(Girl.class, Boy3.class);
 		assertEquals(3, list.size());
@@ -450,13 +462,13 @@ public class DbOomTest extends DbHsqldbTestCase {
 		String tableRef = "ggg";
 
 		DbSqlBuilder dsb = sql()
-				._("select * from ")
+				.$("select * from ")
 				.table(girl, tableRef)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
-		q = new DbOomQuery(dsb);
+		q = DbOomQuery.query(dsb);
 
 		list = q.list(Girl.class);
 
@@ -464,27 +476,27 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1((Girl) list.get(0));		// swim
 
 		dsb = sql()
-				._("update ")
+				.$("update ")
 				.table(girl, tableRef)
 				.set(tableRef, girl)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
-		q = new DbOomQuery(dsb);
+		q = DbOomQuery.query(dsb);
 
 		assertEquals(1, q.executeUpdate());
 
 		girl_condition.speciality = "run";
 
 		dsb = sql()
-				._("select * from ")
+				.$("select * from ")
 				.table(girl, tableRef)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
-		q = new DbOomQuery(dsb);
+		q = DbOomQuery.query(dsb);
 		list = q.list(Girl.class);
 
 		assertEquals(1, list.size());
@@ -497,14 +509,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl_condition.speciality = "run";
 
 		dsb = sql()
-				._("update ")
+				.$("update ")
 				.table(girl, tableRef)
 				.set(tableRef, girl)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
-		q = new DbOomQuery(dsb);
+		q = DbOomQuery.query(dsb);
 
 		assertEquals(1, q.executeUpdate());
 
@@ -514,36 +526,36 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 		DbSqlBuilder dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
 		dt = sql("select g.*, b.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
 
 		badGirl.fooname = "Sandra";
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		Object[] result = q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
@@ -552,26 +564,26 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badBoy.ajdi = Integer.valueOf(1);
 		badBoy.nejm = "Johny";
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 
 		dt = sql("select $C{g.fooid}, $C{b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		result = q.find(BadGirl.class, BadBoy.class);
 		badGirl = (BadGirl) result[0];
 		checkBoy((BadBoy) result[1]);
@@ -583,7 +595,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- special
 
 		dt = sql("select $g.fooid * 2 as did, $C{g.+} from $T{g} order by $g.fooid").aliasColumnsAs(COLUMN_CODE).use("g", BadGirl.class);
-		q = new DbOomQuery(dt);
+		q = DbOomQuery.query(dt);
 		list = q.list(null, BadGirl.class); // explicitly ignore the first column 'did'
 		assertEquals(3, list.size());
 		assertEquals(1, ((BadGirl) ((Object[]) list.get(0))[1]).fooid.intValue());
@@ -600,7 +612,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(3, ((BadGirl) ((Object[]) list.get(2))[1]).fooid.intValue());
 
 
-		q = new DbOomQuery("select g.ID * 2 as did, g.ID from Girl g order by g.ID");
+		q = DbOomQuery.query("select g.ID * 2 as did, g.ID from Girl g order by g.ID");
 		list = q.list(Integer.class, BadGirl.class);
 		assertEquals(3, list.size());
 		assertEquals(2, ((Integer) ((Object[]) list.get(0))[0]).intValue());
@@ -611,7 +623,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(3, ((BadGirl) ((Object[]) list.get(2))[1]).fooid.intValue());
 
 
-		q = new DbOomQuery(sql("select $g.id+$b.id as total, $C{g.*}, $g.id*2 as gdub, $C{b.*}, $g.id/3.0, $g.name from $T{g}, $T{b} where $b.girlId=$g.id").
+		q = DbOomQuery.query(sql("select $g.id+$b.id as total, $C{g.*}, $g.id*2 as gdub, $C{b.*}, $g.id/3.0, $g.name from $T{g}, $T{b} where $b.girlId=$g.id").
 				aliasColumnsAs(COLUMN_CODE).use("b", Boy.class).use("g", Girl.class));
 		list = q.list(Integer.class, Girl.class, Long.class, Boy.class, Float.class, String.class);
 		assertEquals(1, list.size());
@@ -626,21 +638,21 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals("Monica", result[5]);
 
 
-		q = new DbOomQuery(sql("select $C{g.*}, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = DbOomQuery.query(sql("select $C{g.*}, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(Girl.class, Girl.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
 		checkGirl3((Girl) result[0]);
 		checkGirl3((Girl) result[1]);
 
-		q = new DbOomQuery(sql("select $C{g.*}, $g.name from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = DbOomQuery.query(sql("select $C{g.*}, $g.name from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(Girl.class, String.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
 		checkGirl3((Girl) result[0]);
 		assertEquals("Monica", result[1]);
 
-		q = new DbOomQuery(sql("select $g.name, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = DbOomQuery.query(sql("select $g.name, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(String.class, Girl.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
@@ -662,17 +674,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 
-		DbOomQuery f = DbEntitySql.find(girl).aliasColumnsAs(null).query();
+		DbOomQuery f = dbOom.entities().find(girl).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id)", f.toString());
 		f.init();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1)", f.toString());
 		f.close();
-		f = DbEntitySql.find(badGirl).aliasColumnsAs(null).query();
+		f = dbOom.entities().find(badGirl).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (1=1)", f.toString());
 		f.close();
-		f = DbEntitySql.find(badBoy).aliasColumnsAs(null).query();
+		f = dbOom.entities().find(badBoy).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (1=1)", f.toString());
 		f.close();
@@ -681,17 +693,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl.fooname = "Anna";
 		badBoy.nejm = "David";
 
-		f = DbEntitySql.find(girl).query();
+		f = dbOom.entities().find(girl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1 and Girl_.NAME='Monica')", f.toString());
 		f.close();
-		f = DbEntitySql.find(badGirl).query();
+		f = dbOom.entities().find(badGirl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.NAME='Anna')", f.toString());
 		f.close();
-		f = DbEntitySql.find(badBoy).query();
+		f = dbOom.entities().find(badBoy).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (BadBoy_.NAME='David')", f.toString());
@@ -701,30 +713,30 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(2);
-		f = DbEntitySql.findById(badGirl).query();
+		f = dbOom.entities().findById(badGirl).query();
 		list = f.autoClose().list(BadGirl.class);
 		assertTrue(f.isClosed());
 		assertEquals(1, list.size());
 		checkBadGirl2((BadGirl) list.get(0));
 
-		f = DbEntitySql.count(badGirl).query();
+		f = dbOom.entities().count(badGirl).query();
 		count = (int) f.autoClose().executeCount();
 		assertEquals(1, count);
 		assertTrue(f.isClosed());
 
 
-		DbSqlGenerator g = DbEntitySql.deleteById(badGirl);
-		f = new DbOomQuery(g).autoClose();
+		DbSqlGenerator g = dbOom.entities().deleteById(badGirl);
+		f = DbOomQuery.query(g).autoClose();
 		f.executeUpdate();
 		assertTrue(f.isClosed());
 
-		f = DbEntitySql.count(badGirl).query();
+		f = dbOom.entities().count(badGirl).query();
 		count = (int) f.autoClose().executeCount();
 		assertEquals(0, count);
 		assertTrue(f.isClosed());
 
 		badGirl.fooid = null;
-		f = DbEntitySql.count(badGirl).query().autoClose();
+		f = dbOom.entities().count(badGirl).query().autoClose();
 		count = (int) f.executeCount();
 		assertEquals(2, count);
 		assertTrue(f.isClosed());
@@ -732,7 +744,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl = new Girl();
 		girl.id = 1;
 		girl.name = "A%";
-		f = new DbOomQuery("select * from GIRL where id >= :girl.id and name like :girl.name");
+		f = DbOomQuery.query("select * from GIRL where id >= :girl.id and name like :girl.name");
 		f.setDebugMode();
 		f.setBean("girl", girl);
 		assertEquals("select * from GIRL where id >= 1 and name like 'A%'", f.toString());
@@ -750,13 +762,13 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		f = DbEntitySql.findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
+		f = dbOom.entities().findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 		f.close();
 
-		f = DbEntitySql.findForeign(BadBoy.class, badGirl).query();
+		f = dbOom.entities().findForeign(BadBoy.class, badGirl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
@@ -765,8 +777,8 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		BadGirl bbgg = DbEntitySql.findById(badGirl).query().find(BadGirl.class);
-		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
+		BadGirl bbgg = dbOom.entities().findById(badGirl).query().find(BadGirl.class);
+		bbgg.boys = dbOom.entities().findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
 
 		assertNotNull(bbgg);
 		assertEquals(3, bbgg.fooid.intValue());
@@ -779,23 +791,23 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1(badGirl);
 
 		badGirl.fooname = "Ticky";
-		DbEntitySql.update(badGirl).query().executeUpdate();
+		dbOom.entities().update(badGirl).query().executeUpdate();
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt(badGirl);
 
 		badGirl.foospeciality = null;
-		DbEntitySql.updateAll(badGirl).query().executeUpdate();
+		dbOom.entities().updateAll(badGirl).query().executeUpdate();
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt2(badGirl);
 
 
@@ -806,7 +818,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- double table names
 
-		q = new DbOomQuery("select g.*, g.* from GIRL g order by g.ID");
+		q = DbOomQuery.query("select g.*, g.* from GIRL g order by g.ID");
 		//noinspection unchecked
 		List<Object[]> g2 = q.list(Girl.class, Girl.class);
 		assertEquals(2, g2.size());
@@ -816,7 +828,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1Alt((Girl) g2o[1]);
 		q.close();
 
-		q = new DbOomQuery("select g.*, g2.* from GIRL g, GIRL g2 where g.ID=1 and g2.ID=3");
+		q = DbOomQuery.query("select g.*, g2.* from GIRL g, GIRL g2 where g.ID=1 and g2.ID=3");
 		//noinspection unchecked
 		g2 = q.list(Girl.class, Girl.class);
 		assertEquals(1, g2.size());

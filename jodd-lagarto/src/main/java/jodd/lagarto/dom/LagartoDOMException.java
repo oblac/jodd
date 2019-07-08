@@ -32,11 +32,11 @@ import jodd.lagarto.LagartoException;
  */
 public class LagartoDOMException extends LagartoException {
 
-	public LagartoDOMException(Throwable t) {
+	public LagartoDOMException(final Throwable t) {
 		super(t);
 	}
 
-	public LagartoDOMException(String message) {
+	public LagartoDOMException(final String message) {
 		super(message);
 	}
 

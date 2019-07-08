@@ -45,14 +45,14 @@ public class PathUtil {
 	 * a separator it gets resolved as a full path, ignoring the base.
 	 * This method acts different.
 	 */
-	public static Path resolve(Path base, String child) {
+	public static Path resolve(final Path base, String child) {
 		if (StringUtil.startsWithChar(child, File.separatorChar)) {
 			child = child.substring(1);
 		}
 		return base.resolve(child);
 	}
 
-	public static Path resolve(Path path, String... childs) {
+	public static Path resolve(Path path, final String... childs) {
 		for (String child : childs) {
 			path = resolve(path, child);
 		}
@@ -62,29 +62,27 @@ public class PathUtil {
 	/**
 	 * Reads path content.
 	 */
-	public static String readString(Path path) throws IOException {
-		BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
-
-		StringWriter writer = new StringWriter();
-
-		StreamUtil.copy(reader, writer);
-
-		return writer.toString();
+	public static String readString(final Path path) throws IOException {
+		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+			StringWriter writer = new StringWriter(); // flush & close not needed for StringWriter-instance
+			StreamUtil.copy(reader, writer);
+			return writer.toString();
+		}
 	}
 
 	/**
 	 * Deletes a directory recursively.
 	 */
-	public static void deleteFileTree(Path directory) throws IOException {
+	public static void deleteFileTree(final Path directory) throws IOException {
 		Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
 			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
 				Files.delete(file);
 				return FileVisitResult.CONTINUE;
 			}
 
 			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+			public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
 				Files.delete(dir);
 				return FileVisitResult.CONTINUE;
 			}

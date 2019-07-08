@@ -25,9 +25,9 @@
 
 package jodd.db.type;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class StringSqlType extends SqlType<String> {
 
@@ -35,7 +35,7 @@ public class StringSqlType extends SqlType<String> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public String get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getString(index);
 	}
 
@@ -43,7 +43,7 @@ public class StringSqlType extends SqlType<String> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, String value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final String value, final int dbSqlType) throws SQLException {
 		st.setString(index, value);
 	}
 

@@ -27,24 +27,23 @@ package jodd.io.watch;
 
 import jodd.io.FileUtil;
 import jodd.util.ThreadUtil;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// test is ignored as it does not give consistent results, but still can be used locally
-@Ignore
-public class DirWatcherTest {
+@Disabled("test does not give consistent results - run each method individually")
+class DirWatcherTest {
 
 	protected String dataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -53,16 +52,12 @@ public class DirWatcherTest {
 	}
 
 	@Test
-	public void testDirWatcher() throws IOException {
+	void testDirWatcher() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot, "*.md");
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
-		});
+		dirWatcher.register(event -> sb.append(event.type().name() + ":" + event.target().getName() + "\n"));
 
 		dirWatcher.start(100);
 
@@ -80,25 +75,22 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":jodd.md\n" +
-				DirWatcher.Event.MODIFIED + ":jodd.md\n" +
-				DirWatcher.Event.DELETED + ":jodd.md\n",
+				DirWatcherEvent.Type.CREATED + ":jodd.md\n" +
+				DirWatcherEvent.Type.MODIFIED + ":jodd.md\n" +
+				DirWatcherEvent.Type.DELETED + ":jodd.md\n",
 				sb.toString());
 	}
 
 	@Test
-	public void testDirWatcherWithFile() throws IOException {
+	void testDirWatcherWithFile() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot)
 				.monitor("*.md")
 				.useWatchFile("watch.txt");
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
-		});
+		dirWatcher.register(
+			event -> sb.append(event.type().name() + ":" + event.target().getName() + "\n"));
 
 		dirWatcher.start(100);
 
@@ -119,24 +111,22 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":jodd.md\n" +
+				DirWatcherEvent.Type.CREATED + ":jodd.md\n" +
 				//DirWatcher.Event.MODIFIED + ":jodd.md\n" +
-				DirWatcher.Event.DELETED + ":jodd.md\n",
+				DirWatcherEvent.Type.DELETED + ":jodd.md\n",
 				sb.toString());
 	}
 
 	@Test
-	public void testBlankStart() throws IOException {
+	void testBlankStart() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot)
 				.monitor("*.txt")
 				.startBlank(true);
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
+		dirWatcher.register(event -> {
+			sb.append(event.type().name() + ":" + event.target().getName() + "\n");
 		});
 
 		dirWatcher.start(100);
@@ -146,7 +136,7 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":watch.txt\n",
+				DirWatcherEvent.Type.CREATED + ":watch.txt\n",
 				sb.toString());
 
 	}

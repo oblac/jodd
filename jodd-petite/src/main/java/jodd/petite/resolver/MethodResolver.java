@@ -28,37 +28,38 @@ package jodd.petite.resolver;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
-import jodd.petite.InjectionPointFactory;
-import jodd.petite.MethodInjectionPoint;
-import jodd.petite.PetiteUtil;
-import jodd.petite.meta.PetiteInject;
-import jodd.util.ReflectUtil;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Method reference resolver.
+ * Methods injection points resolver.
  */
 public class MethodResolver {
 
-	protected final InjectionPointFactory injectionPointFactory;
+	protected final ReferencesResolver referencesResolver;
 
-	public MethodResolver(InjectionPointFactory injectionPointFactory) {
-		this.injectionPointFactory = injectionPointFactory;
+	public MethodResolver(final ReferencesResolver referencesResolver) {
+		this.referencesResolver = referencesResolver;
 	}
 
-	public MethodInjectionPoint[] resolve(Class type) {
+	/**
+	 * Resolve method injection points in given class.
+	 */
+	public MethodInjectionPoint[] resolve(final Class type) {
 		// lookup methods
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<MethodInjectionPoint> list = new ArrayList<>();
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 
 		for (MethodDescriptor methodDescriptor : allMethods) {
 			Method method = methodDescriptor.getMethod();
 
-			if (ReflectUtil.isBeanPropertySetter(method)) {
+			if (ClassUtil.isBeanPropertySetter(method)) {
 				// ignore setters
 				continue;
 			}
@@ -68,23 +69,24 @@ public class MethodResolver {
 				continue;
 			}
 
-			PetiteInject ref = method.getAnnotation(PetiteInject.class);
-			if (ref == null) {
-				continue;
-			}
+			BeanReferences[] references = referencesResolver.readAllReferencesFromAnnotation(method);
 
-			String[][] references = PetiteUtil.convertAnnValueToReferences(ref.value());
-			list.add(injectionPointFactory.createMethodInjectionPoint(method, references));
+			if (references != null) {
+				MethodInjectionPoint methodInjectionPoint = new MethodInjectionPoint(method, references);
+
+				list.add(methodInjectionPoint);
+			}
 		}
 
-		MethodInjectionPoint[] methods;
+		final MethodInjectionPoint[] methodInjectionPoints;
 
 		if (list.isEmpty()) {
-			methods = MethodInjectionPoint.EMPTY;
+			methodInjectionPoints = MethodInjectionPoint.EMPTY;
 		} else {
-			methods = list.toArray(new MethodInjectionPoint[list.size()]);
+			methodInjectionPoints = list.toArray(new MethodInjectionPoint[0]);
 		}
-		return methods;
+
+		return methodInjectionPoints;
 	}
 
 }

@@ -25,18 +25,18 @@
 
 package jodd.proxetta.advice;
 
-import jodd.proxetta.data.Calc;
-import jodd.proxetta.data.CalcImpl;
-import org.junit.Test;
+import jodd.proxetta.fixtures.data.Calc;
+import jodd.proxetta.fixtures.data.CalcImpl;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class DelegateAdviceTest {
+class DelegateAdviceTest {
 
 	@Test
-	public void testCalcImplDelegate() {
+	void testCalcImplDelegate() {
 		CalcImpl calc = new CalcImpl();
 
 		Calc newCalc = DelegateAdviceUtil.applyAdvice(CalcImpl.class);

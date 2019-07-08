@@ -25,14 +25,14 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LoopIteratorTest {
+class LoopIteratorTest {
 
 	@Test
-	public void testUp() {
+	void testUp() {
 		LoopIterator ls = new LoopIterator(1, 5);
 
 		assertTrue(ls.next());    // jump to 1
@@ -75,7 +75,7 @@ public class LoopIteratorTest {
 	}
 
 	@Test
-	public void testDown() {
+	void testDown() {
 		LoopIterator ls = new LoopIterator(5, 1, -1);
 
 		assertTrue(ls.next());    // jump to 5
@@ -118,7 +118,7 @@ public class LoopIteratorTest {
 	}
 
 	@Test
-	public void testSingle() {
+	void testSingle() {
 		LoopIterator ls = new LoopIterator(1, 5, 20, 10);
 		assertTrue(ls.next());
 		assertTrue(ls.isFirst());
@@ -149,7 +149,7 @@ public class LoopIteratorTest {
 	}
 
 	@Test
-	public void testNone() {
+	void testNone() {
 		LoopIterator ls = new LoopIterator(2, 1);
 		assertFalse(ls.next());
 

@@ -60,7 +60,7 @@ public abstract class DbPager {
 	 *
 	 * @see #page(String, java.util.Map, int, int, String, boolean, Class[])
 	 */
-	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, String[] sortColumns, Class[] target) {
+	public <T> PageData<T> page(PageRequest pageRequest, final String sql, final Map params, final String[] sortColumns, final Class[] target) {
 		if (pageRequest == null) {
 			pageRequest = getDefaultPageRequest();
 		}
@@ -115,7 +115,7 @@ public abstract class DbPager {
 	 * @param ascending <code>true</code> for ascending order
 	 * @param target db entities for mapping (sa usual in DbOom)
 	 */
-	protected <T> PageData<T> page(String sql, Map params, int page, int pageSize, String sortColumnName, boolean ascending, Class[] target) {
+	protected <T> PageData<T> page(String sql, final Map params, final int page, final int pageSize, final String sortColumnName, final boolean ascending, final Class[] target) {
 		if (sortColumnName != null) {
 			sql = buildOrderSql(sql, sortColumnName, ascending);
 		}

@@ -26,53 +26,53 @@
 package jodd.vtor.constraint;
 
 import jodd.vtor.TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class MinLengthConstraintTest extends ConstraintTestBase {
+class MinLengthConstraintTest extends ConstraintTestBase {
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
-        assertEquals("value must be default", minLengthConstraint.getMin(), 0);
+        assertEquals(0, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint(10);
-        assertEquals("value must be the same as was given to constructor", minLengthConstraint.getMin(), 10);
+        assertEquals(10, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testSetMin() {
+    void testSetMin() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         minLengthConstraint.setMin(10);
-        assertEquals("min value must be the same as was given to set method", minLengthConstraint.getMin(), 10);
+        assertEquals(10, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         MinLength annotation = mock(MinLength.class);
-        stub(annotation.value()).toReturn(10);
+        when(annotation.value()).thenReturn(10);
 
         minLengthConstraint.configure(annotation);
-        assertEquals("min value must be the same as was set to annotation when configure", minLengthConstraint.getMin(), 10);
+        assertEquals(10, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testValidate_WithNullValue() {
-        assertTrue("result must be true when validate a null value", MinLengthConstraint.validate(null, 1));
+    void testValidate_WithNullValue() {
+        assertTrue(MinLengthConstraint.validate(null, 1));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         int min = 3;
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint(min);
-        assertTrue("result must be true when validate string with length greater than min", minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min)));
-        assertTrue("result must be true when validate string with length equal to min", minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min)));
-        assertFalse("result must be false when validate string with length less than min", minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min - 1)));
+        assertTrue(minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min)));
+        assertTrue(minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min)));
+        assertFalse(minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min - 1)));
     }
 }

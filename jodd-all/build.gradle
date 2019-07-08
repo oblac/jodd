@@ -1,0 +1,103 @@
+ext.moduleName = 'Jodd Bundle'
+ext.moduleDescription = 'Jodd bundle - all classes in one jar'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply from: "${gradleScriptDir}/provided.gradle"
+apply from: "${gradleScriptDir}/publish-maven.gradle"
+
+group = 'org.jodd'
+
+dependencies {
+    compile javaBundleModules()
+}
+
+jar {
+    baseName = 'jodd-all'
+    javaBundleModules().each { subproject ->
+        from { subproject.sourceSets.main.output }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from javaBundleModules().sourceSets.main.allSource
+}
+task javadocJar(type: Jar, dependsOn: parent.javadocAll) {
+    classifier = 'javadoc'
+    //from javaBundleModules().javadoc.destinationDir
+    from "${parent.buildDir}/reports/javadoc"
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            rebuildAllDependencies(pom)
+
+            // RE-sign the pom, as it has been modified
+
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                pomFile.delete()
+            }
+
+        }
+    }
+}
+
+def rebuildAllDependencies(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        root.remove(root.get("dependencies"))
+
+        root.children().last() + {
+            delegate.dependencies {
+            }
+        }
+
+        def node = root.children().last()
+
+        def used = []
+
+        javaBundleModules().each { prj ->
+            prj.configurations.compile.allDependencies.each { dep ->
+                // ignore all Jodd dependencies
+                if (dep.group != "org.jodd") {
+                    def fulldep = dep.name + ':' + dep.group + ':' + dep.version
+
+
+                    if (!(fulldep in used)) {
+                        used << fulldep
+
+                        def provided = false
+                        prj.configurations.findByName("provided").allDependencies.each { depdep ->
+                            if (depdep.name == dep.name && depdep.group == dep.group && depdep.version == dep.version) {
+                                provided = true
+                            }
+                        }
+
+                        def depNode = new Node(node, "dependency")
+
+                        def groupNode = new Node(depNode, "groupId", dep.group)
+                        def artifcatNode = new Node(depNode, "artifactId", dep.name)
+                        def versionNode = new Node(depNode, "version", dep.version)
+                        def optionalNode = new Node(depNode, "optional", true)
+                        if (provided) {
+                            def scopeNode = new Node(depNode, "scope", "provided")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

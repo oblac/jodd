@@ -42,11 +42,11 @@ public class CSSelly {
 
 	protected final CSSellyLexer lexer;
 
-	public CSSelly(String input) {
+	public CSSelly(final String input) {
 		this(UnsafeUtil.getChars(input));
 	}
 
-	public CSSelly(char[] input) {
+	public CSSelly(final char[] input) {
 		this.lexer = new CSSellyLexer(input);
 	}
 
@@ -88,7 +88,7 @@ public class CSSelly {
 	 * Parses string of selectors (separated with <b>,</b>). Returns
 	 * list of {@link CssSelector} lists in the same order.
 	 */
-	public static List<List<CssSelector>> parse(String query) {
+	public static List<List<CssSelector>> parse(final String query) {
 		String[] singleQueries = StringUtil.splitc(query, ',');
 		List<List<CssSelector>> selectors = new ArrayList<>(singleQueries.length);
 
@@ -104,7 +104,7 @@ public class CSSelly {
 	/**
 	 * Returns string representation of given list of selectors.
 	 */
-	public static String toString(List<CssSelector> selectors) {
+	public static String toString(final List<CssSelector> selectors) {
 		StringBuilder out = new StringBuilder();
 		for (CssSelector s : selectors) {
 			out.append(s.toString());

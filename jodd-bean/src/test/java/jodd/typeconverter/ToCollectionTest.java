@@ -25,26 +25,25 @@
 
 package jodd.typeconverter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ToCollectionTest {
+class ToCollectionTest {
 
 	@Test
-	public void testConvertToList() {
+	void testConvertToList() {
 		Set<String> set = new HashSet<>();
 		set.add("123");
 		set.add("456");
 
-		List<Integer> list =
-			TypeConverterManager.convertToCollection(set, List.class, Integer.class);
+		List<Integer> list = TypeConverterManager.get().convertToCollection(set, List.class, Integer.class);
 
 		assertNotNull(list);
 		assertEquals(2, list.size());

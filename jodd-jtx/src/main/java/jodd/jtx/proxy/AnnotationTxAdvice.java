@@ -42,7 +42,7 @@ import static jodd.jtx.proxy.AnnotationTxAdviceSupport.manager;
  */
 public class AnnotationTxAdvice implements ProxyAdvice {
 
-	public Object execute() throws Exception {
+	public Object execute() {
 		Class type = targetClass();
 		String methodName = targetMethodName();
 		Class[] methodArgsTypes = createArgumentsClassArray();

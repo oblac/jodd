@@ -25,10 +25,10 @@
 
 package jodd.servlet.tag;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
  * Removes attribute from the scope.
@@ -41,13 +41,13 @@ public class UnsetTag extends SimpleTagSupport {
 	private static final String SCOPE_REQUEST = "request";
 	private static final String SCOPE_PAGE = "page";
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	protected String scope;
 
-	public void setScope(String scope) {
+	public void setScope(final String scope) {
 		this.scope = scope;
 	}
 
@@ -58,7 +58,7 @@ public class UnsetTag extends SimpleTagSupport {
 
 		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().removeAttribute(name);
+            request.getServletContext().removeAttribute(name);
         } else if (scopeValue.equals(SCOPE_SESSION)) {
             request.getSession().removeAttribute(name);
         } else if (scopeValue.equals(SCOPE_REQUEST)) {

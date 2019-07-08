@@ -43,7 +43,7 @@ import static jodd.util.StringPool.*;
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 
-	public Boolean convert(Object value) {
+	public Boolean convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -52,7 +52,12 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 			return (Boolean) value;
 		}
 
-		String stringValue = value.toString().trim().toLowerCase();
+		String stringValue = value.toString();
+		if (stringValue.isEmpty()) {
+			return Boolean.FALSE;
+		}
+
+		stringValue = stringValue.trim().toLowerCase();
 		if (stringValue.equals(YES) ||
 				stringValue.equals(Y) ||
 				stringValue.equals(TRUE) ||

@@ -8,6 +8,6 @@ dependencies {
 
 	provided lib.servlet
 
-	testCompile lib.junit
-	testCompile lib.powermock
+	testCompile lib.junit5
+	testCompile lib.mockito
 }

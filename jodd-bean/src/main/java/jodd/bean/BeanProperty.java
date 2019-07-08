@@ -26,10 +26,12 @@
 package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.Introspector;
-import jodd.introspector.PropertyDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
+import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
+
+import java.util.function.Supplier;
 
 /**
  * Represents a bean named property. Contains two information:
@@ -41,10 +43,10 @@ import jodd.introspector.Setter;
  */
 class BeanProperty {
 
-	BeanProperty(BeanUtilBean beanUtilBean, Object bean, String propertyName) {
-		this.introspector = beanUtilBean.getIntrospector();
+	BeanProperty(final BeanUtilBean beanUtilBean, final Object bean, final String propertyName) {
+		this.introspector = beanUtilBean.introspector;
 		setName(propertyName);
-		setBean(bean);
+		updateBean(bean);
 		this.last = true;
 		this.first = true;
 		this.fullName = bean.getClass().getSimpleName() + '#' + propertyName;
@@ -53,7 +55,7 @@ class BeanProperty {
 	// ---------------------------------------------------------------- bean and descriptor
 
 	final String fullName;  // initial name
-	final Introspector introspector;
+	final ClassIntrospector introspector;
 	Object bean;
 	private ClassDescriptor cd;
 	String name;        // property name
@@ -64,7 +66,7 @@ class BeanProperty {
 	/**
 	 * Sets current property name.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 		this.updateProperty = true;
 	}
@@ -72,11 +74,23 @@ class BeanProperty {
 	/**
 	 * Sets new bean instance.
 	 */
-	public void setBean(Object bean) {
+	private void setBean(final Object bean) {
 		this.bean = bean;
 		this.cd = (bean == null ? null : introspector.lookup(bean.getClass()));
 		this.first = false;
 		this.updateProperty = true;
+	}
+
+	/**
+	 * Updates the bean. Detects special case of suppliers.
+	 */
+	public void updateBean(final Object bean) {
+		this.setBean(bean);
+
+		if (this.cd != null && this.cd.isSupplier()) {
+			final Object newBean = ((Supplier)this.bean).get();
+			setBean(newBean);
+		}
 	}
 
 	// ---------------------------------------------------------------- simple properties
@@ -105,7 +119,7 @@ class BeanProperty {
 	/**
 	 * Returns getter.
 	 */
-	public Getter getGetter(boolean declared) {
+	public Getter getGetter(final boolean declared) {
 		loadPropertyDescriptor();
 		return propertyDescriptor != null ? propertyDescriptor.getGetter(declared) : null;
 	}
@@ -113,7 +127,7 @@ class BeanProperty {
 	/**
 	 * Returns setter.
 	 */
-	public Setter getSetter(boolean declared) {
+	public Setter getSetter(final boolean declared) {
 		loadPropertyDescriptor();
 		return propertyDescriptor != null ? propertyDescriptor.getSetter(declared) : null;
 	}

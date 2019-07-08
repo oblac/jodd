@@ -26,18 +26,19 @@
 package jodd.jtx.proxy;
 
 import jodd.jtx.JtxTransactionMode;
-import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.meta.ReadOnlyTransaction;
+import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.meta.Transaction;
-import jodd.jtx.meta.TransactionAnnotation;
-import jodd.jtx.meta.TransactionAnnotationData;
+import jodd.jtx.meta.TransactionAnnotationValues;
 import jodd.jtx.worker.LeanJtxWorker;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringUtil;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manager for {@link jodd.jtx.proxy.AnnotationTxAdvice}.
@@ -56,36 +57,27 @@ public class AnnotationTxAdviceManager {
 	protected final String scopePattern;
 
 	protected Class<? extends Annotation>[] annotations;
-	protected TransactionAnnotation[] annotationInstances;
+	protected AnnotationParser[] annotationParsers;
 
 	// ---------------------------------------------------------------- ctors
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager) {
-		this(new LeanJtxWorker(jtxManager));
-	}
-	
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker) {
 		this(jtxWorker, JTXCTX_PATTERN_CLASS + '#' + JTXCTX_PATTERN_METHOD, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern) {
-		this(new LeanJtxWorker(jtxManager), scopePattern);
-	}
-
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker, final String scopePattern) {
 		this(jtxWorker, scopePattern, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern, JtxTransactionMode defaultTxMode) {
-		this(new LeanJtxWorker(jtxManager), scopePattern, defaultTxMode);
-	}
-
 	@SuppressWarnings( {"unchecked"})
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker, final String scopePattern, final JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
-		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
+		this.defaultTransactionMode = defaultTxMode == null ? JtxTransactionMode.PROPAGATION_SUPPORTS_READ_ONLY : defaultTxMode;
 		this.scopePattern = scopePattern;
-		registerAnnotations(new Class[] {Transaction.class});
+
+		registerAnnotations(new Class[] {
+			Transaction.class, ReadWriteTransaction.class, ReadOnlyTransaction.class
+		});
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -107,7 +99,7 @@ public class AnnotationTxAdviceManager {
 	/**
 	 * Resolves tx scope from scope pattern.
 	 */
-	public String resolveScope(Class type, String methodName) {
+	public String resolveScope(final Class type, final String methodName) {
 		if (scopePattern == null) {
 			return null;
 		}
@@ -124,26 +116,27 @@ public class AnnotationTxAdviceManager {
 	 * @param methodArgTypes types of arguments, used to find the method
 	 * @param unique unique method fingerprint that contains return and arguments type information
 	 */
-	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String unique) {
+	public synchronized JtxTransactionMode getTxMode(final Class type, final String methodName, final Class[] methodArgTypes, final String unique) {
 		String signature = type.getName() + '#' + methodName + '%' + unique;
 		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
 			if (!txmap.containsKey(signature)) {
 
-				Method m;
+				final Method m;
 				try {
 					m = type.getMethod(methodName, methodArgTypes);
 				} catch (NoSuchMethodException nsmex) {
 					throw new ProxettaException(nsmex);
 				}
 
-				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
+				final TransactionAnnotationValues txAnn = readTransactionAnnotation(m);
 				if (txAnn != null) {
-					txMode = new JtxTransactionMode();
-					txMode.setPropagationBehaviour(txAnn.getPropagation());
-					txMode.setIsolationLevel(txAnn.getIsolation());
-					txMode.setReadOnly(txAnn.isReadOnly());
-					txMode.setTransactionTimeout(txAnn.getTimeout());
+					txMode = new JtxTransactionMode(
+						txAnn.propagation(),
+						txAnn.isolation(),
+						txAnn.readOnly(),
+						txAnn.timeout()
+					);
 				} else {
 					txMode = defaultTransactionMode;
 				}
@@ -156,26 +149,32 @@ public class AnnotationTxAdviceManager {
 	// ---------------------------------------------------------------- tx annotations
 
 	/**
-	 * Registers tx annotations.
+	 * Returns current TX annotations.
+	 */
+	public Class<? extends Annotation>[] getAnnotations() {
+		return annotations;
+	}
+
+	/**
+	 * Registers new TX annotations.
 	 */
 	@SuppressWarnings( {"unchecked"})
-	public void registerAnnotations(Class<? extends Annotation>... txAnnotations) {
-		this.annotations = txAnnotations;
+	public void registerAnnotations(final Class<? extends Annotation>[] annotations) {
+		this.annotations = annotations;
 
-		this.annotationInstances = new TransactionAnnotation<?>[annotations.length];
+		this.annotationParsers = new AnnotationParser[annotations.length];
+
 		for (int i = 0; i < annotations.length; i++) {
-			Class<? extends Annotation> annotationClass = annotations[i];
-			annotationInstances[i] = new TransactionAnnotation(annotationClass);
+			annotationParsers[i] = TransactionAnnotationValues.parserFor(annotations[i]);
 		}
-
 	}
 
 	/**
 	 * Finds TX annotation.
 	 */
-	protected TransactionAnnotationData getTransactionAnnotation(Method method) {
-		for (TransactionAnnotation annotationInstance : annotationInstances) {
-			TransactionAnnotationData tad = annotationInstance.readAnnotationData(method);
+	protected TransactionAnnotationValues readTransactionAnnotation(final Method method) {
+		for (AnnotationParser annotationParser : annotationParsers) {
+			TransactionAnnotationValues tad = TransactionAnnotationValues.of(annotationParser, method);
 			if (tad != null) {
 				return tad;
 			}

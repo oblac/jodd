@@ -26,7 +26,7 @@
 package jodd.decora.parser;
 
 import jodd.lagarto.Tag;
-import jodd.lagarto.TagUtil;
+import jodd.util.CharSequenceUtil;
 
 /**
  * Decora tag, defined by the name and its position in decorator file.
@@ -40,11 +40,11 @@ public class DecoraTag {
 	private final int defaultValueStart;
 	private final int defaultValueLength;
 
-	public DecoraTag(String name, String id, int start, int end) {
+	public DecoraTag(final String name, final String id, final int start, final int end) {
 		this(name, id, start, end, -1, 0);
 	}
 
-	public DecoraTag(String name, String id, int start, int end, int defaultValueStart, int defaultValueLength) {
+	public DecoraTag(final String name, final String id, final int start, final int end, int defaultValueStart, final int defaultValueLength) {
 		this.name = name;
 		this.id = id;
 		this.start = start;
@@ -115,7 +115,7 @@ public class DecoraTag {
 	 * Returns <code>true</code> if provided tag
 	 * matches decorator tag.
 	 */
-	public boolean isMatchedTag(Tag tag) {
+	public boolean isMatchedTag(final Tag tag) {
 		if (!tag.nameEquals(name)) {
 			return false;
 		}
@@ -126,7 +126,7 @@ public class DecoraTag {
 				return false;
 			}
 
-			if (!TagUtil.equals(id, tagId)) {
+			if (!CharSequenceUtil.equals(id, tagId)) {
 				return false;
 			}
 		}
@@ -172,7 +172,7 @@ public class DecoraTag {
 	/**
 	 * Starts defining region by setting the start index and reset region length to zero.
 	 */
-	public void startRegion(int start, int tagLen, int deepLevel) {
+	public void startRegion(final int start, final int tagLen, final int deepLevel) {
 		this.regionStart = start + tagLen;
 		this.regionLength = 0;
 		this.regionTagStart = start;
@@ -182,7 +182,7 @@ public class DecoraTag {
 	/**
 	 * Ends region definition by setting the region length.
 	 */
-	public void endRegion(int regionEnd, int tagLen) {
+	public void endRegion(final int regionEnd, final int tagLen) {
 		this.regionLength = regionEnd - regionStart;
 		this.regionTagEnd = regionEnd + tagLen;
 	}
@@ -205,7 +205,7 @@ public class DecoraTag {
 	 * Returns <code>true</code> if region of this Decora tag
 	 * is inside of region of provided Decora tag.
 	 */
-	public boolean isInsideOtherTagRegion(DecoraTag decoraTag) {
+	public boolean isInsideOtherTagRegion(final DecoraTag decoraTag) {
 		return (regionStart > decoraTag.getRegionStart()) && (regionStart < decoraTag.getRegionStart() + decoraTag.getRegionLength());
 	}
 

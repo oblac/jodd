@@ -32,13 +32,13 @@ import java.io.IOException;
  */
 public class TagWriterUtil {
 
-	public static void writeComment(Appendable appendable, CharSequence comment) throws IOException {
+	public static void writeComment(final Appendable appendable, final CharSequence comment) throws IOException {
 		appendable.append("<!--");
 		appendable.append(comment);
 		appendable.append("-->");
 	}
 
-	public static void writeConditionalComment(Appendable appendable, CharSequence value, boolean isStartingTag, boolean downlevelHidden, boolean isHiddenEndTag) throws IOException {
+	public static void writeConditionalComment(final Appendable appendable, final CharSequence value, final boolean isStartingTag, final boolean downlevelHidden, final boolean isHiddenEndTag) throws IOException {
 		if (isStartingTag) {
 			if (downlevelHidden) {
 				appendable.append("<!--[");
@@ -65,17 +65,17 @@ public class TagWriterUtil {
 		}
 	}
 
-	public static void writeCData(Appendable appendable, CharSequence value) throws IOException {
+	public static void writeCData(final Appendable appendable, final CharSequence value) throws IOException {
 		appendable.append("<![CDATA[");
 		appendable.append(value);
 		appendable.append("]]>");
 	}
 
 	public static void writeDoctype(
-			Appendable appendable,
-			CharSequence name,
-			CharSequence publicIdentifier,
-			CharSequence systemIdentifier) throws IOException {
+		final Appendable appendable,
+		final CharSequence name,
+		final CharSequence publicIdentifier,
+		final CharSequence systemIdentifier) throws IOException {
 
 		appendable.append("<!DOCTYPE ");
 		if (name != null) {
@@ -98,7 +98,7 @@ public class TagWriterUtil {
 		appendable.append('>');
 	}
 
-	public static void writeXml(Appendable appendable, CharSequence version, CharSequence encoding, CharSequence standalone) throws IOException {
+	public static void writeXml(final Appendable appendable, final CharSequence version, final CharSequence encoding, final CharSequence standalone) throws IOException {
 		appendable.append("<?xml");
 
 		if (version != null) {

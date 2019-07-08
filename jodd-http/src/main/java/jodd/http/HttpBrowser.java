@@ -26,7 +26,6 @@
 package jodd.http;
 
 import jodd.exception.ExceptionUtil;
-import jodd.util.StringPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +39,14 @@ public class HttpBrowser {
 	protected HttpConnectionProvider httpConnectionProvider;
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
-	protected HttpMultiMap<Cookie> cookies = HttpMultiMap.newCaseInsensitveMap();
-	protected HttpMultiMap<String> defaultHeaders = HttpMultiMap.newCaseInsensitveMap();
+	protected HttpMultiMap<Cookie> cookies = HttpMultiMap.newCaseInsensitiveMap();
+	protected HeadersMultiMap defaultHeaders = new HeadersMultiMap();
 	protected boolean keepAlive;
 	protected long elapsedTime;
 	protected boolean catchTransportExceptions = true;
 
 	public HttpBrowser() {
-		httpConnectionProvider = JoddHttp.httpConnectionProvider;
+		httpConnectionProvider = HttpConnectionProvider.get();
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class HttpBrowser {
 	/**
 	 * Defines that persistent HTTP connection should be used.
 	 */
-	public HttpBrowser setKeepAlive(boolean keepAlive) {
+	public HttpBrowser setKeepAlive(final boolean keepAlive) {
 		this.keepAlive = keepAlive;
 		return this;
 	}
@@ -68,7 +67,7 @@ public class HttpBrowser {
 	/**
 	 * Defines if transport exceptions should be thrown.
 	 */
-	public HttpBrowser setCatchTransportExceptions(boolean catchTransportExceptions) {
+	public HttpBrowser setCatchTransportExceptions(final boolean catchTransportExceptions) {
 		this.catchTransportExceptions = catchTransportExceptions;
 		return this;
 	}
@@ -76,7 +75,7 @@ public class HttpBrowser {
 	/**
 	 * Defines proxy for a browser.
 	 */
-	public HttpBrowser setProxyInfo(ProxyInfo proxyInfo) {
+	public HttpBrowser setProxyInfo(final ProxyInfo proxyInfo) {
 		httpConnectionProvider.useProxy(proxyInfo);
 		return this;
 	}
@@ -85,7 +84,7 @@ public class HttpBrowser {
 	 * Defines {@link jodd.http.HttpConnectionProvider} for this browser session.
 	 * Resets the previous proxy definition, if set.
 	 */
-	public HttpBrowser setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+	public HttpBrowser setHttpConnectionProvider(final HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
 		return this;
 	}
@@ -93,8 +92,8 @@ public class HttpBrowser {
 	/**
 	 * Adds default header to all requests.
 	 */
-	public HttpBrowser setDefaultHeader(String name, String value) {
-		defaultHeaders.add(name, value);
+	public HttpBrowser setDefaultHeader(final String name, final String value) {
+		defaultHeaders.addHeader(name, value);
 		return this;
 	}
 
@@ -135,9 +134,11 @@ public class HttpBrowser {
 
 		// send request
 
+		httpRequest.followRedirects(false);
+
 		while (true) {
 			this.httpRequest = httpRequest;
-			HttpResponse previouseResponse = this.httpResponse;
+			HttpResponse previousResponse = this.httpResponse;
 			this.httpResponse = null;
 
 			addDefaultHeaders(httpRequest);
@@ -146,7 +147,7 @@ public class HttpBrowser {
 			// send request
 			if (catchTransportExceptions) {
 				try {
-					this.httpResponse = _sendRequest(httpRequest, previouseResponse);
+					this.httpResponse = _sendRequest(httpRequest, previousResponse);
 				}
 				catch (HttpException httpException) {
 					httpResponse = new HttpResponse();
@@ -156,7 +157,7 @@ public class HttpBrowser {
 				}
 			}
 			else {
-				this.httpResponse =_sendRequest(httpRequest, previouseResponse);
+				this.httpResponse =_sendRequest(httpRequest, previousResponse);
 			}
 
 			readCookies(httpResponse);
@@ -165,7 +166,11 @@ public class HttpBrowser {
 
 			// 301: moved permanently
 			if (statusCode == 301) {
-				String newPath = location(httpResponse);
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
@@ -173,15 +178,23 @@ public class HttpBrowser {
 
 			// 302: redirect, 303: see other
 			if (statusCode == 302 || statusCode == 303) {
-				String newPath = location(httpResponse);
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
 			}
 
-			// 307: temporary redirect
-			if (statusCode == 307) {
-				String newPath = location(httpResponse);
+			// 307: temporary redirect, 308: permanent redirect
+			if (statusCode == 307 || statusCode == 308) {
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				String originalMethod = httpRequest.method();
 				httpRequest = new HttpRequest()
@@ -201,7 +214,7 @@ public class HttpBrowser {
 	/**
 	 * Opens connection and sends a response.
 	 */
-	protected HttpResponse _sendRequest(HttpRequest httpRequest, HttpResponse previouseResponse) {
+	protected HttpResponse _sendRequest(final HttpRequest httpRequest, final HttpResponse previouseResponse) {
 		if (!keepAlive) {
 			httpRequest.open(httpConnectionProvider);
 		} else {
@@ -220,33 +233,14 @@ public class HttpBrowser {
 	 * Add default headers to the request. If request already has a header set,
 	 * default header will be ignored.
 	 */
-	protected void addDefaultHeaders(HttpRequest httpRequest) {
-		List<Map.Entry<String, String>> entries = defaultHeaders.entries();
-
-		for (Map.Entry<String, String> entry : entries) {
+	protected void addDefaultHeaders(final HttpRequest httpRequest) {
+		for (Map.Entry<String, String> entry : defaultHeaders.entries()) {
 			String name = entry.getKey();
+
 			if (!httpRequest.headers.contains(name)) {
 				httpRequest.headers.add(name, entry.getValue());
 			}
 		}
-	}
-
-	/**
-	 * Parse 'location' header to return the next location.
-	 * Specification (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">rfc2616</a>)
-	 * says that only absolute path must be provided, however, this does not
-	 * happens in the real world. There a <a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">proposal</a>
-	 * that allows server name etc to be omitted.
-	 */
-	protected String location(HttpResponse httpResponse) {
-		String location = httpResponse.header("location");
-
-		if (location.startsWith(StringPool.SLASH)) {
-			HttpRequest httpRequest = httpResponse.getHttpRequest();
-			location = httpRequest.hostUrl() + location;
-		}
-
-		return location;
 	}
 
 	/**
@@ -270,9 +264,16 @@ public class HttpBrowser {
 	// ---------------------------------------------------------------- cookies
 
 	/**
+	 * Deletes all cookies.
+	 */
+	public void clearCookies() {
+		cookies.clear();
+	}
+
+	/**
 	 * Reads cookies from response and adds to cookies list.
 	 */
-	protected void readCookies(HttpResponse httpResponse) {
+	protected void readCookies(final HttpResponse httpResponse) {
 		Cookie[] newCookies = httpResponse.cookies();
 
 		for (Cookie cookie : newCookies) {
@@ -283,7 +284,7 @@ public class HttpBrowser {
 	/**
 	 * Add cookies to the request.
 	 */
-	protected void addCookies(HttpRequest httpRequest) {
+	protected void addCookies(final HttpRequest httpRequest) {
 		// prepare all cookies
 		List<Cookie> cookiesList = new ArrayList<>();
 
@@ -292,7 +293,7 @@ public class HttpBrowser {
 				cookiesList.add(cookieEntry.getValue());
 			}
 
-			httpRequest.cookies(cookiesList.toArray(new Cookie[cookiesList.size()]));
+			httpRequest.cookies(cookiesList.toArray(new Cookie[0]));
 		}
 	}
 }

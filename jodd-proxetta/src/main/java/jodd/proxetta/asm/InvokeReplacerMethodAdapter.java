@@ -26,6 +26,9 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
+import jodd.asm7.Label;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Type;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
@@ -33,20 +36,17 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTargetReplacement;
 import jodd.util.StringPool;
-import jodd.asm5.Label;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.Type;
 
-import static jodd.asm5.Opcodes.ASTORE;
-import static jodd.asm5.Opcodes.POP;
+import static jodd.asm7.Opcodes.ALOAD;
+import static jodd.asm7.Opcodes.ASTORE;
+import static jodd.asm7.Opcodes.DUP;
+import static jodd.asm7.Opcodes.INVOKEINTERFACE;
+import static jodd.asm7.Opcodes.INVOKESPECIAL;
+import static jodd.asm7.Opcodes.INVOKESTATIC;
+import static jodd.asm7.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm7.Opcodes.NEW;
+import static jodd.asm7.Opcodes.POP;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
-import static jodd.asm5.Opcodes.ALOAD;
-import static jodd.asm5.Opcodes.DUP;
-import static jodd.asm5.Opcodes.INVOKEINTERFACE;
-import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm5.Opcodes.NEW;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
@@ -62,7 +62,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	protected final MethodInfo methodInfo;
 	protected final InvokeAspect[] aspects;
 
-	public InvokeReplacerMethodAdapter(MethodVisitor mv, MethodInfo methodInfo, WorkData wd, InvokeAspect[] aspects) {
+	public InvokeReplacerMethodAdapter(final MethodVisitor mv, final MethodInfo methodInfo, final WorkData wd, final InvokeAspect[] aspects) {
 		super(mv);
 		this.wd = wd;
 		this.aspects = aspects;
@@ -85,7 +85,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	 * Invoked on INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC, INVOKEINTERFACE or INVOKEDYNAMIC.
 	 */
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
+	public void visitMethodInsn(final int opcode, String owner, String name, String desc, final boolean isInterface) {
 
 		// replace NEW.<init>
 		if ((newInvokeReplacer != null) && (opcode == INVOKESPECIAL)) {
@@ -285,7 +285,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	}
 
 	@Override
-	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+	public void visitFieldInsn(final int opcode, String owner, final String name, final String desc) {
 		// [*]
 		// Fix all Foo.<field> to FooClone.<field>
 		if (owner.equals(wd.superReference)) {
@@ -295,7 +295,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	}
 
 	@Override
-	public void visitTypeInsn(int opcode, String type) {
+	public void visitTypeInsn(final int opcode, final String type) {
 		if (opcode == NEW) {
 			InvokeInfo invokeInfo = new InvokeInfo(type, INIT, StringPool.EMPTY);
 			for (InvokeAspect aspect : aspects) {
@@ -313,7 +313,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	}
 
 	@Override
-	public void visitVarInsn(int opcode, int var) {
+	public void visitVarInsn(final int opcode, final int var) {
 		if (proxyInfoRequested) {
 			proxyInfoRequested = false;
 			if (opcode == ASTORE) {
@@ -324,7 +324,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	}
 
 	@Override
-	public void visitInsn(int opcode) {
+	public void visitInsn(final int opcode) {
 		if ((newInvokeReplacer != null) && (opcode == DUP)) {
 			return;	// skip dup after new
 		}
@@ -332,11 +332,11 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	}
 
 	@Override
-	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 	}
 
 	@Override
-	public void visitLineNumber(int line, Label start) {
+	public void visitLineNumber(final int line, final Label start) {
 	}
 
 
@@ -345,7 +345,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	/**
 	 * Appends argument to the existing description.
 	 */
-	protected static String appendArgument(String desc, String type) {
+	protected static String appendArgument(final String desc, final String type) {
 		int ndx = desc.indexOf(')');
 		return desc.substring(0, ndx) + type + desc.substring(ndx);
 	}
@@ -353,7 +353,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	/**
 	 * Prepends argument to the existing description.
 	 */
-	protected static String prependArgument(String desc, String type) {
+	protected static String prependArgument(final String desc, final String type) {
 		int ndx = desc.indexOf('(');
 		ndx++;
 		return desc.substring(0, ndx) + type + desc.substring(ndx);
@@ -362,7 +362,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	/**
 	 * Changes return type.
 	 */
-	protected static String changeReturnType(String desc, String type) {
+	protected static String changeReturnType(final String desc, final String type) {
 		int ndx = desc.indexOf(')');
 		return desc.substring(0, ndx + 1) + type;
 	} 

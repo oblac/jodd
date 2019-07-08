@@ -26,6 +26,7 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.TemplateData;
 
 /**
@@ -43,44 +44,44 @@ public class TableChunk extends SqlChunk {
 	protected final String tableAlias;
 	protected final String tableReference;
 
-	public TableChunk(Object entity) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = this.entity.getSimpleName();
 		this.tableReference = null;
 	}
 
-	public TableChunk(Object entity, String alias) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity, final String alias) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = alias;
 		this.tableReference = null;
 	}
 
-	public TableChunk(Object entity, String alias, String tableReference) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity, final String alias, final String tableReference) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = alias;
 		this.tableReference = tableReference;
 	}
 
-	public TableChunk(String entityName, String alias) {
-		this(null, entityName, alias, null);
+	public TableChunk(final DbEntityManager dbEntityManager, final String entityName, final String alias) {
+		this(dbEntityManager, null, entityName, alias, null);
 	}
 
-	protected TableChunk(Class entity, String entityName, String tableAlias, String tableReference) {
-		super(CHUNK_TABLE);
+	private TableChunk(final DbEntityManager dbEntityManager, final Class entity, final String entityName, final String tableAlias, final String tableReference) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = entity;
 		this.entityName = entityName;
 		this.tableAlias = tableAlias;
 		this.tableReference = tableReference;
 	}
 
-	public TableChunk(String tableRef) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, String tableRef) {
+		super(dbEntityManager, CHUNK_TABLE);
 		tableRef = tableRef.trim();
 		int spaceNdx = tableRef.indexOf(' ');
 		this.entity = null;
@@ -103,7 +104,7 @@ public class TableChunk extends SqlChunk {
 	 * Resolves and registers table references.
 	 */
 	@Override
-	public void init(TemplateData templateData) {
+	public void init(final TemplateData templateData) {
 		super.init(templateData);
 		if (entity != null) {
 			ded = lookupType(entity);
@@ -130,9 +131,9 @@ public class TableChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		separateByCommaOrSpace(out);
-		out.append(ded.getTableName());
+		out.append(ded.getTableNameForQuery());
 		if (tableAlias != null) {
 			out.append(' ').append(tableAlias);
 		}

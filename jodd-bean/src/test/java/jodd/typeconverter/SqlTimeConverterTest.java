@@ -25,30 +25,32 @@
 
 package jodd.typeconverter;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.SqlTimeConverter;
-import org.junit.Test;
+import jodd.time.JulianDate;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class SqlTimeConverterTest {
+class SqlTimeConverterTest {
 
-	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
+	private static long time = JulianDate.of(2011, 11, 1, 9, 10, 12, 567).toMilliseconds();
 
 	SqlTimeConverter sqlTimeConverter = new SqlTimeConverter();
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		assertNull(sqlTimeConverter.convert(null));
 	}
 
 	@Test
-	public void testCalendar2Timestamp() {
+	void testCalendar2Timestamp() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		Time sqltime = sqlTimeConverter.convert(calendar);
@@ -56,42 +58,35 @@ public class SqlTimeConverterTest {
 	}
 
 	@Test
-	public void testDate2Timestamp() {
+	void testDate2Timestamp() {
 		Date date = new Date(time);
 		Time sqltime = sqlTimeConverter.convert(date);
 		assertEquals(time, sqltime.getTime());
 	}
 
 	@Test
-	public void testTimestamp2Timestamp() {
+	void testTimestamp2Timestamp() {
 		Timestamp timestamp2 = new Timestamp(time);
 		Time sqltime = sqlTimeConverter.convert(timestamp2);
 		assertEquals(time, sqltime.getTime());
 	}
 
 	@Test
-	public void testSqlDate2Timestamp() {
+	void testSqlDate2Timestamp() {
 		java.sql.Date date = new java.sql.Date(time);
 		Time sqltime = sqlTimeConverter.convert(date);
 		assertEquals(time, sqltime.getTime());
 	}
 
 	@Test
-	public void testSqlTime2Timestamp() {
+	void testSqlTime2Timestamp() {
 		Time sqltime2 = new Time(time);
 		Time sqltime = sqlTimeConverter.convert(sqltime2);
 		assertEquals(time, sqltime.getTime());
 	}
 
 	@Test
-	public void testJDateTime2Timestamp() {
-		JDateTime jdt = new JDateTime(time);
-		Time sqltime = sqlTimeConverter.convert(jdt);
-		assertEquals(time, sqltime.getTime());
-	}
-
-	@Test
-	public void testConversion() {
+	void testConversion() {
 		assertNull(sqlTimeConverter.convert(null));
 
 		assertEquals(Time.valueOf("00:01:02"), sqlTimeConverter.convert(Time.valueOf("00:01:02")));
@@ -101,13 +96,13 @@ public class SqlTimeConverterTest {
 
 		try {
 			sqlTimeConverter.convert("00:01");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
 			sqlTimeConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

@@ -1,0 +1,37 @@
+
+# database
+jdbc.driverClassName=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/jodd_test
+jdbc.username=root
+jdbc.password=root!
+
+# DB POOL
+joy.db.pool.driver=${jdbc.driverClassName}
+joy.db.pool.url=${jdbc.url}
+joy.db.pool.user=${jdbc.username}
+joy.db.pool.password=${jdbc.password}
+joy.db.pool.maxConnections=50
+joy.db.pool.minConnections=5
+joy.db.pool.waitIfBusy=true
+
+# DB QUERY
+joy.db.query.debug=true
+joy.db.query.type=FORWARD_ONLY
+
+# DBOOM
+joy.db.oom.tableNames.prefix=jd_
+
+# MADVOC
+[joy.madvoc]
+madvocEncoding.encoding=UTF-8
+madvocController.welcomeFile=/index.jsp
+requestScope.injectAttributes=true
+echoInterceptor.prefixIn=x--->
+
+joyActionConfig.interceptors=\
+		jodd.madvoc.interceptor.EchoInterceptor,\
+		jodd.joy.auth.AuthInterceptor,\
+		jodd.joy.i18n.I18nInterceptor,\
+		jodd.madvoc.interceptor.ServletConfigInterceptor
+
+fileUploader.maxFileSize=10000

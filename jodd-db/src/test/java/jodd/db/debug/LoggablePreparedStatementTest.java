@@ -25,52 +25,56 @@
 
 package jodd.db.debug;
 
-import jodd.db.DbHsqldbTestCase;
-import org.junit.Test;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LoggablePreparedStatementTest extends DbHsqldbTestCase {
+class LoggablePreparedStatementTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testSetParameters() throws SQLException {
+	void testSetParameters() throws SQLException {
 		Connection connection = cp.getConnection();
 
-		PreparedStatement preparedStatement = LoggablePreparedStatementFactory.create(connection, "select * from BOY t where t.id=?");
+		String sql = "select * from BOY t where t.id=?";
+		LoggablePreparedStatement preparedStatement = new LoggablePreparedStatement(connection.prepareStatement(sql), sql);
 		preparedStatement.setInt(1, 7);
 		preparedStatement.close();
 
-		assertEquals("select * from BOY t where t.id=7", LoggablePreparedStatementFactory.getQueryString(preparedStatement));
+		assertEquals("select * from BOY t where t.id=7", preparedStatement.getQueryString());
 
-		preparedStatement = LoggablePreparedStatementFactory.create(connection, "select * from BOY t where t.name=?");
+		sql = "select * from BOY t where t.name=?";
+		preparedStatement = new LoggablePreparedStatement(connection.prepareStatement(sql), sql);
 		preparedStatement.setString(1, "jodd");
 		preparedStatement.close();
 
-		assertEquals("select * from BOY t where t.name='jodd'", LoggablePreparedStatementFactory.getQueryString(preparedStatement));
+		assertEquals("select * from BOY t where t.name='jodd'", preparedStatement.getQueryString());
 
-		preparedStatement = LoggablePreparedStatementFactory.create(connection, "select * from BOY t where t.name=?");
+		sql = "select * from BOY t where t.name=?";
+		preparedStatement = new LoggablePreparedStatement(connection.prepareStatement(sql), sql);
 		preparedStatement.setNull(1, Types.VARCHAR, "String");
 		preparedStatement.close();
 
-		assertEquals("select * from BOY t where t.name=<null>", LoggablePreparedStatementFactory.getQueryString(preparedStatement));
+		assertEquals("select * from BOY t where t.name=<null>", preparedStatement.getQueryString());
 
-		preparedStatement = LoggablePreparedStatementFactory.create(connection, "select * from BOY t where t.id=?");
+		sql = "select * from BOY t where t.id=?";
+		preparedStatement = new LoggablePreparedStatement(connection.prepareStatement(sql), sql);
 		preparedStatement.setFloat(1, 1.73f);
 		preparedStatement.close();
 
-		assertEquals("select * from BOY t where t.id=1.73", LoggablePreparedStatementFactory.getQueryString(preparedStatement));
+		assertEquals("select * from BOY t where t.id=1.73", preparedStatement.getQueryString());
 
-		preparedStatement = LoggablePreparedStatementFactory.create(connection, "select * from BOY t where t.id=? and t.name=?");
+		sql = "select * from BOY t where t.id=? and t.name=?";
+		preparedStatement = new LoggablePreparedStatement(connection.prepareStatement(sql), sql);
 		preparedStatement.setString(2, "jodd");
 		preparedStatement.setDouble(1, 1.73);
 		preparedStatement.close();
 
-		assertEquals("select * from BOY t where t.id=1.73 and t.name='jodd'", LoggablePreparedStatementFactory.getQueryString(preparedStatement));
+		assertEquals("select * from BOY t where t.id=1.73 and t.name='jodd'", preparedStatement.getQueryString());
 
 		cp.closeConnection(connection);
 	}

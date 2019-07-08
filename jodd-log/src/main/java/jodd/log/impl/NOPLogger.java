@@ -26,69 +26,97 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * Dummy logger.
  */
 public class NOPLogger implements Logger {
 
+	private static final NOPLogger INSTANCE = new NOPLogger("*");
+
+	public static final LoggerProvider<NOPLogger> PROVIDER = name -> INSTANCE;
+
 	private final String name;
 
-	public NOPLogger(String name) {
+	public NOPLogger(final String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public boolean isEnabled(Level level) {
+	@Override
+	public boolean isEnabled(final Level level) {
 		return false;
 	}
 
-	public void log(Level level, String message) {
+	@Override
+	public void log(final Level level, final String message) {
 	}
 
+	@Override
+	public void log(final Level level, final String message, final Throwable throwable) {
+	}
+
+	@Override
+	public void setLevel(final Level level) {
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return false;
 	}
 
-	public void trace(String message) {
+	@Override
+	public void trace(final String message) {
 
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return false;
 	}
 
-	public void debug(String message) {
+	@Override
+	public void debug(final String message) {
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return false;
 	}
 
-	public void info(String message) {
+	@Override
+	public void info(final String message) {
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return false;
 	}
 
-	public void warn(String message) {
+	@Override
+	public void warn(final String message) {
 	}
 
-	public void warn(String message, Throwable throwable) {
+	@Override
+	public void warn(final String message, final Throwable throwable) {
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return false;
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 	}
 
-	public void error(String message, Throwable throwable) {
+	@Override
+	public void error(final String message, final Throwable throwable) {
 	}
 
 }

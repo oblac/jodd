@@ -26,9 +26,9 @@
 package jodd.util.collection;
 
 import java.util.AbstractMap;
-import java.util.Set;
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Adapter for map whose keys are <code>String</code> values.
@@ -92,7 +92,7 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 				final Object value = getAttribute(key);
 				entries.add(new Entry<String, Object>() {
 					@Override
-					public boolean equals(Object obj) {
+					public boolean equals(final Object obj) {
 						if (obj == null) {
 							return false;
 						}
@@ -110,15 +110,18 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 						return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
 					}
 
+					@Override
 					public String getKey() {
 						return key;
 					}
 
+					@Override
 					public Object getValue() {
 						return value;
 					}
 
-					public Object setValue(Object obj) {
+					@Override
+					public Object setValue(final Object obj) {
 						setAttribute(key, obj);
 						return value;
 					}
@@ -133,7 +136,7 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 	 * Returns the request attribute associated with the given key or <code>null</code> if it doesn't exist.
 	 */
 	@Override
-	public Object get(Object key) {
+	public Object get(final Object key) {
 		return getAttribute(key.toString());
 	}
 
@@ -141,7 +144,7 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 	 * Saves an attribute in the request.
 	 */
 	@Override
-	public Object put(String key, Object value) {
+	public Object put(final String key, final Object value) {
 		entries = null;
 		Object previous = get(key);
 		setAttribute(key, value);
@@ -152,7 +155,7 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 	 * Removes the specified request attribute.
 	 */
 	@Override
-	public Object remove(Object key) {
+	public Object remove(final Object key) {
 		entries = null;
 		Object value = get(key);
 		removeAttribute(key.toString());

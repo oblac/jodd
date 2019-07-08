@@ -25,16 +25,18 @@
 
 package jodd.util;
 
+import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.io.findfile.ClassScanner;
+import jodd.template.StringTemplateParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Misc java.util.Properties utils.
@@ -48,7 +50,7 @@ public class PropertiesUtil {
 	 *
 	 * @param fileName properties file name to load
 	 */
-	public static Properties createFromFile(String fileName) throws IOException {
+	public static Properties createFromFile(final String fileName) throws IOException {
 		return createFromFile(new File(fileName));
 	}
 
@@ -57,7 +59,7 @@ public class PropertiesUtil {
 	 *
 	 * @param file properties file to load
 	 */
-	public static Properties createFromFile(File file) throws IOException {
+	public static Properties createFromFile(final File file) throws IOException {
 		Properties prop = new Properties();
 		loadFromFile(prop, file);
 		return prop;
@@ -70,7 +72,7 @@ public class PropertiesUtil {
 	 * @param p        properties to fill in
 	 * @param fileName properties file name to load
 	 */
-	public static void loadFromFile(Properties p, String fileName) throws IOException {
+	public static void loadFromFile(final Properties p, final String fileName) throws IOException {
 		loadFromFile(p, new File(fileName));
 	}
 
@@ -81,7 +83,7 @@ public class PropertiesUtil {
 	 * @param p      properties to fill in
 	 * @param file   file to read properties from
 	 */
-	public static void loadFromFile(Properties p, File file) throws IOException {
+	public static void loadFromFile(final Properties p, final File file) throws IOException {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -98,7 +100,7 @@ public class PropertiesUtil {
 	 * @param p        properties to write to file
 	 * @param fileName destination file name
 	 */
-	public static void writeToFile(Properties p, String fileName) throws IOException {
+	public static void writeToFile(final Properties p, final String fileName) throws IOException {
 		writeToFile(p, new File(fileName), null);
 	}
 
@@ -109,7 +111,7 @@ public class PropertiesUtil {
 	 * @param fileName destination file name
 	 * @param header   optional header
 	 */
-	public static void writeToFile(Properties p, String fileName, String header) throws IOException {
+	public static void writeToFile(final Properties p, final String fileName, final String header) throws IOException {
 		writeToFile(p, new File(fileName), header);
 	}
 
@@ -119,7 +121,7 @@ public class PropertiesUtil {
 	 * @param p      properties to write to file
 	 * @param file   destination file
 	 */
-	public static void writeToFile(Properties p, File file) throws IOException {
+	public static void writeToFile(final Properties p, final File file) throws IOException {
 		writeToFile(p, file, null);
 	}
 
@@ -130,7 +132,7 @@ public class PropertiesUtil {
 	 * @param file   destination file
 	 * @param header optional header
 	 */
-	public static void writeToFile(Properties p, File file, String header) throws IOException {
+	public static void writeToFile(final Properties p, final File file, final String header) throws IOException {
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(file);
@@ -145,7 +147,7 @@ public class PropertiesUtil {
 	/**
 	 * Creates properties from string.
 	 */
-	public static Properties createFromString(String data) throws IOException {
+	public static Properties createFromString(final String data) throws IOException {
 		Properties p = new Properties();
 		loadFromString(p, data);
 		return p;
@@ -154,12 +156,9 @@ public class PropertiesUtil {
 	/**
 	 * Loads properties from string.
 	 */
-	public static void loadFromString(Properties p, String data) throws IOException {
-		ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes(StringPool.ISO_8859_1));
-		try {
+	public static void loadFromString(final Properties p, final String data) throws IOException {
+		try (ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes(StringPool.ISO_8859_1))) {
 			p.load(is);
-		} finally {
-			is.close();
 		}
 	}
 
@@ -177,7 +176,7 @@ public class PropertiesUtil {
 	 *
 	 * @return subset properties
 	 */
-	public static Properties subset(Properties p, String prefix, boolean stripPrefix) {
+	public static Properties subset(final Properties p, String prefix, final boolean stripPrefix) {
 		if (StringUtil.isBlank(prefix)) {
 			return p;
 		}
@@ -201,7 +200,7 @@ public class PropertiesUtil {
 	/**
 	 * Creates properties from classpath.
 	 */
-	public static Properties createFromClasspath(String... rootTemplate) {
+	public static Properties createFromClasspath(final String... rootTemplate) {
 		Properties p = new Properties();
 		return loadFromClasspath(p, rootTemplate);
 	}
@@ -209,18 +208,14 @@ public class PropertiesUtil {
 	/**
 	 * Loads properties from classpath file(s). Properties are specified using wildcards.
 	 */
-	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
-		ClassScanner scanner = new ClassScanner() {
-			@Override
-			protected void onEntry(EntryData entryData) throws IOException {
-				p.load(entryData.openInputStream());
-			}
-		};
-		scanner.setIncludeResources(true);
-		scanner.setIgnoreException(true);
-		scanner.setExcludeAllEntries(true);
-		scanner.setIncludedEntries(rootTemplate);
-		scanner.scanDefaultClasspath();
+	public static Properties loadFromClasspath(final Properties p, final String... rootTemplate) {
+			ClassScanner.create()
+				.registerEntryConsumer(entryData -> UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream())))
+				.includeResources(true)
+				.ignoreException(true)
+				.excludeAllEntries(true)
+				.includeEntries(rootTemplate)
+				.scanDefaultClasspath();
 		return p;
 	}
 
@@ -231,7 +226,7 @@ public class PropertiesUtil {
 	 * Returns String property from a map. If key is not found, or if value is not a String, returns <code>null</code>.
 	 * Mimics <code>Property.getProperty</code> but on map.
 	 */
-	public static String getProperty(Map map, String key) {
+	public static String getProperty(final Map map, final String key) {
 		return getProperty(map, key, null);
 	}
 
@@ -239,7 +234,7 @@ public class PropertiesUtil {
 	 * Returns String property from a map.
 	 * @see #getProperty(java.util.Map, String) 
 	 */
-	public static String getProperty(Map map, String key, String defaultValue) {
+	public static String getProperty(final Map map, final String key, final String defaultValue) {
 		Object val = map.get(key);
 		return (val instanceof String) ? (String) val : defaultValue;
 	}
@@ -247,7 +242,7 @@ public class PropertiesUtil {
 	/**
 	 * Resolves all variables.
 	 */
-	public static void resolveAllVariables(Properties prop) {
+	public static void resolveAllVariables(final Properties prop) {
 		for (Object o : prop.keySet()) {
 			String key = (String) o;
 			String value = resolveProperty(prop, key);
@@ -265,16 +260,12 @@ public class PropertiesUtil {
 	/**
 	 * Returns property with resolved variables.
 	 */
-	public static String resolveProperty(final Map map, String key) {
+	public static String resolveProperty(final Map map, final String key) {
 		String value = getProperty(map, key);
 		if (value == null) {
 			return null;
 		}
-		value = stp.parse(value, new StringTemplateParser.MacroResolver() {
-			public String resolve(String macroName) {
-				return getProperty(map, macroName);
-			}
-		});
+		value = stp.parse(value, macroName -> getProperty(map, macroName));
 
 		return value;
 	}

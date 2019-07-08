@@ -50,7 +50,8 @@ public class RemoveSessionFromUrlFilter implements Filter {
 	/**
 	 * Filters requests to remove URL-based session identifiers.
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	@Override
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 			throws IOException, ServletException {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -67,22 +68,22 @@ public class RemoveSessionFromUrlFilter implements Filter {
 		// wrap response to remove URL encoding
 		HttpServletResponseWrapper wrappedResponse = new HttpServletResponseWrapper(httpResponse) {
 			@Override
-			public String encodeRedirectUrl(String url) {
+			public String encodeRedirectUrl(final String url) {
 				return url;
 			}
 
 			@Override
-			public String encodeRedirectURL(String url) {
+			public String encodeRedirectURL(final String url) {
 				return url;
 			}
 
 			@Override
-			public String encodeUrl(String url) {
+			public String encodeUrl(final String url) {
 				return url;
 			}
 
 			@Override
-			public String encodeURL(String url) {
+			public String encodeURL(final String url) {
 				return url;
 			}
 		};
@@ -94,7 +95,7 @@ public class RemoveSessionFromUrlFilter implements Filter {
 	 * Detects if session ID exist in the URL. It works more reliable
 	 * than <code>servletRequest.isRequestedSessionIdFromURL()</code>.
 	 */
-	protected boolean isRequestedSessionIdFromURL(HttpServletRequest servletRequest) {
+	protected boolean isRequestedSessionIdFromURL(final HttpServletRequest servletRequest) {
 		if (servletRequest.isRequestedSessionIdFromURL()) {
 			return true;
 		}
@@ -110,9 +111,11 @@ public class RemoveSessionFromUrlFilter implements Filter {
 		return false;
 	}
 
-	public void init(FilterConfig config) throws ServletException {
+	@Override
+	public void init(final FilterConfig config) {
 	}
 
+	@Override
 	public void destroy() {
 	}
 }

@@ -25,96 +25,106 @@
 
 package jodd.json;
 
-import jodd.json.mock.Surfer;
-import org.junit.Test;
+import jodd.json.fixtures.JsonParsers;
+import jodd.json.fixtures.mock.Surfer;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonValueContextTest {
+class JsonValueContextTest {
 
 	@Test
-	public void testJsonValueContextBean() {
-		Surfer surfer = new Surfer();
+	void testJsonValueContextBean() {
+		JsonParsers.forEachParser(jsonParser -> {
+			Surfer surfer = new Surfer();
 
-		surfer.setName("Igor");
-		surfer.setSplit("long wave");
+			surfer.setName("Igor");
+			surfer.setSplit("long wave");
 
-		JsonSerializer jsonSerializer = new JsonSerializer()
+			JsonSerializer jsonSerializer = new JsonSerializer()
 				.withSerializer(String.class, new MyTypeJsonSerializer());
 
-		String json = jsonSerializer.serialize(surfer);
+			String json = jsonSerializer.serialize(surfer);
 
-		Map<String, Object> map = new JsonParser().parse(json);
+			Map<String, Object> map = jsonParser.parse(json);
 
-		assertEquals("IGOR", map.get("name"));
+			assertEquals("IGOR", map.get("name"));
 
-		assertEquals("{\"id\":0,\"name\":\"IGOR\",\"pipe\":null,\"skill\":null,\"split\":\"long wave\"}", json);
+			assertEquals("{\"id\":0,\"name\":\"IGOR\",\"pipe\":null,\"skill\":null,\"split\":\"long wave\"}", json);
+		});
 	}
 
 	@Test
-	public void testJsonValueContextList() {
-		List<String> list = new ArrayList<>();
+	void testJsonValueContextList() {
+		JsonParsers.forEachParser(jsonParser -> {
+			List<String> list = new ArrayList<>();
 
-		list.add("one");
-		list.add("two");
-		list.add("three");
+			list.add("one");
+			list.add("two");
+			list.add("three");
 
-		JsonSerializer jsonSerializer = new JsonSerializer()
+			JsonSerializer jsonSerializer = new JsonSerializer()
 				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
-		String json = jsonSerializer.serialize(list);
+			String json = jsonSerializer.serialize(list);
 
-		list = new JsonParser().parse(json);
+			list = jsonParser.parse(json);
 
-		assertEquals(3, list.size());
+			assertEquals(3, list.size());
 
-		assertEquals("TWO", list.get(1));
+			assertEquals("TWO", list.get(1));
 
-		assertEquals("[\"one\",\"TWO\",\"three\"]", json);
+			assertEquals("[\"one\",\"TWO\",\"three\"]", json);
+		});
 	}
 
 	@Test
-	public void testJsonValueContextArray() {
-		String[] array = new String[] {"one", "two", "three"};
+	void testJsonValueContextArray() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String[] array = new String[]{"one", "two", "three"};
 
-		JsonSerializer jsonSerializer = new JsonSerializer()
+			JsonSerializer jsonSerializer = new JsonSerializer()
 				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
-		String json = jsonSerializer.serialize(array);
+			String json = jsonSerializer.serialize(array);
 
-		List<String> list = new JsonParser().parse(json);
+			List<String> list = jsonParser.parse(json);
 
-		assertEquals(3, list.size());
+			assertEquals(3, list.size());
 
-		assertEquals("TWO", list.get(1));
+			assertEquals("TWO", list.get(1));
 
-		assertEquals("[\"one\",\"TWO\",\"three\"]", json);
+			assertEquals("[\"one\",\"TWO\",\"three\"]", json);
+		});
 	}
 
 	@Test
-	public void testJsonValueContextArray2() {
-		Object[] array = new Object[] {new Surfer(), "two", "three"};
+	void testJsonValueContextArray2() {
+		JsonParsers.forEachParser(jsonParser -> {
+			Object[] array = new Object[]{new Surfer(), "two", "three"};
 
-		JsonSerializer jsonSerializer = new JsonSerializer()
+			JsonSerializer jsonSerializer = new JsonSerializer()
 				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
-		String json = jsonSerializer.serialize(array);
+			String json = jsonSerializer.serialize(array);
 
-		List<String> list = new JsonParser().parse(json);
+			List<String> list = jsonParser.parse(json);
 
-		assertEquals(3, list.size());
+			assertEquals(3, list.size());
 
-		assertEquals("TWO", list.get(1));
+			assertEquals("TWO", list.get(1));
+		});
 	}
 
 	// ---------------------------------------------------------------- mys
 
 	public static class MyTypeJsonSerializer implements TypeJsonSerializer<String> {
 
+		@Override
 		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
@@ -132,6 +142,7 @@ public class JsonValueContextTest {
 
 	public static class MyTypeJsonSerializer2 implements TypeJsonSerializer<String> {
 
+		@Override
 		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 

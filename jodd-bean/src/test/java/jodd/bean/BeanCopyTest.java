@@ -25,22 +25,21 @@
 
 package jodd.bean;
 
-import jodd.bean.data.FooBean;
-import jodd.bean.data.FooBeanString;
+import jodd.bean.fixtures.FooBean;
+import jodd.bean.fixtures.FooBeanString;
 import jodd.util.Wildcard;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BeanCopyTest {
+class BeanCopyTest {
 
 	@Test
-	public void testCopy() {
+	void testCopy() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).copy();
@@ -120,7 +119,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyIncludes() {
+	void testCopyIncludes() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).excludeAll().include("fooInteger", "fooLong").copy();
@@ -160,7 +159,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyExcludes() {
+	void testCopyExcludes() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).exclude("fooInteger", "fooLong").copy();
@@ -203,7 +202,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyTemplate() {
+	void testCopyTemplate() {
 		FooBean fooBean = createFooBean();
 		FooBean dest = new FooBean();
 
@@ -244,7 +243,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyProperties() {
+	void testCopyProperties() {
 		Properties properties = new Properties();
 
 		properties.put("fooInteger", Integer.valueOf(1));
@@ -331,7 +330,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testLessToMore() {
+	void testLessToMore() {
 		Less less = new Less();
 		less.data = "data";
 		less.number = new Integer(2);
@@ -348,7 +347,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyMap() {
+	void testCopyMap() {
 		Map map = new HashMap();
 		map.put("fooint", Integer.valueOf(102));
 		map.put("fooString", "mao");
@@ -366,7 +365,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyIgnoreNulls() {
+	void testCopyIgnoreNulls() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 
@@ -455,7 +454,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyWithFields() {
+	void testCopyWithFields() {
 		Source source = new Source();
 		HashMap dest = new HashMap();
 
@@ -527,7 +526,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testIncludeExclude() {
+	void testIncludeExclude() {
 		Moo moo = new Moo();
 		HashMap map = new HashMap();
 
@@ -585,7 +584,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromMapToBean() throws Exception {
+	void testFromMapToBean() throws Exception {
 		Properties propsSource = new Properties();
 
 		propsSource.put("number", 42);
@@ -597,12 +596,12 @@ public class BeanCopyTest {
 
 		BeanCopy.fromMap(propsSource).toBean(beanDest).forced(true).copy();
 
-		assertThat(beanDest.number, is(42));
-		assertThat(beanDest.child.number, is(43));
+		assertEquals(42, beanDest.number);
+		assertEquals(43, beanDest.child.number);
 	}
 
 	@Test
-	public void testFromMapToMap() throws Exception {
+	void testFromMapToMap() throws Exception {
 		Properties propsSource = new Properties();
 
 		propsSource.put("number", 42);
@@ -618,7 +617,7 @@ public class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromBeanToMap() throws Exception {
+	void testFromBeanToMap() throws Exception {
 		PropertyBean beanSource = new PropertyBean();
 
 		beanSource.number = 42;
@@ -634,13 +633,13 @@ public class BeanCopyTest {
 			.copy();
 
 
-		assertThat(propsDest.size(), is(2));
-		assertThat((Integer) propsDest.get("number"), is(42));
-		assertThat((Integer) BeanUtil.pojo.getProperty(propsDest, "child.number"), is(43));
+		assertEquals(2, propsDest.size());
+		assertEquals(42, propsDest.get("number"));
+		assertEquals(Integer.valueOf(43), BeanUtil.pojo.getProperty(propsDest, "child.number"));
 	}
 
 	@Test
-	public void testFromBeanToBean() throws Exception {
+	void testFromBeanToBean() throws Exception {
 		PropertyBean beanSource = new PropertyBean();
 
 		beanSource.number = 42;
@@ -651,8 +650,20 @@ public class BeanCopyTest {
 
 		BeanCopy.fromBean(beanSource).toBean(beanDest).includeFields(true).copy();
 
-		assertThat(beanDest.number, is(42));
-		assertThat(beanDest.child.number, is(43));
+		assertEquals(42, beanDest.number);
+		assertEquals(43, beanDest.child.number);
+	}
+
+	@Test
+	void testIgnoreEmptyString() {
+		FooBean source = new FooBean();
+		source.setFooString("");
+
+		FooBean target = new FooBean();
+
+		BeanCopy.from(source).ignoreEmptyString(true).to(target).copy();
+		String s = BeanUtil.pojo.getProperty(target, "fooString");
+		assertNull(target.getFooString());
 	}
 
 }

@@ -25,68 +25,68 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class SizeConstraintTest extends ConstraintTestBase {
+class SizeConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         SizeConstraint sizeConstraint = new SizeConstraint();
-        assertEquals("min value must be default", sizeConstraint.getMin(), 0);
-        assertEquals("max value must be default", sizeConstraint.getMax(), 0);
+        assertEquals(0, sizeConstraint.getMin());
+        assertEquals(0, sizeConstraint.getMax());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         SizeConstraint sizeConstraint = new SizeConstraint(10, 20);
-        assertEquals("min value must be the same as was given to constructor", sizeConstraint.getMin(), 10);
-        assertEquals("max value must be the same as was given to constructor", sizeConstraint.getMax(), 20);
+        assertEquals(10, sizeConstraint.getMin());
+        assertEquals(20, sizeConstraint.getMax());
     }
 
     @Test
-    public void testSetMinMax() {
+    void testSetMinMax() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         sizeConstraint.setMin(10);
         sizeConstraint.setMax(20);
-        assertEquals("method must return the same value as was given to set method", sizeConstraint.getMin(), 10);
-        assertEquals("method must return the same value as was given to set method", sizeConstraint.getMax(), 20);
+        assertEquals(10, sizeConstraint.getMin());
+        assertEquals(20, sizeConstraint.getMax());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         Size annotation = mock(Size.class);
-        stub(annotation.min()).toReturn(10);
-        stub(annotation.max()).toReturn(20);
+        when(annotation.min()).thenReturn(10);
+        when(annotation.max()).thenReturn(20);
 
         sizeConstraint.configure(annotation);
-        assertEquals("method must return the same value as was set to annotation when configure", sizeConstraint.getMin(), 10);
-        assertEquals("method must return the same value as was set to annotation when configure", sizeConstraint.getMax(), 20);
+        assertEquals(10, sizeConstraint.getMin());
+        assertEquals(20, sizeConstraint.getMax());
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", SizeConstraint.validate(null, 1, 2));
+    void testValidate_WithValIsNull() {
+        assertTrue(SizeConstraint.validate(null, 1, 2));
     }
 
     private void sizeConstraintCheck(Object val) {
-        assertFalse("result must be false when validate value less than min", new SizeConstraint(4, 5).isValid(mockContext(), val));
-        assertFalse("result must be false when validate value grater than max", new SizeConstraint(0, 1).isValid(mockContext(), val));
-        assertTrue("result must be true when validate value grater than min and less than max", new SizeConstraint(1, 3).isValid(mockContext(), val));
-        assertTrue("result must be true when validated value equal to min and max", new SizeConstraint(1, 2).isValid(mockContext(), val));
+        assertFalse(new SizeConstraint(4, 5).isValid(mockContext(), val));
+        assertFalse(new SizeConstraint(0, 1).isValid(mockContext(), val));
+        assertTrue(new SizeConstraint(1, 3).isValid(mockContext(), val));
+        assertTrue(new SizeConstraint(1, 2).isValid(mockContext(), val));
     }
 
     @Test
-    public void testIsValid_ForCollection() {
+    void testIsValid_ForCollection() {
         List<String> val = new ArrayList<>();
         val.add("1");
         val.add("2");
@@ -94,7 +94,7 @@ public class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_ForMap() {
+    void testIsValid_ForMap() {
         Map<String, String> val = new HashMap<>();
         val.put("1", "one");
         val.put("2", "two");
@@ -102,12 +102,12 @@ public class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_ForArray() {
+    void testIsValid_ForArray() {
         sizeConstraintCheck(new String[]{"one", "two"});
     }
 
     @Test
-    public void testValidate_ForUnknownClass() {
-        assertFalse("result must be false when validate something different than map, array or collection", SizeConstraint.validate(new Object(), 0, 1));
+    void testValidate_ForUnknownClass() {
+        assertFalse(SizeConstraint.validate(new Object(), 0, 1));
     }
 }

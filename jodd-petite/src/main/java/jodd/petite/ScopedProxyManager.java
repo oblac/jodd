@@ -25,13 +25,18 @@
 
 package jodd.petite;
 
-import jodd.petite.scope.Scope;
-import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
-import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.petite.proxetta.ProxettaBeanDefinition;
+import jodd.petite.scope.Scope;
+import jodd.proxetta.Proxetta;
+import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.impl.ProxyProxettaFactory;
+import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import jodd.util.ArraysUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -58,7 +63,7 @@ public class ScopedProxyManager {
 
 	protected ProxyAspect aspect = new ProxyAspect(ScopedProxyAdvice.class, new AllMethodsPointcut());
 
-	protected Map<Class, Class> proxyClasses = new HashMap<>();
+	protected TypeCache<Class> proxyClasses = TypeCache.createDefault();
 	protected Map<String, Object> proxies = new HashMap<>();
 
 	public ScopedProxyManager() {
@@ -69,12 +74,12 @@ public class ScopedProxyManager {
 	 * Returns scoped proxy bean if injection scopes are mixed on some injection point.
 	 * May return <code>null</code> if mixing scopes is not detected.
 	 */
-	public Object lookupValue(PetiteContainer petiteContainer, BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
+	public Object lookupValue(final PetiteContainer petiteContainer, final BeanDefinition targetBeanDefinition, final BeanDefinition refBeanDefinition) {
 		Scope targetScope = targetBeanDefinition.scope;
 		Scope refBeanScope = refBeanDefinition.scope;
 
-		boolean detectMixedScopes = petiteContainer.getConfig().isDetectMixedScopes();
-		boolean wireScopedProxy = petiteContainer.getConfig().isWireScopedProxy();
+		boolean detectMixedScopes = petiteContainer.config().isDetectMixedScopes();
+		boolean wireScopedProxy = petiteContainer.config().isWireScopedProxy();
 
 		// when target scope is null then all beans can be injected into it
 		// similar to prototype scope
@@ -116,7 +121,7 @@ public class ScopedProxyManager {
 	/**
 	 * Creates mixed scope message.
 	 */
-	protected String createMixingMessage(BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
+	protected String createMixingMessage(final BeanDefinition targetBeanDefinition, final BeanDefinition refBeanDefinition) {
 		return "Scopes mixing detected: " +
 				refBeanDefinition.name + "@" + refBeanDefinition.scope.getClass().getSimpleName() + " -> " +
 				targetBeanDefinition.name + "@" + targetBeanDefinition.scope.getClass().getSimpleName();
@@ -126,7 +131,7 @@ public class ScopedProxyManager {
 	/**
 	 * Creates scoped proxy bean for given bean definition.
 	 */
-	protected Object createScopedProxyBean(PetiteContainer petiteContainer, BeanDefinition refBeanDefinition) {
+	protected Object createScopedProxyBean(final PetiteContainer petiteContainer, final BeanDefinition refBeanDefinition) {
 
 		Class beanType = refBeanDefinition.type;
 
@@ -135,22 +140,41 @@ public class ScopedProxyManager {
 		if (proxyClass == null) {
 			// create proxy class only once
 
-			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
+			if (refBeanDefinition instanceof ProxettaBeanDefinition) {
+				// special case, double proxy!
 
-			proxetta.setClassNameSuffix("$ScopedProxy");
-			proxetta.setVariableClassName(true);
+				ProxettaBeanDefinition pbd =
+					(ProxettaBeanDefinition) refBeanDefinition;
 
-			ProxyProxettaBuilder builder = proxetta.builder(beanType);
+				ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(ArraysUtil.insert(pbd.proxyAspects, aspect, 0));
 
-			proxyClass = builder.define();
+				proxetta.setClassNameSuffix("$ScopedProxy");
+				proxetta.setVariableClassName(true);
 
-			proxyClasses.put(beanType, proxyClass);
+				ProxyProxettaFactory builder = proxetta.proxy().setTarget(pbd.originalTarget);
+
+				proxyClass = builder.define();
+
+				proxyClasses.put(beanType, proxyClass);
+			}
+			else {
+				ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(aspect);
+
+				proxetta.setClassNameSuffix("$ScopedProxy");
+				proxetta.setVariableClassName(true);
+
+				ProxyProxettaFactory builder = proxetta.proxy().setTarget(beanType);
+
+				proxyClass = builder.define();
+
+				proxyClasses.put(beanType, proxyClass);
+			}
 		}
 
 		Object proxy;
 
 		try {
-			proxy = proxyClass.newInstance();
+			proxy = ClassUtil.newInstance(proxyClass);
 
 			Field field = proxyClass.getField("$__petiteContainer$0");
 

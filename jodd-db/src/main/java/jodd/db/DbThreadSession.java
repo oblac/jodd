@@ -43,9 +43,10 @@ public class DbThreadSession extends DbSession {
 	 * Closes already assigned session, if any exist. 
 	 * @param connectionProvider connection provider
 	 */
-	public DbThreadSession(ConnectionProvider connectionProvider) {
+	public DbThreadSession(final ConnectionProvider connectionProvider) {
 		super(connectionProvider);
-		DbSession session = ThreadDbSessionHolder.get();
+
+		final DbSession session = ThreadDbSessionHolder.get();
 		if (session != null) {
 			session.closeSession();
 		}

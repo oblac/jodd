@@ -28,10 +28,8 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
-import jodd.madvoc.result.RawDownload;
-import jodd.madvoc.result.RawResultData;
+import jodd.madvoc.result.TextResult;
 import jodd.util.CharUtil;
-import jodd.util.MimeTypes;
 
 @MadvocAction
 public class RawAction {
@@ -40,18 +38,18 @@ public class RawAction {
 	public RawData view() {
 		String result = "this is some raw direct result";
 		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
-		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
+		return RawData.of(bytes).asHtml();
 	}
 
 	@Action
-	public String text() {
-		return "text:some raw txt";
+	public TextResult text() {
+		return TextResult.of("some raw txt");
 	}
 
-	@Action(extension = Action.NONE)
-	public RawResultData download() {
+	@Action
+	public RawData download() {
 		String fileContent = "file from jodd.org!";
-		return new RawDownload(fileContent.getBytes(), "jodd-download.txt");
+		return RawData.of(fileContent.getBytes()).downloadableAs("jodd-download.txt");
 	}
 
 }

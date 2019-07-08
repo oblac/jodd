@@ -34,7 +34,7 @@ import jodd.json.TypeJsonSerializer;
 public class BooleanJsonSerializer implements TypeJsonSerializer<Boolean> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, Boolean value) {
+	public boolean serialize(final JsonContext jsonContext, final Boolean value) {
 		jsonContext.write(value.toString());
 		return true;
 	}

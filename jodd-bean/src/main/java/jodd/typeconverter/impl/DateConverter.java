@@ -25,11 +25,14 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
+import jodd.time.JulianDate;
+import jodd.time.TimeUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.StringUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,15 +43,17 @@ import java.util.Date;
  * <li><code>null</code> value is returned as <code>null</code></li>
  * <li>object of destination type is simply casted</li>
  * <li><code>Calendar</code> object is converted</li>
- * <li><code>JDateTime</code> object is converted</li>
+ * <li><code>JulianDate</code> object is converted</li>
+ * <li><code>LocalDateTime</code> object is converted</li>
+ * <li><code>LocalDate</code> object is converted</li>
  * <li><code>Number</code> is used as number of milliseconds</li>
- * <li>finally, if string value contains only numbers it is parsed as milliseconds;
- * otherwise as JDateTime pattern</li>
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds</li>
  * </ul>
  */
 public class DateConverter implements TypeConverter<Date> {
 
-	public Date convert(Object value) {
+	@Override
+	public Date convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -59,19 +64,24 @@ public class DateConverter implements TypeConverter<Date> {
 		if (value instanceof Calendar) {
 			return new Date(((Calendar)value).getTimeInMillis());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToDate();
+		if (value instanceof JulianDate) {
+			return new Date(((JulianDate) value).toMilliseconds());
+		}
+		if (value instanceof LocalDateTime) {
+			return TimeUtil.toDate((LocalDateTime)value);
+		}
+		if (value instanceof LocalDate) {
+			return TimeUtil.toDate((LocalDate)value);
 		}
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());
 		}
 
-		String stringValue = value.toString().trim();
+		final String stringValue = value.toString().trim();
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			// try to parse default string format
-			JDateTime jdt = new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
-			return jdt.convertToDate();
+			return TimeUtil.toDate(LocalDateTime.parse(stringValue));
 		}
 
 		try {

@@ -25,8 +25,8 @@
 
 package jodd.servlet;
 
-import javax.servlet.ServletRequestListener;
 import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -36,12 +36,14 @@ public class RequestContextListener implements ServletRequestListener {
 
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new InheritableThreadLocal<>();
 
-	public void requestInitialized(ServletRequestEvent requestEvent) {
+	@Override
+	public void requestInitialized(final ServletRequestEvent requestEvent) {
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();
 		requestHolder.set(request);
 	}
 
-	public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
+	@Override
+	public void requestDestroyed(final ServletRequestEvent servletRequestEvent) {
 		requestHolder.remove();
 	}
 

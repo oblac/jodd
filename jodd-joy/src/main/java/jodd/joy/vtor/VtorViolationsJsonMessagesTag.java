@@ -28,7 +28,6 @@ package jodd.joy.vtor;
 import jodd.vtor.Violation;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
@@ -41,12 +40,12 @@ public class VtorViolationsJsonMessagesTag extends SimpleTagSupport {
 
 	protected List<Violation> violations;
 
-	public void setViolations(List<Violation> violations) {
+	public void setViolations(final List<Violation> violations) {
 		this.violations = violations;
 	}
 
 	@Override
-	public void doTag() throws JspException, IOException {
+	public void doTag() throws IOException {
 		PageContext pageContext = ((PageContext) getJspContext());
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 

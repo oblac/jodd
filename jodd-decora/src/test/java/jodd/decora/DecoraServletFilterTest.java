@@ -25,51 +25,44 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertNotNull;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import jodd.decora.parser.DecoraParser;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 
-import jodd.decora.parser.DecoraParser;
-import jodd.util.ClassLoaderUtil;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ClassLoaderUtil.class, DecoraResponseWrapper.class })
-public class DecoraServletFilterTest {
+class DecoraServletFilterTest {
 
 	private DecoraServletFilter decoraServletFilter;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 	}
 
 	@Test
-	public final void testCreateDecoraManager() {
+	void testCreateDecoraManager() {
 		// when
 		DecoraManager decoraManager = decoraServletFilter.createDecoraManager();
 
 		// then
-		assertNotNull("New instance should be created.", decoraManager);
+		assertNotNull(decoraManager);
 	}
 
 	@Test
-	public final void testCreateDecoraParser() {
+	void testCreateDecoraParser() {
 		// when
 		DecoraParser decoraParser = decoraServletFilter.createDecoraParser();
 
 		// then
-		assertNotNull("New instance should be created.", decoraParser);
+		assertNotNull(decoraParser);
 	}
 
 	@Test
-	public final void testDestroy() {
+	void testDestroy() {
 		// when
 		decoraServletFilter.destroy();
 
@@ -79,7 +72,7 @@ public class DecoraServletFilterTest {
 	}
 
 	@Test
-	public final void testWrapRequest() {
+	void testWrapRequest() {
 		// setup
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 
@@ -87,7 +80,7 @@ public class DecoraServletFilterTest {
 		HttpServletRequest httpServletRequest = decoraServletFilter.wrapRequest(httpServletRequestMock);
 
 		// then
-		assertNotNull("New instance should be created.", httpServletRequest);
+		assertNotNull(httpServletRequest);
 	}
 
 }

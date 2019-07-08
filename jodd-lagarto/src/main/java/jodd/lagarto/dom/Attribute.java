@@ -37,7 +37,7 @@ public class Attribute implements Cloneable {
 	protected String value;
 	protected String[] splits;
 
-	public Attribute(String rawName, String name, String value) {
+	public Attribute(final String rawName, final String name, final String value) {
 		this.rawName = rawName;
 		this.name = name;
 		this.value = value;
@@ -72,7 +72,7 @@ public class Attribute implements Cloneable {
 	/**
 	 * Sets attribute value.
 	 */
-	public void setValue(String value) {
+	public void setValue(final String value) {
 		this.value = value;
 	}
 
@@ -81,7 +81,7 @@ public class Attribute implements Cloneable {
 	/**
 	 * Returns true if attribute is containing some value.
 	 */
-	public boolean isContaining(String include) {
+	public boolean isContaining(final String include) {
 		if (value == null) {
 			return false;
 		}

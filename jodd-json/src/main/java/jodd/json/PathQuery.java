@@ -29,7 +29,7 @@ import jodd.util.StringUtil;
 
 import java.util.Arrays;
 
-import static jodd.util.StringPool.*;
+import static jodd.util.StringPool.STAR;
 
 /**
  * Path query is used to match properties with some Path.
@@ -47,12 +47,13 @@ public class PathQuery {
 	protected final boolean wildcard;
 	protected final boolean included;
 
-	public PathQuery(String expression, boolean included) {
+	public PathQuery(final String expression, final boolean included) {
 		this.expression = StringUtil.splitc(expression, '.');
 		wildcard = expression.indexOf('*') >= 0;
 		this.included = included;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
@@ -70,7 +71,7 @@ public class PathQuery {
 	/**
 	 * Returns <code>true</code> if path matches the query.
 	 */
-	public boolean matches(Path path) {
+	public boolean matches(final Path path) {
 		int exprNdx = 0;
 		int pathNdx = 0;
 
@@ -78,12 +79,12 @@ public class PathQuery {
 		int exprLen = expression.length;
 
 		while (pathNdx < pathLen) {
-			String current = path.get(pathNdx);
+			CharSequence current = path.get(pathNdx);
 
 			if (exprNdx < exprLen && expression[exprNdx].equals(STAR)) {
 				exprNdx++;
 			}
-			else if (exprNdx < exprLen && expression[exprNdx].equals(current)) {
+			else if (exprNdx < exprLen && expression[exprNdx].contentEquals(current)) {
 				pathNdx++;
 				exprNdx++;
 			}
@@ -122,7 +123,7 @@ public class PathQuery {
 
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}

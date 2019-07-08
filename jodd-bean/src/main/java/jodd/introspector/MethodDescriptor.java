@@ -25,9 +25,8 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -35,23 +34,27 @@ import java.lang.reflect.Type;
  * Method descriptor. Holds additional method data,
  * that might be specific to implementation class.
  */
-public class MethodDescriptor extends Descriptor implements Getter, Setter {
+public class MethodDescriptor extends Descriptor {
+
+	private static final MethodParamDescriptor[] NO_PARAMS = new MethodParamDescriptor[0];
 
 	protected final Method method;
 	protected final Type returnType;
 	protected final Class rawReturnType;
 	protected final Class rawReturnComponentType;
 	protected final Class rawReturnKeyComponentType;
-	protected final Class[] rawParameterTypes;
-	protected final Class[] rawParameterComponentTypes;
+	protected final MethodParamDescriptor[] parameters;
+	protected final MapperFunction mapperFunction;
 
-	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
-		super(classDescriptor, ReflectUtil.isPublic(method));
+//	protected final Function getterFunction;
+
+	public MethodDescriptor(final ClassDescriptor classDescriptor, final Method method) {
+		super(classDescriptor, ClassUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
-		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
+		this.rawReturnType = ClassUtil.getRawType(returnType, classDescriptor.getType());
 
-		Class[] componentTypes = ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		final Class[] componentTypes = ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
 		if (componentTypes != null) {
 			this.rawReturnComponentType = componentTypes[componentTypes.length - 1];
 			this.rawReturnKeyComponentType = componentTypes[0];
@@ -60,26 +63,68 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 			this.rawReturnKeyComponentType = null;
 		}
 
-		ReflectUtil.forceAccess(method);
+		// force access
 
-		Type[] params = method.getGenericParameterTypes();
-		Type[] genericParams = method.getGenericParameterTypes();
+		ClassUtil.forceAccess(method);
 
-		rawParameterTypes = new Class[params.length];
-		rawParameterComponentTypes = genericParams.length == 0 ? null : new Class[params.length];
+		// mapper
 
-		for (int i = 0; i < params.length; i++) {
-			Type type = params[i];
-			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
-			if (rawParameterComponentTypes != null) {
-				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
+		final Mapper mapper = method.getAnnotation(Mapper.class);
+
+		if (mapper != null) {
+			mapperFunction = MapperFunctionInstances.get().lookup(mapper.value());
+		} else {
+			mapperFunction = null;
+		}
+
+		// parameters
+
+		if (method.getParameterCount() == 0) {
+			parameters = NO_PARAMS;
+		}
+		else {
+			parameters = new MethodParamDescriptor[method.getParameterCount()];
+
+			Class[] params = method.getParameterTypes();
+			Type[] genericParams = method.getGenericParameterTypes();
+
+			for (int i = 0; i < params.length; i++) {
+				final Class parameterType = params[i];
+				final Class rawParameterType = genericParams.length == 0 ?
+					parameterType :
+					ClassUtil.getRawType(genericParams[i], classDescriptor.getType());
+				final Class rawParameterComponentType = genericParams.length == 0 ?
+					null :
+					ClassUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
+
+				parameters[i] = new MethodParamDescriptor(parameterType, rawParameterType, rawParameterComponentType);
 			}
 		}
+
+//		try {
+//			MethodHandles.Lookup lookup = MethodHandles.lookup();
+//			CallSite callSite = LambdaMetafactory.metafactory(lookup,
+//				"apply",
+//				MethodType.methodType(Function.class),
+//				MethodType.methodType(Object.class, Object.class),
+//				lookup.findVirtual(
+//					classDescriptor.getType(),
+//					method.getName(),
+//					MethodType.methodType(method.getReturnType())),
+//				MethodType.methodType(method.getReturnType(), classDescriptor.type)
+//			);
+//
+//			this.getterFunction = (Function) callSite.getTarget().invokeExact();
+//		}
+//		catch (Throwable ex) {
+//			throw new IllegalArgumentException(ex);
+//		}
 	}
 
 	/**
 	 * Returns method name.
 	 */
+	@Override
 	public String getName() {
 		return method.getName();
 	}
@@ -121,56 +166,21 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	 * This value is NOT cached.
 	 */
 	public Class[] resolveRawReturnComponentTypes() {
-		return ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		return ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
 	}
 
 	/**
-	 * Returns raw parameter types.
+	 * Returns {@link MethodParamDescriptor method parameteres}.
 	 */
-	public Class[] getRawParameterTypes() {
-		return rawParameterTypes;
+	public MethodParamDescriptor[] getParameters() {
+		return parameters;
 	}
 
 	/**
-	 * Returns raw parameter component types. Returns <code>null</code>
-	 * if data does not exist.
+	 * Returns number of parameters.
 	 */
-	public Class[] getRawParameterComponentTypes() {
-		return rawParameterComponentTypes;
-	}
-
-	// ---------------------------------------------------------------- getter/setter
-
-	public Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException {
-		return method.invoke(target, null);
-	}
-
-	public Class getGetterRawType() {
-		return getRawReturnType();
-	}
-
-	public Class getGetterRawComponentType() {
-		return getRawReturnComponentType();
-	}
-
-	public Class getGetterRawKeyComponentType() {
-		return getRawReturnKeyComponentType();
-	}
-
-	public void invokeSetter(Object target, Object argument) throws IllegalAccessException, InvocationTargetException {
-		method.invoke(target, argument);
-	}
-
-	public Class getSetterRawType() {
-		return getRawParameterTypes()[0];
-	}
-
-	public Class getSetterRawComponentType() {
-		Class[] ts = getRawParameterComponentTypes();
-		if (ts == null) {
-			return null;
-		}
-		return ts[0];
+	public int getParameterCount() {
+		return parameters.length;
 	}
 
 	// ---------------------------------------------------------------- toString

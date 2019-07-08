@@ -31,13 +31,17 @@ package jodd.db.querymap;
 public interface QueryMap {
 
 	/**
-	 * (Re)loads the query map.
+	 * Optionally reloads the query map, if implementation allows it.
 	 */
-	public void load();
+	void reload();
 
 	/**
-	 * Returns query for given key.
+	 * Returns query for given key. Returns <code>null</code> if query not found.
 	 */
-	public String getQuery(String key);
+	String getQuery(String key);
 
+	/**
+	 * Returns total number of queries.
+	 */
+	int size();
 }

@@ -25,11 +25,11 @@
 
 package jodd.lagarto.form;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FormTagTest {
+class FormTagTest {
 
 	static FormFieldResolver foo = new FormFieldResolver() {
 		public Object value(String name) {
@@ -58,13 +58,13 @@ public class FormTagTest {
 	}
 
 	@Test
-	public void testSimple() {
+	void testSimple() {
 		assertEquals("", form(""));
 		assertEquals("<form></form>", form("<form></form>"));
 	}
 
 	@Test
-	public void testVariants() {
+	void testVariants() {
 		assertEquals("<input type=\"text\"/>", form("<input type='text'/>"));
 		assertEquals("<input type=\"text\"></input>", form("<input type='text'></input>"));
 		assertEquals("<input type=\"text\"> </input>", form("<input type='text'> </input>"));
@@ -76,12 +76,12 @@ public class FormTagTest {
 	}
 
 	@Test
-	public void testWrongType() {
+	void testWrongType() {
 		assertEquals("<input type=\"textx\" name=\"foo\"/>", form("<input type='textx' name='foo'/>"));
 	}
 
 	@Test
-	public void testInputText() {
+	void testInputText() {
 		assertEquals("<input type=\"text\" name=\"foo\" value=\"*foo*\"/>", form("<input type='text' name='foo'/>"));
 		assertEquals("<input tYpE=\"text\" nAmE=\"foo\" value=\"*foo*\"/>", form("<input tYpE='text' nAmE='foo'/>"));
 		assertEquals("<input type=\"text\" name=\"foo\" value=\"*foo*\"/>", form("<input type  =  'text'  name = 'foo'/>"));
@@ -91,52 +91,52 @@ public class FormTagTest {
 	}
 
 	@Test
-	public void testInputHidden() {
+	void testInputHidden() {
 		assertEquals("<input type=\"hidden\" name=\"foo\" value=\"*foo*\"/>", form("<input type='hidden' name='foo'/>"));
 	}
 
 	@Test
-	public void testInputPassword() {
+	void testInputPassword() {
 		assertEquals("<input type=\"password\" name=\"foo\" value=\"*foo*\"/>", form("<input type='password' name='foo'/>"));
 	}
 
 	@Test
-	public void testInputImage() {
+	void testInputImage() {
 		assertEquals("<input type=\"image\" name=\"foo\" value=\"*foo*\"/>", form("<input type='image' name='foo'/>"));
 	}
 
 	@Test
-	public void testCheckbox() {
+	void testCheckbox() {
 		assertEquals("<input type=\"checkbox\" name=\"foo\" value=\"not\"/>", form("<input type='checkbox' name='foo' value='not'/>"));
 		assertEquals("<input type=\"checkbox\" name=\"foo\" value=\"*foo*\" checked/>", form("<input type='checkbox' name='foo' value='*foo*'/>"));
 	}
 
 	@Test
-	public void testRadio() {
+	void testRadio() {
 		assertEquals("<input type=\"radio\" name=\"foo\" value=\"not\"/>", form("<input type='radio' name='foo' value='not'/>"));
 		assertEquals("<input type=\"radio\" name=\"foo\" value=\"*foo*\" checked/>", form("<input type='radio' name='foo' value='*foo*'/>"));
 	}
 
 	@Test
-	public void testTextarea() {
+	void testTextarea() {
 		assertEquals("<textarea name=\"foo\">*foo*</textarea>", form("<textarea name='foo'></textarea>"));
 		assertEquals("<textarea name=\"foo\">*\"foo*</textarea>", form2("<textarea name='foo'></textarea>"));
 	}
 
 	@Test
-	public void testSelect() {
+	void testSelect() {
 		assertEquals("<select name=\"foo\"><option value=\"1\"/><option value=\"2\"></option><option value=\"*foo*\" selected/></select>", form("<select name='foo'><option value='1'/><option value='2'></option><option value='*foo*'/></select>"));
 	}
 
 	@Test
-	public void testParamLogType() {
+	void testParamLogType() {
 		assertEquals(
 				"<form><input type=\"hidden\" name=\"logTime>=\" value=\"*logTime>=*\"></form>",
 				form("<form><input type='hidden' name='logTime>='></form>"));
 	}
 
 	@Test
-	public void testMultipleInputs() {
+	void testMultipleInputs() {
 		String form =
 			"<input type=\"text\" name=\"cc\" id=\"cc1\"/>\n" +
 			"<input type=\"text\" name=\"cc\" id=\"cc2\" />\n" +

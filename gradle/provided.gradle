@@ -1,3 +1,28 @@
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 /*
 Provided scope (Gradle still does not want to address this):
 
@@ -6,7 +31,15 @@ http://www.sinking.in/blog/provided-scope-in-gradle/
 http://www.gradle.org/docs/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html
 */
 
-// PROVIDED
+// PROVIDED scope
+//
+// In the Maven world, the "provided" scope means a library that needs to be
+// available in order to compile the project, but which should not be exported
+// as a transitive dependency or included in the final packaged archive (e.g. WAR file)
+// because it will be "provided" in some other way by the target environment.
+// The classic example is web applications - you need the servlet API dependency
+// at compile time but you don't want it in your final WAR because the web server
+// will provide it on a parent classloader.
 
 configurations {
 	provided {
@@ -19,18 +52,12 @@ configurations {
 	compile.extendsFrom provided
 }
 
-// add provided scope to the maven
-Conf2ScopeMappingContainer scopeMappings = project.conf2ScopeMappings
-scopeMappings.addMapping(
-		MavenPlugin.COMPILE_PRIORITY + 1,
-		project.configurations.getByName("provided"),
-		Conf2ScopeMappingContainer.PROVIDED)
-
-
 // set provided scope for IDEA dependencies
 idea {
 	module {
-		scopes.PROVIDED.plus += [ configurations.provided ]
+		if (scopes.PROVIDED != null) {
+			scopes.PROVIDED.plus += [configurations.provided]
+		}
 	}
 }
 
@@ -42,8 +69,8 @@ eclipse {
 }
 
 
-// OPTIONAL
-
+// OPTIONAL attribute
+//
 // + an extra property List that holds optional dependencies
 // + an extra method that can be executed as parameter when declaring dependencies
 

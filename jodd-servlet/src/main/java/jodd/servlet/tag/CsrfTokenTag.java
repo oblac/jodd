@@ -27,11 +27,11 @@ package jodd.servlet.tag;
 
 import jodd.servlet.CsrfShield;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspContext;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
 /**
@@ -45,7 +45,7 @@ public class CsrfTokenTag extends SimpleTagSupport {
 	/**
 	 * Specifies token name.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 

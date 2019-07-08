@@ -25,6 +25,8 @@
 
 package jodd.http;
 
+import jodd.http.net.SocketHttpConnectionProvider;
+
 import java.io.IOException;
 
 /**
@@ -32,13 +34,28 @@ import java.io.IOException;
  */
 public interface HttpConnectionProvider {
 
+	class Implementation {
+		private static HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
+
+		public static void set(final HttpConnectionProvider httpConnectionProvider) {
+			Implementation.httpConnectionProvider = httpConnectionProvider;
+		}
+	}
+
+	/**
+	 * Returns default implementation of connection provider.
+	 */
+	static HttpConnectionProvider get() {
+		return Implementation.httpConnectionProvider;
+	}
+
+
 	/**
 	 * Specifies {@link ProxyInfo proxy} for provide to use.
 	 */
 	public void useProxy(ProxyInfo proxyInfo);
 
-
- 	/**
+	/**
 	 * Creates new {@link HttpConnection}
 	 * from {@link jodd.http.HttpRequest request}.
 	 */

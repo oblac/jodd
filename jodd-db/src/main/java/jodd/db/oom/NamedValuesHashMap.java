@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class NamedValuesHashMap<V> extends HashMap<String, V> {
 
 	@Override
-	public V put(String key, V value) {
+	public V put(String key, final V value) {
 		key = key.toUpperCase();
 		return super.put(key, value);
 	}

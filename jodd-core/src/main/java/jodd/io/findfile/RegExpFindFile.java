@@ -25,7 +25,7 @@
 
 package jodd.io.findfile;
 
-import jodd.util.InExRules;
+import jodd.inex.InExRules;
 
 import java.util.regex.Pattern;
 
@@ -33,21 +33,24 @@ import java.util.regex.Pattern;
  * Simple {@link FindFile} that matches file names with regular expression pattern.
  * @see jodd.io.findfile.WildcardFindFile
  */
-public class RegExpFindFile extends FindFile<RegExpFindFile> {
+public class RegExpFindFile extends FindFile {
+
+	public static RegExpFindFile create() {
+		return new RegExpFindFile();
+	}
 
 	@Override
-	protected InExRules createRulesEngine() {
-		return new InExRules<String, Object>() {
+	protected InExRules<String, String, Pattern> createRulesEngine() {
+		return new InExRules<String, String, Pattern>() {
 
 			@Override
-			protected void addRule(Object rule, boolean include) {
-				Pattern pattern = Pattern.compile((String) rule);
-				super.addRule(pattern, include);
+			protected Pattern makeRule(final String rule) {
+				return Pattern.compile(rule);
 			}
 
 			@Override
-			public boolean accept(String path, Object pattern, boolean include) {
-				return ((Pattern) pattern).matcher(path).matches();
+			public boolean accept(final String path, final Pattern pattern, final boolean include) {
+				return pattern.matcher(path).matches();
 			}
 		};
 	}

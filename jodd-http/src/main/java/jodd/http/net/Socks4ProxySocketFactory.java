@@ -27,9 +27,9 @@ package jodd.http.net;
 
 import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
+import jodd.http.Sockets;
 
 import javax.net.SocketFactory;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -43,40 +43,48 @@ import java.net.Socket;
 public class Socks4ProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
+	private final int connectionTimeout;
 
-	public Socks4ProxySocketFactory(ProxyInfo proxy) {
+	public Socks4ProxySocketFactory(final ProxyInfo proxy, final int connectionTimeout) {
 		this.proxy = proxy;
+		this.connectionTimeout = connectionTimeout;
 	}
 
-	public Socket createSocket(String host, int port) throws IOException {
+	@Override
+	public Socket createSocket(final String host, final int port) {
 		return createSocks4ProxySocket(host, port);
 	}
 
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+	@Override
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) {
 		return createSocks4ProxySocket(host, port);
 	}
 
-	public Socket createSocket(InetAddress host, int port) throws IOException {
+	@Override
+	public Socket createSocket(final InetAddress host, final int port) {
 		return createSocks4ProxySocket(host.getHostAddress(), port);
 	}
 
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+	@Override
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) {
 		return createSocks4ProxySocket(address.getHostAddress(), port);
 	}
 
 	/**
 	 * Connects to the SOCKS4 proxy and returns proxified socket.
 	 */
-	private Socket createSocks4ProxySocket(String host, int port) {
+	private Socket createSocks4ProxySocket(final String host, final int port) {
 		Socket socket = null;
-		String proxyHost = proxy.getProxyAddress();
-		int proxyPort = proxy.getProxyPort();
-		String user = proxy.getProxyUsername();
+		final String proxyHost = proxy.getProxyAddress();
+		final int proxyPort = proxy.getProxyPort();
+		final String user = proxy.getProxyUsername();
 
 		try {
-			socket = new Socket(proxyHost, proxyPort);
-			InputStream in = socket.getInputStream();
-			OutputStream out = socket.getOutputStream();
+			socket = Sockets.connect(proxyHost, proxyPort, connectionTimeout);
+
+			final InputStream in = socket.getInputStream();
+			final OutputStream out = socket.getOutputStream();
+
 			socket.setTcpNoDelay(true);
 
 			byte[] buf = new byte[1024];
@@ -127,6 +135,7 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 
 			byte[] temp = new byte[2];
 			in.read(temp, 0, 2);
+
 			return socket;
 		} catch (RuntimeException rtex) {
 			closeSocket(socket);
@@ -140,7 +149,7 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 	/**
 	 * Closes socket silently.
 	 */
-	private void closeSocket(Socket socket) {
+	private void closeSocket(final Socket socket) {
 		try {
 			if (socket != null) {
 				socket.close();

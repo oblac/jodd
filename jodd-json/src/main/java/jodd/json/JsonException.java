@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class JsonException extends UncheckedException {
 
-	public JsonException(String message) {
+	public JsonException(final String message) {
 		super(message);
 	}
 
-	public JsonException(Throwable t) {
+	public JsonException(final Throwable t) {
 		super(t);
 	}
 
-	public JsonException(String message, Throwable t) {
+	public JsonException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

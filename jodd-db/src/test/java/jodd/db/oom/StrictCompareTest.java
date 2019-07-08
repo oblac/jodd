@@ -25,67 +25,71 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.tst.Tester;
-import org.junit.Test;
+import jodd.db.DbOom;
+import jodd.db.oom.fixtures.Tester;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class StrictCompareTest {
+class StrictCompareTest {
 
 	@Test
-	public void testTableNameDefault() {
-		DbOomManager.resetAll();
-		DbOomManager dboom = DbOomManager.getInstance();
+	void testTableNameDefault() {
+		DbOom dbOom = DbOom.create().get();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		dboom.registerEntity(Tester.class);
+		dbEntityManager.registerEntity(Tester.class);
 
-		DbEntityDescriptor ded = dboom.lookupType(Tester.class);
+		DbEntityDescriptor ded = dbEntityManager.lookupType(Tester.class);
 		assertEquals("TESTER", ded.getTableName());
 
-		assertNotNull(dboom.lookupTableName("TESTER"));
-		assertNotNull(dboom.lookupTableName("tester"));
-		assertNotNull(dboom.lookupTableName("Tester"));
-		assertNotNull(dboom.lookupTableName("TesTer"));
+		assertNotNull(dbEntityManager.lookupTableName("TESTER"));
+		assertNotNull(dbEntityManager.lookupTableName("tester"));
+		assertNotNull(dbEntityManager.lookupTableName("Tester"));
+		assertNotNull(dbEntityManager.lookupTableName("TesTer"));
 
 		assertNotNull(ded.findByColumnName("ID"));
 		assertNotNull(ded.findByColumnName("id"));
 		assertNotNull(ded.findByColumnName("Id"));
 		assertNotNull(ded.findByColumnName("iD"));
 
-		dboom.reset();
-		dboom.getTableNames().setLowercase(true);
-		dboom.registerEntity(Tester.class);
+		dbEntityManager.reset();
+		DbOom.get().config().getTableNames().setLowercase(true);
+		dbEntityManager.registerEntity(Tester.class);
 
-		ded = dboom.lookupType(Tester.class);
+		ded = dbEntityManager.lookupType(Tester.class);
 		assertEquals("tester", ded.getTableName());
 
-		assertNotNull(dboom.lookupTableName("TESTER"));
-		assertNotNull(dboom.lookupTableName("tester"));
-		assertNotNull(dboom.lookupTableName("Tester"));
-		assertNotNull(dboom.lookupTableName("TesTer"));
+		assertNotNull(dbEntityManager.lookupTableName("TESTER"));
+		assertNotNull(dbEntityManager.lookupTableName("tester"));
+		assertNotNull(dbEntityManager.lookupTableName("Tester"));
+		assertNotNull(dbEntityManager.lookupTableName("TesTer"));
 
 		assertNotNull(ded.findByColumnName("ID"));
 		assertNotNull(ded.findByColumnName("id"));
 		assertNotNull(ded.findByColumnName("Id"));
 		assertNotNull(ded.findByColumnName("iD"));
 
-		dboom.reset();
-		dboom.getTableNames().setChangeCase(false);
-		dboom.getTableNames().setSplitCamelCase(false);
-		dboom.registerEntity(Tester.class);
+		dbEntityManager.reset();
+		DbOom.get().config().getTableNames().setChangeCase(false);
+		DbOom.get().config().getTableNames().setSplitCamelCase(false);
+		dbEntityManager.registerEntity(Tester.class);
 
-		ded = dboom.lookupType(Tester.class);
+		ded = dbEntityManager.lookupType(Tester.class);
 		assertEquals("Tester", ded.getTableName());
 
-		assertNotNull(dboom.lookupTableName("TESTER"));
-		assertNotNull(dboom.lookupTableName("tester"));
-		assertNotNull(dboom.lookupTableName("Tester"));
-		assertNotNull(dboom.lookupTableName("TesTer"));
+		assertNotNull(dbEntityManager.lookupTableName("TESTER"));
+		assertNotNull(dbEntityManager.lookupTableName("tester"));
+		assertNotNull(dbEntityManager.lookupTableName("Tester"));
+		assertNotNull(dbEntityManager.lookupTableName("TesTer"));
 
 		assertNotNull(ded.findByColumnName("ID"));
 		assertNotNull(ded.findByColumnName("id"));
 		assertNotNull(ded.findByColumnName("Id"));
 		assertNotNull(ded.findByColumnName("iD"));
+
+		dbOom.shutdown();
 	}
 
 }

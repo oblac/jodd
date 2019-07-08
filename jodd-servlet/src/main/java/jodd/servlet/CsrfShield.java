@@ -27,14 +27,13 @@ package jodd.servlet;
 
 import jodd.util.RandomString;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
-
-import java.util.Set;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Shields against CSRF attacks.
@@ -51,7 +50,7 @@ public class CsrfShield {
 	 * Sets time to live for tokens in seconds.
 	 * By setting negative value or 0 token leaves forever.
 	 */
-	public static void setTimeToLive(int periodInSeconds) {
+	public static void setTimeToLive(final int periodInSeconds) {
 		timeToLive = periodInSeconds;
 	}
 
@@ -60,7 +59,7 @@ public class CsrfShield {
 	 * It is actually the number of CSRF validation that may occur in the
 	 * same time. Limit prevents from malicious growing of the set.
 	 */
-	public static void setMaxTokensPerSession(int maxTokensPerSession) {
+	public static void setMaxTokensPerSession(final int maxTokensPerSession) {
 		CsrfShield.maxTokensPerSession = maxTokensPerSession;
 	}
 
@@ -69,14 +68,14 @@ public class CsrfShield {
 	/**
 	 * @see #prepareCsrfToken(javax.servlet.http.HttpSession, int)
 	 */
-	public static String prepareCsrfToken(PageContext pageContext) {
+	public static String prepareCsrfToken(final PageContext pageContext) {
 		return prepareCsrfToken(pageContext.getSession());
 	}
 
 	/**
 	 * @see #prepareCsrfToken(javax.servlet.http.HttpSession, int)
 	 */
-	public static String prepareCsrfToken(HttpSession session) {
+	public static String prepareCsrfToken(final HttpSession session) {
 		return prepareCsrfToken(session, timeToLive);
 	}
 
@@ -84,7 +83,7 @@ public class CsrfShield {
 	 * Generates new CSRF token and puts it in the session. Returns generated token value.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static String prepareCsrfToken(HttpSession session, int timeToLive) {
+	public static String prepareCsrfToken(final HttpSession session, final int timeToLive) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if (tokenSet == null) {
 			tokenSet = new HashSet<>();
@@ -93,7 +92,7 @@ public class CsrfShield {
 		String value;
 		boolean unique;
 		do {
-			value = RandomString.getInstance().randomAlphaNumeric(32);
+			value = RandomString.get().randomAlphaNumeric(32);
 			assureSize(tokenSet);
 			unique = tokenSet.add(new Token(value, timeToLive));
 		} while (!unique);
@@ -105,7 +104,7 @@ public class CsrfShield {
 	 * Removes expired tokens if token set is full.
 	 * @see #setMaxTokensPerSession(int)  
 	 */
-	protected static void assureSize(Set<Token> tokenSet) {
+	protected static void assureSize(final Set<Token> tokenSet) {
 		if (tokenSet.size() < maxTokensPerSession) {
 			return;
 		}
@@ -134,7 +133,7 @@ public class CsrfShield {
 	/**
 	 * @see #checkCsrfToken(javax.servlet.http.HttpServletRequest, String) 
 	 */
-	public static boolean checkCsrfToken(HttpServletRequest request) {
+	public static boolean checkCsrfToken(final HttpServletRequest request) {
 		return checkCsrfToken(request, CSRF_TOKEN_NAME);
 	}
 
@@ -144,7 +143,7 @@ public class CsrfShield {
 	 * Otherwise, it returns <code>true</code>.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static boolean checkCsrfToken(HttpServletRequest request, String tokenName) {
+	public static boolean checkCsrfToken(final HttpServletRequest request, final String tokenName) {
 		String tokenValue = request.getParameter(tokenName);
 		return checkCsrfToken(request.getSession(), tokenValue);
 	}
@@ -153,7 +152,7 @@ public class CsrfShield {
 	 * Checks token value.
 C	 */
 	@SuppressWarnings({"unchecked"})
-	public static boolean checkCsrfToken(HttpSession session, String tokenValue) {
+	public static boolean checkCsrfToken(final HttpSession session, final String tokenValue) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if ((tokenSet == null) && (tokenValue == null)) {
 			return true;
@@ -185,11 +184,11 @@ C	 */
 		protected final String value;
 		protected final long validUntil;
 
-		public Token(String value) {
+		public Token(final String value) {
 			this(value, 0);
 		}
 
-		public Token(String value, long timeToLive) {
+		public Token(final String value, final long timeToLive) {
 			this.value = value;
 			this.validUntil = timeToLive <= 0 ? Long.MAX_VALUE : (System.currentTimeMillis() + timeToLive * 1000);
 		}
@@ -209,7 +208,7 @@ C	 */
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (this == o) {
 				return true;
 			}

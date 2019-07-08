@@ -41,21 +41,21 @@ public class AttributeSelector extends Selector implements NodeFilter {
 	protected final Match match;
 	protected char quoteChar;
 
-	public AttributeSelector(String name, String sign, String value) {
+	public AttributeSelector(final String name, final String sign, final String value) {
 		super(Type.ATTRIBUTE);
 		this.name = name.trim();
 		this.value = extractValue(value);
 		this.match = Match.valueOf(sign);
 	}
 
-	public AttributeSelector(String name, Match match, String value) {
+	public AttributeSelector(final String name, final Match match, final String value) {
 		super(Type.ATTRIBUTE);
 		this.name = name.trim();
 		this.match = match;
 		this.value = extractValue(value);
 	}
 
-	public AttributeSelector(String attr) {
+	public AttributeSelector(final String attr) {
 		super(Type.ATTRIBUTE);
 		int index = attr.indexOf('=');
 		if (index == -1) {
@@ -117,7 +117,7 @@ public class AttributeSelector extends Selector implements NodeFilter {
 
 	// ---------------------------------------------------------------- match
 
-	public boolean accept(Node node) {
+	public boolean accept(final Node node) {
 		if (!node.hasAttribute(name)) {
 			return false;
 		}

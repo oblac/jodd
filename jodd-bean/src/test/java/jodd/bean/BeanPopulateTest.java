@@ -25,16 +25,16 @@
 
 package jodd.bean;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BeanPopulateTest {
+class BeanPopulateTest {
 
 /*	public static class Bean {
 		Foo foo;
@@ -56,7 +56,7 @@ public class BeanPopulateTest {
 	}
 
 	@Test
-	public void testPopulate() {
+	void testPopulate() {
 
 		Map fooMap = new HashMap();
 		fooMap.put("one", "ONE");

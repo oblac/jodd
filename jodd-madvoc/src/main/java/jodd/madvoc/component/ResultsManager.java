@@ -25,21 +25,18 @@
 
 package jodd.madvoc.component;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.injector.Target;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
-import jodd.typeconverter.TypeConverterManager;
+import jodd.util.ClassUtil;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -51,27 +48,21 @@ public class ResultsManager {
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	public ResultsManager() {
-		this.stringResults = new HashMap<>();
-		this.allResults = new HashMap<>();
-		this.typeResults = new HashMap<>();
+		this.allResults = TypeCache.createDefault();
 	}
 
 	// ---------------------------------------------------------------- container
 
-	protected final Map<String, ActionResult> stringResults;
-	protected final Map<Class, ActionResult> typeResults;
-	protected final Map<Class<? extends ActionResult>, ActionResult> allResults;
+	protected final TypeCache<ActionResult> allResults;
 
 	/**
-	 * Returns all action results.
+	 * Returns all action results as new set.
 	 */
 	public Set<ActionResult> getAllActionResults() {
-		Set<ActionResult> set = new HashSet<>(allResults.size());
-		set.addAll(allResults.values());
+		final Set<ActionResult> set = new HashSet<>(allResults.size());
+		allResults.forEachValue(set::add);
 		return set;
 	}
 
@@ -79,7 +70,7 @@ public class ResultsManager {
 	 * Registers an action result handler and returns created {@link jodd.madvoc.result.ActionResult} if
 	 * result with same type doesn't exist. Otherwise, returns existing result and created one will be ignored.
 	 */
-	public ActionResult register(Class<? extends ActionResult> resultClass) {
+	public ActionResult register(final Class<? extends ActionResult> resultClass) {
 		return register(createResult(resultClass));
 	}
 
@@ -89,7 +80,7 @@ public class ResultsManager {
 	 * same target class exist, it will be replaced! However, default Jodd results will
 	 * <i>never</i> replace other results. After the registration, results are initialized.
 	 */
-	protected ActionResult register(ActionResult result) {
+	protected ActionResult register(final ActionResult result) {
 		Class<? extends ActionResult> actionResultClass = result.getClass();
 
 		// check existing
@@ -103,65 +94,6 @@ public class ResultsManager {
 			return existingResult;
 		}
 
-		// + string hook
-
-		String resultName = result.getResultName();
-
-		if (resultName != null) {
-			existingResult = stringResults.get(resultName);
-
-			if (existingResult != null) {
-				// the same result name exist
-				if (!resultMayReplaceExistingOne(actionResultClass)) {
-					if (log.isDebugEnabled()) {
-						log.debug("ActionResult already registered: " + actionResultClass);
-					}
-					return existingResult;
-				}
-
-				// allow only one action result per result type
-				allResults.remove(existingResult.getClass());
-			}
-
-			if (log.isInfoEnabled()) {
-				log.debug("ActionResult registered: " + resultName + " -> " + actionResultClass);
-			}
-
-			stringResults.put(resultName, result);
-		}
-
-		// + type result
-
-		Class resultValueType = result.getResultValueType();
-
-		if (resultValueType != null && resultValueType != String.class) {
-			existingResult = typeResults.get(resultValueType);
-
-			if (existingResult != null) {
-				if (!resultMayReplaceExistingOne(actionResultClass)) {
-					if (log.isDebugEnabled()) {
-						log.debug("ActionResult already registered: " + actionResultClass);
-					}
-					return existingResult;
-				}
-
-				// allow only one action result per result type
-				allResults.remove(existingResult.getClass());
-			}
-
-			if (log.isInfoEnabled()) {
-				log.debug("ActionResult registered: " + resultValueType + " -> " + actionResultClass);
-			}
-
-			typeResults.put(resultValueType, result);
-		}
-
-		// + all results
-
-		if (log.isInfoEnabled()) {
-			log.debug("ActionResult registered: " + actionResultClass);
-		}
-
 		allResults.put(actionResultClass, result);
 
 		// + init
@@ -171,23 +103,12 @@ public class ResultsManager {
 		return result;
 	}
 
-	/**
-	 * Returns <code>true</code> if action result can replace existing one.
-	 * This rule makes sure that Jodd's default results never replace custom
-	 * results. This rule is important since result are found on classpath
-	 * and can be registered without any order.
-	 */
-	protected boolean resultMayReplaceExistingOne(Class<? extends ActionResult> actionResultClass) {
-		String packageName = actionResultClass.getPackage().getName();
-		return !packageName.startsWith("jodd.");
-	}
-
 	// ---------------------------------------------------------------- lookup
 
 	/**
 	 * Lookups for action result and {@link #register(Class) registers} it if missing.
 	 */
-	private ActionResult lookupAndRegisterIfMissing(Class<? extends ActionResult> actionResultClass) {
+	private ActionResult lookupAndRegisterIfMissing(final Class<? extends ActionResult> actionResultClass) {
 		ActionResult actionResult = allResults.get(actionResultClass);
 
 		if (actionResult == null) {
@@ -200,118 +121,55 @@ public class ResultsManager {
 	/**
 	 * Lookups for {@link jodd.madvoc.result.ActionResult action result handler}
 	 * based on current {@link jodd.madvoc.ActionRequest action request} and action method
-	 * result object. Lookup performs the following in given order:
-	 * <ul>
-	 *     <li>if result object is <code>null</code>, check if {@link jodd.madvoc.result.Result} is used</li>
-	 *     <li>check result definition in <code>@Action</code> annotation</li>
-	 *     <li>if result is not a <code>String</code>, check if it is annotated with {@link jodd.madvoc.meta.RenderWith} annotation</li>
-	 *     <li>if result is not a <code>String</code>, find ActionResult for matching result object type</li>
-	 *     <li>if action result still not found, call <code>toString</code> on result object and parse it</li>
-	 * </ul>
+	 * result object.
 	 */
-	public ActionResult lookup(ActionRequest actionRequest, Object resultObject) {
-		ActionResult actionResult = null;
+	public ActionResult lookup(final ActionRequest actionRequest, final Object resultObject) {
 
-		// + special class: result
-		if (resultObject == null) {
-			Result result = actionRequest.getResult();
+		ActionResult actionResultHandler = null;
 
-			if (result != null) {
-				// read Result, if used; if not, values will be null
-				Class<? extends ActionResult> actionResultClass = result.getActionResult();
+		// + read @RenderWith value on method
+		{
+			final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-				resultObject = result.getResultValue();
-				if (resultObject == null) {
-					resultObject = result.value();
-				}
+			final Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
 
-				if (actionResultClass != null) {
-					actionResult = lookupAndRegisterIfMissing(actionResultClass);
-				}
-			}
-		}
-
-		if (actionResult == null) {
-			// + still not found, read @Action value
-			ActionConfig actionConfig = actionRequest.getActionConfig();
-
-			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
 			if (actionResultClass != null) {
-				actionResult = lookupAndRegisterIfMissing(actionResultClass);
+				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
 			}
 		}
 
-		if (actionResult == null && resultObject != null) {
-			Class resultType = resultObject.getClass();
+		// + use @RenderWith value on resulting object if exist
+		if (actionResultHandler == null && resultObject != null) {
+			final RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
 
-			if (resultType != String.class) {
-				// + still not found, read @RenderWith value if exist
-				RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
-
-				if (renderWith != null) {
-					actionResult = lookupAndRegisterIfMissing(renderWith.value());
-				}
-
-				if (actionResult == null) {
-					// + still not found, lookup for type
-					actionResult = typeResults.get(resultObject.getClass());
-				}
+			if (renderWith != null) {
+				actionResultHandler = lookupAndRegisterIfMissing(renderWith.value());
+			}
+			else if (resultObject instanceof ActionResult) {
+				// special case - returned value is already the ActionResult
+				actionResultHandler = (ActionResult) resultObject;
 			}
 		}
 
-		if (actionResult == null) {
-			// + still not found, toString()
+		// + use action configuration
+		if (actionResultHandler == null) {
+			final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			ActionResult defaultActionResult = lookupAndRegisterIfMissing(madvocConfig.getDefaultActionResult());
+			final Class<? extends ActionResult> actionResultClass = actionRuntime.getDefaultActionResult();
 
-			if (stringResults.isEmpty()) {
-				// no string results registered, carry on with the defaults.
-				actionResult = defaultActionResult;
+			if (actionResultClass != null) {
+				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
 			}
-			else {
-				String resultValue = resultObject != null ? resultObject.toString() : null;
-				String resultName = null;
+		}
 
-				// first check result value
-				if (resultValue != null) {
-					int columnIndex = resultValue.indexOf(':');
-
-					if (columnIndex != -1) {
-						resultName = resultValue.substring(0, columnIndex);
-
-						resultValue = resultValue.substring(columnIndex + 1);
-					}
-				}
-
-				if (resultName != null) {
-					actionResult = stringResults.get(resultName);
-				}
-				else {
-					actionResult = defaultActionResult;
-				}
-
-				if (actionResult.getResultName() != null) {
-					// convert remaining of the string to result object
-					// only when action result is string result
-					try {
-						Class targetClass = actionResult.getResultValueType();
-						if (targetClass == null || targetClass == String.class) {
-							resultObject = resultValue;
-						}
-						else {
-							resultObject = TypeConverterManager.convertType(resultValue, targetClass);
-						}
-					} catch (Exception ex) {
-						resultObject = resultValue;
-					}
-				}
-			}
+		if (actionResultHandler == null) {
+			throw new MadvocException("ActionResult not found for: " + resultObject);
 		}
 
 		// set action result object into action request!
-		actionRequest.setActionResult(resultObject);
+		actionRequest.bindActionResult(resultObject);
 
-		return actionResult;
+		return actionResultHandler;
 	}
 
 
@@ -320,10 +178,8 @@ public class ResultsManager {
 	/**
 	 * Initializes action result.
 	 */
-	protected void initializeResult(ActionResult result) {
-		contextInjectorComponent.injectContext(new Target(result));
-
-		result.init();
+	protected void initializeResult(final ActionResult result) {
+		contextInjectorComponent.injectContext(result);
 	}
 
 	// ---------------------------------------------------------------- create
@@ -331,9 +187,9 @@ public class ResultsManager {
 	/**
 	 * Creates new {@link jodd.madvoc.result.ActionResult}.
 	 */
-	protected ActionResult createResult(Class<? extends ActionResult> actionResultClass) {
+	protected ActionResult createResult(final Class<? extends ActionResult> actionResultClass) {
 		try {
-			return actionResultClass.newInstance();
+			return ClassUtil.newInstance(actionResultClass);
 		} catch (Exception ex) {
 			throw new MadvocException("Invalid Madvoc result: " + actionResultClass, ex);
 		}

@@ -25,9 +25,9 @@
 
 package jodd.db.type;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class DoubleSqlType extends NullAwareSqlType<Double> {
 
@@ -35,7 +35,7 @@ public class DoubleSqlType extends NullAwareSqlType<Double> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Double get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Double get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Double.valueOf(rs.getDouble(index));
 	}
 
@@ -43,7 +43,7 @@ public class DoubleSqlType extends NullAwareSqlType<Double> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Double value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Double value, final int dbSqlType) throws SQLException {
 		st.setDouble(index, value.doubleValue());
 	}
 }

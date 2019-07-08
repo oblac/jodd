@@ -25,9 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ScopeData;
-import jodd.madvoc.injector.Target;
-import jodd.petite.PetiteContainer;
+import jodd.madvoc.config.ScopeData;
+import jodd.madvoc.config.Targets;
+import jodd.madvoc.scope.ParamsScope;
 import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.ServletContext;
@@ -38,32 +38,35 @@ import javax.servlet.ServletContext;
 public class ContextInjectorComponent {
 
 	@PetiteInject
-	protected PetiteContainer madpc;
+	protected ScopeDataInspector scopeDataInspector;
 
 	@PetiteInject
-	protected InjectorsManager injectorsManager;
+	protected ScopeResolver scopeResolver;
 
 	@PetiteInject
 	protected MadvocController madvocController;
 
-	@PetiteInject
-	protected ScopeDataResolver scopeDataResolver;
-
 	/**
 	 * Inject context into target.
 	 */
-	public void injectContext(Target target) {
-		Class targetType = target.resolveType();
+	public void injectContext(final Object targetObject) {
+		final Class targetType = targetObject.getClass();
 
-		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(targetType);
+		final ScopeData scopeData = scopeDataInspector.inspectClassScopesWithCache(targetType);
 
-		ServletContext servletContext = madvocController.getApplicationContext();
+		final Targets targets = new Targets(targetObject, scopeData);
 
-		injectorsManager.getMadvocContextScopeInjector().injectContext(target, scopeData, madpc);
-		injectorsManager.getMadvocParamsInjector().injectContext(target, scopeData, madpc);
+		// inject no context
+		scopeResolver.forEachScope(madvocScope -> madvocScope.inject(targets));
 
-		injectorsManager.getServletContextScopeInjector().injectContext(target, scopeData, servletContext);
-		injectorsManager.getApplicationScopeInjector().injectContext(target, scopeData, servletContext);
+		// inject special case
+		scopeResolver.forScope(ParamsScope.class, scope -> scope.inject(targets));
+
+		// inject servlet context
+		final ServletContext servletContext = madvocController.getApplicationContext();
+		if (servletContext != null) {
+			scopeResolver.forEachScope(madvocScope -> madvocScope.inject(servletContext, targets));
+		}
 	}
 
 }

@@ -41,7 +41,7 @@ public class DecoraResponseWrapper extends BufferResponseWrapper {
 	protected final HttpServletRequest request;
 	protected final HttpServletResponse response;
 
-	public DecoraResponseWrapper(HttpServletRequest originalRequest, HttpServletResponse originalResponse, LastModifiedData lastModifiedData, DecoraManager decoraManager) {
+	public DecoraResponseWrapper(final HttpServletRequest originalRequest, final HttpServletResponse originalResponse, final LastModifiedData lastModifiedData, final DecoraManager decoraManager) {
 		super(originalResponse, lastModifiedData);
 		this.request = originalRequest;
 		this.response = originalResponse;
@@ -53,12 +53,12 @@ public class DecoraResponseWrapper extends BufferResponseWrapper {
 	}
 
 	@Override
-	protected boolean bufferContentType(String contentType, String mimeType, String encoding) {
+	protected boolean bufferContentType(final String contentType, final String mimeType, final String encoding) {
 		return decoraManager.decorateContentType(contentType, mimeType, encoding);
 	}
 
 	@Override
-	protected boolean bufferStatusCode(int statusCode) {
+	protected boolean bufferStatusCode(final int statusCode) {
 		return decoraManager.decorateStatusCode(statusCode);
 	}
 

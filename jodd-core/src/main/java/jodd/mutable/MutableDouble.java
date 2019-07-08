@@ -30,18 +30,22 @@ package jodd.mutable;
  */
 public final class MutableDouble extends Number implements Comparable<MutableDouble>, Cloneable {
 
+	public static MutableDouble of(final double value) {
+		return new MutableDouble(value);
+	}
+
 	public MutableDouble() {
 	}
 
-	public MutableDouble(double value) {
+	public MutableDouble(final double value) {
 		this.value = value;
 	}
 
-	public MutableDouble(String value) {
+	public MutableDouble(final String value) {
 		this.value = Double.parseDouble(value);
 	}
 
-	public MutableDouble(Number number) {
+	public MutableDouble(final Number number) {
 		this.value = number.doubleValue();
 	}
 
@@ -55,21 +59,21 @@ public final class MutableDouble extends Number implements Comparable<MutableDou
 	/**
 	 * Returns mutable value.
 	 */
-	public double getValue() {
+	public double get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(double value) {
+	public void set(final double value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(final Number value) {
 		this.value = value.doubleValue();
 	}
 
@@ -100,7 +104,7 @@ public final class MutableDouble extends Number implements Comparable<MutableDou
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Double)this.value).getClass() == obj.getClass() ) {
 				return Double.doubleToLongBits(value) == Double.doubleToLongBits(((Double) obj).doubleValue());
@@ -165,7 +169,8 @@ public final class MutableDouble extends Number implements Comparable<MutableDou
 	/**
 	 * Compares value of two same instances.
 	 */
-	public int compareTo(MutableDouble other) {
+	@Override
+	public int compareTo(final MutableDouble other) {
 		return Double.compare(value, other.value);
 	}
 

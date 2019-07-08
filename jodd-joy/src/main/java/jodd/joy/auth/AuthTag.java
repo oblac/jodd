@@ -28,13 +28,13 @@ package jodd.joy.auth;
 import jodd.servlet.tag.TagUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
  * Execute tag body if user is (or is not) authenticated.
+ * Only works with sessions.
  */
 public class AuthTag extends SimpleTagSupport {
 
@@ -43,18 +43,18 @@ public class AuthTag extends SimpleTagSupport {
 	/**
 	 * Defines if body should be invoked if user is authenticated.
 	 */
-	public void setAuth(boolean auth) {
+	public void setAuth(final boolean auth) {
 		this.auth = auth;
 	}
 
 	@Override
 	public void doTag() throws JspException {
-		PageContext pageContext = ((PageContext) getJspContext());
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		HttpSession httpSession = request.getSession();
+		final PageContext pageContext = ((PageContext) getJspContext());
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-		Object userSession = AuthUtil.getUserSession(httpSession);
-		boolean invokeBody =  (userSession != null) ?  auth : !auth;
+		final UserSession userSession = UserSession.get(request);
+
+		final boolean invokeBody = (userSession != null) == auth;
 		if (invokeBody) {
 			TagUtil.invokeBody(getJspBody());
 		}

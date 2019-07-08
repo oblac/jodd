@@ -25,14 +25,19 @@
 
 package jodd.db;
 
-import jodd.util.collection.IntArrayList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DbQueryTest {
+class DbQueryTest {
 
 	static class DbQueryEx extends DbQueryParser {
+		public DbQueryEx() {
+			super("");
+		}
+
 		String prepare(String sql) {
 			super.parseSql(sql);
 			return this.sql;
@@ -41,22 +46,22 @@ public class DbQueryTest {
 
 
 	private void doTestSingleNamedParam(DbQueryEx dbp, String paramName, int position) {
-		IntArrayList list = dbp.lookupNamedParameterIndices(paramName);
-		assertEquals(1, list.size());
-		assertEquals(position, list.get(0));
+		DbQueryNamedParameter p = dbp.lookupNamedParameter(paramName);
+		assertEquals(1, p.indices.length);
+		assertEquals(position, p.indices[0]);
 		assertTrue(dbp.prepared);
 	}
 
 	private void doTestDoubleNamedParam(DbQueryEx dbp, String paramName, int position1, int position2) {
-		IntArrayList list = dbp.lookupNamedParameterIndices(paramName);
-		assertEquals(2, list.size());
-		assertEquals(position1, list.get(0));
-		assertEquals(position2, list.get(1));
+		DbQueryNamedParameter p = dbp.lookupNamedParameter(paramName);
+		assertEquals(2, p.indices.length);
+		assertEquals(position1, p.indices[0]);
+		assertEquals(position2, p.indices[1]);
 		assertTrue(dbp.prepared);
 	}
 
 	@Test
-	public void testPrepareSql() {
+	void testPrepareSql() {
 		DbQueryEx dbp = new DbQueryEx();
 		assertEquals("aaa", dbp.prepare("aaa"));
 		assertFalse(dbp.prepared);
@@ -87,6 +92,18 @@ public class DbQueryTest {
 		assertEquals("aaa ? aaa ? aaa ? aa ? aaa ?", dbp.prepare("aaa :x aaa ?1 aaa ? aa :x aaa ?1"));
 		doTestDoubleNamedParam(dbp, "1", 2, 5);
 		doTestDoubleNamedParam(dbp, "x", 1, 4);
+
+		assertTrue(dbp.prepared);
+
+		assertEquals("aa ::xxx aaa ::x aaa",
+				dbp.prepare("aa ::xxx aaa ::x aaa"));
+		assertEquals("aa bbb::xxx aaa ::", dbp.prepare("aa bbb::xxx aaa ::"));
+
+		assertEquals("aa ? aaa ::x", dbp.prepare("aa :xxx aaa ::x"));
+		doTestSingleNamedParam(dbp, "xxx", 1);
+
+		assertEquals("aa ? aaa ::", dbp.prepare("aa :xxx aaa ::"));
+		doTestSingleNamedParam(dbp, "xxx", 1);
 
 		assertTrue(dbp.prepared);
 	}

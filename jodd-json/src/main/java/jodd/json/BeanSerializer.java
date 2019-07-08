@@ -36,7 +36,7 @@ public class BeanSerializer extends TypeJsonVisitor {
 
 	protected final Object source;
 
-	public BeanSerializer(JsonContext jsonContext, Object bean) {
+	public BeanSerializer(final JsonContext jsonContext, final Object bean) {
 		super(jsonContext, bean.getClass());
 
 		this.source = bean;
@@ -53,8 +53,8 @@ public class BeanSerializer extends TypeJsonVisitor {
 	 * Reads property value and {@link #onSerializableProperty(String, Class, Object) serializes it}.
 	 */
 	@Override
-	protected final void onSerializableProperty(String propertyName, PropertyDescriptor propertyDescriptor) {
-		Object value;
+	protected final void onSerializableProperty(String propertyName, final PropertyDescriptor propertyDescriptor) {
+		final Object value;
 
 		if (propertyDescriptor == null) {
 			// metadata - classname
@@ -81,7 +81,7 @@ public class BeanSerializer extends TypeJsonVisitor {
 	 * Invoked on serializable properties, that have passed all the rules.
 	 * Property type is <code>null</code> for metadata class name property.
 	 */
-	protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
+	protected void onSerializableProperty(final String propertyName, final Class propertyType, final Object value) {
 		jsonContext.pushName(propertyName, count > 0);
 
 		jsonContext.serialize(value);
@@ -94,7 +94,7 @@ public class BeanSerializer extends TypeJsonVisitor {
 	/**
 	 * Reads property using property descriptor.
 	 */
-	private Object readProperty(Object source, PropertyDescriptor propertyDescriptor) {
+	private Object readProperty(final Object source, final PropertyDescriptor propertyDescriptor) {
 		Getter getter = propertyDescriptor.getGetter(declared);
 
 		if (getter != null) {

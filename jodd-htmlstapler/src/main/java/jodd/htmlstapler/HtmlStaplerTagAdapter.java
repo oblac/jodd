@@ -27,8 +27,9 @@ package jodd.htmlstapler;
 
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
-import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
+import jodd.util.CharArraySequence;
+import jodd.util.CharSequenceUtil;
 import jodd.util.Util;
 
 /**
@@ -43,7 +44,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	protected boolean insideConditionalComment;
 
-	public HtmlStaplerTagAdapter(HtmlStaplerBundlesManager bundlesManager, String servletPath, TagVisitor target) {
+	public HtmlStaplerTagAdapter(final HtmlStaplerBundlesManager bundlesManager, final String servletPath, final TagVisitor target) {
 		super(target);
 
 		this.bundlesManager = bundlesManager;
@@ -57,7 +58,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	// ---------------------------------------------------------------- javascripts
 
 	@Override
-	public void script(Tag tag, CharSequence body) {
+	public void script(final Tag tag, final CharSequence body) {
 		if (!insideConditionalComment) {
 			String src = Util.toString(tag.getAttributeValue("src"));
 
@@ -80,15 +81,15 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	// ---------------------------------------------------------------- css
 
-	private static final char[] T_LINK = new char[] {'l', 'i', 'n', 'k'};
+	private static final CharSequence T_LINK = CharArraySequence.of('l', 'i', 'n', 'k');
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (!insideConditionalComment) {
 			if (tag.nameEquals(T_LINK)) {
 				CharSequence type = tag.getAttributeValue("type");
 
-				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css")) {
+				if (type != null && CharSequenceUtil.equalsIgnoreCase(type, "text/css")) {
 					String media = Util.toString(tag.getAttributeValue("media"));
 
 					if (media == null || media.contains("screen")) {
@@ -113,7 +114,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 
 	@Override
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 		insideConditionalComment = isStartingTag;
 		super.condComment(expression, isStartingTag, isHidden, isHiddenEndTag);
 	}

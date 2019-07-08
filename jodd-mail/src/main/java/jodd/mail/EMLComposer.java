@@ -33,122 +33,101 @@ import javax.mail.Transport;
 import javax.mail.URLName;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.io.OutputStream;
 
-public class EMLComposer {
+public class EMLComposer extends EMLProperties<EMLComposer> {
 
 	public static EMLComposer create() {
 		return new EMLComposer();
 	}
 
-	protected Session session;
-	protected Properties properties;
-
 	/**
-	 * Assigns custom session. Any property will be ignored.
+	 * Creates EML string from given {@link Email}.
+	 *
+	 * @param email {@link Email} from which to create EML {@link String}.
+	 * @return {@link String} with EML content.
 	 */
-	public EMLComposer session(Session session) {
-		this.session = session;
-		return this;
-	}
-
-	/**
-	 * Uses default session. Any property will be ignored.
-	 */
-	public EMLComposer defaultSession() {
-		this.session = Session.getDefaultInstance(System.getProperties());
-		return this;
-	}
-
-	/**
-	 * Copies properties from given set. If session is already created,
-	 * exception will be thrown.
-	 */
-	public EMLComposer set(Properties properties) {
-		initProperties();
-
-		this.properties.putAll(properties);
-
-		return this;
-	}
-
-	/**
-	 * Sets property for the session. If session is already created, exception
-	 * will be thrown.
-	 */
-	public EMLComposer set(String name, String value) {
-		initProperties();
-
-		properties.setProperty(name, value);
-
-		return this;
-	}
-
-	/**
-	 * Creates EML string from given Email.
-	 */
-	public String compose(Email email) {
-		if (session == null) {
-			session = createSession(properties);
+	public String compose(final Email email) {
+		if (getSession() == null) {
+			createSession(getProperties());
 		}
 
-		OutputStreamTransport ost = new OutputStreamTransport(session);
+		final OutputStreamTransport ost = new OutputStreamTransport(getSession());
 
-		SendMailSession sendMailSession = new SendMailSession(session, ost);
+		final SendMailSession sendMailSession = new SendMailSession(getSession(), ost);
 
 		sendMailSession.sendMail(email);
 
 		return ost.getEml();
 	}
 
-	protected void initProperties() {
-		if (session != null) {
-			throw new MailException("Can't set properties after session is assigned");
-		}
-
-		if (properties == null) {
-			properties = new Properties();
-		}
-	}
 
 	/**
-	 * Creates new session with or without custom properties.
+	 * Creates EML string from given {@link ReceivedEmail}.
+	 *
+	 * @param receivedEmail {@link ReceivedEmail} from which to create EML {@link String}.
+	 * @return {@link String} with EML content.
 	 */
-	protected Session createSession(Properties properties) {
-		if (properties == null) {
-			properties = System.getProperties();
+	public String compose(final ReceivedEmail receivedEmail) {
+		Message msg = receivedEmail.originalMessage();
+
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		try {
+			msg.writeTo(outputStream);
+		} catch (IOException | MessagingException e) {
+			throw new MailException(e);
 		}
 
-		return Session.getInstance(properties);
+		return outputStream.toString();
 	}
 
+
 	/**
-	 * Special transport that writes message into the output stream.
+	 * Special transport that writes message into the {@link OutputStream}.
 	 */
 	private static class OutputStreamTransport extends Transport {
 
-		public OutputStreamTransport(Session session) {
+		/**
+		 * Creates a new {@link OutputStreamTransport}.
+		 *
+		 * @param session {@link Session}.
+		 */
+		public OutputStreamTransport(final Session session) {
 			super(session, new URLName("JODD_MAIL_2_EML", null, -1, null, null, null));
 		}
 
+		/**
+		 * Sends a message.
+		 *
+		 * @param msg       {@link Message} to send.
+		 * @param addresses array of {@link Address}es to send to.
+		 */
 		@Override
-		public void sendMessage(Message msg, Address[] addresses) throws MessagingException {
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		public void sendMessage(final Message msg, final Address[] addresses) {
+			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 			try {
 				msg.writeTo(outputStream);
-			}
-			catch (IOException e) {
+			} catch (IOException | MessagingException e) {
 				throw new MailException(e);
 			}
 
 			eml = outputStream.toString();
 		}
 
+		/**
+		 * Returns the EML content.
+		 *
+		 * @return EML content.
+		 */
 		public String getEml() {
 			return eml;
 		}
 
+		/**
+		 * String with EML content.
+		 */
 		private String eml;
 	}
 }

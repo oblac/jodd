@@ -25,15 +25,20 @@
 
 package jodd.jtx.meta;
 
-import org.junit.Test;
+import jodd.util.annotation.AnnotationParser;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static jodd.jtx.JtxIsolationLevel.*;
-import static jodd.jtx.JtxPropagationBehavior.*;
-import static org.junit.Assert.assertEquals;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_SERIALIZABLE;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_MANDATORY;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRED;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_SUPPORTS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TransactionAnnotationTest {
+class TransactionAnnotationTest {
 
 	@Transaction
 	public void hello() {
@@ -53,12 +58,11 @@ public class TransactionAnnotationTest {
 
 
 	@Test
-	public void testTransactionAnnotationOnly() throws NoSuchMethodException {
-		TransactionAnnotation<Transaction> txAnnotation = new TransactionAnnotation<>(Transaction.class);
-		assertEquals(Transaction.class, txAnnotation.getAnnotationClass());
+	void testTransactionAnnotationOnly() throws NoSuchMethodException {
+		AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(Transaction.class);
 
 		Method method = this.getClass().getMethod("hello");
-		TransactionAnnotationData<Transaction> annotationData = txAnnotation.readAnnotationData(method);
+		TransactionAnnotationValues annotationData = TransactionAnnotationValues.of(annotationParser, method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_SUPPORTS, annotationData.propagation);
@@ -66,7 +70,7 @@ public class TransactionAnnotationTest {
 		assertEquals(-1, annotationData.timeout);
 
 		method = this.getClass().getMethod("hello2");
-		annotationData = txAnnotation.readAnnotationData(method);
+		annotationData = TransactionAnnotationValues.of(annotationParser, method);
 
 		assertEquals(ISOLATION_SERIALIZABLE, annotationData.isolation);
 		assertEquals(PROPAGATION_REQUIRES_NEW, annotationData.propagation);
@@ -75,12 +79,11 @@ public class TransactionAnnotationTest {
 	}
 
 	@Test
-	public void testCustomTransactionAnnotation() throws NoSuchMethodException {
-		TransactionAnnotation<CustomTransaction> txAnnotation = new TransactionAnnotation<>(CustomTransaction.class);
-		assertEquals(CustomTransaction.class, txAnnotation.getAnnotationClass());
+	void testCustomTransactionAnnotation() throws NoSuchMethodException {
+		AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(CustomTransaction.class);
 
 		Method method = this.getClass().getMethod("hello3");
-		TransactionAnnotationData<CustomTransaction> annotationData = txAnnotation.readAnnotationData(method);
+		TransactionAnnotationValues annotationData = TransactionAnnotationValues.of(annotationParser, method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_REQUIRED, annotationData.propagation);
@@ -88,7 +91,7 @@ public class TransactionAnnotationTest {
 		assertEquals(-1, annotationData.timeout);
 
 		method = this.getClass().getMethod("hello4");
-		annotationData = txAnnotation.readAnnotationData(method);
+		annotationData = TransactionAnnotationValues.of(annotationParser, method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_MANDATORY, annotationData.propagation);

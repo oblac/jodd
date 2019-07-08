@@ -36,11 +36,11 @@ public class ParsedDoctype implements Doctype {
 	protected CharSequence systemIdentifier;
 	protected boolean quirksMode;
 
-	public void setName(CharSequence name) {
+	public void setName(final CharSequence name) {
 		this.name = name;
 	}
 
-	public void setQuirksMode(boolean quirksMode) {
+	public void setQuirksMode(final boolean quirksMode) {
 		this.quirksMode = quirksMode;
 	}
 
@@ -51,11 +51,11 @@ public class ParsedDoctype implements Doctype {
 		systemIdentifier = null;
 	}
 
-	public void setPublicIdentifier(CharSequence publicIdentifier) {
+	public void setPublicIdentifier(final CharSequence publicIdentifier) {
 		this.publicIdentifier = publicIdentifier;
 	}
 
-	public void setSystemIdentifier(CharSequence systemIdentifier) {
+	public void setSystemIdentifier(final CharSequence systemIdentifier) {
 		this.systemIdentifier = systemIdentifier;
 	}
 
@@ -64,6 +64,7 @@ public class ParsedDoctype implements Doctype {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CharSequence getName() {
 		return name;
 	}
@@ -71,6 +72,7 @@ public class ParsedDoctype implements Doctype {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isQuirksMode() {
 		return quirksMode;
 	}
@@ -78,6 +80,7 @@ public class ParsedDoctype implements Doctype {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CharSequence getPublicIdentifier() {
 		return publicIdentifier;
 	}
@@ -85,6 +88,7 @@ public class ParsedDoctype implements Doctype {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CharSequence getSystemIdentifier() {
 		return systemIdentifier;
 	}

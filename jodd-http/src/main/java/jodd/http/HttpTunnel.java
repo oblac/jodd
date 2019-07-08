@@ -30,7 +30,6 @@ import jodd.io.StreamUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -61,6 +60,7 @@ public class HttpTunnel {
 	 * Target host.
 	 */
 	protected String targetHost = "localhost";
+
 	/**
 	 * Target port.
 	 */
@@ -92,7 +92,7 @@ public class HttpTunnel {
 	 * to handle the connection. May be used to return custom
 	 * handlers.
 	 */
-	protected Runnable onSocketConnection(Socket socket) {
+	protected Runnable onSocketConnection(final Socket socket) {
 		return new HttpTunnelConnection(socket);
 	}
 
@@ -115,10 +115,11 @@ public class HttpTunnel {
 
 		protected final Socket socket;
 
-		public HttpTunnelConnection(Socket socket) {
+		public HttpTunnelConnection(final Socket socket) {
 			this.socket = socket;
 		}
 
+		@Override
 		public void run() {
 			try {
 				tunnel();
@@ -131,7 +132,7 @@ public class HttpTunnel {
 		 * Invoked after income connection is parsed. Nothing is
 		 * changed in the request, except the target host and port.
 		 */
-		protected void onRequest(HttpRequest request) {
+		protected void onRequest(final HttpRequest request) {
 		}
 
 		/**
@@ -143,7 +144,7 @@ public class HttpTunnel {
 		 * <li>Content-Length is added/update to body size.</li>
 		 * </ul>
 		 */
-		protected void onResponse(HttpResponse response) {
+		protected void onResponse(final HttpResponse response) {
 		}
 
 		/**
@@ -163,8 +164,7 @@ public class HttpTunnel {
 			HttpRequest request = HttpRequest.readFrom(socketInput);
 
 			// open client socket to target
-			Socket clientSocket = new Socket();
-			clientSocket.connect(new InetSocketAddress(targetHost, targetPort));
+			final Socket clientSocket = Sockets.connect(targetHost, targetPort);
 
 			// do request
 			request.host(targetHost);
@@ -190,7 +190,7 @@ public class HttpTunnel {
 
 			// fix response
 			if (response.body() != null) {
-				response.removeHeader("Transfer-Encoding");
+				response.headerRemove("Transfer-Encoding");
 				response.contentLength(response.body().length());
 			}
 

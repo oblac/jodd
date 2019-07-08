@@ -25,181 +25,187 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import jodd.template.MapTemplateParser;
+import jodd.template.StringTemplateParser;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static jodd.util.StringTemplateParser.createMapMacroResolver;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StringTemplateParserTest {
+class StringTemplateParserTest {
 
 	@Test
-	public void testMap() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testMap() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		assertEquals("---value1---", stp.parse("---${key1}---", createMapMacroResolver(map)));
+		assertEquals("---value1---", stp.of(map).parse("---${key1}---"));
 	}
 
 
 	@Test
-	public void testMissing() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testMissing() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
 
-		assertEquals("------", stp.parse("---${key2}---", macroResolver));
+		assertEquals("------", stp.of(map).parse("---${key2}---"));
 
 		stp.setReplaceMissingKey(false);
-		assertEquals("---${key2}---", stp.parse("---${key2}---", macroResolver));
+		assertEquals("---${key2}---", stp.of(map).parse("---${key2}---"));
 
 		stp.setReplaceMissingKey(true);
 		stp.setMissingKeyReplacement("");
 
-		assertEquals("------", stp.parse("---${key2}---", macroResolver));
+		assertEquals("------", stp.of(map).parse("---${key2}---"));
 
 		stp.setMissingKeyReplacement("<>");
-		assertEquals("---<>---", stp.parse("---${key2}---", macroResolver));
+		assertEquals("---<>---", stp.of(map).parse("---${key2}---"));
 	}
 
 	@Test
-	public void testInner() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testInner() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 		map.put("key2", "value");
 
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
+		assertEquals("---value---", stp.of(map).parse("---${key${key1}}---"));
 
-		assertEquals("---value---", stp.parse("---${key${key1}}---", macroResolver));
-
-		assertEquals("---value---", stp.parse("---${key${key${key0}}}---", macroResolver));
+		assertEquals("---value---", stp.of(map).parse("---${key${key${key0}}}---"));
 	}
 
 	@Test
-	public void testInner2() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testInner2() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("foo", "foo");
 		map.put("boo.foo", "*${foo}*");
 		map.put("zoo", "${boo.${foo}}");
 
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
-
-		assertEquals("-*${foo}*-", stp.parse("-${boo.${foo}}-", macroResolver));
-		assertEquals("-${boo.${foo}}-", stp.parse("-${zoo}-", macroResolver));
+		assertEquals("-*${foo}*-", stp.of(map).parse("-${boo.${foo}}-"));
+		assertEquals("-${boo.${foo}}-", stp.of(map).parse("-${zoo}-"));
 
 		stp.setParseValues(true);
-		assertEquals("-*foo*-", stp.parse("-${boo.${foo}}-", macroResolver));
-		assertEquals("-*foo*-", stp.parse("-${zoo}-", macroResolver));
+		assertEquals("-*foo*-", stp.of(map).parse("-${boo.${foo}}-"));
+		assertEquals("-*foo*-", stp.of(map).parse("-${zoo}-"));
 
 	}
 
 	@Test
-	public void testResolver() {
+	void testResolver() {
 		StringTemplateParser stp = new StringTemplateParser();
-		StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
-			public String resolve(String macroName) {
-				return macroName.toUpperCase();
-			}
-		};
-		assertEquals("xxxSMALLxxx", stp.parse("xxx${small}xxx", macroResolver));
+		assertEquals("xxxSMALLxxx", stp.parse("xxx${small}xxx", String::toUpperCase));
 	}
 
 	@Test
-	public void testReplaceMissingKey() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testReplaceMissingKey() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
 
-		assertEquals(".1.", stp.parse(".${key0}.", macroResolver));
+		assertEquals(".1.", stp.of(map).parse(".${key0}."));
 
-		assertEquals("..", stp.parse(".${key2}.", macroResolver));
+		assertEquals("..", stp.of(map).parse(".${key2}."));
 
 		stp.setMissingKeyReplacement("x");
-		assertEquals(".x.", stp.parse(".${key2}.", macroResolver));
+		assertEquals(".x.", stp.of(map).parse(".${key2}."));
 
 		stp.setReplaceMissingKey(false);
-		assertEquals(".${key2}.", stp.parse(".${key2}.", macroResolver));
+		assertEquals(".${key2}.", stp.of(map).parse(".${key2}."));
 
 		stp.setMissingKeyReplacement(null);
-		assertEquals(".${key2}.", stp.parse(".${key2}.", macroResolver));
+		assertEquals(".${key2}.", stp.of(map).parse(".${key2}."));
 	}
 
 	@Test
-	public void testResolveEscapes() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testResolveEscapes() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("fooProp", "abean_value");
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
 
 		stp.setResolveEscapes(false);
 
-		assertEquals("...abean_value...", stp.parse("...${fooProp}...", macroResolver));
+		assertEquals("...abean_value...", stp.of(map).parse("...${fooProp}..."));
 
-		assertEquals("...\\${fooProp}...", stp.parse("...\\${fooProp}...", macroResolver));
-		assertEquals("...\\\\abean_value...", stp.parse("...\\\\${fooProp}...", macroResolver));
-		assertEquals("...\\\\\\${fooProp}...", stp.parse("...\\\\\\${fooProp}...", macroResolver));
-		assertEquals("...\\\\\\\\abean_value...", stp.parse("...\\\\\\\\${fooProp}...", macroResolver));
-		assertEquals("...\\\\\\\\\\${fooProp}...", stp.parse("...\\\\\\\\\\${fooProp}...", macroResolver));
+		assertEquals("...\\${fooProp}...", stp.of(map).parse("...\\${fooProp}..."));
+		assertEquals("...\\\\abean_value...", stp.of(map).parse("...\\\\${fooProp}..."));
+		assertEquals("...\\\\\\${fooProp}...", stp.of(map).parse("...\\\\\\${fooProp}..."));
+		assertEquals("...\\\\\\\\abean_value...", stp.of(map).parse("...\\\\\\\\${fooProp}..."));
+		assertEquals("...\\\\\\\\\\${fooProp}...", stp.of(map).parse("...\\\\\\\\\\${fooProp}..."));
 	}
 
 	@Test
-	public void testCustomMacrosEnds() {
-		StringTemplateParser stp = new StringTemplateParser();
+	void testCustomMacrosEnds() {
+		MapTemplateParser stp = new MapTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("foo", "bar");
 		map.put("bar", "zap");
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
 
-		assertEquals("...bar...<%=foo%>...", stp.parse("...${foo}...<%=foo%>...", macroResolver));
+		assertEquals("...bar...<%=foo%>...", stp.of(map).parse("...${foo}...<%=foo%>..."));
 
 		stp.setMacroStart("<%=");
 		stp.setMacroEnd("%>");
 		stp.setMacroPrefix(null);
 
-		assertEquals("...${foo}...bar...", stp.parse("...${foo}...<%=foo%>...", macroResolver));
+		assertEquals("...${foo}...bar...", stp.of(map).parse("...${foo}...<%=foo%>..."));
 
-		assertEquals("z<%=foo%>z", stp.parse("z\\<%=foo%>z", macroResolver));
-		assertEquals("xzapx", stp.parse("x<%=<%=foo%>%>x", macroResolver));
+		assertEquals("z<%=foo%>z", stp.of(map).parse("z\\<%=foo%>z"));
+		assertEquals("xzapx", stp.of(map).parse("x<%=<%=foo%>%>x"));
 	}
 
 	@Test
-	public void testNonScript() {
+	void testNonScript() {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("foo", "bar");
 		map.put("bar", "zap");
 		map.put("inner.man", "jo");
 
-		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
+		MapTemplateParser stp = new MapTemplateParser();
 
-		StringTemplateParser stp = new StringTemplateParser();
-		assertEquals("...bar...", stp.parse("...$foo...", macroResolver));
-		assertEquals("xx bar xx", stp.parse("xx $foo xx", macroResolver));
-		assertEquals("bar", stp.parse("$foo", macroResolver));
+		assertEquals("...bar...", stp.of(map).parse("...$foo..."));
+		assertEquals("xx bar xx", stp.of(map).parse("xx $foo xx"));
+		assertEquals("bar", stp.of(map).parse("$foo"));
 
-		assertEquals("jo", stp.parse("$inner.man", macroResolver));
-		assertEquals("jo.", stp.parse("$inner.man.", macroResolver));
-		assertEquals("jo x", stp.parse("$inner.man x", macroResolver));
-		assertEquals("jo bar", stp.parse("$inner.man ${foo}", macroResolver));
+		assertEquals("jo", stp.of(map).parse("$inner.man"));
+		assertEquals("jo.", stp.of(map).parse("$inner.man."));
+		assertEquals("jo x", stp.of(map).parse("$inner.man x"));
+		assertEquals("jo bar", stp.of(map).parse("$inner.man ${foo}"));
 
 		stp.setStrictFormat();
-		assertEquals("$inner.man bar", stp.parse("$inner.man ${foo}", macroResolver));
+		assertEquals("$inner.man bar", stp.of(map).parse("$inner.man ${foo}"));
+	}
 
+	@Test
+	void test601_IndexOutOfBounds() {
+		StringTemplateParser stp = new StringTemplateParser();
+		stp.setReplaceMissingKey(false);
+
+		assertEquals("$foo", stp.parse("$foo", null));
+		assertEquals("$foo bar", stp.parse("$foo bar", null));
+		assertEquals("foo $bar", stp.parse("foo $bar", null));
+		assertEquals("$foo", stp.parse("$foo", (s) -> {throw new RuntimeException();}));
+	}
+
+	@Test
+	void test601_DuplicatedChar() {
+		StringTemplateParser stp = new StringTemplateParser();
+		stp.setReplaceMissingKey(false);
+
+		assertEquals("bar$foo baz", stp.parse("bar$foo baz", null));
+		assertEquals("bar$foo baz", stp.parse("bar$foo baz", (s) -> {throw new RuntimeException();}));
 	}
 
 }

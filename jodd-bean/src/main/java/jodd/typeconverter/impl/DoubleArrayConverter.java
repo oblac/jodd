@@ -26,30 +26,30 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>double[]</code>.
  */
 public class DoubleArrayConverter implements TypeConverter<double[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public DoubleArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public DoubleArrayConverter(final TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
-	public double[] convert(Object value) {
+	@Override
+	public double[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
 
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (!valueClass.isArray()) {
 			// source is not an array
@@ -63,14 +63,14 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected double convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, double.class).doubleValue();
+	protected double convertType(final Object value) {
+		return typeConverterManager.convertType(value, double.class).doubleValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected double[] convertToSingleElementArray(Object value) {
+	protected double[] convertToSingleElementArray(final Object value) {
 		return new double[] {convertType(value)};
 	}
 
@@ -79,25 +79,13 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected double[] convertValueToArray(Object value) {
-		if (value instanceof List) {
-			List list = (List) value;
-			double[] target = new double[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
+	protected double[] convertValueToArray(final Object value) {
 		if (value instanceof Collection) {
-			Collection collection = (Collection) value;
-			double[] target = new double[collection.size()];
+			final Collection collection = (Collection) value;
+			final double[] target = new double[collection.size()];
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				target[i] = convertType(element);
 				i++;
 			}
@@ -106,19 +94,19 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		}
 
 		if (value instanceof Iterable) {
-			Iterable iterable = (Iterable) value;
+			final Iterable iterable = (Iterable) value;
 
-			ArrayList<Double> doubleArrayList = new ArrayList<>();
+			final ArrayList<Double> doubleArrayList = new ArrayList<>();
 
-			for (Object element : iterable) {
-				double convertedValue = convertType(element);
+			for (final Object element : iterable) {
+				final double convertedValue = convertType(element);
 				doubleArrayList.add(Double.valueOf(convertedValue));
 			}
 
-			double[] array = new double[doubleArrayList.size()];
+			final double[] array = new double[doubleArrayList.size()];
 
 			for (int i = 0; i < doubleArrayList.size(); i++) {
-				Double d = doubleArrayList.get(i);
+				final Double d = doubleArrayList.get(i);
 				array[i] = d.doubleValue();
 			}
 
@@ -126,7 +114,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
+			final String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 
@@ -137,22 +125,16 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected double[] convertArrayToArray(Object value) {
-		Class valueComponentType = value.getClass().getComponentType();
+	protected double[] convertArrayToArray(final Object value) {
+		final Class valueComponentType = value.getClass().getComponentType();
 
-		if (valueComponentType == double.class) {
-			// equal types, no conversion needed
-			return (double[]) value;
-		}
-
-		double[] result;
+		final double[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			// convert primitive array to target array
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
 			// convert object array to target array
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = new double[array.length];
 
 			for (int i = 0; i < array.length; i++) {
@@ -167,57 +149,57 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected double[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected double[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		double[] result = null;
 
-		if (primitiveComponentType == double[].class) {
+		if (primitiveComponentType == double.class) {
 			return (double[]) value;
 		}
 
 		if (primitiveComponentType == int.class) {
-			int[] array = (int[]) value;
+			final int[] array = (int[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == long.class) {
-			long[] array = (long[]) value;
+			final long[] array = (long[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == float.class) {
-			float[] array = (float[]) value;
+			final float[] array = (float[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == short.class) {
-			short[] array = (short[]) value;
+			final short[] array = (short[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == byte.class) {
-			byte[] array = (byte[]) value;
+			final byte[] array = (byte[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == char.class) {
-			char[] array = (char[]) value;
+			final char[] array = (char[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == boolean.class) {
-			boolean[] array = (boolean[]) value;
+			final boolean[] array = (boolean[]) value;
 			result = new double[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] ? 1 : 0;

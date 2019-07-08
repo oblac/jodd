@@ -26,12 +26,12 @@
 package jodd.mail;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
 import javax.activation.DataSource;
 import javax.mail.internet.MimeUtility;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,47 +40,82 @@ import java.io.UnsupportedEncodingException;
 /**
  * Email attachment.
  */
-public abstract class EmailAttachment {
+public class EmailAttachment<T extends DataSource> {
 
-	protected final String name;
-	protected final String contentId;
-	protected EmailMessage targetMessage;
+	/**
+	 * {@link String} with file name.
+	 */
+	private final String name;
+
+	/**
+	 * Content ID of attachment.
+	 */
+	private String contentId;
+
+	/**
+	 * Whether the attachment is inline.
+	 */
+	private boolean isInline;
+
+	/**
+	 * {@link DataSource} of the attachment.
+	 */
+	private final T dataSource;
+
+	/**
+	 * Target {@link EmailMessage}.
+	 */
+	private EmailMessage targetMessage;
+
+	// ---------------------------------------------------------------- constructor
+
+	/**
+	 * Returns new/empty {@link EmailAttachmentBuilder}.
+	 *
+	 * @return {@link EmailAttachmentBuilder}.
+	 */
+	public static EmailAttachmentBuilder with() {
+		return new EmailAttachmentBuilder();
+	}
 
 	/**
 	 * Creates new attachment with given name and content id for inline attachments.
-	 * Content id may be <code>null</code> if attachment is not embedded.
-	 * Email name may be <code>null</code> as well.
+	 *
+	 * @param contentId Value may be {@code null} if attachment is not embedded.
+	 * @param isInline  {@code true} if the attachment is inline.
+	 * @param name      Email name may be {@code null} as well.
+	 * @see MimeUtility#decodeText(String)
 	 */
-	protected EmailAttachment(String name, String contentId) {
+	protected EmailAttachment(final String name, final String contentId, final boolean isInline, final T dataSource) {
 		if (name != null) {
 			try {
 				this.name = MimeUtility.decodeText(name);
-			} catch (UnsupportedEncodingException ueex) {
-				throw new MailException(ueex);
+			} catch (final UnsupportedEncodingException useexc) {
+				throw new MailException(useexc);
 			}
 		} else {
 			this.name = null;
 		}
 		this.contentId = contentId;
+		this.isInline = isInline;
+		this.dataSource = dataSource;
 	}
 
-	/**
-	 * Creates {@link EmailAttachmentBuilder builder} for convenient
-	 * building of the email attachments.
-	 */
-	public static EmailAttachmentBuilder attachment() {
-		return new EmailAttachmentBuilder();
-	}
+	// ---------------------------------------------------------------- properties
 
 	/**
-	 * Returns attachment name. May be <code>null</code>.
+	 * Returns attachment name.
+	 *
+	 * @return attachment name. Value may be {@code null}.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Returns encoded attachment name. May be <code>null</code>.
+	 * Returns encoded attachment name.
+	 *
+	 * @return encoded attachment name. Value may be {@code null}.
 	 */
 	public String getEncodedName() {
 		if (name == null) {
@@ -88,106 +123,188 @@ public abstract class EmailAttachment {
 		}
 		try {
 			return MimeUtility.encodeText(name);
-		} catch (UnsupportedEncodingException ueex) {
+		} catch (final UnsupportedEncodingException ueex) {
 			throw new MailException(ueex);
 		}
 	}
 
 	/**
 	 * Returns content id for inline attachments.
-	 * Equals to <code>null</code> when attachment is not embedded.
+	 * <p>
+	 * Value is {@code null} when attachment is not embedded.
+	 *
+	 * @return content id for inline attachments
+	 * @see #isEmbedded()
 	 */
 	public String getContentId() {
 		return contentId;
 	}
 
 	/**
-	 * Returns <code>true</code> if it is inline attachment.
+	 * Returns {@code true} if the attachment is embedded.
+	 * <p>
+	 * Embedded attachment is one when {@link #getContentId()} is not {@code null}.
+	 *
+	 * @return {@code true} if the attachment is embedded.
 	 */
-	public boolean isInline() {
+	public boolean isEmbedded() {
 		return contentId != null;
 	}
 
 	/**
-	 * Sets target message for embedded attachments.
+	 * Returns {@code true} if it is an inline attachment.
+	 *
+	 * @return {@code true} if it is an inline attachment.
 	 */
-	public void setEmbeddedMessage(EmailMessage emailMessage) {
-		if (!isInline()) {
-			throw new MailException("Only inline attachments may be embedded");
-		}
-		targetMessage = emailMessage;
+	public boolean isInline() {
+		return isInline;
 	}
 
 	/**
-	 * Returns <code>true</code> if attachment is embedded into provided message.
+	 * Sets whether attachment is inline.
+	 *
+	 * @param isInline {@code true} for inline.
+	 * @return this
 	 */
-	public boolean isEmbeddedInto(EmailMessage emailMessage) {
+	protected EmailAttachment<T> setInline(final boolean isInline) {
+		this.isInline = isInline;
+		return this;
+	}
+
+	/**
+	 * Sets content ID.
+	 *
+	 * @param contentId content ID of {@link EmailAttachment}.
+	 * @return this
+	 */
+	protected EmailAttachment<T> setContentId(final String contentId) {
+		this.contentId = contentId;
+		return this;
+	}
+
+	/**
+	 * Sets target message for embedded attachments.
+	 *
+	 * @param emailMessage target {@link EmailMessage}.
+	 */
+	public EmailAttachment<T> setEmbeddedMessage(final EmailMessage emailMessage) {
+		targetMessage = emailMessage;
+		return this;
+	}
+
+	/**
+	 * Returns {@code true} if attachment is embedded into provided message.
+	 *
+	 * @param emailMessage target {@link EmailMessage}.
+	 * @return {@code true} if attachment is embedded into provided message.
+	 */
+	public boolean isEmbeddedInto(final EmailMessage emailMessage) {
 		return targetMessage == emailMessage;
 	}
 
 	// ---------------------------------------------------------------- data source
 
 	/**
-	 * Returns <code>DataSource</code> implementation, depending of attachment source.
+	 * Returns {@link DataSource} implementation, depending on attachment source.
 	 */
-	public abstract DataSource getDataSource();
+	public T getDataSource() {
+		return dataSource;
+	}
+
+	/**
+	 * Returns content type of {@link DataSource}.
+	 *
+	 * @return content type of {@link DataSource}.
+	 */
+	public String getContentType() {
+		return dataSource.getContentType();
+	}
 
 	// ---------------------------------------------------------------- size
 
-	protected int size = -1;
+	/**
+	 * Size of attachment. Defaults to -1.
+	 */
+	private int size = -1;
 
 	/**
-	 * Returns size of <b>received</b> attachment,
+	 * Returns size of attachment.
+	 *
+	 * @return size of attachment or -1 if not yet calculated from {@link DataSource}.
 	 */
 	public int getSize() {
 		return size;
 	}
 
-	protected void setSize(int size) {
+	/**
+	 * Sets size of attachment.
+	 *
+	 * @param size the size of the attachment.
+	 * @return this
+	 */
+	protected EmailAttachment<T> setSize(final int size) {
 		this.size = size;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- content methods
 
 	/**
 	 * Returns byte content of the attachment.
+	 *
+	 * @return byte array with content of the attachment.
 	 */
 	public byte[] toByteArray() {
-		FastByteArrayOutputStream out = size != -1 ?
-				new FastByteArrayOutputStream(size) :
-				new FastByteArrayOutputStream();
-
+		final FastByteArrayOutputStream out;
+		if (size != -1) {
+			out = new FastByteArrayOutputStream(size);
+		} else {
+			out = new FastByteArrayOutputStream();
+		}
 		writeToStream(out);
 		return out.toByteArray();
 	}
 
 	/**
 	 * Saves attachment to a file.
+	 *
+	 * @param destination The destination file to be written.
 	 */
-	public void writeToFile(File destination) {
-		InputStream in = null;
+	public void writeToFile(final File destination) {
+		InputStream input = null;
+		final OutputStream output;
 		try {
-			in = getDataSource().getInputStream();
-			FileUtil.writeStream(destination, in);
-		} catch (IOException ioex) {
+			input = getDataSource().getInputStream();
+			output = new FileOutputStream(destination);
+
+			StreamUtil.copy(input, output);
+		}
+		catch (final IOException ioex) {
 			throw new MailException(ioex);
-		} finally {
-			StreamUtil.close(in);
+		}
+		finally {
+			StreamUtil.close(input);
 		}
 	}
 
 	/**
-	 * Saves attachment to output stream.
+	 * Saves attachment to the output stream.
+	 *
+	 * @param out OutputStream where attachment should be copied to.
 	 */
-	public void writeToStream(OutputStream out) {
-		InputStream in = null;
+	public void writeToStream(final OutputStream out) {
+		InputStream input = null;
 		try {
-			in = getDataSource().getInputStream();
-			StreamUtil.copy(in, out);
-		} catch (IOException ioex) {
+			input = getDataSource().getInputStream();
+
+			StreamUtil.copy(input, out);
+		}
+		catch (final IOException ioex) {
 			throw new MailException(ioex);
-		} finally {
-			StreamUtil.close(in);
+		}
+		finally {
+			StreamUtil.close(input);
 		}
 	}
+
 }

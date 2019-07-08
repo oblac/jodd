@@ -26,7 +26,10 @@
 package jodd.madvoc;
 
 import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
 public class MyInterceptorStack extends ActionInterceptorStack {
-
+	public MyInterceptorStack() {
+		super(ServletConfigInterceptor.class, AppendingInterceptor.class);
+	}
 }

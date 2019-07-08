@@ -28,8 +28,8 @@ package jodd.db.connection;
 import jodd.db.DbSqlException;
 
 import javax.naming.InitialContext;
-import javax.sql.DataSource;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -43,12 +43,11 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 	private final String username;
 	private final String password;
 
-
-	public DataSourceConnectionProvider(String jndiName) {
+	public DataSourceConnectionProvider(final String jndiName) {
 		this(jndiName, null, null);
 	}
 
-	public DataSourceConnectionProvider(String jndiName, String user, String pass) {
+	public DataSourceConnectionProvider(final String jndiName, final String user, final String pass) {
 		try {
 			InitialContext initialContext = new InitialContext();
 
@@ -60,19 +59,21 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		this.password = pass;
 	}
 
-	public DataSourceConnectionProvider(DataSource dataSource) {
+	public DataSourceConnectionProvider(final DataSource dataSource) {
 		this.dataSource = dataSource;
 		username = password = null;
 	}
 
-	public DataSourceConnectionProvider(DataSource dataSource, String user, String pass) {
+	public DataSourceConnectionProvider(final DataSource dataSource, final String user, final String pass) {
 		this.dataSource = dataSource;
 		this.username = user;
 		this.password = pass;
 	}
 
+	@Override
 	public void init() {}
 
+	@Override
 	public Connection getConnection() {
 		try {
 			if (username != null || password != null) {
@@ -85,7 +86,8 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
-	public void closeConnection(Connection connection) {
+	@Override
+	public void closeConnection(final Connection connection) {
 		try {
 			connection.close();
 		} catch (SQLException sex) {
@@ -93,5 +95,6 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void close() {}
 }

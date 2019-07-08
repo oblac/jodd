@@ -25,16 +25,16 @@
 
 package jodd.util.collection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ArrayEnumerationTest {
+class ArrayEnumerationTest {
 
 	@Test
-	public void testEnumeration() {
+	void testEnumeration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(i);
@@ -49,7 +49,7 @@ public class ArrayEnumerationTest {
 
 		try {
 			ae.nextElement();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}
@@ -57,7 +57,7 @@ public class ArrayEnumerationTest {
 	}
 
 	@Test
-	public void testEnumerationFrom() {
+	void testEnumerationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(i, 2, 2);
@@ -68,7 +68,7 @@ public class ArrayEnumerationTest {
 
 		try {
 			ae.nextElement();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}

@@ -27,6 +27,7 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.servlet.RequestContextListener;
 
@@ -46,6 +47,13 @@ import java.util.Map;
  */
 public class SessionScope extends ShutdownAwareScope {
 
+	private final PetiteContainer pc;
+
+	public SessionScope(final PetiteContainer pc) {
+		this.pc = pc;
+	}
+
+
 	// ---------------------------------------------------------------- destory
 
 	protected static final String SESSION_BEANS_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
@@ -53,7 +61,7 @@ public class SessionScope extends ShutdownAwareScope {
 	/**
 	 * Registers new session destroy callback if not already registered.
 	 */
-	protected Map<String, BeanData> registerSessionBeans(HttpSession httpSession) {
+	protected Map<String, BeanData> registerSessionBeans(final HttpSession httpSession) {
 	    SessionBeans sessionBeans = new SessionBeans();
 		httpSession.setAttribute(SESSION_BEANS_NAME, sessionBeans);
 		return sessionBeans.getBeanMap();
@@ -63,7 +71,7 @@ public class SessionScope extends ShutdownAwareScope {
 	 * Returns instance map from http session.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, BeanData> getSessionMap(HttpSession session) {
+	protected Map<String, BeanData> getSessionMap(final HttpSession session) {
 		SessionBeans sessionBeans = (SessionBeans) session.getAttribute(SESSION_BEANS_NAME);
 		if (sessionBeans == null) {
 			return null;
@@ -86,14 +94,16 @@ public class SessionScope extends ShutdownAwareScope {
 			return beanMap;
 		}
 
-		public void valueBound(HttpSessionBindingEvent event) {
+		@Override
+		public void valueBound(final HttpSessionBindingEvent event) {
 			// do nothing
 		}
 
 		/**
 		 * Session is destroyed.
 		 */
-		public void valueUnbound(HttpSessionBindingEvent event) {
+		@Override
+		public void valueUnbound(final HttpSessionBindingEvent event) {
 			for (BeanData beanData : beanMap.values()) {
 				destroyBean(beanData);
 			}
@@ -111,7 +121,8 @@ public class SessionScope extends ShutdownAwareScope {
 		super.shutdown();
 	}
 
-	public Object lookup(String name) {
+	@Override
+	public Object lookup(final String name) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
@@ -122,23 +133,26 @@ public class SessionScope extends ShutdownAwareScope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.bean();
 	}
 
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	@Override
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
 			map = registerSessionBeans(session);
 		}
 
-		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.getName(), beanData);
+		final BeanData beanData = new BeanData(pc, beanDefinition, bean);
+
+		map.put(beanDefinition.name(), beanData);
 
 		registerDestroyableBeans(beanData);
 	}
 
-	public void remove(String name) {
+	@Override
+	public void remove(final String name) {
 		if (totalRegisteredDestroyableBeans() == 0) {
 			return;
 		}
@@ -149,8 +163,13 @@ public class SessionScope extends ShutdownAwareScope {
 		}
 	}
 
-	public boolean accept(Scope referenceScope) {
+	@Override
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
 
 		if (refScopeType == SingletonScope.class) {
 			return true;

@@ -45,76 +45,47 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 	private Integer isolation;
 	private Boolean autoCommit;
 
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
-	public String getDriverClass() {
-		return driverClass;
-	}
-
-	public void setDriverClass(String driverClass) {
+	public void setDriverClass(final String driverClass) {
 		this.driverClass = driverClass;
 	}
 
-	public Integer getIsolation() {
-		return isolation;
-	}
-
-	public void setIsolation(Integer isolation) {
+	public void setIsolation(final Integer isolation) {
 		this.isolation = isolation;
 	}
 
-	public Boolean getAutoCommit() {
-		return autoCommit;
-	}
-
-	public void setAutoCommit(Boolean autoCommit) {
+	public void setAutoCommit(final Boolean autoCommit) {
 		this.autoCommit = autoCommit;
 	}
 
 	// ---------------------------------------------------------------- ctors
 
-	public DriverManagerConnectionProvider(String driverClass, String url, String username, String password) {
+	public DriverManagerConnectionProvider(final String driverClass, final String url, final String username, final String password) {
 		this.driverClass = driverClass;
 		this.password = password;
 		this.username = username;
 		this.url = url;
 	}
-	public DriverManagerConnectionProvider(String driverClass, String url) {
+	public DriverManagerConnectionProvider(final String driverClass, final String url) {
 		this.driverClass = driverClass;
 		this.url = url;
 	}
 
-	public DriverManagerConnectionProvider() {
-		
-	}
-
 	// ---------------------------------------------------------------- provider
 
-
-	public void init() {
+	@Override
+	public synchronized void init() {
 		try {
 			Class.forName(driverClass);
 		} catch (ClassNotFoundException cnfex) {
@@ -122,6 +93,7 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public Connection getConnection() {
 		Connection conn;
 		try {
@@ -143,7 +115,8 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 		return conn;
 	}
 
-	public void closeConnection(Connection connection) {
+	@Override
+	public void closeConnection(final Connection connection) {
 		try {
 			connection.close();
 		} catch (SQLException sex) {
@@ -151,6 +124,7 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void close() {
 	}
 }

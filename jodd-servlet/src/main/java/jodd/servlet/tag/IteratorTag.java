@@ -25,14 +25,14 @@
 
 package jodd.servlet.tag;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Iterator tag for iterating collections.
@@ -54,49 +54,49 @@ public class IteratorTag extends SimpleTagSupport {
 	/**
 	 * Specifies item collection.
 	 */
-	public void setItems(Object items) {
+	public void setItems(final Object items) {
 		this.items = items;
 	}
 
 	/**
 	 * Specifies variable name that will be used for item during iteration.
 	 */
-	public void setVar(String var) {
+	public void setVar(final String var) {
 		this.var = var;
 	}
 
 	/**
 	 * Specifies status variable name. If omitted, status will not be used.
 	 */
-	public void setStatus(String status) {
+	public void setStatus(final String status) {
 		this.status = status;
 	}
 
 	/**
 	 * Specifies modulus value for the iterator status
 	 */
-	public void setModulus(int modulus) {
+	public void setModulus(final int modulus) {
 		this.modulus = modulus;
 	}
 
 	/**
 	 * Sets scope for all variables.
 	 */
-	public void setScope(String scope) {
+	public void setScope(final String scope) {
 		this.scope = scope;
 	}
 
 	/**
 	 * Sets starting index.
 	 */
-	public void setFrom(int from) {
+	public void setFrom(final int from) {
 		this.from = from;
 	}
 
 	/**
 	 * Sets count as total number of items to iterate.
 	 */
-	public void setCount(int count) {
+	public void setCount(final int count) {
 		this.count = count;
 	}
 
@@ -122,7 +122,7 @@ public class IteratorTag extends SimpleTagSupport {
 		} else if (items.getClass().isArray()) {
 			iterateArray((Object[]) items, from, count, pageContext);
 		} else if (items instanceof String) {
-			iterateArray(Convert.toStringArray(items), from, count, pageContext);
+			iterateArray(Converter.get().toStringArray(items), from, count, pageContext);
 		} else {
 			throw new JspException("Provided items are not iterable");
 		}
@@ -137,7 +137,7 @@ public class IteratorTag extends SimpleTagSupport {
 	/**
 	 * Calculates 'TO'.
 	 */
-	protected int calculateTo(int from, int count, int size) {
+	protected int calculateTo(final int from, final int count, final int size) {
 		int to = size;
 		if (count != -1) {
 			to = from + count;
@@ -151,7 +151,7 @@ public class IteratorTag extends SimpleTagSupport {
 	/**
 	 * Iterates collection.
 	 */
-	protected void iterateCollection(Collection collection, int from, int count, PageContext pageContext) throws JspException {
+	protected void iterateCollection(final Collection collection, final int from, final int count, final PageContext pageContext) throws JspException {
 		JspFragment body = getJspBody();
 		Iterator iter = collection.iterator();
 		int i = 0;
@@ -172,7 +172,7 @@ public class IteratorTag extends SimpleTagSupport {
 	/**
 	 * Iterates arrays.
 	 */
-	protected void iterateArray(Object[] array, int from, int count, PageContext pageContext) throws JspException {
+	protected void iterateArray(final Object[] array, final int from, final int count, final PageContext pageContext) throws JspException {
 		JspFragment body = getJspBody();
 		int len = array.length;
 		int to = calculateTo(from, count, len);

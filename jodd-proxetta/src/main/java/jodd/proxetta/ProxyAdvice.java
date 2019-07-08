@@ -28,6 +28,7 @@ package jodd.proxetta;
 /**
  * ProxyAdvice is the code portion of an aspect, i.e. the logic that replaces crosscutting concern.
  */
+@FunctionalInterface
 public interface ProxyAdvice {
 
 	/**

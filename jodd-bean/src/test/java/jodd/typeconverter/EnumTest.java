@@ -25,21 +25,21 @@
 
 package jodd.typeconverter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EnumTest {
+class EnumTest {
 
 	public enum En {
 		ONE, TWO
 	}
 
 	@Test
-	public void testCastEnums() {
-		En en = TypeConverterManager.convertType("ONE", En.class);
+	void testCastEnums() {
+		En en = TypeConverterManager.get().convertType("ONE", En.class);
 		assertEquals(En.ONE, en);
-		en = TypeConverterManager.convertType("TWO", En.class);
+		en = TypeConverterManager.get().convertType("TWO", En.class);
 		assertEquals(En.TWO, en);
 	}
 

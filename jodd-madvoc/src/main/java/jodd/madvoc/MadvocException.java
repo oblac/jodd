@@ -35,15 +35,15 @@ public class MadvocException extends UncheckedException {
 	public MadvocException() {
 	}
 
-	public MadvocException(Throwable t) {
+	public MadvocException(final Throwable t) {
 		super(t);
 	}
 
-	public MadvocException(String message) {
+	public MadvocException(final String message) {
 		super(message);
 	}
 
-	public MadvocException(String message, Throwable t) {
+	public MadvocException(final String message, final Throwable t) {
 		super(message, t);
 	}
 

@@ -25,18 +25,18 @@
 
 package jodd.petite;
 
-import jodd.petite.data.Biz;
-import jodd.petite.data.MyBiz;
-import jodd.petite.data.MyBiz2;
-import jodd.petite.data.MyBiz3;
-import jodd.petite.data.WeBiz;
-import org.junit.Test;
+import jodd.petite.fixtures.data.Biz;
+import jodd.petite.fixtures.data.MyBiz;
+import jodd.petite.fixtures.data.MyBiz2;
+import jodd.petite.fixtures.data.MyBiz3;
+import jodd.petite.fixtures.data.WeBiz;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestOneInterfaceLookup {
 
@@ -48,14 +48,14 @@ public class TestOneInterfaceLookup {
 
 		BeanDefinition beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		Biz myBiz = pc.getBean("myBiz");
 		assertNotNull(myBiz);
 
 		BeanDefinition altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNotNull(altBeanDefinition);
-		assertEquals("myBiz", altBeanDefinition.getName());
+		assertEquals("myBiz", altBeanDefinition.name());
 		assertSame(beanDefinition, altBeanDefinition);
 
 		Biz myBiz2 = pc.getBean("biz");
@@ -74,7 +74,7 @@ public class TestOneInterfaceLookup {
 
 		beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNull(altBeanDefinition);
@@ -85,7 +85,7 @@ public class TestOneInterfaceLookup {
 		weBiz = new WeBiz();
 		try {
 			pc.wire(weBiz);
-			fail();
+			fail("error");
 		}
 		catch (PetiteException ignore) {}
 
@@ -95,7 +95,7 @@ public class TestOneInterfaceLookup {
 
 		beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNull(altBeanDefinition);
@@ -106,7 +106,7 @@ public class TestOneInterfaceLookup {
 		weBiz = new WeBiz();
 		try {
 			pc.wire(weBiz);
-			fail();
+			fail("error");
 		}
 		catch (PetiteException ignore) {}
 		assertNull(weBiz.biz);

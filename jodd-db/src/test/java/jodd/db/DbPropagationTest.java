@@ -25,16 +25,25 @@
 
 package jodd.db;
 
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.jtx.JtxException;
+import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.worker.LeanJtxWorker;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class DbPropagationTest extends DbHsqldbTestCase {
+class DbPropagationTest extends DbHsqldbTestCase {
 
 	private static final String CTX_1 = "ctx #1";
 	private static final String CTX_2 = "ctx #2";
@@ -42,11 +51,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- required
 
 	private JtxTransactionMode required() {
-		return new JtxTransactionMode().propagationRequired().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, false);
 	}
 
 	@Test
-	public void testRequired() {
+	void testRequired() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -80,7 +89,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToRequiredCommit() {
+	void testRequiredToRequiredCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -117,7 +126,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToRequiredRollback() {
+	void testRequiredToRequiredRollback() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -156,7 +165,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsToRequiredCommit() {
+	void testSupportsToRequiredCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -197,11 +206,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- supports
 
 	private JtxTransactionMode supports() {
-		return new JtxTransactionMode().propagationSupports().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, false);
 	}
 
 	@Test
-	public void testSupportsNone() {
+	void testSupportsNone() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -233,7 +242,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToSupportsCommit() {
+	void testRequiredToSupportsCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -271,7 +280,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	@Test
-	public void testSupportsToSupportsCommit() {
+	void testSupportsToSupportsCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -311,11 +320,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- not supported
 
 	private JtxTransactionMode notSupported() {
-		return new JtxTransactionMode().propagationNotSupported().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_NOT_SUPPORTED, false);
 	}
 
 	@Test
-	public void testNotSupported() {
+	void testNotSupported() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -348,7 +357,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 /*
-	public void testRequiredToNotSupported() {
+	void testRequiredToNotSupported() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -394,11 +403,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- never
 
 	private JtxTransactionMode never() {
-		return new JtxTransactionMode().propagationNever().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_NEVER, false);
 	}
 
 	@Test
-	public void testRequiredToNever() {
+	void testRequiredToNever() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -416,13 +425,13 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		// session #2: inner, never
 		try {
 			worker.maybeRequestTransaction(never(), CTX_2);
-			fail();
+			fail("error");
 		} catch (JtxException ignore) {
 		}
 	}
 
 	@Test
-	public void testSupportsToNeverCommit() {
+	void testSupportsToNeverCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -463,11 +472,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- requires new
 
 	private JtxTransactionMode requiredNew() {
-		return new JtxTransactionMode().propagationRequiresNew().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, false);
 	}
 
 /*
-	public void testRequiredToRequiredNewCommit() {
+	void testRequiredToRequiredNewCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -507,7 +516,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 */
 
 /*
-	public void testRequiredToRequiredNewRollback() {
+	void testRequiredToRequiredNewRollback() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -549,7 +558,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 */
 
 	@Test
-	public void testSupportsToRequiresNewCommit() {
+	void testSupportsToRequiresNewCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -590,11 +599,11 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- mandatory
 
 	private JtxTransactionMode mandatory() {
-		return new JtxTransactionMode().propagationMandatory().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_MANDATORY, false);
 	}
 
 	@Test
-	public void testRequiredToMandatoryCommit() {
+	void testRequiredToMandatoryCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -631,7 +640,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsToMandatory() {
+	void testSupportsToMandatory() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -650,7 +659,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		// session #2: inner, mandatory
 		try {
 			worker.maybeRequestTransaction(mandatory(), CTX_2);
-			fail();
+			fail("error");
 		} catch (JtxException ignore) {
 		}
 	}

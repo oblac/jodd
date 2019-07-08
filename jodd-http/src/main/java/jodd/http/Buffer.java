@@ -28,7 +28,7 @@ package jodd.http;
 import jodd.http.up.Uploadable;
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
-import jodd.util.buffer.FastByteBuffer;
+import jodd.buffer.FastByteBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ public class Buffer {
 	/**
 	 * Appends string content to buffer.
 	 */
-	public Buffer append(String string) {
+	public Buffer append(final String string) {
 		ensureLast();
 
 		try {
@@ -69,7 +69,7 @@ public class Buffer {
 	/**
 	 * Appends a char.
 	 */
-	public Buffer append(char c) {
+	public Buffer append(final char c) {
 		append(Character.toString(c));
 		return this;
 	}
@@ -77,7 +77,7 @@ public class Buffer {
 	/**
 	 * Appends a number.
 	 */
-	public Buffer append(int number) {
+	public Buffer append(final int number) {
 		append(Integer.toString(number));
 		return this;
 	}
@@ -85,7 +85,7 @@ public class Buffer {
 	/**
 	 * Appends {@link jodd.http.up.Uploadable} to buffer.
 	 */
-	public Buffer append(Uploadable uploadable) {
+	public Buffer append(final Uploadable uploadable) {
 		list.add(uploadable);
 		size += uploadable.getSize();
 		last = null;
@@ -95,7 +95,7 @@ public class Buffer {
 	/**
 	 * Appends other buffer to this one.
 	 */
-	public Buffer append(Buffer buffer) {
+	public Buffer append(final Buffer buffer) {
 		if (buffer.list.isEmpty()) {
 			// nothing to append
 			return buffer;
@@ -128,7 +128,7 @@ public class Buffer {
 	/**
 	 * Writes content to the writer.
 	 */
-	public void writeTo(Writer writer) throws IOException {
+	public void writeTo(final Writer writer) throws IOException {
 		for (Object o : list) {
 			if (o instanceof FastByteBuffer) {
 				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
@@ -155,7 +155,7 @@ public class Buffer {
 	/**
 	 * Writes content to the output stream.
 	 */
-	public void writeTo(OutputStream out) throws IOException {
+	public void writeTo(final OutputStream out) throws IOException {
 		for (Object o : list) {
 			if (o instanceof FastByteBuffer) {
 				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
@@ -180,7 +180,7 @@ public class Buffer {
 	/**
 	 * Writes content to the output stream, using progress listener to track the sending progress.
 	 */
-	public void writeTo(OutputStream out, HttpProgressListener progressListener) throws IOException {
+	public void writeTo(final OutputStream out, final HttpProgressListener progressListener) throws IOException {
 
 		// start
 

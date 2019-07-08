@@ -25,16 +25,18 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import jodd.inex.InExRuleMatcher;
+import jodd.inex.InExRules;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class InExRulesTest {
+class InExRulesTest {
 
 	@Test
-	public void testIncludeExcludes() {
-		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
+	void testIncludeExcludes() {
+		InExRules<String, String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());
 		assertFalse(inExRules.isWhitelist());
@@ -136,15 +138,15 @@ public class InExRulesTest {
 	}
 
 	@Test
-	public void testSmartMode() {
-		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
+	void testSmartMode() {
+		InExRules<String, String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());
 		assertFalse(inExRules.isWhitelist());
 
 		inExRules.include("xxx");
 
-		inExRules.smartMode();
+		inExRules.detectMode();
 
 		assertFalse(inExRules.isBlacklist());
 		assertTrue(inExRules.isWhitelist());

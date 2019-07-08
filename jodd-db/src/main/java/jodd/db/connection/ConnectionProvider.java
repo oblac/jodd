@@ -37,14 +37,13 @@ import java.sql.Connection;
 public interface ConnectionProvider extends AutoCloseable {
 
 	/**
-	 * Initialize the connection provider. Properties are provided either
-	 * with constructor either with bean setters.
+	 * Initialize the connection provider. May be called more then once;
+	 * does not have any effect if pool is already initialized.
 	 */
 	void init();
 
-
 	/**
-	 * Get a connection.
+	 * Returns a connection from connection pool.
 	 */
 	Connection getConnection();
 
@@ -53,10 +52,10 @@ public interface ConnectionProvider extends AutoCloseable {
 	 */
 	void closeConnection(Connection connection);
 
-
 	/**
 	 * Closes a provider and releases all its resources.
 	 */
+	@Override
 	void close();
 
 }

@@ -26,7 +26,6 @@
 package jodd.csselly.selector;
 
 import jodd.csselly.CSSellyException;
-import jodd.util.StringUtil;
 
 /**
  * {@link AttributeSelector Attribute} relation matcher.
@@ -38,7 +37,7 @@ public enum Match {
 	 */
 	EQUALS("=") {
 		@Override
-		public boolean compare(String attr, String val) {
+		public boolean compare(final String attr, final String val) {
 			return val.equals(attr);
 		}
 	},
@@ -50,17 +49,53 @@ public enum Match {
 	 */
 	INCLUDES("~=") {
 		@Override
-		public boolean compare(String attr, String val) {
-			if (val.length() == 0) {
+		public boolean compare(final String attr, final String val) {
+			final int valLength = val.length();
+			final int attrLength = attr.length();
+			
+			//  value or attribute is empty or the requested value is 'too' long
+			if (attrLength == 0 || valLength == 0 || attrLength < valLength) {
 				return false;
 			}
-			String[] attrarr = StringUtil.splitc(attr, ' ');
-			for (String aa : attrarr) {
-				if (aa.equals(val)) {
-					return true;
-				}
-			}
-			return false;
+			
+	        // if both length are equals, just compare the value with the attribute
+			// no need to split
+	        if (valLength == attrLength) {
+	            return val.equals(attr);
+	        }
+	        
+	        // manually split the attribute
+	        // DO NOT allocate the string but use regionMatches and length comparison to make the check
+	        boolean inClass = false;
+	        int start = 0;
+	        for (int i = 0; i < attrLength; i ++) {
+	            char c = attr.charAt(i);
+				if ((c == ' ') || (c == '\t')) {
+	                if (inClass) {
+	                    // the white space ends a class name
+	                    // compare it with the requested one
+	                    if ((i - start == valLength) && attr.regionMatches(start, val, 0, valLength)) {
+	                        return true;
+	                    }
+	                    inClass = false;
+	                }
+	            }
+	            else {
+	                if (!inClass) {
+	                    // we're in a class name : keep the start of the substring
+	                    inClass = true;
+	                    start = i;
+	                }
+	            }
+	        }
+	        
+	        // the attribute may not end by a white space
+	        // check the current class name
+	        if (inClass && (attrLength - start == valLength)) {
+	            return attr.regionMatches(start, val, 0, valLength);  
+	        }
+	        
+	        return false;
 		}
 	},
 
@@ -70,7 +105,7 @@ public enum Match {
 	 */
 	DASH("|=") {
 		@Override
-		public boolean compare(String attr, String val) {
+		public boolean compare(final String attr, final String val) {
 			return attr.equals(val) || attr.startsWith(val + '-');
 		}
 	},
@@ -81,7 +116,7 @@ public enum Match {
 	 */
 	PREFIX("^=") {
 		@Override
-		public boolean compare(String attr, String val) {
+		public boolean compare(final String attr, final String val) {
 			if (val.length() == 0) {
 				return false;
 			}
@@ -95,7 +130,7 @@ public enum Match {
 	 */
 	SUFFIX("$=") {
 		@Override
-		public boolean compare(String attr, String val) {
+		public boolean compare(final String attr, final String val) {
 			if (val.length() == 0) {
 				return false;
 			}
@@ -109,7 +144,7 @@ public enum Match {
 	 */
 	SUBSTRING("*=") {
 		@Override
-		public boolean compare(String attr, String val) {
+		public boolean compare(final String attr, final String val) {
 			if (val.length() == 0) {
 				return false;
 			}
@@ -119,7 +154,7 @@ public enum Match {
 
 	private final String sign;
 
-	Match(String sign) {
+	Match(final String sign) {
 		this.sign = sign;
 	}
 
@@ -140,7 +175,7 @@ public enum Match {
 	/**
 	 * Resolves match type from the sign.
 	 */
-	public static Match valueOfSign(String sign) {
+	public static Match valueOfSign(final String sign) {
 		Match[] values = Match.values();
 		for (Match match : values) {
 			if (match.getSign().equals(sign)) {
@@ -154,7 +189,7 @@ public enum Match {
 	 * Resolves match type from the first character of the sign.
 	 * It is assumed that the second character is '='.
 	 */
-	public static Match valueOfFirstChar(char firstChar) {
+	public static Match valueOfFirstChar(final char firstChar) {
 		Match[] values = Match.values();
 		for (Match match : values) {
 			String matchSign = match.getSign();

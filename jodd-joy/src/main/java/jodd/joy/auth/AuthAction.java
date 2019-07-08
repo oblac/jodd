@@ -25,7 +25,19 @@
 
 package jodd.joy.auth;
 
-import jodd.madvoc.meta.Action;
+import jodd.json.JsonObject;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
+import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.scope.Request;
+import jodd.madvoc.result.JsonResult;
+import jodd.petite.meta.PetiteInject;
+import jodd.servlet.ServletUtil;
+import jodd.util.StringUtil;
+import jodd.net.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Authentication action, usually extended by login action.
@@ -35,42 +47,105 @@ import jodd.madvoc.meta.Action;
  * <p>
  * Usually <code>LoginAction</code> extends this class.
  */
-public abstract class AuthAction {
+public abstract class AuthAction<T> {
 
-	public static final String LOGIN_ACTION_PATH = "/j_login";
-	public static final String LOGOUT_ACTION_PATH = "/j_logout";
-	public static final String REGISTER_ACTION_PATH = "/j_register";
+	private static final Logger log = LoggerFactory.getLogger(AuthAction.class);
 
-	public static final String LOGIN_USERNAME = "j_username";
-	public static final String LOGIN_PASSWORD = "j_password";
-	public static final String LOGIN_TOKEN = "j_token";
-	public static final String LOGIN_SUCCESS_PATH = "j_path";
+	public static final String J_LOGIN_PATH = "/j_login";
+	public static final String J_LOGOUT_PATH = "/j_logout";
+
+	public static final String PARAM_USERNAME = "j_username";
+	public static final String PARAM_PASSWORD = "j_password";
 
 	public static final String ALIAS_INDEX = "<index>";
 	public static final String ALIAS_LOGIN = "<login>";
-	public static final String ALIAS_LOGIN_NAME = "login";
-	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
-	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
+
+	@In @Request protected HttpServletRequest servletRequest;
+	@In @Request protected HttpServletResponse servletResponse;
+
+	@PetiteInject
+	protected UserAuth<T> userAuth;
+
+	// ---------------------------------------------------------------- login
 
 	/**
-	 * Login hook.
+	 * Authenticate user and start user session.
 	 */
-	@Action(value = LOGIN_ACTION_PATH, method = "POST")
-	public final void login() {
+	protected JsonResult login() {
+		T authToken;
+
+		authToken = loginViaBasicAuth(servletRequest);
+
+		if (authToken == null) {
+			authToken = loginViaRequestParams(servletRequest);
+		}
+
+		if (authToken == null) {
+			log.warn("Login failed.");
+
+			return JsonResult.of(HttpStatus.error401().unauthorized("Login failed."));
+		}
+
+		log.info("login OK!");
+
+		final UserSession<T> userSession = new UserSession<>(authToken, userAuth.tokenValue(authToken));
+
+		userSession.start(servletRequest, servletResponse);
+
+		// return token
+
+		return tokenAsJson(authToken);
 	}
+
+	/**
+	 * Prepares the JSON payload that carries on the token value.
+	 */
+	protected JsonResult tokenAsJson(final T authToken) {
+		final JsonObject jsonObject = new JsonObject();
+
+		jsonObject.put("token", userAuth.tokenValue(authToken));
+
+		return JsonResult.of(jsonObject);
+	}
+
+	/**
+	 * Tries to login user with form data. Returns session object, otherwise returns <code>null</code>.
+	 */
+	protected T loginViaRequestParams(final HttpServletRequest servletRequest) {
+		final String username = servletRequest.getParameter(PARAM_USERNAME).trim();
+		if (StringUtil.isEmpty(username)) {
+			return null;
+		}
+		final String password = servletRequest.getParameter(PARAM_PASSWORD).trim();
+
+		return userAuth.login(username, password);
+	}
+
+	/**
+	 * Tries to login user with basic authentication.
+	 */
+	protected T loginViaBasicAuth(final HttpServletRequest servletRequest) {
+		final String username = ServletUtil.resolveAuthUsername(servletRequest);
+		if (username == null) {
+			return null;
+		}
+		final String password = ServletUtil.resolveAuthPassword(servletRequest);
+
+		return userAuth.login(username, password);
+	}
+
+	// ---------------------------------------------------------------- logout
 
 	/**
 	 * Logout hook.
 	 */
-	@Action(LOGOUT_ACTION_PATH)
-	public final void logout() {
+	protected JsonResult logout() {
+		log.debug("logout user");
+
+		UserSession.stop(servletRequest, servletResponse);
+
+		return JsonResult.of(HttpStatus.ok());
 	}
 
-	/**
-	 * Register hook.
-	 */
-	@Action(REGISTER_ACTION_PATH)
-	public final void register() {
-	}
 
 }

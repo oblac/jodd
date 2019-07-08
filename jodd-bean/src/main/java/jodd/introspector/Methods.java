@@ -26,7 +26,7 @@
 package jodd.introspector;
 
 import jodd.util.ArraysUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Methods {
 	// cache
 	private MethodDescriptor[] allMethods;
 
-	public Methods(ClassDescriptor classDescriptor) {
+	public Methods(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.methodsMap = inspectMethods();
 	}
@@ -57,14 +57,19 @@ public class Methods {
 	 */
 	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
-		Class type = classDescriptor.getType();
 
-		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		if (classDescriptor.isSystemClass()) {
+			scanAccessible = false;
+		}
 
-		HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
+		final Class type = classDescriptor.getType();
 
-		for (Method method : methods) {
-			String methodName = method.getName();
+		final Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
+
+		final HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
+
+		for (final Method method : methods) {
+			final String methodName = method.getName();
 
 			MethodDescriptor[] mds = map.get(methodName);
 
@@ -85,7 +90,7 @@ public class Methods {
 	/**
 	 * Creates new {@code MethodDescriptor}.
 	 */
-	protected MethodDescriptor createMethodDescriptor(Method method) {
+	protected MethodDescriptor createMethodDescriptor(final Method method) {
 		return new MethodDescriptor(classDescriptor, method);
 	}
 
@@ -96,14 +101,14 @@ public class Methods {
 	 * Returns a method that matches given name and parameter types.
 	 * Returns <code>null</code> if method is not found.
 	 */
-	public MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+	public MethodDescriptor getMethodDescriptor(final String name, final Class[] paramTypes) {
+		final MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
 		}
 		for (MethodDescriptor methodDescriptor : methodDescriptors) {
-			Method m = methodDescriptor.getMethod();
-			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
+			final Method m = methodDescriptor.getMethod();
+			if (ClassUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
 				return methodDescriptor;
 			}
 		}
@@ -116,8 +121,8 @@ public class Methods {
 	 * Returns <code>null</code> if no method exist in this collection by given name.
 	 * @see #getMethodDescriptor(String, Class[])
 	 */
-	public MethodDescriptor getMethodDescriptor(String name) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+	public MethodDescriptor getMethodDescriptor(final String name) {
+		final MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
 		}
@@ -130,7 +135,7 @@ public class Methods {
 	/**
 	 * Returns all methods for given name. Returns <code>null</code> if method not found.
 	 */
-	public MethodDescriptor[] getAllMethodDescriptors(String name) {
+	public MethodDescriptor[] getAllMethodDescriptors(final String name) {
 		return methodsMap.get(name);
 	}
 
@@ -139,19 +144,15 @@ public class Methods {
 	 */
 	public MethodDescriptor[] getAllMethodDescriptors() {
 		if (allMethods == null) {
-			List<MethodDescriptor> allMethodsList = new ArrayList<>();
+			final List<MethodDescriptor> allMethodsList = new ArrayList<>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
 				Collections.addAll(allMethodsList, methodDescriptors);
 			}
 
-			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+			final MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[0]);
 
-			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
-				public int compare(MethodDescriptor md1, MethodDescriptor md2) {
-					return md1.getMethod().getName().compareTo(md2.getMethod().getName());
-				}
-			});
+			Arrays.sort(allMethods, Comparator.comparing(md -> md.getMethod().getName()));
 
 			this.allMethods = allMethods;
 		}

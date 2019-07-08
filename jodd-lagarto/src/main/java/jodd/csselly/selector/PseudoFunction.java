@@ -26,6 +26,7 @@
 package jodd.csselly.selector;
 
 import jodd.csselly.CSSelly;
+import jodd.csselly.CssSelector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeMatcher;
 import jodd.lagarto.dom.NodeSelector;
@@ -50,12 +51,12 @@ public abstract class PseudoFunction<E> {
 	public static class NTH_CHILD extends PseudoFunction<PseudoFunctionExpression> {
 
 		@Override
-		public PseudoFunctionExpression parseExpression(String expression) {
+		public PseudoFunctionExpression parseExpression(final String expression) {
 			return new PseudoFunctionExpression(expression);
 		}
 
 		@Override
-		public boolean match(Node node, PseudoFunctionExpression expression) {
+		public boolean match(final Node node, final PseudoFunctionExpression expression) {
 			int value = node.getSiblingElementIndex() + 1;
 
 			return expression.match(value);
@@ -70,12 +71,12 @@ public abstract class PseudoFunction<E> {
 	public static class NTH_LAST_CHILD extends PseudoFunction<PseudoFunctionExpression> {
 
 		@Override
-		public PseudoFunctionExpression parseExpression(String expression) {
+		public PseudoFunctionExpression parseExpression(final String expression) {
 			return new PseudoFunctionExpression(expression);
 		}
 
 		@Override
-		public boolean match(Node node, PseudoFunctionExpression expression) {
+		public boolean match(final Node node, final PseudoFunctionExpression expression) {
 			int value = node.getParentNode().getChildElementsCount() - node.getSiblingElementIndex();
 
 			return expression.match(value);
@@ -91,12 +92,12 @@ public abstract class PseudoFunction<E> {
 	public static class NTH_OF_TYPE extends PseudoFunction<PseudoFunctionExpression> {
 
 		@Override
-		public PseudoFunctionExpression parseExpression(String expression) {
+		public PseudoFunctionExpression parseExpression(final String expression) {
 			return new PseudoFunctionExpression(expression);
 		}
 
 		@Override
-		public boolean match(Node node, PseudoFunctionExpression expression) {
+		public boolean match(final Node node, final PseudoFunctionExpression expression) {
 			int value = node.getSiblingNameIndex() + 1;
 
 			return expression.match(value);
@@ -112,12 +113,12 @@ public abstract class PseudoFunction<E> {
 	public static class NTH_LAST_OF_TYPE extends PseudoFunction<PseudoFunctionExpression> {
 
 		@Override
-		public PseudoFunctionExpression parseExpression(String expression) {
+		public PseudoFunctionExpression parseExpression(final String expression) {
 			return new PseudoFunctionExpression(expression);
 		}
 
 		@Override
-		public boolean match(Node node, PseudoFunctionExpression expression) {
+		public boolean match(final Node node, final PseudoFunctionExpression expression) {
 			Node child = node.getParentNode().getLastChildElement(node.getNodeName());
 			int value = child.getSiblingNameIndex() + 1 - node.getSiblingNameIndex();
 
@@ -133,17 +134,17 @@ public abstract class PseudoFunction<E> {
 	public static class EQ extends PseudoFunction<Integer> {
 
 		@Override
-		public Integer parseExpression(String expression) {
+		public Integer parseExpression(final String expression) {
 			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
-		public boolean match(Node node, Integer expression) {
+		public boolean match(final Node node, final Integer expression) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index, final Integer expression) {
 			int value = expression.intValue();
 			if (value >= 0) {
 				return index == value;
@@ -159,17 +160,17 @@ public abstract class PseudoFunction<E> {
 	public static class GT extends PseudoFunction<Integer> {
 
 		@Override
-		public Integer parseExpression(String expression) {
+		public Integer parseExpression(final String expression) {
 			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
-		public boolean match(Node node, Integer expression) {
+		public boolean match(final Node node, final Integer expression) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index, final Integer expression) {
 			int value = expression.intValue();
 			return index > value;
 		}
@@ -181,17 +182,17 @@ public abstract class PseudoFunction<E> {
 	public static class LT extends PseudoFunction<Integer> {
 
 		@Override
-		public Integer parseExpression(String expression) {
+		public Integer parseExpression(final String expression) {
 			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
-		public boolean match(Node node, Integer expression) {
+		public boolean match(final Node node, final Integer expression) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index, Integer expression) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index, final Integer expression) {
 			int value = expression.intValue();
 			return index < value;
 		}
@@ -211,7 +212,7 @@ public abstract class PseudoFunction<E> {
 		}
 
 		@Override
-		public boolean match(Node node, String expression) {
+		public boolean match(final Node node, final String expression) {
 			String text = node.getTextContent();
 			return text.contains(expression);
 		}
@@ -222,19 +223,19 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Selects elements which contain at least one element that matches the specified selector.
 	 */
-	public static class HAS extends PseudoFunction<String> {
+	public static class HAS extends PseudoFunction<List<List<CssSelector>>> {
 
 		@Override
-		public String parseExpression(String expression) {
+		public List<List<CssSelector>> parseExpression(String expression) {
 			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
 				expression = expression.substring(1, expression.length() - 1);
 			}
-			return expression;
+			return CSSelly.parse(expression);
 		}
 
 		@Override
-		public boolean match(Node node, String expression) {
-			List<Node> matchedNodes = new NodeSelector(node).select(CSSelly.parse(expression));
+		public boolean match(final Node node, final List<List<CssSelector>> selectors) {
+			List<Node> matchedNodes = new NodeSelector(node).select(selectors);
 
 			return !matchedNodes.isEmpty();
 		}
@@ -243,19 +244,19 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Selects all elements that do not match the given selector.
 	 */
-	public static class NOT extends PseudoFunction<String> {
+	public static class NOT extends PseudoFunction<List<List<CssSelector>>> {
 
 		@Override
-		public String parseExpression(String expression) {
+		public List<List<CssSelector>> parseExpression(String expression) {
 			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
 				expression = expression.substring(1, expression.length() - 1);
 			}
-			return expression;
+			return CSSelly.parse(expression);
 		}
 
 		@Override
-		public boolean match(Node node, String expression) {
-			return !new NodeMatcher(node).match(CSSelly.parse(expression));
+		public boolean match(final Node node, final List<List<CssSelector>> selectors) {
+			return !new NodeMatcher(node).match(selectors);
 		}
 	}
 
@@ -274,7 +275,7 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Returns <code>true</code> if node matches the pseudoclass within current results.
 	 */
-	public boolean match(List<Node> currentResults, Node node, int index, E expression) {
+	public boolean match(final List<Node> currentResults, final Node node, final int index, final E expression) {
 		return true;
 	}
 

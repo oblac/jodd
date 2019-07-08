@@ -26,17 +26,17 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BigDecimalConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class BigDecimalConverterTest {
+class BigDecimalConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		BigDecimalConverter bigDecimalConverter = new BigDecimalConverter();
 
 		assertNull(bigDecimalConverter.convert(null));

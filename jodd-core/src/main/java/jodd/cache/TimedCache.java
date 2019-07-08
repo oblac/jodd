@@ -37,7 +37,7 @@ import java.util.TimerTask;
  */
 public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 
-	public TimedCache(long timeout) {
+	public TimedCache(final long timeout) {
 		this.cacheSize = 0;
 		this.timeout = timeout;
 		cacheMap = new HashMap<>();
@@ -70,7 +70,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	/**
 	 * Schedules prune.
 	 */
-	public void schedulePrune(long delay) {
+	public void schedulePrune(final long delay) {
 		if (pruneTimer != null) {
 			pruneTimer.cancel();
 		}

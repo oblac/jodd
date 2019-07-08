@@ -25,13 +25,12 @@
 
 package jodd.madvoc;
 
-import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
+import jodd.log.impl.SimpleLogger;
 
-public class MyWebApplication2 extends WebApplication {
+public class MyWebApplication2 extends WebApp {
 
 	public MyWebApplication2() {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
+		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 	}
 }

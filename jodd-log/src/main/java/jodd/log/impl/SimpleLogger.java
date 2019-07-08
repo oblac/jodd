@@ -26,84 +26,114 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * Simple logger.
  */
 public class SimpleLogger implements Logger {
 
-	private final String name;
-	private final SimpleLoggerFactory slf;
+	public static final LoggerProvider<SimpleLogger> PROVIDER = new SimpleLoggerProvider();
 
-	public SimpleLogger(SimpleLoggerFactory simpleLoggerFactory, String name) {
+	private final String name;
+	private Level level;
+	private final SimpleLoggerProvider slf;
+
+	public SimpleLogger(final SimpleLoggerProvider simpleLoggerProvider, final String name, final Level defaultLevel) {
 		this.name = name;
-		this.slf = simpleLoggerFactory;
+		this.slf = simpleLoggerProvider;
+		this.level = defaultLevel;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public boolean isEnabled(Level level) {
-		return level.isEnabledFor(slf.getLevel());
+	@Override
+	public boolean isEnabled(final Level level) {
+		return level.isEnabledFor(this.level);
 	}
 
-	public void log(Level level, String message) {
+	@Override
+	public void log(final Level level, final String message) {
 		print(level, message, null);
 	}
 
-	public boolean isTraceEnabled() {
-		return Level.TRACE.isEnabledFor(slf.getLevel());
+	@Override
+	public void log(final Level level, final String message, final Throwable throwable) {
+		print(level, message, throwable);
 	}
 
-	public void trace(String message) {
+	@Override
+	public void setLevel(final Level level) {
+		this.level = level;
+	}
+
+	@Override
+	public boolean isTraceEnabled() {
+		return Level.TRACE.isEnabledFor(level);
+	}
+
+	@Override
+	public void trace(final String message) {
 		print(Level.TRACE, message, null);
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
-		return Level.DEBUG.isEnabledFor(slf.getLevel());
+		return Level.DEBUG.isEnabledFor(level);
 	}
 
-	public void debug(String message) {
+	@Override
+	public void debug(final String message) {
 		print(Level.DEBUG, message, null);
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
-		return Level.INFO.isEnabledFor(slf.getLevel());
+		return Level.INFO.isEnabledFor(level);
 	}
 
-	public void info(String message) {
+	@Override
+	public void info(final String message) {
 		print(Level.INFO, message, null);
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
-		return Level.WARN.isEnabledFor(slf.getLevel());
+		return Level.WARN.isEnabledFor(level);
 	}
 
-	public void warn(String message) {
+	@Override
+	public void warn(final String message) {
 		print(Level.WARN, message, null);
 	}
 
-	public void warn(String message, Throwable throwable) {
+	@Override
+	public void warn(final String message, final Throwable throwable) {
 		print(Level.WARN, message, throwable);
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
-		return Level.ERROR.isEnabledFor(slf.getLevel());
+		return Level.ERROR.isEnabledFor(level);
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 		print(Level.ERROR, message, null);
 	}
 
-	public void error(String message, Throwable throwable) {
+	@Override
+	public void error(final String message, final Throwable throwable) {
 		print(Level.ERROR, message, throwable);
 	}
 
 	/**
-	 * Prints error message.
+	 * Prints error message if level is enabled.
 	 */
-	protected void print(Level level, String message, Throwable throwable) {
+	protected void print(final Level level, final String message, final Throwable throwable) {
 		if (!isEnabled(level)) {
 			return;
 		}
@@ -111,7 +141,7 @@ public class SimpleLogger implements Logger {
 		StringBuilder msg = new StringBuilder()
 			.append(slf.getElapsedTime()).append(' ').append('[')
 			.append(level).append(']').append(' ')
-			.append(slf.getCallerClass()).append(' ').append('-')
+			.append(getCallerClass()).append(' ').append('-')
 			.append(' ').append(message);
 
 		System.out.println(msg.toString());
@@ -120,4 +150,58 @@ public class SimpleLogger implements Logger {
 			throwable.printStackTrace(System.out);
 		}
 	}
+
+	/**
+	 * Returns called class.
+	 */
+	protected String getCallerClass() {
+		Exception exception = new Exception();
+
+		StackTraceElement[] stackTrace = exception.getStackTrace();
+
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			String className = stackTraceElement.getClassName();
+			if (className.equals(SimpleLoggerProvider.class.getName())) {
+				continue;
+			}
+			if (className.equals(SimpleLogger.class.getName())) {
+				continue;
+			}
+			if (className.equals(Logger.class.getName())) {
+				continue;
+			}
+			return shortenClassName(className)
+				+ '.' + stackTraceElement.getMethodName()
+				+ ':' + stackTraceElement.getLineNumber();
+		}
+		return "N/A";
+	}
+
+	/**
+	 * Returns shorten class name.
+	 */
+	protected String shortenClassName(final String className) {
+		int lastDotIndex = className.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			return className;
+		}
+
+		StringBuilder shortClassName = new StringBuilder(className.length());
+
+		int start = 0;
+		while(true) {
+			shortClassName.append(className.charAt(start));
+
+			int next = className.indexOf('.', start);
+			if (next == lastDotIndex) {
+				break;
+			}
+			start = next + 1;
+			shortClassName.append('.');
+		}
+		shortClassName.append(className.substring(lastDotIndex));
+
+		return shortClassName.toString();
+	}
+
 }

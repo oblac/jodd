@@ -1,16 +1,41 @@
+# Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 
 f = open('ArraysUtil.java', 'w')
 f.write('''
 
 package jodd.util;
 
+import javax.annotation.Generated;
 import java.lang.reflect.Array;
 import static jodd.util.StringPool.NULL;
 
 /**
  * Array utilities.
- * <b>DO NOT MODIFY: this source is generated.</b>
  */
+@Generated("ArraysUtil.py")
 public class ArraysUtil {
 
 ''')
@@ -124,8 +149,8 @@ template = '''
 	/**
 	 * Resizes a <code>$T</code> array.
 	 */
-	public static $T[] resize($T buffer[], int newSize) {
-		$T temp[] = new $T[newSize];
+	public static $T[] resize($T[] buffer, int newSize) {
+		$T[] temp = new $T[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -152,7 +177,7 @@ template = '''
 	/**
 	 * Appends an element to <code>$T</code> array.
 	 */
-	public static $T[] append($T buffer[], $T newElement) {
+	public static $T[] append($T[] buffer, $T newElement) {
 		$T[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -192,7 +217,7 @@ template = '''
 	 */
 	public static $T[] remove($T[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		$T temp[] = new $T[len2];
+		$T[] temp = new $T[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -231,7 +256,7 @@ template = '''
 	 * Returns subarray.
 	 */
 	public static $T[] subarray($T[] buffer, int offset, int length) {
-		$T temp[] = new $T[length];
+		$T[] temp = new $T[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -641,10 +666,13 @@ f.write('''
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -661,10 +689,13 @@ template = '''
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}

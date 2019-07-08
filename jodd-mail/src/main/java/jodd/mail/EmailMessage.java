@@ -28,36 +28,54 @@ package jodd.mail;
 import jodd.core.JoddCore;
 
 /**
- * Represents e-mail message: string with mime type and encoding.
+ * Represents email message including the mime type and encoding.
  */
 public class EmailMessage {
 
+	/**
+	 * The content as a {@link String}.
+	 */
 	private final String content;
+
+	/**
+	 * The MIME type as a as a {@link String}.
+	 */
 	private final String mimeType;
+
+	/**
+	 * The encoding as a {@link String}.
+	 */
 	private final String encoding;
 
 	/**
 	 * Defines email content.
+	 *
+	 * @param content  The content as a {@link String}.
+	 * @param mimeType The MIME type as a as a {@link String}.
+	 * @param encoding The encoding as a {@link String}.
 	 */
-	public EmailMessage(String content, String mimeType, String encoding) {
+	public EmailMessage(final String content, final String mimeType, final String encoding) {
 		this.content = content;
 		this.mimeType = mimeType;
 		this.encoding = encoding;
 	}
 
 	/**
-	 * Defines UTF-8 email content.
+	 * Uses UTF-8 email content by default (as per {@link JoddCore#encoding}.
+	 *
+	 * @param content  The content as a {@link String}.
+	 * @param mimeType The MIME type as a as a {@link String}.
 	 */
-	public EmailMessage(String content, String mimeType) {
-		this.content = content;
-		this.mimeType = mimeType;
-		this.encoding = JoddCore.encoding;
+	public EmailMessage(final String content, final String mimeType) {
+		this(content, mimeType, JoddCore.encoding);
 	}
 
 	// ---------------------------------------------------------------- getters
 
 	/**
 	 * Returns message content.
+	 *
+	 * @return {@link String} containing the message content.
 	 */
 	public String getContent() {
 		return content;
@@ -65,6 +83,8 @@ public class EmailMessage {
 
 	/**
 	 * Returns message mime type.
+	 *
+	 * @return {@link String} containing the message mime type.
 	 */
 	public String getMimeType() {
 		return mimeType;
@@ -72,6 +92,8 @@ public class EmailMessage {
 
 	/**
 	 * Returns message encoding.
+	 *
+	 * @return {@link String} containing the message encoding.
 	 */
 	public String getEncoding() {
 		return encoding;

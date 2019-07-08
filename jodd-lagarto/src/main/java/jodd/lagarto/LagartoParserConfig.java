@@ -28,8 +28,7 @@ package jodd.lagarto;
 /**
  * Configuration for {@link jodd.lagarto.LagartoParser}.
  */
-@SuppressWarnings("unchecked")
-public class LagartoParserConfig<T extends LagartoParserConfig> {
+public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 
 	protected boolean parseXmlTags = false;
 	protected boolean enableConditionalComments = true;
@@ -41,14 +40,19 @@ public class LagartoParserConfig<T extends LagartoParserConfig> {
 		return enableConditionalComments;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	/**
 	 * Enables detection of IE conditional comments. If not enabled,
 	 * downlevel-hidden cond. comments will be treated as regular comment,
 	 * while revealed cond. comments will be treated as an error.
 	 */
-	public T setEnableConditionalComments(boolean enableConditionalComments) {
+	public T setEnableConditionalComments(final boolean enableConditionalComments) {
 		this.enableConditionalComments = enableConditionalComments;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -61,9 +65,9 @@ public class LagartoParserConfig<T extends LagartoParserConfig> {
 	/**
 	 * Enables parsing of XML tags.
 	 */
-	public T setParseXmlTags(boolean parseXmlTags) {
+	public T setParseXmlTags(final boolean parseXmlTags) {
 		this.parseXmlTags = parseXmlTags;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isCaseSensitive() {
@@ -73,9 +77,9 @@ public class LagartoParserConfig<T extends LagartoParserConfig> {
 	/**
 	 * Sets the case-sensitive flag for various matching.
 	 */
-	public T setCaseSensitive(boolean caseSensitive) {
+	public T setCaseSensitive(final boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isCalculatePosition() {
@@ -89,9 +93,9 @@ public class LagartoParserConfig<T extends LagartoParserConfig> {
 	 * overhead, and can't be easily disabled. By enabling this property,
 	 * position will be calculated manually only on errors.
 	 */
-	public T setCalculatePosition(boolean calculatePosition) {
+	public T setCalculatePosition(final boolean calculatePosition) {
 		this.calculatePosition = calculatePosition;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isEnableRawTextModes() {
@@ -101,9 +105,9 @@ public class LagartoParserConfig<T extends LagartoParserConfig> {
 	/**
 	 * Enables RAW (CDATA) and RCDATA text mode while parsing.
 	 */
-	public T setEnableRawTextModes(boolean enableRawTextModes) {
+	public T setEnableRawTextModes(final boolean enableRawTextModes) {
 		this.enableRawTextModes = enableRawTextModes;
-		return (T) this;
+		return _this();
 	}
 
 }

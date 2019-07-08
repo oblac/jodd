@@ -44,7 +44,7 @@ class DbListIterator<T> implements Iterator<T> {
 
 	// ---------------------------------------------------------------- ctors
 
-	DbListIterator(DbOomQuery query, Class[] types, boolean closeOnEnd) {
+	DbListIterator(final DbOomQuery query, final Class[] types, final boolean closeOnEnd) {
 		this.query = query;
 		this.resultSetMapper = query.executeAndBuildResultSetMapper();
 		this.entityAwareMode = query.entityAwareMode;
@@ -52,7 +52,7 @@ class DbListIterator<T> implements Iterator<T> {
 		this.closeOnEnd = closeOnEnd;
 	}
 
-	DbListIterator(DbOomQuery query, Class[] types, ResultSetMapper resultSetMapper, boolean closeOnEnd) {
+	DbListIterator(final DbOomQuery query, final Class[] types, final ResultSetMapper resultSetMapper, final boolean closeOnEnd) {
 		this.query = query;
 		this.resultSetMapper = resultSetMapper;
 		this.entityAwareMode = query.entityAwareMode;
@@ -68,6 +68,7 @@ class DbListIterator<T> implements Iterator<T> {
 	protected boolean last;
 	protected Boolean hasNext;
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
@@ -76,6 +77,7 @@ class DbListIterator<T> implements Iterator<T> {
 	 * Returns <code>true</code> if there is {@link #next() next} parsed object
 	 * available.
 	 */
+	@Override
 	public boolean hasNext() {
 		if (hasNext == null) {
 			hasNext = Boolean.valueOf(moveToNext());
@@ -86,6 +88,7 @@ class DbListIterator<T> implements Iterator<T> {
 	/**
 	 * Returns next mapped object.
 	 */
+	@Override
 	public T next() {
 		if (hasNext == null) {
 			hasNext = Boolean.valueOf(moveToNext());

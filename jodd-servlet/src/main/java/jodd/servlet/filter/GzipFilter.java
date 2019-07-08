@@ -27,13 +27,11 @@ package jodd.servlet.filter;
 
 import jodd.io.FileNameUtil;
 import jodd.servlet.ServletUtil;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConversionException;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
-
-import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -43,6 +41,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Compresses output with GZIP, for browsers that supports it.
@@ -88,7 +87,8 @@ public class GzipFilter implements Filter {
 	 * <p>
 	 * If browser does not support gzip, invokes resource normally.
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+	@Override
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws ServletException, IOException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
@@ -121,17 +121,18 @@ public class GzipFilter implements Filter {
 	/**
 	 * Filter initialization.
 	 */
-	public void init(FilterConfig config) throws ServletException {
+	@Override
+	public void init(final FilterConfig config) {
 
 		try {
-			wildcards = Convert.toBooleanValue(config.getInitParameter("wildcards"), false);
+			wildcards = Converter.get().toBooleanValue(config.getInitParameter("wildcards"), false);
 		} catch (TypeConversionException ignore) {
 			wildcards = false;
 		}
 
 		// min size
 		try {
-			threshold = Convert.toIntValue(config.getInitParameter("threshold"), 0);
+			threshold = Converter.get().toIntValue(config.getInitParameter("threshold"), 0);
 		} catch (TypeConversionException ignore) {
 			threshold = 0;
 		}
@@ -181,20 +182,21 @@ public class GzipFilter implements Filter {
 
 	}
 
+	@Override
 	public void destroy() {
 	}
 
 	/**
 	 * Determine if request is eligible for GZipping.
 	 */
-	protected boolean isGzipEligible(HttpServletRequest request) {
+	protected boolean isGzipEligible(final HttpServletRequest request) {
 		// request parameter name
 
 		if (requestParameterName.length() != 0) {
 			String forceGzipString = request.getParameter(requestParameterName);
 
 			if (forceGzipString != null) {
-				return Convert.toBooleanValue(forceGzipString, false);
+				return Converter.get().toBooleanValue(forceGzipString, false);
 			}
 		}
 

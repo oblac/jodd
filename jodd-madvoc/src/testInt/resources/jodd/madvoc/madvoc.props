@@ -1,12 +1,9 @@
 interceptorManager.requestScopeInjector.injectAttributes=true
 interceptorManager.requestScopeInjector.injectParameters=true
-madvocConfig.defaultExtension=html
 
-madvocConfig.pathMacroClass=jodd.madvoc.macro.RegExpPathMacros
+actionsManager.pathMacroClass=jodd.madvoc.macro.RegExpPathMacros
 
-jodd.madvoc.AppendingInterceptor.addon=<jodd>
-jodd.madvoc.AppendingInterceptor$Hey.addon=<heyp>
+appendingInterceptor.addon=<jodd>
+hey.addon=<heyp>
 
-jodd.madvoc.MyInterceptorStack.interceptors=\
-	jodd.madvoc.interceptor.DefaultWebAppInterceptors,\
-	jodd.madvoc.AppendingInterceptor
+asyncActionExecutor.foo=3

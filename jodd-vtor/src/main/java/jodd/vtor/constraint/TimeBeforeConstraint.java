@@ -25,49 +25,54 @@
 
 package jodd.vtor.constraint;
 
-import jodd.datetime.JDateTime;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.TypeConverterManager;
+import jodd.typeconverter.impl.LocalDateTimeConverter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
+
+import java.time.LocalDateTime;
 
 public class TimeBeforeConstraint implements ValidationConstraint<TimeBefore> {
 
 	public TimeBeforeConstraint() {
 	}
 
-	public TimeBeforeConstraint(JDateTime time) {
+	public TimeBeforeConstraint(final LocalDateTime time) {
 		this.time = time;
 	}
 
 	// ---------------------------------------------------------------- properties
 
-	protected JDateTime time;
+	protected LocalDateTime time;
 
-	public JDateTime getTime() {
+	public LocalDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(JDateTime time) {
+	public void setTime(final LocalDateTime time) {
 		this.time = time;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(TimeBefore annotation) {
-		time = new JDateTime(annotation.value());
+	@Override
+	public void configure(final TimeBefore annotation) {
+		time = LocalDateTime.parse(annotation.value());
 	}
 
 	// ---------------------------------------------------------------- validate
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, time);
 	}
 
-	public static boolean validate(Object value, JDateTime then) {
+	public static boolean validate(final Object value, final LocalDateTime then) {
 		if (value == null) {
 			return true;
 		}
-		JDateTime now = Convert.toJDateTime(value);
+		LocalDateTimeConverter ldtc = (LocalDateTimeConverter) TypeConverterManager.get().lookup(LocalDateTime.class);
+		LocalDateTime now = ldtc.convert(value);
 		return now.isBefore(then);
 	}
 }

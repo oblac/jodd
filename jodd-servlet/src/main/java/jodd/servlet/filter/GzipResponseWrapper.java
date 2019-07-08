@@ -27,13 +27,12 @@ package jodd.servlet.filter;
 
 import jodd.io.StreamUtil;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 /**
  * Implementation of <b>HttpServletResponseWrapper</b> that works with
@@ -45,7 +44,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * Calls the parent constructor which creates a ServletResponse adaptor
 	 * wrapping the given response object.
 	 */
-	public GzipResponseWrapper(HttpServletResponse response) {
+	public GzipResponseWrapper(final HttpServletResponse response) {
 		super(response);
 		origResponse = response;
 
@@ -85,7 +84,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * Set content type
 	 */
 	@Override
-	public void setContentType(String contentType) {
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 		origResponse.setContentType(contentType);
 	}
@@ -93,7 +92,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	/**
 	 * Set threshold number
 	 */
-	public void setCompressionThreshold(int threshold) {
+	public void setCompressionThreshold(final int threshold) {
 		this.threshold = threshold;
 	}
 
@@ -171,7 +170,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * Ignores set content length on zipped stream.
 	 */
 	@Override
-	public void setContentLength(int length) {
+	public void setContentLength(final int length) {
 	}
 
 	/**
@@ -179,7 +178,8 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * in case they are used.
 	 * See: https://github.com/oblac/jodd/issues/189
 	 */
-	public void setContentLengthLong(long length) {
+	@Override
+	public void setContentLengthLong(final long length) {
 	}
 
 }

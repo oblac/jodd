@@ -25,14 +25,15 @@
 
 package jodd.props;
 
+import jodd.template.StringTemplateParser;
 import jodd.util.StringPool;
-import jodd.util.StringTemplateParser;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Props data storage for base and profile properties.
@@ -66,7 +67,7 @@ public class PropsData implements Cloneable {
 	protected boolean skipEmptyProps = true;
 
 	public PropsData() {
-		this(new HashMap<String, PropsEntry>(), new HashMap<String, Map<String, PropsEntry>>());
+		this(new HashMap<>(), new HashMap<>());
 	}
 
 	protected PropsData(final HashMap<String, PropsEntry> properties, final HashMap<String, Map<String, PropsEntry>> profiles) {
@@ -76,10 +77,10 @@ public class PropsData implements Cloneable {
 
 	@Override
 	public PropsData clone() {
-		final HashMap<String, PropsEntry> newBase = new HashMap<>();
 		final HashMap<String, Map<String, PropsEntry>> newProfiles = new HashMap<>();
 
-		newBase.putAll(baseProperties);
+		final HashMap<String, PropsEntry> newBase = new HashMap<>(baseProperties);
+
 		for (final Map.Entry<String, Map<String, PropsEntry>> entry : profileProperties.entrySet()) {
 			final Map<String, PropsEntry> map = new HashMap<>(entry.getValue().size());
 			map.putAll(entry.getValue());
@@ -166,11 +167,7 @@ public class PropsData implements Cloneable {
 	 * Adds profile property.
 	 */
 	public void putProfileProperty(final String key, final String value, final String profile, final boolean append) {
-		Map<String, PropsEntry> map = profileProperties.get(profile);
-		if (map == null) {
-			map = new HashMap<>();
-			profileProperties.put(profile, map);
-		}
+		Map<String, PropsEntry> map = profileProperties.computeIfAbsent(profile, k -> new HashMap<>());
 		put(profile, map, key, value, append);
 	}
 
@@ -190,6 +187,7 @@ public class PropsData implements Cloneable {
 
 	/**
 	 * Lookup props value through profiles and base properties.
+	 * Returns {@code null} if value not found.
 	 */
 	protected String lookupValue(final String key, final String... profiles) {
 		if (profiles != null) {
@@ -242,24 +240,22 @@ public class PropsData implements Cloneable {
 			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
 		}
 
-		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
-			public String resolve(String macroName) {
-				String[] lookupProfiles = profiles;
+		final Function<String, String> macroResolver = macroName -> {
+			String[] lookupProfiles = profiles;
 
-				int leftIndex = macroName.indexOf('<');
-				if (leftIndex != -1) {
-					int rightIndex = macroName.indexOf('>');
+			int leftIndex = macroName.indexOf('<');
+			if (leftIndex != -1) {
+				int rightIndex = macroName.indexOf('>');
 
-					String profiles = macroName.substring(leftIndex + 1, rightIndex);
-					macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
+				String profiles1 = macroName.substring(leftIndex + 1, rightIndex);
+				macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
 
-					lookupProfiles = StringUtil.splitc(profiles, ',');
+				lookupProfiles = StringUtil.splitc(profiles1, ',');
 
-					StringUtil.trimAll(lookupProfiles);
-				}
-
-				return lookupValue(macroName, lookupProfiles);
+				StringUtil.trimAll(lookupProfiles);
 			}
+
+			return lookupValue(macroName, lookupProfiles);
 		};
 
 		// start parsing
@@ -309,7 +305,7 @@ public class PropsData implements Cloneable {
 						extractMap(target, map, profiles, wildcardPatterns, prefix);
 					}
 
-					final int ndx = profile.indexOf('.');
+					final int ndx = profile.lastIndexOf('.');
 					if (ndx == -1) {
 						break;
 					}

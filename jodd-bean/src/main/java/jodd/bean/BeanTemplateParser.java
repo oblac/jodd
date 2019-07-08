@@ -25,7 +25,8 @@
 
 package jodd.bean;
 
-import jodd.util.StringTemplateParser;
+import jodd.template.ContextTemplateParser;
+import jodd.template.StringTemplateParser;
 
 /**
  * Bean template is a string template with JSP-alike
@@ -40,26 +41,20 @@ import jodd.util.StringTemplateParser;
 public class BeanTemplateParser extends StringTemplateParser {
 
 	/**
-	 * Replaces named macros with context values.
-	 * All declared properties are considered during value lookup.
-	 */
-	public String parse(String template, Object context) {
-		return parse(template, createBeanMacroResolver(context));
-	}
-
-	/**
 	 * Creates bean-backed <code>MacroResolver</code>.
 	 */
-	public static MacroResolver createBeanMacroResolver(final Object context) {
-		return new MacroResolver() {
-			public String resolve(String macroName) {
-				Object value = BeanUtil.declaredSilent.getProperty(context, macroName);
+	public ContextTemplateParser of(final Object context) {
+		return template -> parseWithBean(template, context);
+	}
 
-				if (value == null) {
-					return null;
-				}
-				return value.toString();
+	public String parseWithBean(final String template, final Object context) {
+		return super.parse(template, macroName -> {
+			Object value = BeanUtil.declaredSilent.getProperty(context, macroName);
+
+			if (value == null) {
+				return null;
 			}
-		};
+			return value.toString();
+		});
 	}
 }

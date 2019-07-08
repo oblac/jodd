@@ -32,37 +32,61 @@ public enum JtxPropagationBehavior {
 
 	/**
 	 * Support a current transaction, create a new one if none exists.
+	 * <pre>{@code
+	 * None -> T2 (same session, new tx)
+	 * T1 -> T1 (same session, join tx)
+	 * }</pre>
 	 */
 	PROPAGATION_REQUIRED(1),
 
 	/**
 	 * Support a current transaction, execute non-transactionally if none exists.
+	 * <pre>{@code
+	 * None -> None (same session)
+	 * T1 -> T1 (same session, join tx)
+	 * }</pre>
 	 */
 	PROPAGATION_SUPPORTS(2),
 
 	/**
 	 * Support a current transaction, throw an exception if none exists.
+	 * <pre>{@code
+	 * None -> Error
+	 * T1 -> T1 (same session, join tx)
+	 * }</pre>
 	 */
 	PROPAGATION_MANDATORY(3),
 
 	/**
 	 * Create a new transaction, suspend the current transaction if one exists.
+	 * <pre>{@code
+	 * None -> T2 (same session, new tx)
+	 * T1 -> T2  (new session, new tx)
+	 * }</pre>
 	 */
 	PROPAGATION_REQUIRES_NEW(4),
 
 	/**
 	 * Execute non-transactionally, suspend the current transaction if one exists.
+	 * <pre>{@code
+	 * None -> None (same session)
+	 * T1 -> None (new session, no tx)
+	 * }</pre>
 	 */
 	PROPAGATION_NOT_SUPPORTED(5),
 
 	/**
 	 * Execute non-transactionally, throw an exception if a transaction exists.
+	 * <pre>{@code
+	 * None -> None (same session)
+	 * T1 -> Error
+	 * }</pre>
 	 */
 	PROPAGATION_NEVER(6);
 
 	private int value;
 
-	JtxPropagationBehavior(int value) {
+	JtxPropagationBehavior(final int value) {
 		this.value = value;
 	}
 

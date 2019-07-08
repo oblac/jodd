@@ -26,28 +26,28 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
-
-import static jodd.madvoc.meta.Action.NONE;
+import jodd.madvoc.meta.Out;
+import jodd.madvoc.result.Redirect;
 
 @MadvocAction("/re/")
 public class RestAction {
 
-	@InOut
+	@In @Out
 	long itemId;
 
-	@Action(value = "view/${itemId}", extension = NONE)
+	@Action(value = "view/{itemId}")
 	public String viewItem() {
 		return "#view";
 	}
 
-	@Action(value = "view2/g-${itemId}")
-	public String viewItem2() {
-		return "redirect:/re/view/${itemId}";
+	@Action(value = "view2/g-{itemId}")
+	public Redirect viewItem2() {
+		return Redirect.to("/re/view/{itemId}");
 	}
 
-	@Action(value = "view3/${itemId:^[0-9]+}", extension = NONE)
+	@Action(value = "view3/{itemId:^[0-9]+}")
 	public String viewItem3() {
 		return "#view";
 	}

@@ -27,13 +27,14 @@ package jodd.http.net;
 
 import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
+import jodd.http.Sockets;
 
+import javax.net.SocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import javax.net.SocketFactory;
 
 /**
  * Socket factory for SOCKS5 proxy.
@@ -43,38 +44,46 @@ import javax.net.SocketFactory;
 public class Socks5ProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
+	private final int connectionTimeout;
 
-	public Socks5ProxySocketFactory(ProxyInfo proxy) {
+	public Socks5ProxySocketFactory(final ProxyInfo proxy, final int connectionTimeout) {
 		this.proxy = proxy;
+		this.connectionTimeout = connectionTimeout;
 	}
 
-	public Socket createSocket(String host, int port) throws IOException {
+	@Override
+	public Socket createSocket(final String host, final int port) {
 		return createSocks5ProxySocket(host, port);
 	}
 
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+	@Override
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) {
 		return createSocks5ProxySocket(host, port);
 	}
 
-	public Socket createSocket(InetAddress host, int port) throws IOException {
+	@Override
+	public Socket createSocket(final InetAddress host, final int port) {
 		return createSocks5ProxySocket(host.getHostAddress(), port);
 	}
 
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+	@Override
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) {
 		return createSocks5ProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createSocks5ProxySocket(String host, int port) {
+	private Socket createSocks5ProxySocket(final String host, final int port) {
 		Socket socket = null;
+
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();
 		String user = proxy.getProxyUsername();
 		String passwd = proxy.getProxyPassword();
 
 		try {
-			socket = new Socket(proxyAddress, proxyPort);
-			InputStream in = socket.getInputStream();
-			OutputStream out = socket.getOutputStream();
+			socket = Sockets.connect(proxyAddress, proxyPort, connectionTimeout);
+
+			final InputStream in = socket.getInputStream();
+			final OutputStream out = socket.getOutputStream();
 
 			socket.setTcpNoDelay(true);
 
@@ -187,7 +196,6 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 				default:
 			}
 			return socket;
-
 		} catch (RuntimeException rttex) {
 			closeSocket(socket);
 			throw rttex;
@@ -197,7 +205,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 		}
 	}
 
-	private void fill(InputStream in, byte[] buf, int len) throws IOException {
+	private void fill(final InputStream in, final byte[] buf, final int len) throws IOException {
 		int s = 0;
 		while (s < len) {
 			int i = in.read(buf, s, len - s);
@@ -211,7 +219,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 	/**
 	 * Closes socket silently.
 	 */
-	private void closeSocket(Socket socket) {
+	private void closeSocket(final Socket socket) {
 		try {
 			if (socket != null) {
 				socket.close();

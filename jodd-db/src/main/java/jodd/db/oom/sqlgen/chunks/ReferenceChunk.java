@@ -27,6 +27,7 @@ package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.util.StringPool;
 
@@ -43,19 +44,19 @@ public class ReferenceChunk extends SqlChunk {
 	protected final String columnRef;
 	protected final boolean onlyId;
 
-	public ReferenceChunk(String tableRef, String columnRef) {
-		this(tableRef, columnRef, false);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String tableRef, final String columnRef) {
+		this(dbEntityManager, tableRef, columnRef, false);
 	}
 
-	public ReferenceChunk(String tableRef, String columnRef, boolean onlyId) {
-		super(CHUNK_REFERENCE);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String tableRef, final String columnRef, final boolean onlyId) {
+		super(dbEntityManager, CHUNK_REFERENCE);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
 		this.onlyId = onlyId;
 	}
 
-	public ReferenceChunk(String reference) {
-		super(CHUNK_REFERENCE);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String reference) {
+		super(dbEntityManager, CHUNK_REFERENCE);
 
 		int dotNdx = reference.indexOf('.');
 
@@ -82,14 +83,14 @@ public class ReferenceChunk extends SqlChunk {
 	// ---------------------------------------------------------------- process
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 
-		DbEntityDescriptor ded;
+		final DbEntityDescriptor ded;
 
 		if (tableRef != null) {
 			ded = lookupTableRef(tableRef);
 
-			String tableName = resolveTable(tableRef, ded);
+			final String tableName = resolveTable(tableRef, ded);
 
 			out.append(tableName);
 		} else {
@@ -104,19 +105,16 @@ public class ReferenceChunk extends SqlChunk {
 			out.append(ded.getIdColumnName());
 		} else if (columnRef != null) {
 			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
-
 			templateData.lastColumnDec = dec;
 
-			String column = dec == null ? null : dec.getColumnName();
-			//String column = ded.getColumnName(columnRef);
-			if (column == null) {
-				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
+			if (dec == null) {
+				throw new DbSqlBuilderException("Invalid column reference: [" + tableRef + '.' + columnRef + "]");
 			}
 
 			if (tableRef != null) {
 				out.append('.');
 			}
-			out.append(column);
+			out.append(dec.getColumnNameForQuery());
 		}
 	}
 

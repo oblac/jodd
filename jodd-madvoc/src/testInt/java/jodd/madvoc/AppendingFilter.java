@@ -25,12 +25,12 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.filter.BaseActionFilter;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class AppendingFilter extends BaseActionFilter {
+public class AppendingFilter implements ActionFilter {
 
 	/*
 	@Override
@@ -51,18 +51,19 @@ public class AppendingFilter extends BaseActionFilter {
 		return result;
 	}*/
 
+	@Override
 	public Object filter(ActionRequest actionRequest) throws Exception {
 		HttpServletResponse httpResponse = actionRequest.getHttpServletResponse();
 
 		BufferResponseWrapper wrapper = new BufferResponseWrapper(httpResponse);
-		actionRequest.setHttpServletResponse(wrapper);
+		actionRequest.bind(wrapper);
 
 		Object result = actionRequest.invoke();
 
 		wrapper.print("peep!");
 		wrapper.writeContentToResponse();
 
-		actionRequest.setHttpServletResponse(httpResponse);
+		actionRequest.bind(httpResponse);
 
 		return result;
 	}

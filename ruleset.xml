@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="Jodd-Rules">
+
+	<exclude-pattern>.*/test/.*</exclude-pattern>
+	<exclude-pattern>.*/testInt/.*</exclude-pattern>
+	<exclude-pattern>.*/perf/.*</exclude-pattern>
+	<exclude-pattern>.*/asm6/.*</exclude-pattern>
+
+</ruleset>

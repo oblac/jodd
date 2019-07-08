@@ -26,19 +26,19 @@
 package jodd.vtor;
 
 import jodd.vtor.constraint.MinLengthConstraint;
-import jodd.vtor.data.Too;
-import jodd.vtor.data.Zoo;
-import org.junit.Test;
+import jodd.vtor.fixtures.Too;
+import jodd.vtor.fixtures.Zoo;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ProfileTest {
+class ProfileTest {
 
 	@Test
-	public void testProfiles() {
+	void testProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(true);
 		Zoo zoo = new Zoo();
@@ -82,7 +82,7 @@ public class ProfileTest {
 
 
 	@Test
-	public void testDefaultProfiles() {
+	void testDefaultProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
 		Zoo zoo = new Zoo();
@@ -109,7 +109,7 @@ public class ProfileTest {
 
 
 	@Test
-	public void testMinusPlusProfiles() {
+	void testMinusPlusProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
 		vtor.useProfile("default");
@@ -158,7 +158,7 @@ public class ProfileTest {
 	}
 
 	@Test
-	public void testAsJoyAction() {
+	void testAsJoyAction() {
 		Vtor vtor = new Vtor();
 		vtor.useProfiles(Vtor.DEFAULT_PROFILE, "register");
 		vtor.validate(new Too());

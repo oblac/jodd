@@ -25,7 +25,7 @@
 
 package jodd.joy;
 
-import jodd.madvoc.config.AutomagicMadvocConfigurator;
+import jodd.madvoc.AutomagicMadvocConfigurator;
 
 /**
  * Configurator that loads only actions for integration tests.
@@ -33,10 +33,11 @@ import jodd.madvoc.config.AutomagicMadvocConfigurator;
 public class MadvocTestIntegrationConfig extends AutomagicMadvocConfigurator {
 
 	@Override
-	protected void onActionClass(String className) throws ClassNotFoundException {
+	protected void acceptActionClass(final Class actionClass) {
+		String className = actionClass.getName();
 		if (!className.startsWith("jodd.joy.action.")) {
 			return;
 		}
-		super.onActionClass(className);
+		super.acceptActionClass(actionClass);
 	}
 }

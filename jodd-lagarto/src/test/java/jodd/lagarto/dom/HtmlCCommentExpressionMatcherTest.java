@@ -25,15 +25,15 @@
 
 package jodd.lagarto.dom;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HtmlCCommentExpressionMatcherTest {
+class HtmlCCommentExpressionMatcherTest {
 
 	@Test
-	public void testSingleExpressions() {
+	void testSingleExpressions() {
 		HtmlCCommentExpressionMatcher m = new HtmlCCommentExpressionMatcher();
 
 		assertFalse(m.match(5, "if IE 6"));
@@ -86,7 +86,7 @@ public class HtmlCCommentExpressionMatcherTest {
 	}
 
 	@Test
-	public void testTwoExpressions() {
+	void testTwoExpressions() {
 		HtmlCCommentExpressionMatcher m = new HtmlCCommentExpressionMatcher();
 
 		assertTrue(m.match(5, "if (lt IE 6)&(lt IE 7)"));

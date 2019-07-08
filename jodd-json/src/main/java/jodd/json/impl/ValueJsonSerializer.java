@@ -39,7 +39,8 @@ public abstract class ValueJsonSerializer<T> implements TypeJsonSerializer<T> {
 	 * Detects circular dependencies and pushes value as current
 	 * type context.
 	 */
-	public final boolean serialize(JsonContext jsonContext, T value) {
+	@Override
+	public final boolean serialize(final JsonContext jsonContext, final T value) {
 		if (jsonContext.pushValue(value)) {
 			// prevent circular dependencies
 			return false;

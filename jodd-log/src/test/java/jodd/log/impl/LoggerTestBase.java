@@ -25,20 +25,23 @@
 
 package jodd.log.impl;
 
-import static org.junit.Assert.assertFalse;
 import jodd.log.Logger;
-import jodd.log.LoggerFactoryInterface;
 import jodd.log.Logger.Level;
+import jodd.log.LoggerProvider;
+import org.junit.jupiter.api.Test;
 
-public class LoggerTestBase {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+abstract class LoggerTestBase {
 	
 	protected Logger logger;
 	
 	protected Throwable throwable;
 	
-	protected LoggerFactoryInterface loggerFactory;
+	protected LoggerProvider loggerProvider;
 
-	protected void testIsLevelEnabled() {
+	@Test
+	void testIsLevelEnabled() {
 		// Loggers does not provide any API to enable levels.
 		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
 		assertFalse(logger.isTraceEnabled());
@@ -48,7 +51,8 @@ public class LoggerTestBase {
 		assertFalse(logger.isErrorEnabled());
 	}
 
-	protected void testIsEnabled() {
+	@Test
+	void testIsEnabled() {
 		// Loggers does not provide any API to enable levels.
 		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
 		assertFalse(logger.isEnabled(Level.TRACE));

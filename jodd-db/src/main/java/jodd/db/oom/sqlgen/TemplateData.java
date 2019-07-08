@@ -25,17 +25,18 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.DbOomManager;
-import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.ColumnData;
+import jodd.db.DbOom;
 import jodd.db.oom.ColumnAliasType;
+import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.NamedValuesHashMap;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Template common data used during template parsing.
@@ -44,36 +45,23 @@ import java.util.ArrayList;
 public abstract class TemplateData {
 
 	private static final String COL_CODE_PREFIX = "col_";
-	
-	protected final DbOomManager dbOomManager;
+	protected final DbEntityManager entityManager;
+	protected final ColumnAliasType defaultColumnAliasType;
 
-	protected TemplateData() {
-		dbOomManager = DbOomManager.getInstance();
-		columnAliasType = dbOomManager.getDefaultColumnAliasType();
+	protected TemplateData(final DbOom dbOom) {
+		this.entityManager = dbOom.entityManager();
+		this.columnAliasType = defaultColumnAliasType = dbOom.config().getDefaultColumnAliasType();
 	}
 
 	/**
-	 * Returns associated {@link jodd.db.oom.DbOomManager}.
+	 * Resets the builder so it can be used again. Not everything is reset:
+	 * object references and column alias type is not.
 	 */
-	public DbOomManager getDbOomManager() {
-		return dbOomManager;
-	}
-
-	/**
-	 * Resets the build before initializing and processing.
-	 */
-	protected void resetOnPreInit() {
+	protected void resetSoft() {
 		columnCount = 0;
 		paramCount = 0;
 		hintCount = 0;
-	}
 
-	/**
-	 * Resets the builder so it can be used again. Note that
-	 * object references are not cleared.
-	 */
-	protected void resetAll() {
-		resetOnPreInit();
 		if (tableRefs != null) {
 			tableRefs.clear();
 		}
@@ -87,7 +75,13 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
-		columnAliasType = dbOomManager.getDefaultColumnAliasType();
+		//columnAliasType = defaultColumnAliasType;
+	}
+
+	protected void resetHard() {
+		resetSoft();
+		objectRefs = null;
+		columnAliasType = defaultColumnAliasType;
 	}
 
 
@@ -98,7 +92,7 @@ public abstract class TemplateData {
 	/**
 	 * Saves object reference.
 	 */
-	public void setObjectReference(String name, Object object) {
+	public void setObjectReference(final String name, final Object object) {
 		if (objectRefs == null) {
 			objectRefs = new HashMap<>();
 		}
@@ -108,7 +102,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns object reference.
 	 */
-	public Object getObjectReference(String name) {
+	public Object getObjectReference(final String name) {
 		if (objectRefs == null) {
 			return null;
 		}
@@ -118,7 +112,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for object reference and throws an exception if reference doesn't exist.
 	 */
-	public Object lookupObject(String ref) {
+	public Object lookupObject(final String ref) {
 		Object value = getObjectReference(ref);
 		if (value == null) {
 			throw new DbSqlBuilderException("Invalid object reference: " + ref);
@@ -132,7 +126,7 @@ public abstract class TemplateData {
 		final String alias;
 		final DbEntityDescriptor desc;
 
-		private TableRefData(DbEntityDescriptor desc, String alias) {
+		private TableRefData(final DbEntityDescriptor desc, final String alias) {
 			this.alias = alias;
 			this.desc = desc;
 		}
@@ -143,7 +137,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns entity descriptor for provided table reference.
 	 */
-	public DbEntityDescriptor getTableDescriptor(String tableRef) {
+	public DbEntityDescriptor getTableDescriptor(final String tableRef) {
 		if (tableRefs == null) {
 			return null;
 		}
@@ -154,7 +148,7 @@ public abstract class TemplateData {
 	/**
 	 * Finds entity descriptor of a table that contains provided column reference.
 	 */
-	public DbEntityDescriptor findTableDescriptorByColumnRef(String columnRef) {
+	public DbEntityDescriptor findTableDescriptorByColumnRef(final String columnRef) {
 		for (Map.Entry<String, TableRefData> entry : tableRefs.entrySet()) {
 			DbEntityDescriptor ded = entry.getValue().desc;
 
@@ -168,7 +162,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns table alias for provided table reference.
 	 */
-	public String getTableAlias(String tableRef) {
+	public String getTableAlias(final String tableRef) {
 		if (tableRefs == null) {
 			return null;
 		}
@@ -179,7 +173,7 @@ public abstract class TemplateData {
 	/**
 	 * Registers table reference for provided entity.
 	 */
-	public void registerTableReference(String tableReference, DbEntityDescriptor ded, String tableAlias) {
+	public void registerTableReference(final String tableReference, final DbEntityDescriptor ded, final String tableAlias) {
 		if (tableRefs == null) {
 			tableRefs = new HashMap<>();
 		}
@@ -215,14 +209,14 @@ public abstract class TemplateData {
 	}
 
 
-	public void registerColumnDataForTableRef(String tableRef, String tableName) {
+	public void registerColumnDataForTableRef(final String tableRef, final String tableName) {
 		if (columnData == null) {
 			columnData = new NamedValuesHashMap<>();
 		}
 		columnData.put(tableRef, new ColumnData(tableName));
 	}
 
-	public String registerColumnDataForColumnCode(String tableName, String column) {
+	public String registerColumnDataForColumnCode(final String tableName, final String column) {
 		if (columnData == null) {
 			columnData = new NamedValuesHashMap<>();
 		}
@@ -248,7 +242,7 @@ public abstract class TemplateData {
 	/**
 	 * Adds query parameter.
 	 */
-	public void addParameter(String name, Object value, DbEntityColumnDescriptor dec) {
+	public void addParameter(final String name, final Object value, final DbEntityColumnDescriptor dec) {
 		if (parameters == null) {
 			parameters = new HashMap<>();
 		}
@@ -262,8 +256,8 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
-	protected DbEntityDescriptor lookupName(String entityName) {
-		DbEntityDescriptor ded = dbOomManager.lookupName(entityName);
+	protected DbEntityDescriptor lookupName(final String entityName) {
+		DbEntityDescriptor ded = entityManager.lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -273,8 +267,8 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
-	protected DbEntityDescriptor lookupType(Class entity) {
-		DbEntityDescriptor ded = dbOomManager.lookupType(entity);
+	protected DbEntityDescriptor lookupType(final Class entity) {
+		DbEntityDescriptor ded = entityManager.lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}
@@ -284,7 +278,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for table reference and throws an exception if table reference not found.
 	 */
-	protected DbEntityDescriptor lookupTableRef(String tableRef) {
+	protected DbEntityDescriptor lookupTableRef(final String tableRef) {
 		DbEntityDescriptor ded = getTableDescriptor(tableRef);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Table reference not used in this query: " + tableRef);
@@ -297,7 +291,7 @@ public abstract class TemplateData {
 	/**
 	 * Defines parameter with name and its value.
 	 */
-	protected void defineParameter(StringBuilder query, String name, Object value) {
+	protected void defineParameter(final StringBuilder query, String name, final Object value) {
 		if (name == null) {
 			name = getNextParameterName();
 		}
@@ -315,7 +309,7 @@ public abstract class TemplateData {
 	/**
 	 * Registers a hint.
 	 */
-	public void registerHint(String hint) {
+	public void registerHint(final String hint) {
 		if (hints == null) {
 			hints = new ArrayList<>(hintCount);
 		}

@@ -27,9 +27,9 @@ package jodd.servlet.tag;
 
 import jodd.util.LoopIterator;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.JspFragment;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
  * Support for looping tags.
@@ -47,14 +47,14 @@ public abstract class LoopingTagSupport extends SimpleTagSupport {
 	/**
 	 * Sets the first loop value (inclusive).
 	 */
-	public void setStart(int start) {
+	public void setStart(final int start) {
 		this.start = start;
 	}
 
 	/**
 	 * Sets the end loop value (inclusive).
 	 */
-	public void setEnd(int end) {
+	public void setEnd(final int end) {
 		this.end = end;
 	}
 
@@ -62,21 +62,21 @@ public abstract class LoopingTagSupport extends SimpleTagSupport {
 	 * Specifies the loop step. If step is 0, it will be set to +1 or -1,
 	 * depending on start and end values.
 	 */
-	public void setStep(int step) {
+	public void setStep(final int step) {
 		this.step = step;
 	}
 
 	/**
 	 * Specifies {@link jodd.util.LoopIterator status} variable name. If omitted, status will not be used.
 	 */
-	public void setStatus(String status) {
+	public void setStatus(final String status) {
 		this.status = status;
 	}
 
 	/**
 	 * Specifies modulus value for the looping status.
 	 */
-	public void setModulus(int modulus) {
+	public void setModulus(final int modulus) {
 		this.modulus = modulus;
 	}
 
@@ -102,7 +102,7 @@ public abstract class LoopingTagSupport extends SimpleTagSupport {
 	 * start and end value. Throws an exception if direction is invalid.
 	 * If autoDirection is set, direction checking is skipped.
 	 */
-	protected void prepareStepDirection(boolean autoDirection, boolean checkDirection) {
+	protected void prepareStepDirection(final boolean autoDirection, final boolean checkDirection) {
 		if (step == 0) {
 			step = (start <= end) ? 1 : -1;
 			return;

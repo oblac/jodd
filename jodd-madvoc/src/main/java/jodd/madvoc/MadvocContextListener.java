@@ -30,7 +30,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * Creates {@link Madvoc} @{link WebApplication}. It's an alternative way how to
+ * Creates {@link Madvoc} {@link WebApp}. It's an alternative way how to
  * start web application - before any other Jodd framework is used and called.
  */
 public class MadvocContextListener implements ServletContextListener {
@@ -38,21 +38,25 @@ public class MadvocContextListener implements ServletContextListener {
 	protected Madvoc madvoc;
 
 	/**
-	 * Creates new {@link Madvoc} @{link WebApplication} that is configured
+	 * Creates new {@link Madvoc} {@link WebApp} that is configured
 	 * by context init parameters.
 	 */
-	public void contextInitialized(ServletContextEvent servletContextEvent) {
+	@Override
+	public void contextInitialized(final ServletContextEvent servletContextEvent) {
 		ServletContext servletContext = servletContextEvent.getServletContext();
 
 		madvoc = new Madvoc();
-		madvoc.configure(servletContext);
-		madvoc.startNewWebApplication(servletContext);
+
+		madvoc.configureWith(servletContext);
+
+		madvoc.startWebApplication(servletContext);
 	}
 
 	/**
 	 * Stops Madvoc.
 	 */
-	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+	@Override
+	public void contextDestroyed(final ServletContextEvent servletContextEvent) {
 		madvoc.stopWebApplication();
 	}
 

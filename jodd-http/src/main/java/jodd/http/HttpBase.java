@@ -25,16 +25,16 @@
 
 package jodd.http;
 
-import jodd.datetime.TimeUtil;
 import jodd.http.up.ByteArrayUploadable;
 import jodd.http.up.FileUploadable;
 import jodd.http.up.Uploadable;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartStreamParser;
-import jodd.util.MimeTypes;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.MultipartStreamParser;
+import jodd.net.MimeTypes;
+import jodd.time.TimeUtil;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -55,10 +56,43 @@ import static jodd.util.StringPool.CRLF;
 /**
  * Base class for {@link HttpRequest} and {@link HttpResponse}.
  */
-@SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
-    public static final String HEADER_ACCEPT = "Accept";
+	public static class Defaults {
+
+		public static final int DEFAULT_PORT = -1;
+
+		/**
+		 * Default HTTP query parameters encoding (UTF-8).
+		 */
+		public static String queryEncoding = StringPool.UTF_8;
+		/**
+		 * Default form encoding (UTF-8).
+		 */
+		public static String formEncoding = StringPool.UTF_8;
+		/**
+		 * Default body media type.
+		 */
+		public static String bodyMediaType = MimeTypes.MIME_TEXT_HTML;
+		/**
+		 * Default body encoding (UTF-8).
+		 */
+		public static String bodyEncoding = StringPool.UTF_8;
+		/**
+		 * Default user agent value.
+		 */
+		public static String userAgent = "Jodd HTTP";
+		/**
+		 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
+		 * When disabled, header keys are used as they are passed.
+		 * When flag is enabled, header keys will be capitalized.
+		 */
+		public static boolean capitalizeHeaderKeys = true;
+
+	}
+
+	public static final String HEADER_ACCEPT = "Accept";
+	public static final String HEADER_AUTHORIZATION = "Authorization";
 	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -72,10 +106,16 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
+	protected boolean capitalizeHeaderKeys = Defaults.capitalizeHeaderKeys;
+	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
+
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
 
 	// ---------------------------------------------------------------- properties
 
@@ -89,9 +129,27 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets the HTTP version string. Must be formed like "HTTP/1.1".
 	 */
-	public T httpVersion(String httpVersion) {
+	public T httpVersion(final String httpVersion) {
 		this.httpVersion = httpVersion;
-		return (T) this;
+		return _this();
+	}
+
+	/**
+	 * Returns whether header keys should be strict or not, when they are
+	 * modified by changing them to PascalCase.
+	 * @see Defaults#capitalizeHeaderKeys
+	 */
+	public boolean capitalizeHeaderKeys() {
+		return capitalizeHeaderKeys;
+	}
+	
+	/**
+	 * Sets headers behavior.
+	 * @see Defaults#capitalizeHeaderKeys
+	 */
+	public T capitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
+		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- headers
@@ -102,24 +160,22 @@ public abstract class HttpBase<T> {
 	 * the first value will be returned. Returns <code>null</code>
 	 * if header doesn't exist.
 	 */
-	public String header(String name) {
-		return headers.get(name);
+	public String header(final String name) {
+		return headers.getHeader(name);
 	}
 
 	/**
 	 * Returns all values for given header name.
 	 */
-	public List<String> headers(String name) {
+	public List<String> headers(final String name) {
 		return headers.getAll(name);
 	}
 
 	/**
 	 * Removes all header parameters for given name.
 	 */
-	public void removeHeader(String name) {
-		String key = name.trim().toLowerCase();
-
-		headers.remove(key);
+	public void headerRemove(final String name) {
+		headers.remove(name.trim());
 	}
 
 	/**
@@ -131,42 +187,59 @@ public abstract class HttpBase<T> {
 	 * {@link #mediaType() media type} and {@link #charset() charset}
 	 * values.
 	 */
-	public T header(String name, String value) {
-		return header(name, value, false);
+	public T header(final String name, final String value) {
+		return _header(name, value, false);
+	}
+
+	/**
+	 * Adds many header parameters at once.
+	 * @see #header(String, String)
+	 */
+	public T header(final Map<String, String> headerMap) {
+		for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+			header(entry.getKey(), entry.getValue());
+		}
+		return _this();
+	}
+
+	/**
+	 * Sets the header by overwriting it.
+	 * @see #header(String, String)
+	 */
+	public T headerOverwrite(final String name, String value) {
+		return _header(name, value, true);
 	}
 
 	/**
 	 * Adds or sets header parameter.
 	 * @see #header(String, String)
 	 */
-	public T header(String name, String value, boolean overwrite) {
-		String key = name.trim().toLowerCase();
-
-		value = value.trim();
+	protected T _header(final String name, String value, final boolean overwrite) {
+		String key = name.trim();
 
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
+			value = value.trim();
+
 			mediaType = HttpUtil.extractMediaType(value);
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite) {
-			headers.set(key, value);
-		} else {
-			headers.add(key, value);
-		}
-		return (T) this;
+		_headerRaw(name, value, overwrite);
+
+		return _this();
 	}
 
 	/**
 	 * Internal direct header setting.
 	 */
-	protected void _header(String name, String value, boolean overwrite) {
-		String key = name.trim().toLowerCase();
+	protected void _headerRaw(String name, String value, final boolean overwrite) {
+		name = name.trim();
 		value = value.trim();
+
 		if (overwrite) {
-			headers.set(key, value);
+			headers.setHeader(name, value);
 		} else {
-			headers.add(key, value);
+			headers.addHeader(name, value);
 		}
 	}
 
@@ -174,26 +247,43 @@ public abstract class HttpBase<T> {
 	 * Adds <code>int</code> value as header parameter,
 	 * @see #header(String, String)
 	 */
-	public T header(String name, int value) {
-		_header(name, String.valueOf(value), false);
-		return (T) this;
+	public T header(final String name, final int value) {
+		_headerRaw(name, String.valueOf(value), false);
+		return _this();
 	}
 
 	/**
 	 * Adds date value as header parameter.
 	 * @see #header(String, String)
 	 */
-	public T header(String name, long millis) {
-		_header(name, TimeUtil.formatHttpDate(millis), false);
-		return (T) this;
+	public T header(final String name, final long millis) {
+		_headerRaw(name, TimeUtil.formatHttpDate(millis), false);
+		return _this();
 	}
 
 	/**
-	 * Returns {@link HttpMultiMap} of all headers.
+	 * Returns collection of all header names. Depends on
+	 * {@link #capitalizeHeaderKeys()} flag.
 	 */
-	public HttpMultiMap<String> headers() {
-		return headers;
+	public Collection<String> headerNames() {
+		return headers.names();
 	}
+
+	/**
+	 * Returns Bearer token or {@code null} if not set.
+	 */
+	public String tokenAuthentication() {
+		final String value = headers.get(HEADER_AUTHORIZATION);
+		if (value == null) {
+			return null;
+		}
+		final int ndx = value.indexOf("Bearer ");
+		if (ndx == -1) {
+			return null;
+		}
+		return value.substring(ndx + 7).trim();
+	}
+
 
 	// ---------------------------------------------------------------- content type
 
@@ -213,10 +303,10 @@ public abstract class HttpBase<T> {
 	 * <code>null</code> will remove the charset information from
 	 * the header.
 	 */
-	public T charset(String charset) {
+	public T charset(final String charset) {
 		this.charset = null;
 		contentType(null, charset);
-		return (T) this;
+		return _this();
 	}
 
 
@@ -236,9 +326,9 @@ public abstract class HttpBase<T> {
 	 * Setting this value to <code>null</code> will
 	 * not have any effects.
 	 */
-	public T mediaType(String mediaType) {
+	public T mediaType(final String mediaType) {
 		contentType(mediaType, null);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -254,9 +344,9 @@ public abstract class HttpBase<T> {
 	 * Sets full "Content-Type" header. Both {@link #mediaType() media type}
 	 * and {@link #charset() charset} are overridden.
 	 */
-	public T contentType(String contentType) {
-		header(HEADER_CONTENT_TYPE, contentType, true);
-		return (T) this;
+	public T contentType(final String contentType) {
+		headerOverwrite(HEADER_CONTENT_TYPE, contentType);
+		return _this();
 	}
 
 	/**
@@ -284,8 +374,8 @@ public abstract class HttpBase<T> {
 			contentType += ";charset=" + charset;
 		}
 
-		_header(HEADER_CONTENT_TYPE, contentType, true);
-		return (T) this;
+		_headerRaw(HEADER_CONTENT_TYPE, contentType, true);
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- keep-alive
@@ -294,13 +384,13 @@ public abstract class HttpBase<T> {
 	 * Defines "Connection" header as "Keep-Alive" or "Close".
 	 * Existing value is overwritten.
 	 */
-	public T connectionKeepAlive(boolean keepAlive) {
+	public T connectionKeepAlive(final boolean keepAlive) {
 		if (keepAlive) {
-			header(HEADER_CONNECTION, HEADER_KEEP_ALIVE, true);
+			headerOverwrite(HEADER_CONNECTION, HEADER_KEEP_ALIVE);
 		} else {
-			header(HEADER_CONNECTION, HEADER_CLOSE, true);
+			headerOverwrite(HEADER_CONNECTION, HEADER_CLOSE);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -325,7 +415,8 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Returns full "Content-Length" header or
-	 * <code>null</code> if not set.
+	 * <code>null</code> if not set. Returned value is raw and unchecked, exactly the same
+	 * as it was specified or received. It may be even invalid.
 	 */
 	public String contentLength() {
 		return header(HEADER_CONTENT_LENGTH);
@@ -334,9 +425,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets the full "Content-Length" header.
 	 */
-	public T contentLength(int value) {
-		_header(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
-		return (T) this;
+	public T contentLength(final int value) {
+		_headerRaw(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
+		return _this();
 	}
 
 	/**
@@ -356,9 +447,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets "Accept" header.
 	 */
-	public T accept(String encodings) {
-		header(HEADER_ACCEPT, encodings, true);
-		return (T) this;
+	public T accept(final String encodings) {
+		headerOverwrite(HEADER_ACCEPT, encodings);
+		return _this();
 	}
 	
 	/**
@@ -371,9 +462,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets "Accept-Encoding" header.
 	 */
-	public T acceptEncoding(String encodings) {
-		header(HEADER_ACCEPT_ENCODING, encodings, true);
-		return (T) this;
+	public T acceptEncoding(final String encodings) {
+		headerOverwrite(HEADER_ACCEPT_ENCODING, encodings);
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- form
@@ -383,7 +474,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void initForm() {
 		if (form == null) {
-			form = HttpMultiMap.newCaseInsensitveMap();
+			form = HttpMultiMap.newCaseInsensitiveMap();
 		}
 	}
 
@@ -392,7 +483,7 @@ public abstract class HttpBase<T> {
 	 * Detects invalid types and throws an exception. So all uploadable values
 	 * are of the same type.
 	 */
-	protected Object wrapFormValue(Object value) {
+	protected Object wrapFormValue(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -421,36 +512,31 @@ public abstract class HttpBase<T> {
 	/**
 	 * Adds the form parameter. Existing parameter will not be overwritten.
 	 */
-	public T form(String name, Object value) {
+	public T form(final String name, Object value) {
 		initForm();
 
 		value = wrapFormValue(value);
 		((HttpMultiMap<Object>)form).add(name, value);
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
-	 * Sets form parameter. Optionally overwrite existing one.
+	 * Sets form parameter by overwriting.
 	 */
-	public T form(String name, Object value, boolean overwrite) {
+	public T formOverwrite(final String name, Object value) {
 		initForm();
 
 		value = wrapFormValue(value);
+		((HttpMultiMap<Object>)form).set(name, value);
 
-		if (overwrite) {
-			((HttpMultiMap<Object>)form).set(name, value);
-		} else {
-			((HttpMultiMap<Object>)form).add(name, value);
-		}
-
-		return (T) this;
+		return _this();
 	}
 
 	/**
 	 * Sets many form parameters at once.
 	 */
-	public T form(String name, Object value, Object... parameters) {
+	public T form(String name, final Object value, final Object... parameters) {
 		initForm();
 
 		form(name, value);
@@ -460,19 +546,19 @@ public abstract class HttpBase<T> {
 
 			form(name, parameters[i + 1]);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
 	 * Sets many form parameters at once.
 	 */
-	public T form(Map<String, Object> formMap) {
+	public T form(final Map<String, Object> formMap) {
 		initForm();
 
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
 			form(entry.getKey(), entry.getValue());
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -485,16 +571,16 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form encoding
 
-	protected String formEncoding = JoddHttp.defaultFormEncoding;
+	protected String formEncoding = Defaults.formEncoding;
 
 	/**
 	 * Defines encoding for forms parameters. Default value is
-	 * copied from {@link JoddHttp#defaultFormEncoding}.
+	 * copied from {@link Defaults#formEncoding}.
 	 * It is overridden by {@link #charset() charset} value.
 	 */
-	public T formEncoding(String encoding) {
+	public T formEncoding(final String encoding) {
 		this.formEncoding = encoding;
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- body
@@ -543,11 +629,11 @@ public abstract class HttpBase<T> {
 	 * Also sets "Content-Length" parameter. However, "Content-Type" is not set
 	 * and it is expected from user to set this one.
 	 */
-	public T body(String body) {
+	public T body(final String body) {
 		this.body = body;
 		this.form = null;
 		contentLength(body.length());
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -555,27 +641,30 @@ public abstract class HttpBase<T> {
 	 * Body string will be converted to {@link #body(String) raw body string}
 	 * and "Content-Type" header will be set.
 	 */
-	public T bodyText(String body, String mediaType, String charset) {
+	public T bodyText(String body, final String mediaType, final String charset) {
 		body = StringUtil.convertCharset(body, charset, StringPool.ISO_8859_1);
 		contentType(mediaType, charset);
 		body(body);
-		return (T) this;
+		return _this();
 	}
 
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded in {@link JoddHttp#defaultBodyEncoding default body encoding}.
+	 * that will be encoded in {@link Defaults#bodyEncoding default body encoding}.
 	 */
-	public T bodyText(String body, String mediaType) {
-		return bodyText(body, mediaType, JoddHttp.defaultBodyEncoding);
+	public T bodyText(final String body, final String mediaType) {
+		return bodyText(body, mediaType, charset != null ? charset : Defaults.bodyEncoding);
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded as {@link JoddHttp#defaultBodyMediaType default body media type}
-	 * in {@link JoddHttp#defaultBodyEncoding default body encoding}.
+	 * that will be encoded as {@link Defaults#bodyMediaType default body media type}
+	 * in {@link Defaults#bodyEncoding default body encoding} if missing.
 	 */
-	public T bodyText(String body) {
-		return bodyText(body, JoddHttp.defaultBodyMediaType, JoddHttp.defaultBodyEncoding);
+	public T bodyText(final String body) {
+		return bodyText(
+			body,
+			mediaType != null ? mediaType : Defaults.bodyMediaType,
+			charset != null ? charset : Defaults.bodyEncoding);
 	}
 
 	/**
@@ -583,7 +672,7 @@ public abstract class HttpBase<T> {
 	 * Also sets "Content-Length" and "Content-Type" parameter.
 	 * @see #body(String)
 	 */
-	public T body(byte[] content, String contentType) {
+	public T body(final byte[] content, final String contentType) {
 		String body = null;
 		try {
 			body = new String(content, StringPool.ISO_8859_1);
@@ -637,7 +726,7 @@ public abstract class HttpBase<T> {
 			return buffer;
 		}
 
-		String boundary = StringUtil.repeat('-', 10) + RandomString.getInstance().randomAlphaNumeric(10);
+		String boundary = StringUtil.repeat('-', 10) + RandomString.get().randomAlphaNumeric(10);
 
 		for (Map.Entry<String, ?> entry : form) {
 
@@ -726,6 +815,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns string representation of this request or response.
 	 */
+	@Override
 	public String toString() {
 		return toString(true);
 	}
@@ -734,10 +824,10 @@ public abstract class HttpBase<T> {
 	 * Returns full request/response, or just headers.
 	 * Useful for debugging.
 	 */
-	public String toString(boolean fullResponse) {
-		Buffer buffer = buffer(fullResponse);
+	public String toString(final boolean fullResponse) {
+		final Buffer buffer = buffer(fullResponse);
 
-		StringWriter stringWriter = new StringWriter();
+		final StringWriter stringWriter = new StringWriter();
 
 		try {
 			buffer.writeTo(stringWriter);
@@ -753,7 +843,7 @@ public abstract class HttpBase<T> {
 	 * Returns byte array of request or response.
 	 */
 	public byte[] toByteArray() {
-		Buffer buffer = buffer(true);
+		final Buffer buffer = buffer(true);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
 
@@ -773,18 +863,24 @@ public abstract class HttpBase<T> {
 	 */
 	protected abstract Buffer buffer(boolean full);
 
-	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
-		for (String key : headers.names()) {
-			List<String> values = headers.getAll(key);
+	protected void populateHeaderAndBody(final Buffer target, final Buffer formBuffer, final boolean fullRequest) {
+		for (String name : headers.names()) {
+			List<String> values = headers.getAll(name);
 
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
+			String key = capitalizeHeaderKeys ? HttpUtil.prepareHeaderParameterName(name) : name;
+
+			target.append(key);
+			target.append(": ");
+			int count = 0;
 
 			for (String value : values) {
-				target.append(headerName);
-				target.append(": ");
+				if (count++ > 0) {
+					target.append(", ");
+				}
 				target.append(value);
-				target.append(CRLF);
 			}
+
+			target.append(CRLF);
 		}
 
 		if (fullRequest) {
@@ -806,8 +902,8 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sends request or response to output stream.
 	 */
-	public void sendTo(OutputStream out) throws IOException {
-		Buffer buffer = buffer(true);
+	public void sendTo(final OutputStream out) throws IOException {
+		final Buffer buffer = buffer(true);
 
 		if (httpProgressListener == null) {
 			buffer.writeTo(out);
@@ -824,9 +920,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * Parses headers.
 	 */
-	protected void readHeaders(BufferedReader reader) {
+	protected void readHeaders(final BufferedReader reader) {
 		while (true) {
-			String line;
+			final String line;
 			try {
 				line = reader.readLine();
 			} catch (IOException ioex) {
@@ -849,7 +945,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Parses body.
 	 */
-	protected void readBody(BufferedReader reader) {
+	protected void readBody(final BufferedReader reader) {
 		String bodyString = null;
 
 		// first determine if chunked encoding is specified
@@ -884,12 +980,18 @@ public abstract class HttpBase<T> {
 		// chunked encoding
 		if (isChunked) {
 
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+			final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+
 			try {
 				while (true) {
-					String line = reader.readLine();
+					final String line = reader.readLine();
 
-					int len = Integer.parseInt(line, 16);
+					final int len;
+					try {
+						len = Integer.parseInt(line, 16);
+					} catch (NumberFormatException nfex) {
+						throw new HttpException("Invalid chunk length: " + line);
+					}
 
 					if (len > 0) {
 						StreamUtil.copy(reader, fastCharArrayWriter, len);
@@ -940,7 +1042,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = HttpMultiMap.newCaseInsensitveMap();
+			form = HttpMultiMap.newCaseInsensitiveMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 

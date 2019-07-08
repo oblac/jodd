@@ -25,34 +25,66 @@
 
 package jodd.log;
 
-import jodd.log.impl.NOPLoggerFactory;
+import jodd.log.impl.NOPLogger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Logger factory.
  */
 public final class LoggerFactory {
 
-	private static LoggerFactoryInterface loggerFactory = new NOPLoggerFactory();
+	static {
+		setLoggerProvider(NOPLogger.PROVIDER);
+	}
+
+	private static Function<String, Logger> loggerProvider;
+
+	private static Map<String, Logger> loggers = new HashMap<>();
 
 	/**
-	 * Sets logger factory implementation.
+	 * Sets {@link LoggerProvider} instance used for creating new {@link Logger}s.
 	 */
-	public static void setLoggerFactory(LoggerFactoryInterface loggerFactoryInterface) {
-		loggerFactory = loggerFactoryInterface;
+	public static void setLoggerProvider(final LoggerProvider loggerProvider) {
+		LoggerFactory.loggerProvider = loggerProvider::createLogger;
+		if (loggers != null) {
+			loggers.clear();
+		}
 	}
 
 	/**
-	 * Returns logger for given class.
+	 * Returns logger for given class by simply using the class name.
+	 * @see #getLogger(String)
 	 */
-	public static Logger getLogger(Class clazz) {
+	public static Logger getLogger(final Class clazz) {
 		return getLogger(clazz.getName());
 	}
 
 	/**
-	 * Returns logger for given name.
+	 * Enables cache. Previous cache is removed.
 	 */
-	public static Logger getLogger(String name) {
-		return loggerFactory.getLogger(name);
+	public static void enableCache() {
+		loggers = new HashMap<>();
+	}
+
+	/**
+	 * Disables the cache.
+	 */
+	public static void disableCache() {
+		loggers = null;
+	}
+
+	/**
+	 * Returns logger for given name. Repeated calls to this method with the
+	 * same argument should return the very same instance of the logger.
+	 */
+	public static Logger getLogger(final String name) {
+		if (loggers == null) {
+			return loggerProvider.apply(name);
+		}
+		return loggers.computeIfAbsent(name, loggerProvider);
 	}
 
 }

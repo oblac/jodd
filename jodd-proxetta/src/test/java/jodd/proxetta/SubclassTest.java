@@ -25,12 +25,16 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.*;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
+import jodd.proxetta.fixtures.data.StatCounter;
+import jodd.proxetta.fixtures.data.StatCounterAdvice;
+import jodd.proxetta.fixtures.data.Two;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -38,18 +42,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class SubclassTest {
+class SubclassTest {
 
 	@Test
-	public void test1() {
+	void test1() {
 
-		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 /*
 		byte[] b = Proxetta.withAspects(a1).createProxy(Foo.class);
@@ -59,9 +62,9 @@ public class SubclassTest {
 			e.printStackTrace();
 		}
 */
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(a1);
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(a1);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta");
-		ProxyProxettaBuilder pb = proxyProxetta.builder();
+		ProxyProxettaFactory pb = proxyProxetta.proxy();
 		pb.setTarget(Foo.class);
 		Foo foo = (Foo) pb.newInstance();
 
@@ -88,50 +91,51 @@ public class SubclassTest {
 	}
 
 	@Test
-	public void testProxyClassNames() {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
+	void testProxyClassNames() {
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(ProxyAspect.of(FooProxyAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(true);
 
-		ProxyProxettaBuilder builder = proxyProxetta.builder();
+		ProxyProxettaFactory builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
 		Foo foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
+		assertEquals(Foo.class.getName() + ProxettaNames.proxyClassNameSuffix, StringUtil.substring(foo.getClass().getName(), 0, -1));
 
-		builder = proxyProxetta.builder();
+		builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
+		assertEquals(Foo.class.getName() + ProxettaNames.proxyClassNameSuffix, StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Ppp");
-		builder = proxyProxetta.builder();
+		builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
 		assertEquals(Foo.class.getName() + "$$Ppp", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
-		proxyProxetta.setClassNameSuffix("$$Proxetta");
+		proxyProxetta.setClassNameSuffix(ProxettaNames.proxyClassNameSuffix);
 		proxyProxetta.setVariableClassName(false);
-		builder = proxyProxetta.builder(Foo.class, ".Too");
+		builder = proxyProxetta.proxy().setTarget(Foo.class).setTargetProxyClassName(".Too");
+
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getPackage().getName() + ".Too$$Proxetta", foo.getClass().getName());
+		assertEquals(Foo.class.getPackage().getName() + ".Too" + ProxettaNames.proxyClassNameSuffix, foo.getClass().getName());
 
-		builder = proxyProxetta.builder();
+		builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
 		builder.setTargetProxyClassName("foo.");
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals("foo.Foo$$Proxetta", foo.getClass().getName());
+		assertEquals("foo.Foo" + ProxettaNames.proxyClassNameSuffix, foo.getClass().getName());
 
 		proxyProxetta.setClassNameSuffix(null);
-		builder = proxyProxetta.builder();
+		builder = proxyProxetta.proxy();
 		builder.setTargetProxyClassName("foo.Fff");
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
@@ -142,24 +146,25 @@ public class SubclassTest {
 	}
 
 	@Test
-	public void testInnerOverride() {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
-		ProxyProxettaBuilder builder = proxyProxetta.builder();
+	void testInnerOverride() {
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
+		ProxyProxettaFactory builder = proxyProxetta.proxy();
 		builder.setTarget(Two.class);
 		builder.setTargetProxyClassName("foo.");
 
 		Two two = (Two) builder.newInstance();
 
 		assertNotNull(two);
-		assertEquals("foo.Two$$Proxetta", two.getClass().getName());
+		assertEquals("foo.Two" + ProxettaNames.proxyClassNameSuffix, two.getClass().getName());
 	}
 
+	@SuppressWarnings({"CachedNumberConstructorCall", "UnnecessaryBoxing"})
 	@Test
-	public void testJdk() throws Exception {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
+	void testJdk() {
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(false);
 
-		ProxyProxettaBuilder builder = proxyProxetta.builder();
+		ProxyProxettaFactory builder = proxyProxetta.proxy();
 		builder.setTarget(Object.class);
 		try {
 			builder.define();
@@ -168,22 +173,22 @@ public class SubclassTest {
 			// ignore
 		}
 
-		builder = proxyProxetta.builder();
+		builder = proxyProxetta.proxy();
 		builder.setTarget(Object.class);
 		builder.setTargetProxyClassName("foo.");
 		Object object = builder.newInstance();
 
 		assertNotNull(object);
-		assertEquals("foo.Object$$Proxetta", object.getClass().getName());
+		assertEquals("foo.Object" + ProxettaNames.proxyClassNameSuffix, object.getClass().getName());
 
-		System.out.println("----------list");
+		//System.out.println("----------list");
 
 		StatCounter.counter = 0;
 
-		builder = proxyProxetta.builder(ArrayList.class, "foo.");
+		builder = proxyProxetta.proxy().setTarget(ArrayList.class).setTargetProxyClassName("foo.");
 		List list = (List) builder.newInstance();
 		assertNotNull(list);
-		assertEquals("foo.ArrayList$$Proxetta", list.getClass().getName());
+		assertEquals("foo.ArrayList" + ProxettaNames.proxyClassNameSuffix, list.getClass().getName());
 
 		assertEquals(1, StatCounter.counter);
 		list.add(new Integer(1));
@@ -191,11 +196,11 @@ public class SubclassTest {
 
 		System.out.println("----------set");
 
-		builder = proxyProxetta.builder(HashSet.class, "foo.");
+		builder = proxyProxetta.proxy().setTarget(HashSet.class).setTargetProxyClassName("foo.");
 		Set set = (Set) builder.newInstance();
 
 		assertNotNull(set);
-		assertEquals("foo.HashSet$$Proxetta", set.getClass().getName());
+		assertEquals("foo.HashSet" + ProxettaNames.proxyClassNameSuffix, set.getClass().getName());
 
 		assertTrue(StatCounter.counter == 4 || StatCounter.counter == 3);
 		set.add(new Integer(1));

@@ -26,18 +26,18 @@
 package jodd.io;
 
 import jodd.util.Bits;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class UnicodeInputStreamTest {
+class UnicodeInputStreamTest {
 
 	@Test
-	public void testUtf8() throws IOException {
+	void testUtf8() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0xEFBBBF65);
 
@@ -50,7 +50,7 @@ public class UnicodeInputStreamTest {
 	}
 
 	@Test
-	public void testUtf16BE() throws IOException {
+	void testUtf16BE() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0xFEFF6565);
 
@@ -63,7 +63,7 @@ public class UnicodeInputStreamTest {
 	}
 
 	@Test
-	public void testUtf16LE() throws IOException {
+	void testUtf16LE() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0xFFFE6565);
 
@@ -76,7 +76,7 @@ public class UnicodeInputStreamTest {
 	}
 
 	@Test
-	public void testUtf32BE() throws IOException {
+	void testUtf32BE() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0x0000FEFF);
 
@@ -89,7 +89,7 @@ public class UnicodeInputStreamTest {
 	}
 
 	@Test
-	public void testUtf32LE() throws IOException {
+	void testUtf32LE() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0xFFFE0000);
 
@@ -102,7 +102,7 @@ public class UnicodeInputStreamTest {
 	}
 
 	@Test
-	public void testNoUtf() throws IOException {
+	void testNoUtf() throws IOException {
 		byte[] bytes = new byte[4];
 		Bits.putInt(bytes, 0, 0x11223344);
 

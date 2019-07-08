@@ -1,1 +1,1 @@
-Hello ${name} ${requestMethod} ${requestBody}
+Hello ${name} ${reqMethod} ${reqBody}

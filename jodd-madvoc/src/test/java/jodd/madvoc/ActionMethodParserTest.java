@@ -27,441 +27,433 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.RootPackages;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.RouteChunk;
+import jodd.madvoc.fixtures.tst.Boo1Action;
+import jodd.madvoc.fixtures.tst.Boo2Action;
+import jodd.madvoc.fixtures.tst.Boo3Action;
+import jodd.madvoc.fixtures.tst.BooAction;
+import jodd.madvoc.fixtures.tst2.Boo4Action;
+import jodd.madvoc.fixtures.tst2.Boo5Action;
+import jodd.madvoc.fixtures.tst2.ReAction;
 import jodd.madvoc.macro.RegExpPathMacros;
-import jodd.madvoc.tst.Boo1Action;
-import jodd.madvoc.tst.Boo2Action;
-import jodd.madvoc.tst.Boo3Action;
-import jodd.madvoc.tst.BooAction;
-import jodd.madvoc.tst2.Boo4Action;
-import jodd.madvoc.tst2.Boo5Action;
-import jodd.madvoc.tst2.ReAction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ActionMethodParserTest extends MadvocTestCase {
+class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
-	public void testDefaultMethods() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+	void testDefaultMethods() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
-		assertEquals("/boo.foo.html", cfg.actionPath);
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
-		cfg = parse(actionMethodParser, "tst.BooAction#view");
-		assertEquals("/boo.html", cfg.actionPath);
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
+		assertEquals("/boo.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#execute");
-		assertEquals("/boo.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#view");
+		assertEquals("/boo", cfg.getActionPath());
+
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#execute");
+		assertEquals("/boo", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testMethod() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+	void testMethod() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
 		assertNotNull(cfg);
-		assertEquals(BooAction.class, cfg.actionClass);
-		assertEquals("/boo.foo.html", cfg.actionPath);
+		assertEquals(BooAction.class, cfg.getActionClass());
+		assertEquals("/boo.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo1");
-		assertEquals("/boo.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo1");
+		assertEquals("/boo.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo2");
-		assertEquals("/boo.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
+		assertEquals("/boo.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo3");
-		assertEquals("/boo.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo3");
+		assertEquals("/boo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo4");
-		assertEquals("/xxx", cfg.actionPath);
-		assertNull(cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo4");
+		assertEquals("/xxx", cfg.getActionPath());
+		assertNull(cfg.getActionMethod());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo41");
-		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("DELETE", cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo41");
+		assertEquals("/xxx", cfg.getActionPath());
+		assertEquals("DELETE", cfg.getActionMethod());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo5");
-		assertEquals("/xxx.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo5");
+		assertEquals("/xxx.html", cfg.getActionPath());
+		assertEquals("POST", cfg.getActionMethod());
 
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		assertEquals("/xxx.html", actionsManager.lookupPathAlias("dude"));
 	}
 
 	@Test
-	public void testMethodWithPackage() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testMethodWithPackage() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
 		assertNotNull(cfg);
-		assertEquals(BooAction.class, cfg.actionClass);
-		assertEquals("/tst/boo.foo.html", cfg.actionPath);
+		assertEquals(BooAction.class, cfg.getActionClass());
+		assertEquals("/fixtures/tst/boo.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo1");
-		assertEquals("/tst/boo.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo1");
+		assertEquals("/fixtures/tst/boo.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo2");
-		assertEquals("/tst/boo.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
+		assertEquals("/fixtures/tst/boo.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo3");
-		assertEquals("/tst/boo.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo3");
+		assertEquals("/fixtures/tst/boo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo4");
-		assertEquals("/xxx", cfg.actionPath);
-		assertNull(cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo4");
+		assertEquals("/xxx", cfg.getActionPath());
+		assertNull(cfg.getActionMethod());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo41");
-		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("DELETE", cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo41");
+		assertEquals("/xxx", cfg.getActionPath());
+		assertEquals("DELETE", cfg.getActionMethod());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo5");
-		assertEquals("/xxx.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo5");
+		assertEquals("/xxx.html", cfg.getActionPath());
+		assertEquals("POST", cfg.getActionMethod());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo6");
-		assertEquals("/tst/boo.qfoo62.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo6");
+		assertEquals("/fixtures/tst/boo.qfoo62", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.BooAction#foo7");
-		assertEquals("/foo7.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo7");
+		assertEquals("/foo7.html", cfg.getActionPath());
 	}
 
 
 	@Test
-	public void testClasses() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+	void testClasses() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.Boo1Action#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo1Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo1Action.class, cfg.actionClass);
-		assertEquals("/boo1.foo.html", cfg.actionPath);
+		assertEquals(Boo1Action.class, cfg.getActionClass());
+		assertEquals("/boo1.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo");
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo2Action.class, cfg.actionClass);
-		assertEquals("/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo2Action.class, cfg.getActionClass());
+		assertEquals("/bbb.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo1");
-		assertEquals("/bbb.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo1");
+		assertEquals("/bbb.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo2");
-		assertEquals("/bbb.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo2");
+		assertEquals("/bbb.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo3");
-		assertEquals("/bbb.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo3");
+		assertEquals("/bbb", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testClassesWithPackage() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testClassesWithPackage() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.Boo1Action#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo1Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo1Action.class, cfg.actionClass);
-		assertEquals("/tst/boo1.foo.html", cfg.actionPath);
+		assertEquals(Boo1Action.class, cfg.getActionClass());
+		assertEquals("/fixtures/tst/boo1.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo");
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo2Action.class, cfg.actionClass);
-		assertEquals("/tst/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo2Action.class, cfg.getActionClass());
+		assertEquals("/fixtures/tst/bbb.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo1");
-		assertEquals("/tst/bbb.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo1");
+		assertEquals("/fixtures/tst/bbb.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo2");
-		assertEquals("/tst/bbb.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo2");
+		assertEquals("/fixtures/tst/bbb.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo2Action#foo3");
-		assertEquals("/tst/bbb.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo3");
+		assertEquals("/fixtures/tst/bbb", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testClassesWithoutPackage() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testClassesWithoutPackage() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.Boo3Action#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo3Action.class, cfg.actionClass);
-		assertEquals("/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo3Action.class, cfg.getActionClass());
+		assertEquals("/bbb.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo3Action#foo1");
-		assertEquals("/bbb.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo1");
+		assertEquals("/bbb.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo3Action#foo2");
-		assertEquals("/bbb.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo2");
+		assertEquals("/bbb.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst.Boo3Action#foo3");
-		assertEquals("/bbb.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo3");
+		assertEquals("/bbb", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testPackage() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testPackage() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst2.Boo4Action#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo4Action.class, cfg.actionClass);
-		assertEquals("/ttt/www.foo.html", cfg.actionPath);
+		assertEquals(Boo4Action.class, cfg.getActionClass());
+		assertEquals("/ttt/www.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo4Action#foo1");
-		assertEquals("/ttt/www.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo1");
+		assertEquals("/ttt/www.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo4Action#foo2");
-		assertEquals("/ttt/www.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo2");
+		assertEquals("/ttt/www.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo4Action#foo3");
-		assertEquals("/ttt/www.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo3");
+		assertEquals("/ttt/www", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testNoPackage() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testNoPackage() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst2.Boo5Action#foo");
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
+
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo5Action.class, cfg.actionClass);
-		assertEquals("/www.foo.html", cfg.actionPath);
+		assertEquals(Boo5Action.class, cfg.getActionClass());
+		assertEquals("/www.foo", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo5Action#foo1");
-		assertEquals("/www.xxx.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo1");
+		assertEquals("/www.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo5Action#foo2");
-		assertEquals("/www.foo2.xxx", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo2");
+		assertEquals("/www.foo2.xxx", cfg.getActionPath());
 
-		cfg = parse(actionMethodParser, "tst2.Boo5Action#foo3");
-		assertEquals("/www.html", cfg.actionPath);
+		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo3");
+		assertEquals("/www", cfg.getActionPath());
 
 	}
 
 	@Test
-	public void testEndSlashClassName() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testEndSlashClassName() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionConfig cfg = parse(actionMethodParser, "tst2.ReAction#hello");
-		assertNotNull(cfg);
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/hello.html", cfg.actionPath);
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
-		cfg = parse(actionMethodParser, "tst2.ReAction#macro");
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.ReAction#hello");
 		assertNotNull(cfg);
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/hello", cfg.getActionPath());
+
+		cfg = parse(actionMethodParser, "fixtures.tst2.ReAction#macro");
+		assertNotNull(cfg);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/user/{id}/macro", cfg.getActionPath());
 	}
 
 	@Test
-	public void testMacros() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testMacros() {
+		WebApp webapp = new WebApp();
+		webapp.start();
+		
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "macro");
-		ActionConfig cfg = actionsManager.lookup("/re/user/173/macro.html", "GET");
-
-		assertNotNull(cfg);
-		ActionConfigSet set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
-		assertEquals(4, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
-		assertNull(set.actionPathMacros.getPatterns()[0]);
-
-
-		actionsManager.register(ReAction.class, "macro2");
-		cfg = actionsManager.lookup("/re/user/image/173/png/macro2.html", "GET");
+		actionsManager.registerAction(ReAction.class, "macro", null);
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/173/macro.html"));
 
 		assertNotNull(cfg);
-		set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/image/${id}/${fmt}/macro2.html", cfg.actionPath);
-		assertEquals(6, set.deep);
-		assertEquals(2, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
-		assertEquals("fmt", set.actionPathMacros.getNames()[1]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/user/{id}/macro", cfg.getActionPath());
 
-		actionsManager.register(ReAction.class, "macro3");
-		cfg = actionsManager.lookup("/re/users/173/macro3", "POST");
+		RouteChunk chunk = cfg.getRouteChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+		assertNull(chunk.pathMacros().patterns()[0]);
+
+
+		actionsManager.registerAction(ReAction.class, "macro2", null);
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/image/173/png/macro2.html"));
 
 		assertNotNull(cfg);
-		set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/users/${id}/macro3", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
-		assertEquals(4, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/user/image/{id}/{fmt}/macro2", cfg.getActionPath());
+		chunk = cfg.getRouteChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("fmt", chunk.pathMacros().names()[0]);
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+		chunk = cfg.getRouteChunk();
+		assertNull(chunk.pathMacros());
 
-		cfg = actionsManager.lookup("/re/user/index.html", "GET");
+		actionsManager.registerAction(ReAction.class, "macro3", null);
+		cfg = actionsManager.lookup("POST", MadvocUtil.splitPathToChunks("/re/users/173/macro3"));
+
+		assertNotNull(cfg);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/users/{id}/macro3", cfg.getActionPath());
+		assertEquals("POST", cfg.getActionMethod());
+		chunk = cfg.getRouteChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/index.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/user/index/reindex/macro.html", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/index/reindex/macro.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/users/173/macro3", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/users/173/macro3"));
 		assertNull(cfg);
 
 		assertEquals(3, actionsManager.getActionsCount());
 	}
 
 	@Test
-	public void testMacrosWildcards() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+	void testMacrosWildcards() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		actionsManager.register(ReAction.class, "wild1");
-		actionsManager.register(ReAction.class, "wild2");
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
-		ActionConfig cfg = actionsManager.lookup("/re/ild123cat", "GET");
+		actionsManager.registerAction(ReAction.class, "wild1", null);
+		actionsManager.registerAction(ReAction.class, "wild2", null);
+
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/ild123cat"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123cat", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123ca"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123cat.html", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123cat.html"));
 		assertNotNull(cfg);
-		ActionConfigSet set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/wild${id}cat.html", cfg.actionPath);
-		assertEquals(2, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/wild{id}cat", cfg.getActionPath());
 
-		cfg = actionsManager.lookup("/re/wild123dog.html", "GET");
+		RouteChunk chunk = cfg.getRouteChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123dog.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123dog.html", "POST");
+		cfg = actionsManager.lookup("POST", MadvocUtil.splitPathToChunks("/re/wild123dog.html"));
 		assertNotNull(cfg);
-		set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/wild${id}dog.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
-		assertEquals(2, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/wild{id}dog", cfg.getActionPath());
+		assertEquals("POST", cfg.getActionMethod());
+		chunk = cfg.getRouteChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
 
 	@Test
-	public void testMacrosDups() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+	void testMacrosDups() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
-		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		actionsManager.register(ReAction.class, "duplo1");
-		actionsManager.register(ReAction.class, "duplo2");
+		webapp.madvocContainer().lookupComponent(RootPackages.class).addRootPackageOf(this.getClass());
+		actionsManager.setPathMacroClass(RegExpPathMacros.class);
 
-		ActionConfig cfg = actionsManager.lookup("/re/duplo/123", "GET");
+		actionsManager.registerAction(ReAction.class, "duplo2", null);
+		actionsManager.registerAction(ReAction.class, "duplo1", null);
+
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/duplo/123"));
 		assertNotNull(cfg);
-		ActionConfigSet set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/duplo/${id:^[0-9]+}", cfg.actionPath);
-		assertEquals(3, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/duplo/{id:^[0-9]+}", cfg.getActionPath());
 
-		cfg = actionsManager.lookup("/re/duplo/aaa", "GET");
+		RouteChunk chunk = cfg.getRouteChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/duplo/aaa"));
 		assertNotNull(cfg);
-		set = cfg.getActionConfigSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/duplo/${sid}", cfg.actionPath);
-		assertEquals(3, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("sid", set.actionPathMacros.getNames()[0]);
+		assertEquals(ReAction.class, cfg.getActionClass());
+		assertEquals("/re/duplo/{sid}", cfg.getActionPath());
+		chunk = cfg.getRouteChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("sid", chunk.pathMacros().names()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
 
 	@Test
-	public void testMarkerClass() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		RootPackages rootPackages = madvocConfig.getRootPackages();
+	void testZqq() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		String thisPackageName = this.getClass().getPackage().getName();
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3"));
-		ActionConfig cfg = parse(actionMethodParser, "tst3.JohnAction#hello");
-		assertEquals("/root", rootPackages.getPackageActionPath(thisPackageName + ".tst3"));
-		assertEquals("/root/john.hello.html", cfg.actionPath);
+		actionsManager.registerAction(ReAction.class, "zqq1", null);
+		actionsManager.registerAction(ReAction.class, "zqq2", null);
 
-		cfg = parse(actionMethodParser, "tst3.JimAction#hello");
-		assertEquals("/my-root/jim.my-hello.html", cfg.actionPath);
-
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl1"));
-		cfg = parse(actionMethodParser, "tst3.lvl1.EmaAction#hello");
-		assertEquals("/root/lvl1/ema.hello.html", cfg.actionPath);
-		assertEquals("/root/lvl1", rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl1"));
-
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl2"));
-		cfg = parse(actionMethodParser, "tst3.lvl2.DidyAction#hello");
-		assertEquals("/gig/didy.hello.html", cfg.actionPath);
-		assertEquals("/gig", rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl2"));
-
-	}
-
-	@Test
-	public void testZqq() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
-
-		actionsManager.register(ReAction.class, "zqq1");
-		actionsManager.register(ReAction.class, "zqq2");
-
-		ActionConfig cfg = actionsManager.lookup("/config/dba.delete_multi", "GET");
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/config/dba.delete_multi.do"));
 		assertNotNull(cfg);
 
-		assertEquals("/${entityName}/dba.delete_multi", cfg.getActionPath());
+		assertEquals("/{entityName}/dba.delete_multi.do", cfg.getActionPath());
 	}
 
 }

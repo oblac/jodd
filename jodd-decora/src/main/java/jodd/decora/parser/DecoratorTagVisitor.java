@@ -48,7 +48,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	 * Returns an array of founded Decora tags.
 	 */
 	public DecoraTag[] getDecoraTags() {
-		return decoraTags.toArray(new DecoraTag[decoraTags.size()]);
+		return decoraTags.toArray(new DecoraTag[0]);
 	}
 
 	protected String decoraTagName;
@@ -62,7 +62,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	protected int closingTagDeepLevel;
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		String tagName = tag.getName().toString();
 
 		if (tagName.startsWith("decora:") ) {
@@ -88,7 +88,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	/**
 	 * Handle Decora tags.
 	 */
-	protected void onDecoraTag(Tag tag) {
+	protected void onDecoraTag(final Tag tag) {
 		String tagName = tag.getName().toString();
 
 		if (tag.getType() == TagType.SELF_CLOSING) {
@@ -117,7 +117,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	/**
 	 * Handle open and empty ID attribute tags.
 	 */
-	protected void onIdAttrStart(Tag tag) {
+	protected void onIdAttrStart(final Tag tag) {
 		String id = tag.getId().toString().substring(7);
 		String tagName;
 		String idName;
@@ -153,7 +153,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 		}
 	}
 
-	protected void onIdAttrEnd(Tag tag) {
+	protected void onIdAttrEnd(final Tag tag) {
 		decoraTagEnd = tag.getTagPosition() + tag.getTagLength();
 		decoraTagDefaultValueEnd = tag.getTagPosition();
 		defineDecoraTag();

@@ -27,22 +27,18 @@ package jodd.http;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RawTest {
+class RawTest {
 
 	@Test
-	public void testRawResponse1() throws IOException {
+	void testRawResponse1() throws IOException {
 		URL data = RawTest.class.getResource("1-response.txt");
 
 		String fileContent = FileUtil.readString(data.getFile());
@@ -51,7 +47,7 @@ public class RawTest {
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
 
-		HttpMultiMap<String> headers = response.headers();
+		HttpMultiMap<String> headers = response.headers;
 		assertEquals(7, headers.size());
 
 		assertEquals("no-cache", headers.get("pragma"));
@@ -90,7 +86,7 @@ public class RawTest {
 	}
 
 	@Test
-	public void testRawResponse4() throws IOException {
+	void testRawResponse4() throws IOException {
 		URL data = RawTest.class.getResource("4-response.txt");
 
 		String fileContent = FileUtil.readString(data.getFile());
@@ -110,7 +106,7 @@ public class RawTest {
 
 
 	@Test
-	public void testRawResponse5() throws IOException {
+	void testRawResponse5() throws IOException {
 		URL data = RawTest.class.getResource("5-response.txt");
 
 		String fileContent = FileUtil.readString(data.getFile());
@@ -131,7 +127,7 @@ public class RawTest {
 	}
 
 	@Test
-	public void testRawResponse6() throws IOException {
+	void testRawResponse6() throws IOException {
 		URL data = RawTest.class.getResource("6-response.txt");
 
 		String fileContent = FileUtil.readString(data.getFile());
@@ -140,6 +136,9 @@ public class RawTest {
 		fileContent = StringUtil.replace(fileContent, "\r\r\n", "\r\n");
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
+
+		assertEquals(200, response.statusCode());
+		assertEquals("", response.statusPhrase);
 
 		String body = response.bodyText();
 

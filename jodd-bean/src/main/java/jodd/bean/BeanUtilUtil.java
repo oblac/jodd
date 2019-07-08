@@ -25,12 +25,12 @@
 
 package jodd.bean;
 
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
-import jodd.introspector.Introspector;
+import jodd.introspector.MapperFunction;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -49,36 +49,21 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected Introspector introspector = JoddBean.introspector;
-	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
+	protected ClassIntrospector introspector = ClassIntrospector.get();
+	protected TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	/**
-	 * Sets {@link Introspector introspector} implementation.
+	 * Sets {@link ClassIntrospector introspector} implementation.
 	 */
-	public void setIntrospector(Introspector introspector) {
+	public void setIntrospector(final ClassIntrospector introspector) {
 		this.introspector = introspector;
 	}
 
 	/**
-	 * Returns {@link Introspector introspector} implementation.
+	 * Sets {@link TypeConverterManager type converter manager} implementation.
 	 */
-	@Override
-	public Introspector getIntrospector() {
-		return introspector;
-	}
-
-	/**
-	 * Sets {@link TypeConverterManagerBean type converter manager} implementation.
-	 */
-	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
+	public void setTypeConverterManager(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
-	}
-
-	/**
-	 * Returns {@link TypeConverterManagerBean type converter manager} implementation.
-	 */
-	public TypeConverterManagerBean getTypeConverterManager() {
-		return typeConverterManager;
 	}
 
 	/**
@@ -87,14 +72,15 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * if conversion fails.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Object convertType(Object value, Class type) {
+	protected Object convertType(final Object value, final Class type) {
 		return typeConverterManager.convertType(value, type);
 	}
 
 	/**
-	 * Convert to collection.
+	 * Converter to collection.
 	 */
-	protected Object convertToCollection(Object value, Class destinationType, Class componentType) {
+	@SuppressWarnings("unchecked")
+	protected Object convertToCollection(final Object value, final Class destinationType, final Class componentType) {
 		return typeConverterManager.convertToCollection(value, destinationType, componentType);
 	}
 
@@ -104,11 +90,18 @@ abstract class BeanUtilUtil implements BeanUtil {
 	/**
 	 * Invokes setter, but first converts type to match the setter type.
 	 */
-	protected Object invokeSetter(Setter setter, BeanProperty bp, Object value) {
+	protected Object invokeSetter(final Setter setter, final BeanProperty bp, Object value) {
 		try {
-			Class type = setter.getSetterRawType();
 
-			if (ReflectUtil.isTypeOf(type, Collection.class)) {
+			final MapperFunction setterMapperFunction = setter.getMapperFunction();
+
+			if (setterMapperFunction != null) {
+				value = setterMapperFunction.apply(value);
+			}
+
+			final Class type = setter.getSetterRawType();
+
+			if (ClassUtil.isTypeOf(type, Collection.class)) {
 				Class componentType = setter.getSetterRawComponentType();
 
 				value = convertToCollection(value, type, componentType);
@@ -133,7 +126,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Returns the element of an array forced. If value is <code>null</code>, it will be instantiated.
 	 * If not the last part of indexed bean property, array will be expanded to the index if necessary.
 	 */
-	protected Object arrayForcedGet(BeanProperty bp, Object array, int index) {
+	protected Object arrayForcedGet(final BeanProperty bp, Object array, final int index) {
 		Class componentType = array.getClass().getComponentType();
 		if (!bp.last) {
 			array = ensureArraySize(bp, array, componentType, index);
@@ -141,7 +134,8 @@ abstract class BeanUtilUtil implements BeanUtil {
 		Object value = Array.get(array, index);
 		if (value == null) {
 			try {
-				value = ReflectUtil.newInstance(componentType);
+				//noinspection unchecked
+				value = ClassUtil.newInstance(componentType);
 			} catch (Exception ex) {
 				if (isSilent) {
 					return null;
@@ -157,7 +151,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Sets the array element forced. If index is greater then arrays length, array will be expanded to the index.
 	 * If speed is critical, it is better to allocate an array with proper size before using this method. 
 	 */
-	protected void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
+	protected void arrayForcedSet(final BeanProperty bp, Object array, final int index, Object value) {
 		Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
 		value = convertType(value, componentType);
@@ -166,7 +160,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 
 	@SuppressWarnings({"SuspiciousSystemArraycopy"})
-	protected Object ensureArraySize(BeanProperty bp, Object array, Class componentType, int index) {
+	protected Object ensureArraySize(final BeanProperty bp, Object array, final Class componentType, final int index) {
 		int len = Array.getLength(array);
 		if (index >= len) {
 			Object newArray = Array.newInstance(componentType, index + 1);
@@ -186,7 +180,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	}
 
 	@SuppressWarnings({"unchecked"})
-	protected void ensureListSize(List list, int size) {
+	protected void ensureListSize(final List list, final int size) {
 		int len = list.size();
 		while (size >= len) {
 			list.add(null);
@@ -200,7 +194,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Finds the very first next dot. Ignores dots between index brackets.
 	 * Returns <code>-1</code> when dot is not found.
 	 */
-	protected int indexOfDot(String name) {
+	protected int indexOfDot(final String name) {
 		int ndx = 0;
 		int len = name.length();
 
@@ -232,7 +226,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * If index is found, it is stripped from bean property name.
 	 * If no index is found, it returns <code>null</code>.
 	 */
-	protected String extractIndex(BeanProperty bp) {
+	protected String extractIndex(final BeanProperty bp) {
 		bp.index = null;
 		String name = bp.name;
 		int lastNdx = name.length() - 1;
@@ -250,7 +244,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 		return null;
 	}
 
-	protected int parseInt(String indexString, BeanProperty bp) {
+	protected int parseInt(final String indexString, final BeanProperty bp) {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
@@ -265,7 +259,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Creates new instance for current property name through its setter.
 	 * It uses default constructor!
 	 */
-	protected Object createBeanProperty(BeanProperty bp) {
+	protected Object createBeanProperty(final BeanProperty bp) {
 		Setter setter = bp.getSetter(true);
 		if (setter == null) {
 			return null;
@@ -275,7 +269,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 		Object newInstance;
 		try {
-			newInstance = ReflectUtil.newInstance(type);
+			newInstance = ClassUtil.newInstance(type);
 		} catch (Exception ex) {
 			if (isSilent) {
 				return null;
@@ -294,7 +288,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Extracts generic component type of a property. Returns <code>Object.class</code>
 	 * when property does not have component.
 	 */
-	protected Class extractGenericComponentType(Getter getter) {
+	protected Class extractGenericComponentType(final Getter getter) {
 		Class componentType = null;
 
 		if (getter != null) {
@@ -310,7 +304,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	/**
 	 * Converts <b>Map</b> index to key type. If conversion fails, original value will be returned.
 	 */
-	protected Object convertIndexToMapKey(Getter getter, Object index) {
+	protected Object convertIndexToMapKey(final Getter getter, final Object index) {
 		Class indexType = null;
 
 		if (getter != null) {
@@ -336,7 +330,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	/**
 	 * Extracts type of current property.
 	 */
-	protected Class extractType(BeanProperty bp) {
+	protected Class extractType(final BeanProperty bp) {
 		Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			if (bp.index != null) {

@@ -48,15 +48,15 @@ public class LoopIterator {
 	protected int count;
 	protected final boolean looping;
 
-	public LoopIterator(int start, int end) {
+	public LoopIterator(final int start, final int end) {
 		this(start, end, 1, 2);
 	}
 
-	public LoopIterator(int start, int end, int step) {
+	public LoopIterator(final int start, final int end, final int step) {
 		this(start, end, step, 2);
 	}
 
-	public LoopIterator(int start, int end, int step, int modulus) {
+	public LoopIterator(final int start, final int end, final int step, final int modulus) {
 		this.start = start;
 		this.end = end;
 		this.step = step;
@@ -102,7 +102,7 @@ public class LoopIterator {
 	/**
 	 * Calculates modulus of current count.
 	 */
-	public int modulus(int operand) {
+	public int modulus(final int operand) {
 		return count % operand;
 	}
 
@@ -174,7 +174,7 @@ public class LoopIterator {
 		last = false;
 	}
 
-	protected boolean isLastIteration(int value) {
+	protected boolean isLastIteration(final int value) {
 		return step > 0 ? value > end : value < end;
 	}
 

@@ -26,17 +26,22 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BooleanArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class BooleanArrayConverterTest {
+class BooleanArrayConverterTest {
+
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
-	public void testConversion() {
-		BooleanArrayConverter booleanArrayConverter = (BooleanArrayConverter) TypeConverterManager.lookup(boolean[].class);
+	void testConversion() {
+		BooleanArrayConverter booleanArrayConverter = (BooleanArrayConverter) typeConverterManager.lookup(boolean[].class);
 
 		assertNull(booleanArrayConverter.convert(null));
 
@@ -59,14 +64,14 @@ public class BooleanArrayConverterTest {
 	}
 
 	@Test
-	public void testArrayConversion() {
+	void testArrayConversion() {
 		Object[] booleanArray = new Object[]{Boolean.FALSE, "TRUE", Integer.valueOf(0)};
 
-		boolean[] arr1 = TypeConverterManager.convertType(booleanArray, boolean[].class);
+		boolean[] arr1 = typeConverterManager.convertType(booleanArray, boolean[].class);
 		assertEquals(3, arr1.length);
 		assertEq(arrl(false, true, false), arr1);
 
-		Boolean[] arr2 = TypeConverterManager.convertType(booleanArray, Boolean[].class);
+		Boolean[] arr2 = typeConverterManager.convertType(booleanArray, Boolean[].class);
 		assertEquals(3, arr2.length);
 		assertEq(arrl(false, true, false), arr2);
 	}

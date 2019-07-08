@@ -25,19 +25,19 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Properties;
 
 import static jodd.util.PropertiesUtil.resolveProperty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PropertiesUtilTest {
+class PropertiesUtilTest {
 
 	@Test
-	public void testResolve() throws IOException {
+	void testResolve() throws IOException {
 		Properties p = PropertiesUtil.createFromString(
 				"foo=foo\n" +
 						"boo.foo=*${foo}*\n" +
@@ -61,7 +61,7 @@ public class PropertiesUtilTest {
 	}
 
 	@Test
-	public void testEscape() throws IOException {
+	void testEscape() throws IOException {
 		Properties p = PropertiesUtil.createFromString(
 				"foo=foo\n" +
 						"boo.foo=*\\\\${foo}*\n" +
@@ -83,7 +83,7 @@ public class PropertiesUtilTest {
 	}
 
 	@Test
-	public void testNull() {
+	void testNull() {
 
 		Properties properties = new Properties();
 		properties.setProperty("foo", "123");

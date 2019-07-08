@@ -30,10 +30,9 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.petite.InjectionPointFactory;
-import jodd.petite.SetInjectionPoint;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,17 +43,11 @@ import java.util.List;
  */
 public class SetResolver {
 
-	protected final InjectionPointFactory injectionPointFactory;
-
-	public SetResolver(InjectionPointFactory injectionPointFactory) {
-		this.injectionPointFactory = injectionPointFactory;
-	}
-
 	/**
 	 * Resolves all collections for given type.
 	 */
-	public SetInjectionPoint[] resolve(Class type, boolean autowire) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+	public SetInjectionPoint[] resolve(final Class type, final boolean autowire) {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<>();
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
@@ -66,7 +59,7 @@ public class SetResolver {
 			}
 
 			Class propertyType = propertyDescriptor.getType();
-			if (!ReflectUtil.isTypeOf(propertyType, Collection.class)) {
+			if (!ClassUtil.isTypeOf(propertyType, Collection.class)) {
 				continue;
 			}
 
@@ -86,7 +79,7 @@ public class SetResolver {
 				continue;
 			}
 
-			list.add(injectionPointFactory.createSetInjectionPoint(propertyDescriptor));
+			list.add(new SetInjectionPoint(propertyDescriptor));
 		}
 
 		SetInjectionPoint[] fields;
@@ -94,7 +87,7 @@ public class SetResolver {
 		if (list.isEmpty()) {
 			fields = SetInjectionPoint.EMPTY;
 		} else {
-			fields = list.toArray(new SetInjectionPoint[list.size()]);
+			fields = list.toArray(new SetInjectionPoint[0]);
 		}
 		return fields;
 	}

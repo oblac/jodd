@@ -25,58 +25,64 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
+import jodd.json.fixtures.mock.LocationAlt;
 import jodd.json.meta.JSON;
-import jodd.json.mock.LocationAlt;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.json.meta.JsonAnnotationManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CustomAnnotationTest {
+class CustomAnnotationTest {
 
-	@Before
-	public void setUp() {
-		JoddJson.jsonAnnotation = JSON2.class;
+	@BeforeEach
+	void setUp() {
+		JsonAnnotationManager.get().setJsonAnnotation(JSON2.class);
 	}
 
-	@After
-	public void tearDown() {
-		JoddJson.jsonAnnotation = JSON.class;
-	}
-
-	@Test
-	public void testAnnName() {
-		LocationAlt location = new LocationAlt();
-
-		location.setLatitude(65);
-		location.setLongitude(12);
-
-		String json = new JsonSerializer().serialize(location);
-
-		assertEquals("{\"lat\":65,\"lng\":12}", json);
-
-		LocationAlt jsonLocation = new JsonParser().parse(json, LocationAlt.class);
-
-		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
-		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+	@AfterEach
+	void tearDown() {
+		JsonAnnotationManager.get().setJsonAnnotation(JSON.class);
 	}
 
 	@Test
-	public void testAnnNameWithClass() {
-		LocationAlt location = new LocationAlt();
+	void testAnnName() {
+		JsonParsers.forEachParser(jsonParser -> {
+			LocationAlt location = new LocationAlt();
 
-		location.setLatitude(65);
-		location.setLongitude(12);
+			location.setLatitude(65);
+			location.setLongitude(12);
 
-		String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
+			String json = new JsonSerializer().serialize(location);
 
-		assertEquals("{\"lat\":65,\"lng\":12}", json);
+			assertEquals("{\"lat\":65,\"lng\":12}", json);
 
-		LocationAlt jsonLocation = new JsonParser().setClassMetadataName("class").parse(json, LocationAlt.class);
+			LocationAlt jsonLocation = jsonParser.parse(json, LocationAlt.class);
 
-		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
-		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+			assertEquals(location.getLatitude(), jsonLocation.getLatitude());
+			assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+		});
+	}
+
+	@Test
+	void testAnnNameWithClass() {
+		JsonParsers.forEachParser(jsonParser -> {
+			LocationAlt location = new LocationAlt();
+
+			location.setLatitude(65);
+			location.setLongitude(12);
+
+			String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
+
+			assertEquals("{\"lat\":65,\"lng\":12}", json);
+
+			LocationAlt jsonLocation = jsonParser.setClassMetadataName("class").parse(json, LocationAlt.class);
+
+			assertEquals(location.getLatitude(), jsonLocation.getLatitude());
+			assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+		});
 	}
 
 }

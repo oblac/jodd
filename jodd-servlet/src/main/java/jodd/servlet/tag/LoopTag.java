@@ -40,7 +40,7 @@ public class LoopTag extends LoopingTagSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setEnd(int end) {
+	public void setEnd(final int end) {
 		super.setEnd(end);
 		if (isEndSpecified) {
 			throw new IllegalArgumentException("End boundary already specified");
@@ -51,7 +51,7 @@ public class LoopTag extends LoopingTagSupport {
 	/**
 	 * Sets loop count.
 	 */
-	public void setCount(int count) {
+	public void setCount(final int count) {
 		setEnd(count);
 		isCount = true;
 	}
@@ -59,7 +59,7 @@ public class LoopTag extends LoopingTagSupport {
 	/**
 	 * Sets TO loop value (exclusive).
 	 */
-	public void setTo(int to) {
+	public void setTo(final int to) {
 		setEnd(to);
 		isExclusive = true;
 	}
@@ -69,7 +69,7 @@ public class LoopTag extends LoopingTagSupport {
 	/**
 	 * Specifies if direction should be detected from the start and end value.
 	 */
-	public void setAutoDirection(boolean autoDirection) {
+	public void setAutoDirection(final boolean autoDirection) {
 		this.autoDirection = autoDirection;
 	}
 

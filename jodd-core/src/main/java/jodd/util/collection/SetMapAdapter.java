@@ -42,7 +42,7 @@ public abstract class SetMapAdapter<E> extends AbstractSet<E> {
 	 * Constructs a new, empty set; the backing <code>HashMap</code> instance has
 	 * default initial capacity (16) and load factor (0.75).
 	 */
-	protected SetMapAdapter(Map<E, Object> mapImplementation) {
+	protected SetMapAdapter(final Map<E, Object> mapImplementation) {
 		this.map = mapImplementation;
 	}
 
@@ -82,7 +82,7 @@ public abstract class SetMapAdapter<E> extends AbstractSet<E> {
 	 */
 	@SuppressWarnings({"SuspiciousMethodCalls"})
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return map.containsKey(o);
 	}
 
@@ -95,7 +95,7 @@ public abstract class SetMapAdapter<E> extends AbstractSet<E> {
 	 *         element.
 	 */
 	@Override
-	public boolean add(E o) {
+	public boolean add(final E o) {
 		return map.put(o, DUMMY_VALUE) == null;
 	}
 
@@ -106,7 +106,7 @@ public abstract class SetMapAdapter<E> extends AbstractSet<E> {
 	 * @return <code>true</code> if the set contained the specified element.
 	 */
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return map.remove(o) == DUMMY_VALUE;
 	}
 

@@ -25,41 +25,40 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.Girl;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DbNoTableTest extends DbHsqldbTestCase {
+class DbNoTableTest extends DbHsqldbTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Bean1.class);
+		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
+		dbEntityManager.registerEntity(Bean1.class);
 	}
 
 	@Test
-	public void testMappingNoTable() {
+	void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one
-		DbOomQuery q = new DbOomQuery(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
+		DbOomQuery q = dbOom.query(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
 		Object[] row = q.find(Integer.class, String.class);
 
 		assertEquals(Integer.valueOf(11), row[0]);
@@ -75,7 +74,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 				"select g.ID + 10 as col_0_, UCASE(g.NAME) as col_1_, g.ID as col_2_, g.NAME as col_3_, g.SPECIALITY as col_4_ from GIRL g where g.ID=1",
 				dbSqlBuilder.generateQuery());
 
-		dbSqlBuilder.reset();
+		dbSqlBuilder.resetAll();
 
 		assertEquals(
 				"select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1",
@@ -83,7 +82,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		dbSqlBuilder.reset();
 
-		q = new DbOomQuery(dbSqlBuilder);
+		q = dbOom.query(dbSqlBuilder);
 		row = q.find(Bean1.class, Girl.class);
 
 		Bean1 bean1 = (Bean1) row[0];
@@ -108,7 +107,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		dbSqlBuilder.reset();
 
-		q = new DbOomQuery(dbSqlBuilder);
+		q = dbOom.query(dbSqlBuilder);
 		row = q.find(Bean1.class, Girl.class);
 
 		bean1 = (Bean1) row[0];

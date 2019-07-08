@@ -32,10 +32,59 @@ import java.lang.reflect.InvocationTargetException;
  */
 public interface Setter {
 
+	static Setter of(final MethodDescriptor methodDescriptor) {
+		return new Setter() {
+			@Override
+			public void invokeSetter(final Object target, final Object argument) throws InvocationTargetException, IllegalAccessException {
+				methodDescriptor.method.invoke(target, argument);
+			}
+
+			@Override
+			public Class getSetterRawType() {
+				return methodDescriptor.getParameters()[0].getRawType();
+			}
+
+			@Override
+			public Class getSetterRawComponentType() {
+				return methodDescriptor.getParameters()[0].getRawComponentType();
+			}
+
+			@Override
+			public MapperFunction getMapperFunction() {
+				return methodDescriptor.mapperFunction;
+			}
+		};
+	}
+
+	static Setter of(final FieldDescriptor fieldDescriptor) {
+		return new Setter() {
+			@Override
+			public void invokeSetter(final Object target, final Object argument) throws IllegalAccessException {
+				fieldDescriptor.field.set(target, argument);
+			}
+
+			@Override
+			public Class getSetterRawType() {
+				return fieldDescriptor.getRawType();
+			}
+
+			@Override
+			public Class getSetterRawComponentType() {
+				return fieldDescriptor.getRawComponentType();
+			}
+
+			@Override
+			public MapperFunction getMapperFunction() {
+				return fieldDescriptor.mapperFunction;
+			}
+		};
+	}
+
 	void invokeSetter(Object target, Object argument) throws IllegalAccessException, InvocationTargetException;
 
 	Class getSetterRawType();
 
 	Class getSetterRawComponentType();
 
+	MapperFunction getMapperFunction();
 }

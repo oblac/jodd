@@ -25,7 +25,6 @@
 
 package jodd.mail;
 
-import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -36,115 +35,29 @@ import static jodd.util.StringPool.TRUE;
 /**
  * Represents simple plain SMTP server for sending emails.
  */
-public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider {
-
-	public static final String MAIL_HOST = "mail.host";
-	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
-	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
-	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
-	public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
-	public static final String MAIL_SMTP_FROM = "mail.smtp.from";
-
-	public static final String MAIL_SMTP_CONNECTIONTIMEOUT ="mail.smtp.connectiontimeout";
-	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
-	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
-	public static final String MAIL_DEBUG = "mail.debug";
-	public static final String MAIL_MIME_ADDRESS_STRICT = "mail.mime.address.strict";
+public class SmtpServer extends MailServer<SendMailSession> {
 
 	protected static final String PROTOCOL_SMTP = "smtp";
 
+	/**
+	 * Default SMTP port
+	 */
 	protected static final int DEFAULT_SMTP_PORT = 25;
-
-	protected final String host;
-	protected final int port;
-	protected Authenticator authenticator;
-	protected int timeout = 0;
-	protected boolean debug = false;
-	protected boolean strictAddress = true;
-	private Properties additionalProperties;
 
 	// ---------------------------------------------------------------- create
 
-	public static SmtpServer create(String host) {
-		return new SmtpServer(host, DEFAULT_SMTP_PORT);
+	public SmtpServer(final Builder builder) {
+		super(builder, DEFAULT_SMTP_PORT);
 	}
-
-	public static SmtpServer create(String host, int port) {
-		return new SmtpServer(host, port);
-	}
-
-	/**
-	 * SMTP server defined with its host and default port.
-	 */
-	public SmtpServer(String host) {
-		this.host = host;
-		this.port = DEFAULT_SMTP_PORT;
-	}
-	/**
-	 * SMTP server defined with its host and port.
-	 */
-	public SmtpServer(String host, int port) {
-		this.host = host;
-		this.port = port;
-	}
-
-	// ---------------------------------------------------------------- builder
-
-	public T authenticateWith(String username, String password) {
-		this.authenticator = new SimpleAuthenticator(username, password);
-		return (T) this;
-	}
-
-	public T authenticateWith(Authenticator authenticator) {
-		this.authenticator = authenticator;
-		return (T) this;
-	}
-
-	/**
-	 * Defines timeout value in milliseconds for all mail-related operations.
-	 */
-	public T timeout(int timeout) {
-		this.timeout = timeout;
-		return (T) this;
-	}
-
-	/**
-	 * Enables debug mode. By default it is turned off.
-	 */
-	public T debug(boolean debug) {
-		this.debug = true;
-		return (T) this;
-	}
-
-	/**
-	 * Disables the strict address. By default strict mime address checking
-	 * is turned on.
-	 */
-	public T strictAddress(boolean strictAddress) {
-		this.strictAddress = strictAddress;
-		return (T) this;
-	}
-
-	public T properties(Properties properties) {
-		this.additionalProperties = properties;
-		return (T) this;
-	}
-
-	public T property(String name, String value) {
-		if (additionalProperties == null) {
-			additionalProperties = new Properties();
-		}
-		this.additionalProperties.put(name, value);
-		return (T) this;
+	protected SmtpServer(final Builder builder, final int defaultPort) {
+		super(builder, defaultPort);
 	}
 
 	// ---------------------------------------------------------------- properties
 
-	/**
-	 * Creates mail session properties.
-	 */
+	@Override
 	protected Properties createSessionProperties() {
-		Properties props = new Properties();
+		final Properties props = super.createSessionProperties();
 
 		props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
 		props.setProperty(MAIL_HOST, host);
@@ -156,18 +69,10 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 		}
 
 		if (timeout > 0) {
-			String timeoutValue = String.valueOf(timeout);
+			final String timeoutValue = String.valueOf(timeout);
 			props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
-		}
-
-		if (debug) {
-			props.put(MAIL_DEBUG, "true");
-		}
-
-		if (!strictAddress) {
-			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
 		}
 
 		return props;
@@ -175,59 +80,30 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @return {@link SendMailSession}
 	 */
+	@Override
 	public SendMailSession createSession() {
-		Properties sessionProperties = createSessionProperties();
-
-		if (additionalProperties != null) {
-			sessionProperties.putAll(additionalProperties);
-		}
-
-		Session mailSession = Session.getInstance(sessionProperties, authenticator);
-		Transport mailTransport;
+		final Session session = Session.getInstance(createSessionProperties(), authenticator);
+		final Transport mailTransport;
 		try {
-			mailTransport = getTransport(mailSession);
-		} catch (NoSuchProviderException nspex) {
+			mailTransport = getTransport(session);
+		} catch (final NoSuchProviderException nspex) {
 			throw new MailException(nspex);
 		}
-		return new SendMailSession(mailSession, mailTransport);
+		return new SendMailSession(session, mailTransport);
 	}
 
 	/**
-	 * Returns mail transport.
+	 * Get the {@link Transport} for {@link Session}.
+	 *
+	 * @param session The {@link SendMailSession}.
+	 * @return SMTP {@link Transport}.
+	 * @throws NoSuchProviderException If provider for the given protocol is not found.
 	 */
-	protected Transport getTransport(Session session) throws NoSuchProviderException {
+	protected Transport getTransport(final Session session) throws NoSuchProviderException {
 		return session.getTransport(PROTOCOL_SMTP);
-	}
-
-	// ---------------------------------------------------------------- getters
-
-	/**
-	 * Returns SMTP host address.
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * Returns authenticator.
-	 */
-	public Authenticator getAuthenticator() {
-		return authenticator;
-	}
-
-	/**
-	 * Returns current port.
-	 */
-	public int getPort() {
-		return port;
-	}
-
-	/**
-	 * Returns timeout in milliseconds.
-	 */
-	public int getTimeout() {
-		return timeout;
 	}
 
 }

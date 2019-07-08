@@ -35,7 +35,7 @@ public class ShortSqlType extends NullAwareSqlType<Short> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Short get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Short get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Short.valueOf(rs.getShort(index));
 	}
 
@@ -43,7 +43,7 @@ public class ShortSqlType extends NullAwareSqlType<Short> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Short value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Short value, final int dbSqlType) throws SQLException {
 		st.setShort(index, value.shortValue());
 	}
 

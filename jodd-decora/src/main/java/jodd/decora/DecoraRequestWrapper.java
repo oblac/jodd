@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 
-	public DecoraRequestWrapper(HttpServletRequest httpServletRequest) {
+	public DecoraRequestWrapper(final HttpServletRequest httpServletRequest) {
 		super(httpServletRequest);
 	}
 
@@ -41,7 +41,7 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	 * Returns <code>null</code> for excluded HTTP headers.
 	 */
 	@Override
-	public String getHeader(String header) {
+	public String getHeader(final String header) {
 		if (isExcluded(header)) {
 			return null;
 		}
@@ -52,7 +52,7 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	 * Returns <code>-1</code> for excluded HTTP headers.
 	 */
 	@Override
-	public long getDateHeader(String header) {
+	public long getDateHeader(final String header) {
 		if (isExcluded(header)) {
 			return -1;
 		}
@@ -62,7 +62,7 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	/**
 	 * Checks if header name is excluded.
 	 */
-	protected boolean isExcluded(String header) {
+	protected boolean isExcluded(final String header) {
 		return "If-Modified-Since".equalsIgnoreCase(header);
 	}
 

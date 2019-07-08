@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Proxetta aware Madvoc components.
+ * Proxetta-aware Madvoc components.
  */
 package jodd.madvoc.proxetta;

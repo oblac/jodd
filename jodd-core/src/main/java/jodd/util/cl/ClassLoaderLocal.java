@@ -87,7 +87,7 @@ public class ClassLoaderLocal<T> {
 	 * Most subclasses will have no need to override this method, relying solely on the initialValue()
 	 * method to set the values of classloader-locals.
 	 */
-	public synchronized void set(T value) {
+	public synchronized void set(final T value) {
 
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 

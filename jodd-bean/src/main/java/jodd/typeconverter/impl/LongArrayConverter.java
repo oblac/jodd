@@ -26,30 +26,30 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>long[]</code>.
  */
 public class LongArrayConverter implements TypeConverter<long[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public LongArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public LongArrayConverter(final TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
-	public long[] convert(Object value) {
+	@Override
+	public long[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
 
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (!valueClass.isArray()) {
 			// source is not an array
@@ -63,14 +63,14 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected long convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, long.class).longValue();
+	protected long convertType(final Object value) {
+		return typeConverterManager.convertType(value, long.class).longValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected long[] convertToSingleElementArray(Object value) {
+	protected long[] convertToSingleElementArray(final Object value) {
 		return new long[] {convertType(value)};
 	}
 
@@ -79,25 +79,13 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected long[] convertValueToArray(Object value) {
-		if (value instanceof List) {
-			List list = (List) value;
-			long[] target = new long[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
+	protected long[] convertValueToArray(final Object value) {
 		if (value instanceof Collection) {
-			Collection collection = (Collection) value;
-			long[] target = new long[collection.size()];
+			final Collection collection = (Collection) value;
+			final long[] target = new long[collection.size()];
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				target[i] = convertType(element);
 				i++;
 			}
@@ -106,19 +94,19 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 		}
 
 		if (value instanceof Iterable) {
-			Iterable iterable = (Iterable) value;
+			final Iterable iterable = (Iterable) value;
 
-			ArrayList<Long> longArrayList = new ArrayList<>();
+			final ArrayList<Long> longArrayList = new ArrayList<>();
 
-			for (Object element : iterable) {
-				long convertedValue = convertType(element);
+			for (final Object element : iterable) {
+				final long convertedValue = convertType(element);
 				longArrayList.add(Long.valueOf(convertedValue));
 			}
 
-			long[] array = new long[longArrayList.size()];
+			final long[] array = new long[longArrayList.size()];
 
 			for (int i = 0; i < longArrayList.size(); i++) {
-				Long l = longArrayList.get(i);
+				final Long l = longArrayList.get(i);
 				array[i] = l.longValue();
 			}
 
@@ -126,7 +114,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
+			final String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 
@@ -137,22 +125,16 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected long[] convertArrayToArray(Object value) {
-		Class valueComponentType = value.getClass().getComponentType();
+	protected long[] convertArrayToArray(final Object value) {
+		final Class valueComponentType = value.getClass().getComponentType();
 
-		if (valueComponentType == long.class) {
-			// equal types, no conversion needed
-			return (long[]) value;
-		}
-
-		long[] result;
+		final long[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			// convert primitive array to target array
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
 			// convert object array to target array
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = new long[array.length];
 
 			for (int i = 0; i < array.length; i++) {
@@ -167,57 +149,57 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected long[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected long[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		long[] result = null;
 
-		if (primitiveComponentType == long[].class) {
+		if (primitiveComponentType == long.class) {
 			return (long[]) value;
 		}
 
 		if (primitiveComponentType == int.class) {
-			int[] array = (int[]) value;
+			final int[] array = (int[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == float.class) {
-			float[] array = (float[]) value;
+			final float[] array = (float[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (long) array[i];
 			}
 		}
 		else if (primitiveComponentType == double.class) {
-			double[] array = (double[]) value;
+			final double[] array = (double[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (long) array[i];
 			}
 		}
 		else if (primitiveComponentType == short.class) {
-			short[] array = (short[]) value;
+			final short[] array = (short[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == byte.class) {
-			byte[] array = (byte[]) value;
+			final byte[] array = (byte[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == char.class) {
-			char[] array = (char[]) value;
+			final char[] array = (char[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == boolean.class) {
-			boolean[] array = (boolean[]) value;
+			final boolean[] array = (boolean[]) value;
 			result = new long[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] ? 1 : 0;

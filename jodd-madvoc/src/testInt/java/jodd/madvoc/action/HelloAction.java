@@ -25,19 +25,20 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.scope.Body;
+import jodd.madvoc.result.Chain;
+import jodd.madvoc.result.NoResult;
 import jodd.mutable.MutableInteger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @MadvocAction
 public class HelloAction {
@@ -50,7 +51,7 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@InOut
+	@In @Out
 	private String name;
 	public void setName(String name) {
 		this.name = "planet " + name;
@@ -79,20 +80,16 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@InOut("p")
+	@In("p") @Out("p")
 	Person person;      // Due to create == true, person will be instanced on first access.
 
-	/**
-	 * Action mapped to '/hello.bean.html'
-	 * Result mapped to '/hello.bean.jsp' and aliased in {@link MySimpleConfigurator} to /hi-bean.jsp
-	 */
 	@Action
 	public void bean() {
 	}
 
 	// ----------------------------------------------------------------
 
-	@In(scope = ScopeType.SERVLET)
+	@In
 	HttpServletResponse servletResponse;
 
 	/**
@@ -100,30 +97,35 @@ public class HelloAction {
 	 * No result.
 	 */
 	@Action
-	public String direct() throws IOException {
+	public NoResult direct() throws IOException {
 		servletResponse.getWriter().print("Direct stream output");
-		return "none:";
+		return NoResult.value();
 	}
 
-	@In(scope = ScopeType.SERVLET)
-	Map<String, String> requestParamMap;
-
-	@In(scope = ScopeType.SERVLET)
 	@Out
-	String requestMethod;
+	public String getReqMethod() {
+		return servletRequest.getMethod();
+	}
 
 	static class ReqReqOut {
 		@Out
 		public String name;
 	}
 
-	@In(scope = ScopeType.SERVLET)
-	@Out
+	@In
+	HttpServletRequest servletRequest;
+
+	@In @Body
 	String requestBody;
+
+	@Out
+	public String getReqBody() {
+		return requestBody;
+	}
 
 	@Action
 	public void reqreq(ReqReqOut reqReqOut) {
-		String hey = requestParamMap.get("hey");
+		String hey = servletRequest.getParameter("hey");
 
 		reqReqOut.name = hey;
 	}
@@ -132,7 +134,7 @@ public class HelloAction {
 
 	// since 'hello.jsp' exist, we need to change the class-related
 	// part of action prefix
-	@Action("/nohello.${:method}")
+	@Action("/nohello.{:name}")
 	public void nojsp() {
 	}
 
@@ -142,9 +144,9 @@ public class HelloAction {
 	int chain;
 
 	@Action
-	public String chain() {
+	public Chain chain() {
 		chain++;
-		return "chain:/hello.link.html";
+		return Chain.to("/hello.link.html");
 	}
 
 	@Action

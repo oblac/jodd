@@ -25,32 +25,41 @@
 
 package jodd.petite;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
-
 /**
  * Petite configuration.
  */
 public class PetiteConfig {
-
-	private static final Logger log = LoggerFactory.getLogger(PetiteConfig.class);
 
 	public PetiteConfig() {
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
 		resolveReferenceParameters = true;
 		useFullTypeNames = false;
-		lookupReferences = new PetiteReference[] {
-				PetiteReference.NAME,
-		        PetiteReference.TYPE_SHORT_NAME,
-				PetiteReference.TYPE_FULL_NAME
-		};
-		useParamo = JoddPetite.useProxetta;
+		lookupReferences = PetiteReferenceType.DEFAULT;
+		useParamo = true;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
 		useAltBeanNames = true;
+		implicitParamInjection = true;
 	}
 
+	// ----------------------------------------------------------------
+
+	protected boolean implicitParamInjection;
+
+	/**
+	 * Returns {@code true} if implicit parameter injection is enabled.
+	 */
+	public boolean isImplicitParamInjection() {
+		return implicitParamInjection;
+	}
+
+	/**
+	 * Enables implicit parameter injection.
+	 */
+	public void setImplicitParamInjection(final boolean implicitParamInjection) {
+		this.implicitParamInjection = implicitParamInjection;
+	}
 	// ----------------------------------------------------------------
 
 	protected boolean useAltBeanNames;
@@ -65,8 +74,9 @@ public class PetiteConfig {
 	/**
 	 * Enables alternative bean names.
 	 */
-	public void setUseAltBeanNames(boolean useAltBeanNames) {
+	public PetiteConfig setUseAltBeanNames(final boolean useAltBeanNames) {
 		this.useAltBeanNames = useAltBeanNames;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -81,11 +91,12 @@ public class PetiteConfig {
 	/**
 	 * Specifies default wiring mode.
 	 */
-	public void setDefaultWiringMode(WiringMode defaultWiringMode) {
+	public PetiteConfig setDefaultWiringMode(final WiringMode defaultWiringMode) {
 		if ((defaultWiringMode == null) || (defaultWiringMode == WiringMode.DEFAULT)) {
 			throw new PetiteException("Invalid default wiring mode: " + defaultWiringMode);
 		}
 		this.defaultWiringMode = defaultWiringMode;
+		return this;
 	}
 	/**
 	 * Resolves wiring mode by checking if default and <code>null</code> values.
@@ -110,8 +121,9 @@ public class PetiteConfig {
 	/**
 	 * Specifies if an exception should be thrown if two beans with same exception are registered with this container.
 	 */
-	public void setDetectDuplicatedBeanNames(boolean detectDuplicatedBeanNames) {
+	public PetiteConfig setDetectDuplicatedBeanNames(final boolean detectDuplicatedBeanNames) {
 		this.detectDuplicatedBeanNames = detectDuplicatedBeanNames;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -126,8 +138,9 @@ public class PetiteConfig {
 	/**
 	 * Defines if reference parameters should be resolved.
 	 */
-	public void setResolveReferenceParameters(boolean resolveReferenceParameters) {
+	public PetiteConfig setResolveReferenceParameters(final boolean resolveReferenceParameters) {
 		this.resolveReferenceParameters = resolveReferenceParameters;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -141,15 +154,16 @@ public class PetiteConfig {
 	/**
 	 * Specifies if type names should be full or short.
 	 */
-	public void setUseFullTypeNames(boolean useFullTypeNames) {
+	public PetiteConfig setUseFullTypeNames(final boolean useFullTypeNames) {
 		this.useFullTypeNames = useFullTypeNames;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- references
 
-	protected PetiteReference[] lookupReferences;
+	protected PetiteReferenceType[] lookupReferences;
 
-	public PetiteReference[] getLookupReferences() {
+	public PetiteReferenceType[] getLookupReferences() {
 		return lookupReferences;
 	}
 
@@ -157,8 +171,9 @@ public class PetiteConfig {
 	 * Specifies references for bean name lookup, when name
 	 * is not specified, in given order.
 	 */
-	public void setLookupReferences(PetiteReference... lookupReferences) {
+	public PetiteConfig setLookupReferences(final PetiteReferenceType... lookupReferences) {
 		this.lookupReferences = lookupReferences;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -171,15 +186,9 @@ public class PetiteConfig {
 
 	/**
 	 * Specifies if <b>Paramo</b> tool should be used to resolve
-	 * method and ctor argument names. If <b>Paramo</b> is not
-	 * available, this property can't be set (i.e. will be
-	 * always <code>false</code>).
+	 * method and ctor argument names.
 	 */
-	public void setUseParamo(boolean useParamo) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
+	public void setUseParamo(final boolean useParamo) {
 		this.useParamo = useParamo;
 	}
 
@@ -194,14 +203,10 @@ public class PetiteConfig {
 
 	/**
 	 * Defines if scoped proxies should be wired.
-	 * Only available with Proxetta.
 	 */
-	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
+	public PetiteConfig setWireScopedProxy(final boolean wireScopedProxy) {
 		this.wireScopedProxy = wireScopedProxy;
+		return this;
 	}
 
 	public boolean isDetectMixedScopes() {
@@ -213,13 +218,9 @@ public class PetiteConfig {
 	 * If {@link #wireScopedProxy} is not set, then enabling this flag
 	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
 	 * enabling this flag will just issue a warn message in the log.
-	 * Only available with Proxetta.
 	 */
-	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
+	public PetiteConfig setDetectMixedScopes(final boolean detectMixedScopes) {
 		this.detectMixedScopes = detectMixedScopes;
+		return this;
 	}
 }

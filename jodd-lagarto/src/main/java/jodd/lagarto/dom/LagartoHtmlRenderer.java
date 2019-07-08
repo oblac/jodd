@@ -34,7 +34,7 @@ public class LagartoHtmlRenderer {
 	/**
 	 * Renders node to appendable.
 	 */
-	public String toHtml(Node node, Appendable appendable) {
+	public String toHtml(final Node node, final Appendable appendable) {
 		NodeVisitor renderer = createRenderer(appendable);
 
 		node.visit(renderer);
@@ -45,7 +45,7 @@ public class LagartoHtmlRenderer {
 	/**
 	 * Renders node children to appendable.
 	 */
-	public String toInnerHtml(Node node, Appendable appendable) {
+	public String toInnerHtml(final Node node, final Appendable appendable) {
 		NodeVisitor renderer = createRenderer(appendable);
 
 		node.visitChildren(renderer);
@@ -53,7 +53,7 @@ public class LagartoHtmlRenderer {
 		return appendable.toString();
 	}
 
-	protected NodeVisitor createRenderer(Appendable appendable) {
+	protected NodeVisitor createRenderer(final Appendable appendable) {
 		return new LagartoHtmlRendererNodeVisitor(appendable);
 	}
 

@@ -26,39 +26,36 @@
 package jodd.log.impl;
 
 import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.log.impl.fixtures.LoggerConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.mock;
 
-public class NOPLoggerTest extends LoggerTestBase {
+class NOPLoggerTest extends LoggerTestBase {
 
 	private String name = "NOPLogger";
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		logger = new NOPLogger(name);
 	}
 
+	@Override
 	@Test
-	public void testIsEnabled() {
-		assertFalse("Source code implemented in such a way that this method call always returns false"
-			, logger.isEnabled(Level.DEBUG));
+	void testIsEnabled() {
+		assertFalse(logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
-	public void testGetName() {
-		assertEquals("Name must be equal to NOPLogger", name, logger.getName());
+	void testGetName() {
+		assertEquals(logger.getName(), name);
 	}
 
 	@Test
-	public void testLog() {
+	void testLog() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -76,20 +73,14 @@ public class NOPLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
-	}
-
-	@Test
-	public void testJDKLoggerFactory() {
+	void testNopLoggerFactory() {
 		//given
-		loggerFactory = new NOPLoggerFactory();
+		loggerProvider = NOPLogger.PROVIDER;
 
 		//when
-		logger = (NOPLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type NOPLogger", logger.getClass(),
-			is(instanceOf(NOPLogger.class.getClass())));
+		assertEquals(NOPLogger.class, logger.getClass());
 	}
 }

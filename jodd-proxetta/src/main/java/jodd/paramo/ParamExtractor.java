@@ -26,8 +26,10 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyMethodVisitor;
+import jodd.asm7.Label;
 import jodd.util.ArraysUtil;
-import jodd.asm5.Label;
+
+import java.lang.reflect.Parameter;
 
 /**
  * Extracts param information from a method.
@@ -36,20 +38,22 @@ final class ParamExtractor extends EmptyMethodVisitor {
 
 	private final int paramCount;
 	private final int ignoreCount;
+	private final Parameter[] parameters;
 	private MethodParameter[] methodParameters;
 	private int currentParam;
 	boolean debugInfoPresent;
 
-	ParamExtractor(int ignoreCount, int paramCount) {
+	ParamExtractor(final int ignoreCount, final int paramCount, final Parameter[] parameters) {
 		this.ignoreCount = ignoreCount;
 		this.paramCount = paramCount;
 		this.methodParameters = new MethodParameter[paramCount];
 		this.currentParam = 0;
-		this.debugInfoPresent = paramCount == 0;		// for 0 params, no need for debug info
+		this.debugInfoPresent = paramCount == 0;
+		this.parameters = parameters;// for 0 params, no need for debug info
 	}
 
 	@Override
-	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	public void visitLocalVariable(final String name, final String desc, String signature, final Label start, final Label end, final int index) {
 		if ((index >= ignoreCount) && (index < (ignoreCount + paramCount))) {
 			if (!name.equals("arg" + currentParam)) {
 				debugInfoPresent = true;
@@ -57,7 +61,8 @@ final class ParamExtractor extends EmptyMethodVisitor {
 			if (signature == null) {
 				signature = desc;
 			}
-			methodParameters[currentParam] = new MethodParameter(name, signature);
+			methodParameters[currentParam] = new MethodParameter(
+				name, signature, parameters[currentParam]);
 			currentParam++;
 		}
 	}

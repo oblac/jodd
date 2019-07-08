@@ -25,15 +25,32 @@
 
 package jodd.props;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import jodd.io.FastCharArrayWriter;
 import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+abstract class BasePropsTest {
 
-public abstract class BasePropsTest {
+	protected InputStream readDataToInputstream(String fileName) throws IOException {
+		String dataFolder = this.getClass().getPackage().getName() + ".data.";
+		dataFolder = dataFolder.replace('.', '/');
+		return ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
+	}
+
+	protected File readDataToFile(String fileName) throws URISyntaxException {
+		String dataFolder = this.getClass().getPackage().getName() + ".data.";
+		dataFolder = dataFolder.replace('.', '/');
+
+		final URL url = ClassLoaderUtil.getResourceUrl("/" + dataFolder + fileName);
+		return new File(url.toURI());
+	}
 
 	protected String readDataFile(String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";

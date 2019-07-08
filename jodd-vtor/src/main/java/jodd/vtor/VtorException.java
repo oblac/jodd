@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class VtorException extends UncheckedException {
 
-	public VtorException(Throwable t) {
+	public VtorException(final Throwable t) {
 		super(t);
 	}
 
-	public VtorException(String message) {
+	public VtorException(final String message) {
 		super(message);
 	}
 
-	public VtorException(String message, Throwable t) {
+	public VtorException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

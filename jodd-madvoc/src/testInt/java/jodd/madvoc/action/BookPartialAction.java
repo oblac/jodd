@@ -28,6 +28,7 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.result.TextResult;
 
 @MadvocAction
 public class BookPartialAction {
@@ -35,7 +36,7 @@ public class BookPartialAction {
 	@In Book book;
 
 	@Action
-	public String hello() {
-		return "text:Hi" + book.getIban();
+	public TextResult hello() {
+		return TextResult.of("Hi" + book.getIban());
 	}
 }

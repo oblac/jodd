@@ -25,14 +25,14 @@
 
 package jodd.http;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HttpBrowserOfflineTest {
+class HttpBrowserOfflineTest {
 
 	@Test
-	public void testDefaultParameters() {
+	void testDefaultParameters() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 		httpBrowser.setDefaultHeader("aaa", "123");
 
@@ -41,13 +41,13 @@ public class HttpBrowserOfflineTest {
 
 		httpBrowser.addDefaultHeaders(request);
 
-		assertEquals(3, request.headers().size());
+		assertEquals(3, request.headerNames().size());
 		assertEquals("123", request.header("aaa"));
 		assertEquals("987", request.header("bbb"));
 	}
 
 	@Test
-	public void testDefaultParametersOverwrite() {
+	void testDefaultParametersOverwrite() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 		httpBrowser.setDefaultHeader("aaa", "123");
 
@@ -56,7 +56,7 @@ public class HttpBrowserOfflineTest {
 
 		httpBrowser.addDefaultHeaders(request);
 
-		assertEquals(2, request.headers().size());
+		assertEquals(2, request.headerNames().size());
 		assertEquals("987", request.header("aaa"));
 	}
 }

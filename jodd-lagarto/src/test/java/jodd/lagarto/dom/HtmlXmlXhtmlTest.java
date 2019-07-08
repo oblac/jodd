@@ -25,19 +25,19 @@
 
 package jodd.lagarto.dom;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HtmlXmlXhtmlTest {
+class HtmlXmlXhtmlTest {
 
 	private static final String HTML_STRING = "<html><meta><body><div>xxx<br>zzz</div><span></span></body></html>";
 	private static final String XHTML_STRING = "<html><meta/><body><div>xxx<br/>zzz</div><span></span></body></html>";
 	private static final String XML_STRING = "<html><meta></meta><body><div>xxx<br></br>zzz</div><span></span></body></html>";
 
 	@Test
-	public void testHtml2Html() {
+	void testHtml2Html() {
 		String content = HTML_STRING;
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableHtmlMode().parse(content);
@@ -46,7 +46,7 @@ public class HtmlXmlXhtmlTest {
 	}
 
 	@Test
-	public void testHtml2XHtml() {
+	void testHtml2XHtml() {
 		String content = HTML_STRING;
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableXhtmlMode().parse(content);
@@ -55,7 +55,7 @@ public class HtmlXmlXhtmlTest {
 	}
 
 	@Test
-	public void testXHtml2Html() {
+	void testXHtml2Html() {
 		String content = XHTML_STRING;
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableHtmlMode().parse(content);
@@ -64,7 +64,7 @@ public class HtmlXmlXhtmlTest {
 	}
 
 	@Test
-	public void testXml() {
+	void testXml() {
 		String content = XML_STRING;
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableXmlMode().parse(content);

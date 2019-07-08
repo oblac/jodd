@@ -25,42 +25,38 @@
 
 package jodd.decora.parser;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.reflect.Whitebox.invokeMethod;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Writer;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-public class DecoraParserTestDecoratedPageTest {
+class DecoraParserTestDecoratedPageTest {
 
 	private DecoraParser decoraParser;
 	private Writer writerMock;
 	private DecoraTag decoraTagMock;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		decoraParser = new DecoraParser();
 		writerMock = mock(Writer.class);
 		decoraTagMock = mock(DecoraTag.class);
 	}
 
 	@Test
-	public void testWriteDecoratedPageDecoraTagLengthNegative() throws Exception {
+	void testWriteDecoratedPageDecoraTagLengthNegative() throws Exception {
 		// setup
 		when(decoraTagMock.getStartIndex()).thenReturn(-1);
 		DecoraTag[] decoraTags = { decoraTagMock };
 		char[] decoratorContent = new char[] {};
 
 		// when
-		invokeMethod(decoraParser, "writeDecoratedPage", writerMock, decoratorContent, new char[] {}, decoraTags);
+		decoraParser.writeDecoratedPage(writerMock, decoratorContent, new char[] {}, decoraTags);
 
 		// then
 		verify(decoraTagMock, never()).getEndIndex();
@@ -68,7 +64,7 @@ public class DecoraParserTestDecoratedPageTest {
 	}
 
 	@Test
-	public void testWriteDecoratedPageDecoraTagRegionUndefined() throws Exception {
+	void testWriteDecoratedPageDecoraTagRegionUndefined() throws Exception {
 		// setup
 		DecoraTag decoraTagMock2 = mock(DecoraTag.class);
 		when(decoraTagMock.isRegionUndefined()).thenReturn(true);
@@ -78,7 +74,7 @@ public class DecoraParserTestDecoratedPageTest {
 		char[] pageContent = new char[] {};
 
 		// when
-		invokeMethod(decoraParser, "writeRegion", writerMock, pageContent, decoraTagMock, decoraTags);
+		decoraParser.writeRegion(writerMock, pageContent, decoraTagMock, decoraTags);
 
 		// then
 		verify(decoraTagMock2, never()).isInsideOtherTagRegion(decoraTagMock);

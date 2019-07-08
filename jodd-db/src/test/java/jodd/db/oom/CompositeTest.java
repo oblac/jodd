@@ -25,67 +25,70 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.tst.User;
-import jodd.db.oom.tst.WizUser;
-import jodd.db.oom.tst.Wizard;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.User;
+import jodd.db.oom.fixtures.WizUser;
+import jodd.db.oom.fixtures.Wizard;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CompositeTest extends DbHsqldbTestCase {
+class CompositeTest extends DbHsqldbTestCase {
 
 	DbSession session;
 
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(User.class);
-		dbOom.registerEntity(Wizard.class);
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
+		dbEntityManager.registerEntity(User.class);
+		dbEntityManager.registerEntity(Wizard.class);
 
 		session = new DbThreadSession(cp);
 
 		executeUpdate("drop table WIZARD if exists");
 		executeUpdate("drop table USER if exists");
 
-		DbQuery query = new DbQuery(
+		DbQuery query = DbQuery.query(
 				"create table USER (" +
 				"USER_ID	IDENTITY," +
 				"NAME		varchar(20)	not null" +
 				')');
 		query.executeUpdate();
 
-		query = new DbQuery("insert into USER values(1, 'Gandalf')");
+		query = DbQuery.query("insert into USER values(1, 'Gandalf')");
 		query.executeUpdate();
 
-		query = new DbQuery(
+		query = DbQuery.query(
 				"create table WIZARD (" +
 				"WIZARD_ID	IDENTITY," +
 				"LEVEL		INT	not null" +
 				')');
 		query.executeUpdate();
 
-		query = new DbQuery("insert into WIZARD values(1, 7);");
+		query = DbQuery.query("insert into WIZARD values(1, 7);");
 		query.executeUpdate();
 	}
 
-	@After
-	public void tearDown() {
+	@Override
+	@AfterEach
+	protected void tearDown() {
 		session.closeSession();
+		DbOom.get().shutdown();
 	}
 
 	@Test
-	public void testCustomName() {
+	void testCustomName() {
 		DbOomQuery dbOomQuery = sql("select $C{u.*} from $T{User u}").query();
 		User user = dbOomQuery.find(User.class);
 
@@ -101,7 +104,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testAdditionalColumn() {
+	void testAdditionalColumn() {
 		// default
 
 		DbOomQuery dbOomQuery = sql("select $C{u.*}, 243 from $T{User u}").query();
@@ -138,7 +141,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testExtend() {
+	void testExtend() {
 		DbOomQuery dbOomQuery = sql("select $C{w.*}, $C{w.user:u.*} from $T{Wizard w} inner join $T{User u} on $w.wizardId=$u.userId").query();
 
 		Wizard wizard = dbOomQuery.find(/*Wizard.class, User.class*/);

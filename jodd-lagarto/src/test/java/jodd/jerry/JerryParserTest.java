@@ -28,24 +28,24 @@ package jodd.jerry;
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class JerryParserTest {
+class JerryParserTest {
 
 	@Test
-	public void testJerryParserCreation() {
+	void testJerryParserCreation() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml>   <book isbn='123'> <name>Foo<br></name>   </book></xml>");
 
-		Jerry name = doc.$("book name");
+		Jerry name = doc.s("book name");
 
 		assertEquals("Foo", name.text());
 
@@ -53,14 +53,14 @@ public class JerryParserTest {
 	}
 
 	@Test
-	public void testAppendContent() {
+	void testAppendContent() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -68,14 +68,14 @@ public class JerryParserTest {
 	}
 
 	@Test
-	public void testAppendContent2() {
+	void testAppendContent2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -83,14 +83,14 @@ public class JerryParserTest {
 	}
 
 	@Test
-	public void testAppendContent3() {
+	void testAppendContent3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXhtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -98,7 +98,7 @@ public class JerryParserTest {
 	}
 
 	@Test
-	public void testAttributeCaseSensitive() {
+	void testAttributeCaseSensitive() {
 		String str = "<dIV id='one' myAttr='aaa'>xxx</dIV>";
 
 		Jerry.JerryParser jerryParser = Jerry.jerry();
@@ -113,7 +113,7 @@ public class JerryParserTest {
 		assertNotNull(divNode.getAttribute("myattr"));
 		assertNotNull(divNode.getAttribute("myAttr"));
 
-		Element divNode2 = (Element) doc.$("div[myattr=aaa]").nodes[0];
+		Element divNode2 = (Element) doc.s("div[myattr=aaa]").nodes[0];
 		assertSame(divNode, divNode2);
 
 		assertEquals("<div id=\"one\" myattr=\"aaa\">xxx</div>", doc.html());
@@ -130,8 +130,8 @@ public class JerryParserTest {
 
 		assertEquals("<dIV id=\"one\" myAttr=\"aaa\">xxx</dIV>", doc.html());
 
-		assertEquals(0, doc.$("div[myattr=aaa]").nodes.length);
-		divNode2 = (Element) doc.$("dIV[myAttr=aaa]").nodes[0];
+		assertEquals(0, doc.s("div[myattr=aaa]").nodes.length);
+		divNode2 = (Element) doc.s("dIV[myAttr=aaa]").nodes[0];
 		assertSame(divNode, divNode2);
 	}
 }

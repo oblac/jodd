@@ -30,7 +30,7 @@ package jodd.lagarto.dom;
  */
 public class CData extends Node {
 
-	public CData(Document ownerDocument, String cdata) {
+	public CData(final Document ownerDocument, final String cdata) {
 		super(ownerDocument, NodeType.CDATA, null);
 		this.nodeValue = cdata;
 	}
@@ -41,7 +41,7 @@ public class CData extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.cdata(this);
 	}
 }

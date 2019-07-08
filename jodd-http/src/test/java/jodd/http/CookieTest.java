@@ -25,15 +25,15 @@
 
 package jodd.http;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CookieTest {
+class CookieTest {
 
 	@Test
-	public void testCookieParsing() {
+	void testCookieParsing() {
 		Cookie cookie = new Cookie("name=value");
 
 		assertEquals("name", cookie.getName());
@@ -53,5 +53,57 @@ public class CookieTest {
 		assertEquals("/accounts", cookie.getPath());
 		assertTrue(cookie.isSecure());
 		assertTrue(cookie.isHttpOnly());
+	}
+
+	@Test
+	void test395() {
+		Cookie cookie = new Cookie("name=value;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("name=value;       ");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("p_skey=UIJeeZgODkPQgiVcwHJBhq9mYrZC9JdpYF6SCZ3fNfY_; PATH=/; DOMAIN=mail.qq.com; ;");
+
+		assertEquals("p_skey", cookie.getName());
+		assertEquals("UIJeeZgODkPQgiVcwHJBhq9mYrZC9JdpYF6SCZ3fNfY_", cookie.getValue());
+	}
+
+	@Test
+	void testSpecialCookieValues() {
+		Cookie cookie = new Cookie("name=value");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("name=value;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		// duplicated value
+
+		cookie = new Cookie("name=value;a=b;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		// empty value
+
+		cookie = new Cookie("name=");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("", cookie.getValue());
+
+		// empty name
+
+		cookie = new Cookie("=value");
+
+		assertEquals(null, cookie.getName());
+		assertEquals(null, cookie.getValue());
 	}
 }

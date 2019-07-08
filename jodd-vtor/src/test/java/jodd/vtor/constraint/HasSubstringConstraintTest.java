@@ -25,87 +25,84 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class HasSubstringConstraintTest extends ConstraintTestBase {
+class HasSubstringConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         String someStr = "someStr";
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint(someStr, true);
-        assertEquals("string must be the same as was given to constructor", hasSubstringConstraint.getSubstring(), someStr);
+        assertEquals(someStr, hasSubstringConstraint.getSubstring());
         assertTrue(hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         assertNull(hasSubstringConstraint.getSubstring());
         assertFalse(hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         HasSubstring annotation = mock(HasSubstring.class);
         String substring = "testString";
         boolean ignoreCase = true;
-        stub(annotation.value()).toReturn(substring);
-        stub(annotation.ignoreCase()).toReturn(ignoreCase);
+        when(annotation.value()).thenReturn(substring);
+        when(annotation.ignoreCase()).thenReturn(ignoreCase);
 
         hasSubstringConstraint.configure(annotation);
-        assertEquals("substring must be the same as was set to annotation when configure",
-                hasSubstringConstraint.getSubstring(), substring);
+        assertEquals(substring, hasSubstringConstraint.getSubstring());
 
-        assertEquals("ignoreCase must be the same as was set to annotation when configure",
-                hasSubstringConstraint.isIgnoreCase(), ignoreCase);
-
+        assertEquals(ignoreCase, hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testSetSubstring() {
+    void testSetSubstring() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         String someStr = "someStr";
         hasSubstringConstraint.setSubstring(someStr);
-        assertEquals("string must be the same as was given to set method", hasSubstringConstraint.getSubstring(), someStr);
+        assertEquals(someStr, hasSubstringConstraint.getSubstring());
     }
 
     @Test
-    public void testSetIgnoreCase() {
+    void testSetIgnoreCase() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setIgnoreCase(true);
-        assertTrue("IgnoreCase must be the same as was given to set method", hasSubstringConstraint.isIgnoreCase());
+        assertTrue(hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
-        assertTrue("result must be true when validate a null value", hasSubstringConstraint.isValid(mockContext(), null));
+        assertTrue(hasSubstringConstraint.isValid(mockContext(), null));
     }
 
     @Test
-    public void testIgnoreCase_False() {
+    void testIgnoreCase_False() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setSubstring("al");
         hasSubstringConstraint.setIgnoreCase(false);
 
-        assertTrue("result mast be true when validate low case string", hasSubstringConstraint.isValid(mockContext(), "value"));
-        assertFalse("result mast be false when validate upper case string", hasSubstringConstraint.isValid(mockContext(), "VALUE"));
-        assertFalse("result must be false when validate string without substring", hasSubstringConstraint.isValid(mockContext(), "FOO"));
+        assertTrue(hasSubstringConstraint.isValid(mockContext(), "value"));
+        assertFalse(hasSubstringConstraint.isValid(mockContext(), "VALUE"));
+        assertFalse(hasSubstringConstraint.isValid(mockContext(), "FOO"));
     }
 
     @Test
-    public void testIgnoreCase_True() {
+    void testIgnoreCase_True() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setSubstring("al");
         hasSubstringConstraint.setIgnoreCase(true);
 
-        assertTrue("result mast be true when validate low case string", hasSubstringConstraint.isValid(mockContext(), "value"));
-        assertTrue("result mast be true when validate upper case string", hasSubstringConstraint.isValid(mockContext(), "VALUE"));
-        assertFalse("result must be false when validate string without substring", hasSubstringConstraint.isValid(mockContext(), "FOO"));
+        assertTrue(hasSubstringConstraint.isValid(mockContext(), "value"), "result mast be true when validate low case string");
+        assertTrue(hasSubstringConstraint.isValid(mockContext(), "VALUE"), "result mast be true when validate upper case string");
+        assertFalse(hasSubstringConstraint.isValid(mockContext(), "FOO"), "result must be false when validate string without substring");
     }
 }

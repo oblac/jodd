@@ -25,21 +25,37 @@
 
 package jodd.madvoc.action.sys;
 
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.result.JsonResult;
 
 @MadvocAction
 public class UserAction {
 
-	@InOut
+	public static class User {
+		public String id;
+		public String name;
+	}
+
+	@In
+	@Out
 	String id;
 
-	@RestAction(value = "${id}")
-	public void get() {}
+	@RestAction(value = "{id}")
+	public User get() {
+		User user = new User();
+		user.id = id;
+		user.name = "get";
+		return user;
+	}
 
-	@RestAction(value = "${id}")
-	public String post() {
-		return "#post";		// dont have to do this
+	@RestAction(value = "{id}")
+	public JsonResult post() {
+		User user = new User();
+		user.id = id;
+		user.name = "post";
+		return JsonResult.of(user);
 	}
 }

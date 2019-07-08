@@ -26,6 +26,7 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 import org.apache.commons.logging.Log;
 
 /**
@@ -33,17 +34,22 @@ import org.apache.commons.logging.Log;
  */
 public class JCLLogger implements Logger {
 
-	private final Log logger;
+	public static final LoggerProvider<JCLLogger> PROVIDER =
+		name -> new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
 
-	public JCLLogger(Log log) {
+	final Log logger;
+
+	public JCLLogger(final Log log) {
 		this.logger = log;
 	}
 
+	@Override
 	public String getName() {
 		return logger.toString();
 	}
 
-	public boolean isEnabled(Level level) {
+	@Override
+	public boolean isEnabled(final Level level) {
 		switch (level) {
 			case TRACE: return logger.isTraceEnabled();
 			case DEBUG: return logger.isDebugEnabled();
@@ -56,7 +62,8 @@ public class JCLLogger implements Logger {
 
 	}
 
-	public void log(Level level, String message) {
+	@Override
+	public void log(final Level level, final String message) {
 		switch (level) {
 			case TRACE: logger.trace(message); break;
 			case DEBUG: logger.debug(message); break;
@@ -66,51 +73,79 @@ public class JCLLogger implements Logger {
 		}
 	}
 
+	@Override
+	public void log(final Level level, final String message, final Throwable throwable) {
+		switch (level) {
+			case TRACE: logger.trace(message, throwable); break;
+			case DEBUG: logger.debug(message, throwable); break;
+			case INFO: logger.info(message, throwable); break;
+			case WARN: logger.warn(message, throwable); break;
+			case ERROR: logger.error(message, throwable); break;
+		}
+	}
+
+	@Override
+	public void setLevel(final Level level) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return logger.isTraceEnabled();
 	}
 
-	public void trace(String message) {
+	@Override
+	public void trace(final String message) {
 		logger.trace(message);
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
 	}
 
-	public void debug(String message) {
+	@Override
+	public void debug(final String message) {
 		logger.debug(message);
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}
 
-	public void info(String message) {
+	@Override
+	public void info(final String message) {
 		logger.info(message);
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return logger.isWarnEnabled();
 	}
 
-	public void warn(String message) {
+	@Override
+	public void warn(final String message) {
 		logger.warn(message);
 	}
 
-	public void warn(String message, Throwable throwable) {
+	@Override
+	public void warn(final String message, final Throwable throwable) {
 		logger.warn(message, throwable);
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return logger.isErrorEnabled();
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 		logger.error(message);
 	}
 
-	public void error(String message, Throwable throwable) {
+	@Override
+	public void error(final String message, final Throwable throwable) {
 		logger.error(message, throwable);
 	}
 }

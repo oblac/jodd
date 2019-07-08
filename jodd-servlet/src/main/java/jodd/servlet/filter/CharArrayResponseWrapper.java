@@ -25,15 +25,14 @@
 
 package jodd.servlet.filter;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import jodd.io.FastCharArrayWriter;
+import jodd.util.StringPool;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import jodd.io.FastCharArrayWriter;
-import jodd.util.StringPool;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Response wrapper that takes everything the client would normally output
@@ -50,7 +49,7 @@ public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * Initializes wrapper by creating {@link FastCharArrayWriter} that will
 	 * be used to accumulate the response.
 	 */
-	public CharArrayResponseWrapper(HttpServletResponse response) {
+	public CharArrayResponseWrapper(final HttpServletResponse response) {
 		super(response);
 	}
 

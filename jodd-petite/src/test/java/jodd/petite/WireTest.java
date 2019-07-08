@@ -25,65 +25,70 @@
 
 package jodd.petite;
 
-import jodd.petite.config.AutomagicPetiteConfigurator;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.BooC;
+import jodd.petite.fixtures.tst.BooC2;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Goo;
+import jodd.petite.fixtures.tst.Ioo;
+import jodd.petite.fixtures.tst.Loo;
+import jodd.petite.fixtures.tst.Zoo;
+import jodd.petite.fixtures.tst.impl.DefaultIoo;
 import jodd.petite.scope.ProtoScope;
-import jodd.petite.tst.*;
-import jodd.petite.tst.impl.DefaultIoo;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class WireTest {
+class WireTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() {
 		Foo.instanceCounter = 0;
 	}
 
 	@Test
-	public void testContainer() {
+	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
-		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
-		configurator.setExcludeAllEntries(true);
-		configurator.setIncludedEntries("jodd.petite.*");
-		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
-		configurator.setExcludedEntries(
-				"jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses", "*Public*", "*Secret*", "*$*");
-		configurator.configure(pc);
+		pc.registerPetiteBean(Foo.class);
 
-		assertEquals(1, pc.getTotalBeans());
-		assertEquals(1, pc.getTotalScopes());
+		assertEquals(1, pc.beansCount());
+		assertEquals(1, pc.scopesCount());
 		assertEquals(0, Foo.instanceCounter);
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals(1, foo.hello());
-		foo = (Foo) pc.getBean("foo");
+		foo = pc.getBean("foo");
 		assertEquals(1, foo.hello());
 
 
 		// register again the same class, but this time with proto scope
-		pc.registerPetiteBean(Foo.class, "foo2", ProtoScope.class, null, false);
-		assertEquals(2, pc.getTotalBeans());
-		assertEquals(2, pc.getTotalScopes());
+		pc.registerPetiteBean(Foo.class, "foo2", ProtoScope.class, null, false, null);
+		assertEquals(2, pc.beansCount());
+		assertEquals(2, pc.scopesCount());
 
 		assertEquals(2, ((Foo) pc.getBean("foo2")).hello());
 		assertEquals(3, ((Foo) pc.getBean("foo2")).hello());
 
 
 		// register boo
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
-		assertEquals(3, pc.getTotalBeans());
-		assertEquals(2, pc.getTotalScopes());
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
+		assertEquals(3, pc.beansCount());
+		assertEquals(2, pc.scopesCount());
 
 		Boo boo;
 		try {
 			//noinspection UnusedAssignment
-			boo = (Boo) pc.getBean("boo");
-			fail();
+			boo = pc.getBean("boo");
+			fail("error");
 		} catch (PetiteException pex) {
 			// zoo class is missing
 		}
@@ -92,14 +97,14 @@ public class WireTest {
 		// registering missing dependency.
 		// however we need to remove existing bean that requires this dependency
 		// as it has been already initialized.
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
 		pc.removeBean(Boo.class);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
 
-		assertEquals(4, pc.getTotalBeans());
-		assertEquals(2, pc.getTotalScopes());
+		assertEquals(4, pc.beansCount());
+		assertEquals(2, pc.scopesCount());
 
-		boo = (Boo) pc.getBean("boo");
+		boo = pc.getBean("boo");
 		assertNotNull(boo);
 		assertNotNull(boo.getFoo());
 		assertNotNull(boo.zoo);
@@ -109,13 +114,13 @@ public class WireTest {
 	}
 
 	@Test
-	public void testCreate() {
+	void testCreate() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
-		assertEquals(3, pc.getTotalBeans());
-		assertEquals(1, pc.getTotalScopes());
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
+		assertEquals(3, pc.beansCount());
+		assertEquals(1, pc.scopesCount());
 		assertEquals(0, Foo.instanceCounter);
 
 		Boo boo = pc.createBean(Boo.class);
@@ -128,59 +133,59 @@ public class WireTest {
 	}
 
 	@Test
-	public void testCtor() {
+	void testCtor() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(BooC.class, null, null, null, false);
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		assertEquals(2, pc.getTotalBeans());
-		assertEquals(1, pc.getTotalScopes());
+		pc.registerPetiteBean(BooC.class, null, null, null, false, null);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		assertEquals(2, pc.beansCount());
+		assertEquals(1, pc.scopesCount());
 		assertEquals(0, Foo.instanceCounter);
 
-		BooC boo = (BooC) pc.getBean("booC");
+		BooC boo = pc.getBean("booC");
 		assertNotNull(boo);
 		assertNotNull(boo.getFoo());
 		assertEquals(1, boo.getFoo().hello());
 
-		pc.registerPetiteBean(BooC2.class, "boo", null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		assertEquals(4, pc.getTotalBeans());
-		assertEquals(1, pc.getTotalScopes());
+		pc.registerPetiteBean(BooC2.class, "boo", null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		assertEquals(4, pc.beansCount());
+		assertEquals(1, pc.scopesCount());
 		assertEquals(1, Foo.instanceCounter);
 
 		try {
 			pc.getBean("boo");
-			fail();
+			fail("error");
 		} catch (PetiteException pex) {
 			// ignore                       // cyclic dependency
 		}
 	}
 
 	@Test
-	public void testAutowire() {
+	void testAutowire() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
-		pc.registerPetiteBean(Loo.class, null, null, null, false);
+		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false, null);
+		pc.registerPetiteBean(Loo.class, null, null, null, false, null);
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
-		Goo goo = (Goo) pc.getBean("goo");
+		Goo goo = pc.getBean("goo");
 		assertNotNull(goo);
 		assertNotNull(goo.looCustom);
 		assertNull(goo.foo);
 
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		goo = (Goo) pc.getBean("goo");
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		goo = pc.getBean("goo");
 		assertNotNull(goo);
 		assertNotNull(goo.looCustom);
 		assertNull(goo.foo);
 
 		pc = new PetiteContainer();
-		pc.getConfig().setDefaultWiringMode(WiringMode.AUTOWIRE);
-		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
-		pc.registerPetiteBean(Loo.class, null, null, null, false);
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.config().setDefaultWiringMode(WiringMode.AUTOWIRE);
+		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false, null);
+		pc.registerPetiteBean(Loo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
-		goo = (Goo) pc.getBean("goo");
+		goo = pc.getBean("goo");
 		assertNotNull(goo);
 		assertNotNull(goo.looCustom);
 		assertNotNull(goo.foo);
@@ -189,43 +194,43 @@ public class WireTest {
 	}
 
 	@Test
-	public void testInterface() {
+	void testInterface() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(DefaultIoo.class, "ioo", null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(DefaultIoo.class, "ioo", null, null, false, null);
 
-		assertEquals(2, pc.getTotalBeans());
-		Ioo ioo = (Ioo) pc.getBean("ioo");
+		assertEquals(2, pc.beansCount());
+		Ioo ioo = pc.getBean("ioo");
 		assertNotNull(ioo);
 		assertNotNull(ioo.getFoo());
 		assertEquals(DefaultIoo.class, ioo.getClass());
 	}
 
 	@Test
-	public void testSelf() {
+	void testSelf() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.addSelf();
 
-		assertEquals(1, pc.getTotalBeans());
+		assertEquals(1, pc.beansCount());
 
-		PetiteContainer pc2 = (PetiteContainer) pc.getBean(PetiteContainer.PETITE_CONTAINER_REF_NAME);
+		PetiteContainer pc2 = pc.getBean(PetiteContainer.PETITE_CONTAINER_REF_NAME);
 		assertEquals(pc2, pc);
 
 	}
 
 	@Test
-	public void testInit() {
+	void testInit() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, "boo2", null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, "boo2", null, null, false, null);
 
-		Boo boo = (Boo) pc.getBean("boo");
+		Boo boo = pc.getBean("boo");
 		assertNotNull(boo.getFoo());
 		assertEquals(1, boo.getCount());
 
-		Boo boo2 = (Boo) pc.getBean("boo2");
+		Boo boo2 = pc.getBean("boo2");
 		assertNotSame(boo, boo2);
 		assertEquals(1, boo2.getCount());
 

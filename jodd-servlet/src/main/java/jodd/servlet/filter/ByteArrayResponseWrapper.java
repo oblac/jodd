@@ -25,13 +25,12 @@
 
 package jodd.servlet.filter;
 
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 /**
  * Response wrapper that takes everything the client would normally output
@@ -42,7 +41,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	private final PrintWriter writer;
 	private final FastByteArrayServletOutputStream out;
 
-	public ByteArrayResponseWrapper(HttpServletResponse response) {
+	public ByteArrayResponseWrapper(final HttpServletResponse response) {
 		super(response);
 		out = new FastByteArrayServletOutputStream();
 
@@ -52,19 +51,19 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
 		writer = new PrintWriter(new OutputStreamWriter(out) {
 			@Override
-			public void write(int c) throws IOException {
+			public void write(final int c) throws IOException {
 				super.write(c);
 				super.flush();
 			}
 
 			@Override
-			public void write(char[] cbuf, int off, int len) throws IOException {
+			public void write(final char[] cbuf, final int off, final int len) throws IOException {
 				super.write(cbuf, off, len);
 				super.flush();
 			}
 
 			@Override
-			public void write(String str, int off, int len) throws IOException {
+			public void write(final String str, final int off, final int len) throws IOException {
 				super.write(str, off, len);
 				super.flush();
 			}
@@ -75,7 +74,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * Returns the wrapped output stream.
 	 */
 	@Override
-	public ServletOutputStream getOutputStream() throws IOException {
+	public ServletOutputStream getOutputStream() {
 		return out;
 	}
 
@@ -84,7 +83,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * wrapped output stream.
 	 */
 	@Override
-	public PrintWriter getWriter() throws IOException {
+	public PrintWriter getWriter() {
 		return writer;
 	}
 

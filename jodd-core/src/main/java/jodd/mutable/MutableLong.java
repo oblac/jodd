@@ -30,18 +30,22 @@ package jodd.mutable;
  */
 public final class MutableLong extends Number implements Comparable<MutableLong>, Cloneable {
 
+	public static MutableLong of(final long value) {
+		return new MutableLong(value);
+	}
+
 	public MutableLong() {
 	}
 
-	public MutableLong(long value) {
+	public MutableLong(final long value) {
 		this.value = value;
 	}
 
-	public MutableLong(String value) {
+	public MutableLong(final String value) {
 		this.value = Long.parseLong(value);
 	}
 
-	public MutableLong(Number number) {
+	public MutableLong(final Number number) {
 		this.value = number.longValue();
 	}
 
@@ -55,21 +59,21 @@ public final class MutableLong extends Number implements Comparable<MutableLong>
 	/**
 	 * Returns mutable value.
 	 */
-	public long getValue() {
+	public long get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(long value) {
+	public void set(final long value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(final Number value) {
 		this.value = value.longValue();
 	}
 
@@ -99,7 +103,7 @@ public final class MutableLong extends Number implements Comparable<MutableLong>
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Long)this.value).getClass() == obj.getClass() ) {
 				return value == ((Long) obj).longValue();
@@ -150,7 +154,8 @@ public final class MutableLong extends Number implements Comparable<MutableLong>
 	/**
 	 * Compares value of two same instances.
 	 */
-	public int compareTo(MutableLong other) {
+	@Override
+	public int compareTo(final MutableLong other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}
 

@@ -25,8 +25,6 @@
 
 package jodd.bean;
 
-import jodd.introspector.Introspector;
-
 /**
  * Supreme utility for reading and writing bean properties. However, this one is the fastest available.
  * Although it provides various methods, the whole thing can be easily extended to match most needs.
@@ -73,13 +71,6 @@ public interface BeanUtil {
 	BeanUtil declaredForcedSilent = new BeanUtilBean().declared(true).forced(true).silent(true);
 
 	BeanUtil forcedSilent = new BeanUtilBean().forced(true).silent(true);
-
-	// ---------------------------------------------------------------- INTROSPECTOR
-
-	/**
-	 * Returns introspector instance used by this implementation.
-	 */
-	Introspector getIntrospector();
 
 	// ---------------------------------------------------------------- SET
 

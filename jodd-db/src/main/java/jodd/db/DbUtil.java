@@ -26,7 +26,7 @@
 package jodd.db;
 
 import jodd.db.type.SqlType;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class DbUtil {
 	/**
 	 * Closes statement safely without throwing an exception.
 	 */
-	public static void close(Statement statement) {
+	public static void close(final Statement statement) {
 		if (statement == null) {
 			return;
 		}
@@ -59,7 +59,7 @@ public class DbUtil {
 	/**
 	 * Closes result set safely without throwing an exception.
 	 */
-	public static void close(ResultSet resultSet) {
+	public static void close(final ResultSet resultSet) {
 		if (resultSet == null) {
 			return;
 		}
@@ -73,7 +73,7 @@ public class DbUtil {
 	/**
 	 * Returns long value of very first column in result set.
 	 */
-	public static long getFirstLong(ResultSet resultSet) throws SQLException {
+	public static long getFirstLong(final ResultSet resultSet) throws SQLException {
 		if (resultSet.next()) {
 			return resultSet.getLong(1);
 		}
@@ -83,11 +83,18 @@ public class DbUtil {
 	/**
 	 * Returns int value of very first column in result set.
 	 */
-	public static int getFirstInt(ResultSet resultSet) throws SQLException {
+	public static int getFirstInt(final ResultSet resultSet) throws SQLException {
 		if (resultSet.next()) {
 			return resultSet.getInt(1);
 		}
 		return -1;
+	}
+
+	public static Object getFirstObject(final ResultSet resultSet) throws SQLException {
+		if (resultSet.next()) {
+			return resultSet.getObject(1);
+		}
+		return null;
 	}
 
 	/**
@@ -95,62 +102,63 @@ public class DbUtil {
 	 * Here Jodd makes conversion and not JDBC driver.
 	 * See: http://www.tutorialspoint.com/jdbc/jdbc-data-types.htm
 	 */
-	public static void setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType) throws SQLException {
+	public static void setPreparedStatementObject(final PreparedStatement preparedStatement, final int index, final Object value, final int targetSqlType) throws SQLException {
 		if (value == null) {
 			preparedStatement.setNull(index, Types.NULL);
+			return;
 		}
 
 		switch (targetSqlType) {
 			case Types.VARCHAR:
 			case Types.LONGVARCHAR:
 			case Types.CHAR:
-				preparedStatement.setString(index, Convert.toString(value));
+				preparedStatement.setString(index, Converter.get().toString(value));
 				break;
 
 			case Types.INTEGER:
 			case Types.SMALLINT:
 			case Types.TINYINT:
-				preparedStatement.setInt(index, Convert.toIntValue(value));
+				preparedStatement.setInt(index, Converter.get().toIntValue(value));
 				break;
 
 			case Types.BIGINT:
-				preparedStatement.setLong(index, Convert.toLongValue(value));
+				preparedStatement.setLong(index, Converter.get().toLongValue(value));
 				break;
 
 			case Types.BOOLEAN:
 			case Types.BIT:
-				preparedStatement.setBoolean(index, Convert.toBooleanValue(value));
+				preparedStatement.setBoolean(index, Converter.get().toBooleanValue(value));
 				break;
 
 			case Types.DATE:
-				preparedStatement.setDate(index, TypeConverterManager.convertType(value, java.sql.Date.class));
+				preparedStatement.setDate(index, TypeConverterManager.get().convertType(value, java.sql.Date.class));
 				break;
 
 			case Types.NUMERIC:
 			case Types.DECIMAL:
-				preparedStatement.setBigDecimal(index, Convert.toBigDecimal(value));
+				preparedStatement.setBigDecimal(index, Converter.get().toBigDecimal(value));
 				break;
 
 			case Types.DOUBLE:
-				preparedStatement.setDouble(index, Convert.toDoubleValue(value));
+				preparedStatement.setDouble(index, Converter.get().toDoubleValue(value));
 				break;
 
 			case Types.REAL:
 			case Types.FLOAT:
-				preparedStatement.setFloat(index, Convert.toFloatValue(value));
+				preparedStatement.setFloat(index, Converter.get().toFloatValue(value));
 			    break;
 
 			case Types.TIME:
-				preparedStatement.setTime(index, TypeConverterManager.convertType(value, java.sql.Time.class));
+				preparedStatement.setTime(index, TypeConverterManager.get().convertType(value, java.sql.Time.class));
 				break;
 
 			case Types.TIMESTAMP:
-				preparedStatement.setTimestamp(index, TypeConverterManager.convertType(value, Timestamp.class));
+				preparedStatement.setTimestamp(index, TypeConverterManager.get().convertType(value, Timestamp.class));
 				break;
 
 			case Types.BINARY:
 			case Types.VARBINARY:
-				preparedStatement.setBytes(index, TypeConverterManager.convertType(value, byte[].class));
+				preparedStatement.setBytes(index, TypeConverterManager.get().convertType(value, byte[].class));
 				break;
 
 			default:

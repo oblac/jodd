@@ -25,13 +25,14 @@
 
 package jodd.vtor;
 
+import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -57,20 +58,16 @@ public class ValidationContext {
 	/**
 	 * Adds validation checks.
 	 */
-	public void add(Check check) {
+	public void add(final Check check) {
 		String name = check.getName();
-		List<Check> list = map.get(name);
-		if (list == null) {
-			list = new ArrayList<>();
-			map.put(name, list);
-		}
+		List<Check> list = map.computeIfAbsent(name, k -> new ArrayList<>());
 		list.add(check);
 	}
 
 	/**
 	 * Adds all checks from provided list.
 	 */
-	public void addAll(List<Check> checkList) {
+	public void addAll(final List<Check> checkList) {
 		for (Check check : checkList) {
 			add(check);
 		}
@@ -79,13 +76,13 @@ public class ValidationContext {
 
 	// ---------------------------------------------------------------- annotation resolver
 
-	private static Map<Class, List<Check>> cache = new HashMap<>();
+	public static TypeCache<List<Check>> cache = TypeCache.createDefault();
 
 	/**
 	 * Resolve validation context for provided target class.
 	 * @see #addClassChecks(Class)
 	 */
-	public static ValidationContext resolveFor(Class<?> target) {
+	public static ValidationContext resolveFor(final Class<?> target) {
 		ValidationContext vc = new ValidationContext();
 		vc.addClassChecks(target);
 		return vc;
@@ -95,26 +92,23 @@ public class ValidationContext {
 	 * Parses class annotations and adds all checks.
 	 * @see #resolveFor(Class)
 	 */
-	public void addClassChecks(Class target) {
-		List<Check> list = cache.get(target);
-		if (list == null) {
-			list = new ArrayList<>();
-			ClassDescriptor cd = ClassIntrospector.lookup(target);
-
-			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+	public void addClassChecks(final Class target) {
+		final List<Check> list = cache.get(target, () -> {
+			final List<Check> newList = new ArrayList<>();
+			final ClassDescriptor cd = ClassIntrospector.get().lookup(target);
+			final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : allProperties) {
-				collectPropertyAnnotationChecks(list, propertyDescriptor);
+				collectPropertyAnnotationChecks(newList, propertyDescriptor);
 			}
-
-			cache.put(target, list);
-		}
+			return newList;
+		});
 		addAll(list);
 	}
 
 	/**
 	 * Process all annotations of provided properties.
 	 */
-	protected void collectPropertyAnnotationChecks(List<Check> annChecks, PropertyDescriptor propertyDescriptor) {
+	protected void collectPropertyAnnotationChecks(final List<Check> annChecks, final PropertyDescriptor propertyDescriptor) {
 		FieldDescriptor fd = propertyDescriptor.getFieldDescriptor();
 
 		if (fd != null) {
@@ -139,7 +133,7 @@ public class ValidationContext {
 	 * Collect annotations for some target.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void collectAnnotationChecks(List<Check> annChecks, Class targetType, String targetName, Annotation[] annotations) {
+	protected void collectAnnotationChecks(final List<Check> annChecks, final Class targetType, final String targetName, final Annotation[] annotations) {
 		for (Annotation annotation : annotations) {
 			Constraint c = annotation.annotationType().getAnnotation(Constraint.class);
 			Class<? extends ValidationConstraint> constraintClass;
@@ -180,7 +174,7 @@ public class ValidationContext {
 	 * <li>otherwise, use constructor with ValidationContext parameter.</li>
 	 * </ul>
 	 */
-	protected <V extends ValidationConstraint> V newConstraint(Class<V> constraint, Class targetType) throws Exception {
+	protected <V extends ValidationConstraint> V newConstraint(final Class<V> constraint, final Class targetType) throws Exception {
 		Constructor<V> ctor;
 		try {
 			ctor = constraint.getConstructor();
@@ -192,18 +186,17 @@ public class ValidationContext {
 	}
 
 
-
 	/**
 	 * Copies default properties from annotation to the check.
 	 */
-	protected void copyDefaultCheckProperties(Check destCheck, Annotation annotation) {
-		Integer severity = (Integer) ReflectUtil.readAnnotationValue(annotation, ANN_SEVERITY);
+	protected void copyDefaultCheckProperties(final Check destCheck, final Annotation annotation) {
+		Integer severity = (Integer) ClassUtil.readAnnotationValue(annotation, ANN_SEVERITY);
 		destCheck.setSeverity(severity.intValue());
 
-		String[] profiles = (String[]) ReflectUtil.readAnnotationValue(annotation, ANN_PROFILES);
+		String[] profiles = (String[]) ClassUtil.readAnnotationValue(annotation, ANN_PROFILES);
 		destCheck.setProfiles(profiles);
 
-		String message = (String) ReflectUtil.readAnnotationValue(annotation, ANN_MESSAGE);
+		String message = (String) ClassUtil.readAnnotationValue(annotation, ANN_MESSAGE);
 		destCheck.setMessage(message);
 	}
 

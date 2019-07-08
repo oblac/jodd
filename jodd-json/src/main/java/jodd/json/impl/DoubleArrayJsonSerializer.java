@@ -34,7 +34,11 @@ import jodd.json.TypeJsonSerializer;
 public class DoubleArrayJsonSerializer implements TypeJsonSerializer<double[]> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, double[] array) {
+	public boolean serialize(final JsonContext jsonContext, final double[] array) {
+		if (array.length == 0 && jsonContext.isExcludeEmpty()) {
+			return true;
+		}
+
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {

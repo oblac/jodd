@@ -25,32 +25,33 @@
 
 package jodd.petite;
 
-import jodd.petite.tst.Foo;
-import org.junit.Test;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Val;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ParamTest {
+class ParamTest {
 
 	@Test
-	public void testSimpleParams() {
+	void testSimpleParams() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
 		pc.defineParameter("foo.name", "FOONAME");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("FOONAME", foo.getName());
 	}
 
 	@Test
-	public void testRefParams() {
+	void testRefParams() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
 		pc.defineParameter("foo.name", "$${name}");
 		pc.defineParameter("name", "${name${num}}");
@@ -58,42 +59,42 @@ public class ParamTest {
 		pc.defineParameter("name2", "FOONAME");
 		pc.defineParameter("FOONAME", "aaa");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("$FOONAME", foo.getName());
 	}
 
 	@Test
-	public void testRefParamsEscape() {
+	void testRefParamsEscape() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
 		pc.defineParameter("foo.name", "\\${name}");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("${name}", foo.getName());
 	}
 
 	@Test
-	public void testRefParamsNoResolve() {
+	void testRefParamsNoResolve() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setResolveReferenceParameters(false);
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.config().setResolveReferenceParameters(false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
 		pc.defineParameter("foo.name", "${name}");
 		pc.defineParameter("name", "${name2}");
 		pc.defineParameter("name2", "FOONAME");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("${name}", foo.getName());
 	}
 
 	@Test
-	public void testProperties() {
+	void testProperties() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 
 		Properties p = new Properties();
 		p.setProperty("foo.name", "${name}");
@@ -101,9 +102,38 @@ public class ParamTest {
 		p.setProperty("name2", "FOONAME");
 		pc.defineParameters(p);
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("FOONAME", foo.getName());
+	}
+
+	@Test
+	void testInjectedParams() {
+		final PetiteContainer pc = new PetiteContainer();
+		pc.registerPetiteBean(Val.class, null, null, null, false, null);
+		pc.config().setImplicitParamInjection(false);
+
+		pc.defineParameter("someValue", "173");
+		pc.defineParameter("jodd.is.cool", "yes!");
+
+		Val val = pc.getBean("val");
+		assertNotNull(val);
+		assertEquals("{foo=173,hello='WOO-yes!173'}", val.toString());
+
+	}
+
+	@Test
+	void testEmptyParam() {
+		final PetiteContainer pc = new PetiteContainer();
+		pc.registerPetiteBean(Val.class, null, null, null, false, null);
+		pc.config().setImplicitParamInjection(false);
+
+		pc.defineParameter("someValue", "173");
+		pc.defineParameter("justValue", "aaa");
+
+		Val val = pc.getBean("val");
+		assertNotNull(val);
+		assertEquals("aaa", val.getJustValue());
 	}
 
 }

@@ -25,32 +25,58 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmUtil;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.AnnotationVisitor;
-
-import static jodd.asm5.Opcodes.ACC_ABSTRACT;
-import static jodd.asm5.Opcodes.ACC_NATIVE;
-import static jodd.asm5.Opcodes.ASTORE;
-import static jodd.asm5.Opcodes.GETFIELD;
-import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.asm5.Opcodes.ARETURN;
-import static jodd.asm5.Opcodes.POP;
-import static jodd.asm5.Opcodes.POP2;
-import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm5.Opcodes.INVOKEINTERFACE;
-import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.ALOAD;
-import jodd.proxetta.ProxettaException;
-import jodd.proxetta.ProxyTarget;
-import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.proxetta.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
+import jodd.asm.AsmUtil;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.asm7.AnnotationVisitor;
+import jodd.asm7.MethodVisitor;
+import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaNames;
+import jodd.proxetta.ProxyTarget;
 import jodd.proxetta.ProxyTargetReplacement;
 
 import java.util.List;
+
+import static jodd.asm7.Opcodes.ACC_ABSTRACT;
+import static jodd.asm7.Opcodes.ACC_NATIVE;
+import static jodd.asm7.Opcodes.ALOAD;
+import static jodd.asm7.Opcodes.ARETURN;
+import static jodd.asm7.Opcodes.ASTORE;
+import static jodd.asm7.Opcodes.GETFIELD;
+import static jodd.asm7.Opcodes.INVOKEINTERFACE;
+import static jodd.asm7.Opcodes.INVOKESPECIAL;
+import static jodd.asm7.Opcodes.INVOKESTATIC;
+import static jodd.asm7.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm7.Opcodes.POP;
+import static jodd.asm7.Opcodes.POP2;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceFieldName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceMethodName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.castToReturnType;
+import static jodd.proxetta.asm.ProxettaAsmUtil.checkArgumentIndex;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentsCountMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isCreateArgumentsArrayMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isCreateArgumentsClassArrayMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isInvokeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isReturnTypeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isReturnValueMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isSetArgumentMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetClassAnnotationMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetClassMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodAnnotationMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodDescriptionMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodNameMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodSignatureMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadStaticMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.prepareReturnValue;
+import static jodd.proxetta.asm.ProxettaAsmUtil.storeMethodArgumentFromObject;
+import static jodd.proxetta.asm.ProxettaAsmUtil.visitReturn;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class ProxettaMethodBuilder extends EmptyMethodVisitor {
@@ -61,7 +87,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected final WorkData wd;
 	protected final List<ProxyAspectData> aspectList;
 
-	public ProxettaMethodBuilder(MethodSignatureVisitor msign, WorkData wd, List<ProxyAspectData> aspectList) {
+	public ProxettaMethodBuilder(final MethodSignatureVisitor msign, final WorkData wd, final List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.wd = wd;
 		this.aspectList = aspectList;
@@ -74,7 +100,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * Copies target method annotations.
 	 */
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		AnnotationVisitor destAnn = methodVisitor.visitAnnotation(desc, visible); // [A4]
 		return new AnnotationVisitorAdapter(destAnn);
 	}
@@ -86,7 +112,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 		AnnotationVisitor destAnn = methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return new AnnotationVisitorAdapter(destAnn);
 	}
@@ -116,8 +142,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected void createFirstChainDelegate_Start() {
 		// check invalid access flags
 		int access = msign.getAccessFlags();
-		if ((access & AsmUtil.ACC_FINAL) != 0) {   // detect final
-			throw new ProxettaException("Unable to create proxy for final method: " + msign +". Remove final modifier or change the pointcut definition.");
+		if (!wd.allowFinalMethods) {
+			if ((access & AsmUtil.ACC_FINAL) != 0) {   // detect final
+				throw new ProxettaException(
+					"Unable to create proxy for final method: " + msign + ". Remove final modifier or change the pointcut definition.");
+			}
 		}
 
 		// create proxy methods
@@ -127,14 +156,14 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		access &= ~ACC_ABSTRACT;
 
 		methodVisitor = wd.dest.visitMethod(
-				access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getRawSignature(), null);
+				access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getAsmMethodSignature(), null);
 	}
 
 	/**
 	 * Continues the creation of the very first method in calling chain that simply delegates invocation to the first proxy method.
 	 * This method mirrors the target method.
 	 */
-	protected void createFirstChainDelegate_Continue(TargetMethodData tmd) {
+	protected void createFirstChainDelegate_Continue(final TargetMethodData tmd) {
 		methodVisitor.visitCode();
 
 		if (tmd.msign.isStatic) {
@@ -185,16 +214,16 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		aspectData.getAdviceClassReader().accept(new EmptyClassVisitor() {
 
 			@Override
-			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 
-				if (!name.equals(executeMethodName)) {
+				if (!name.equals(ProxettaNames.executeMethodName)) {
 					return null;
 				}
 
 				return new HistoryMethodAdapter(mv) {
 
 					@Override
-					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+					public void visitFieldInsn(final int opcode, String owner, String name, final String desc) {
 						if (owner.equals(aspectData.adviceReference)) {
 							owner = wd.thisReference;              // [F5]
 							name = adviceFieldName(name, aspectData.aspectIndex);
@@ -204,7 +233,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 
 					@Override
-					public void visitVarInsn(int opcode, int var) {
+					public void visitVarInsn(final int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
 
 						if (proxyInfoRequested) {
@@ -218,13 +247,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					}
 
 					@Override
-					public void visitIincInsn(int var, int increment) {
+					public void visitIincInsn(int var, final int increment) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
 						super.visitIincInsn(var, increment);  // [F1]
 					}
 
 					@Override
-					public void visitInsn(int opcode) {
+					public void visitInsn(final int opcode) {
 						if (opcode == ARETURN) {
 							visitReturn(mv, td.msign, true);
 							return;
@@ -239,7 +268,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 					@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 					@Override
-					public void visitMethodInsn(int opcode, String string, String mname, String mdesc, boolean isInterface) {
+					public void visitMethodInsn(final int opcode, String string, String mname, final String mdesc, final boolean isInterface) {
 						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE) || (opcode == INVOKESPECIAL)) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;

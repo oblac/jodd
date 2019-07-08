@@ -25,13 +25,15 @@
 
 package jodd.db.oom.mapper;
 
+import jodd.db.oom.DbEntityManager;
+
 import java.sql.ResultSet;
 
 /**
  * ResultSet mapper which implementations parse objects from one result set row.
  * There are two ways of mapping. The basic way is mapping against provided
  * entity types. The second, extended, way is auto-mapping, where no types
- * are provided. Instead, they are mapped by {@link jodd.db.oom.DbOomManager} or
+ * are provided. Instead, they are mapped by {@link DbEntityManager} or
  * similar external class.
  * <p>
  * There should be only one instance of <code>ResultSetMapper</code> per <code>ResultSet</code>.

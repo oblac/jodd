@@ -28,7 +28,7 @@ package jodd.http;
 import jodd.http.up.Uploadable;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,13 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class BufferTest {
+class BufferTest {
 
-	public class SimpleUploadable implements Uploadable {
+	class SimpleUploadable implements Uploadable {
 
 		final int size;
 		final byte[] bytes;
@@ -85,7 +85,7 @@ public class BufferTest {
 		}
 	}
 
-	public class SimpleProgressListener extends HttpProgressListener {
+	class SimpleProgressListener extends HttpProgressListener {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -104,7 +104,7 @@ public class BufferTest {
 	}
 
 	@Test
-	public void testBufferAppend() {
+	void testBufferAppend() {
 		Buffer buffer = new Buffer();
 
 		assertEquals(0, buffer.size());
@@ -145,7 +145,7 @@ public class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite1() throws IOException {
+	void testBufferWrite1() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;
@@ -188,7 +188,7 @@ public class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite2() throws IOException {
+	void testBufferWrite2() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;
@@ -239,7 +239,7 @@ public class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite3() throws IOException {
+	void testBufferWrite3() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;

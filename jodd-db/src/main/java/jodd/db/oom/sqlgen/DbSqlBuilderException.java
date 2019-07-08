@@ -29,13 +29,13 @@ import jodd.db.oom.DbOomException;
 
 public class DbSqlBuilderException extends DbOomException {
 
-	public DbSqlBuilderException(String message) {
+	public DbSqlBuilderException(final String message) {
 		super(message);
 	}
 
 	protected String queryString;
 
-	public void setQueryString(String queryString) {
+	public void setQueryString(final String queryString) {
 		this.queryString = queryString;
 	}
 

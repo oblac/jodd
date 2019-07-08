@@ -60,13 +60,13 @@ public class UnicodeInputStream extends InputStream {
 	 * Read mode is active when target encoding is set. Then this stream reads
 	 * optional BOM for given encoding. If BOM doesn't exist, nothing is skipped.
 	 */
-	public UnicodeInputStream(InputStream in, String targetEncoding) {
+	public UnicodeInputStream(final InputStream in, final String targetEncoding) {
 		internalInputStream = new PushbackInputStream(in, MAX_BOM_SIZE);
 		this.targetEncoding = targetEncoding;
 	}
 
 	/**
-	 * Returns detected UTF encoding or <code>null</code> if no UTF encoding has been detected (i.e. no BOM).
+	 * Returns detected UTF encoding or {@code null} if no UTF encoding has been detected (i.e. no BOM).
 	 * If stream is not read yet, it will be {@link #init() initalized} first.
 	 */
 	public String getDetectedEncoding() {

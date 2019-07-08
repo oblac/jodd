@@ -25,29 +25,40 @@
 
 package jodd.petite;
 
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
+import jodd.petite.def.ValueInjectionPoint;
+import jodd.petite.meta.PetiteValue;
+import jodd.template.ContextTemplateParser;
+import jodd.template.MapTemplateParser;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
- * Parameter storage and resolver.
+ * Parameters storage and resolver. Parameters are injected into beans.
  */
 public class ParamManager {
 
 	protected final Map<String, Object> params;
+	protected final ContextTemplateParser contextTemplateParser;
 
 	public ParamManager() {
 		params = new HashMap<>();
+		contextTemplateParser =  new MapTemplateParser().of(params);
 	}
 
 	/**
 	 * Adds a parameter.
 	 */
-	public void put(String name, Object value) {
+	public void put(final String name, final Object value) {
 		params.put(name, value);
 	}
 
@@ -55,15 +66,19 @@ public class ParamManager {
 	 * Returns parameter for given name or <code>null</code>
 	 * if not found.
 	 */
-	public Object get(String name) {
+	public Object get(final String name) {
 		return params.get(name);
+	}
+
+	public String parseKeyTemplate(final String input) {
+		return contextTemplateParser.parse(input);
 	}
 
 	/**
 	 * Returns an array of param keys that belongs to provided bean.
 	 * Optionally resolves the value of returned parameters.
 	 */
-	public String[] resolve(String beanName, boolean resolveReferenceParams) {
+	public String[] filterParametersForBeanName(String beanName, final boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 
 		List<String> list = new ArrayList<>();
@@ -83,8 +98,39 @@ public class ParamManager {
 		if (list.isEmpty()) {
 			return StringPool.EMPTY_ARRAY;
 		} else {
-			return list.toArray(new String[list.size()]);
+			return list.toArray(new String[0]);
 		}
+	}
+
+	public ValueInjectionPoint[] resolveParamInjectionPoints(final Class type) {
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+
+		final List<ValueInjectionPoint> valueInjectionPointList = new ArrayList<>();
+
+		for (final PropertyDescriptor pd : cd.getAllPropertyDescriptors()) {
+			final FieldDescriptor fd = pd.getFieldDescriptor();
+
+			if (fd != null) {
+				final PetiteValue petiteValue = fd.getField().getAnnotation(PetiteValue.class);
+
+				if (petiteValue != null) {
+					valueInjectionPointList.add(new ValueInjectionPoint(pd.getName(), petiteValue.value()));
+					continue;
+				}
+			}
+
+			MethodDescriptor md = pd.getWriteMethodDescriptor();
+			if (md != null) {
+				final PetiteValue petiteValue = md.getMethod().getAnnotation(PetiteValue.class);
+
+				if (petiteValue != null) {
+					valueInjectionPointList.add(new ValueInjectionPoint(pd.getName(), petiteValue.value()));
+					continue;
+				}
+			}
+		}
+
+		return valueInjectionPointList.toArray(new ValueInjectionPoint[0]);
 	}
 
 }

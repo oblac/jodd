@@ -28,14 +28,15 @@ package jodd.mail;
 import jodd.util.StringPool;
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.MessagingException;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,258 +45,320 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Encapsulates email sending session. Prepares and sends message(s).
+ * Encapsulates {@link Email} sending session. Prepares and sends {@link #sendMail(Email)} {@link Email}s.
  */
-public class SendMailSession {
+public class SendMailSession extends MailSession<Transport> {
 
 	private static final String ALTERNATIVE = "alternative";
 	private static final String RELATED = "related";
 	private static final String CHARSET = ";charset=";
 	private static final String INLINE = "inline";
-	
-	protected final Session mailSession;
-	protected final Transport mailTransport;
 
 	static {
-		JoddMail.mailSystem.defineJavaMailSystemProperties();
+		setupSystemMailProperties();
 	}
 
 	/**
 	 * Creates new mail session.
+	 *
+	 * @param session   {@link Session}
+	 * @param transport {@link Transport}
 	 */
-	public SendMailSession(Session session, Transport transport) {
-		this.mailSession = session;
-		this.mailTransport = transport;
+	public SendMailSession(final Session session, final Transport transport) {
+		super(session, transport);
+	}
+
+	@Override
+	public Transport getService() {
+		return (Transport) service;
 	}
 
 	/**
-	 * Opens mail session.
+	 * Prepares message and sends it. Returns Message ID of sent email.
+	 *
+	 * @param email {@link Email} to send.
+	 * @return String representing message ID.
 	 */
-	public void open() {
+	public String sendMail(final Email email) {
 		try {
-			mailTransport.connect();
-		} catch (MessagingException msex) {
-			throw new MailException("Failed to connect", msex);
-		}
-	}
-
-	/**
-	 * Prepares message and sends it.
-	 * Returns Message ID of sent email.
-	 */
-	public String sendMail(Email mail) {
-		MimeMessage msg;
-		try {
-			msg = createMessage(mail, mailSession);
-		} catch (MessagingException mex) {
-			throw new MailException("Failed to prepare email: " + mail, mex);
-		}
-		try {
-			mailTransport.sendMessage(msg, msg.getAllRecipients());
-
+			final MimeMessage msg = createMessage(email);
+			getService().sendMessage(msg, msg.getAllRecipients());
 			return msg.getMessageID();
-		} catch (MessagingException mex) {
-			throw new MailException("Failed to send email: " + mail, mex);
+		} catch (final MessagingException msgexc) {
+			throw new MailException("Failed to send email: " + email, msgexc);
 		}
 	}
 
-	/**
-	 * Closes session.
-	 */
-	public void close() {
-		try {
-			mailTransport.close();
-		} catch (MessagingException mex) {
-			throw new MailException("Failed to close session", mex);
-		}
-	}
-
-	
 	// ---------------------------------------------------------------- adapter
 
 	/**
-	 * Creates new JavaX message from {@link Email email}.
+	 * Creates new {@link MimeMessage} from an {@link Email}.
+	 *
+	 * @param email {@link Email} to be created as a {@link MimeMessage}.
+	 * @return {@link MimeMessage} created from an {@link Email}.
+	 * @throws MessagingException if there is a failure
 	 */
-	protected MimeMessage createMessage(Email email, Session session) throws MessagingException {
-		MimeMessage msg = new MimeMessage(session);
+	protected MimeMessage createMessage(final Email email) throws MessagingException {
+		final Email clone = email.clone();
 
-		msg.setFrom(email.getFrom().toInternetAddress());
+		final MimeMessage newMsg = new MimeMessage(getSession());
 
-		// to
-		int totalTo = email.getTo().length;
-		InternetAddress[] address = new InternetAddress[totalTo];
-		for (int i = 0; i < totalTo; i++) {
-			address[i] = email.getTo()[i].toInternetAddress();
-		}
-		msg.setRecipients(Message.RecipientType.TO, address);
+		setPeople(clone, newMsg);
+		setSubject(clone, newMsg);
+		setSentDate(clone, newMsg);
+		setHeaders(clone, newMsg);
+		addBodyData(clone, newMsg);
+		return newMsg;
+	}
 
-		// replyTo
-		if (email.getReplyTo() != null) {
-			int totalReplyTo = email.getReplyTo().length;
-			address = new InternetAddress[totalReplyTo];
-			for (int i = 0; i < totalReplyTo; i++) {
-				address[i] = email.getReplyTo()[i].toInternetAddress();
-			}
-			msg.setReplyTo(address);
-		}
-
-		// cc
-		if (email.getCc() != null) {
-			int totalCc = email.getCc().length;
-			address = new InternetAddress[totalCc];
-			for (int i = 0; i < totalCc; i++) {
-				address[i] = email.getCc()[i].toInternetAddress();
-			}
-			msg.setRecipients(Message.RecipientType.CC, address);
-		}
-
-		// bcc
-		if (email.getBcc() != null) {
-			int totalBcc = email.getBcc().length;
-			address = new InternetAddress[totalBcc];
-			for (int i = 0; i < totalBcc; i++) {
-				address[i] = email.getBcc()[i].toInternetAddress();
-			}
-			msg.setRecipients(Message.RecipientType.BCC, address);
-		}
-
-		// subject & date
-
-		if (email.getSubjectEncoding() != null) {
-			msg.setSubject(email.getSubject(), email.getSubjectEncoding());
+	/**
+	 * Sets subject in msgToSet from subject in emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 */
+	private void setSubject(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		if (emailWithData.subjectEncoding() != null) {
+			msgToSet.setSubject(emailWithData.subject(), emailWithData.subjectEncoding());
 		} else {
-			msg.setSubject(email.getSubject());
+			msgToSet.setSubject(emailWithData.subject());
 		}
+	}
 
-
-		Date date = email.getSentDate();
+	/**
+	 * Sets sent date in msgToSet with sent date from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 */
+	private void setSentDate(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		Date date = emailWithData.sentDate();
 		if (date == null) {
 			date = new Date();
 		}
-		msg.setSentDate(date);
+		msgToSet.setSentDate(date);
+	}
 
-		// headers
-		Map<String, String> headers = email.getAllHeaders();
+	/**
+	 * Sets headers in msgToSet with headers from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 */
+	private void setHeaders(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		final Map<String, String> headers = emailWithData.headers();
 		if (headers != null) {
-			for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
-				String value = stringStringEntry.getValue();
-				msg.setHeader(stringStringEntry.getKey(), value);
+			for (final Map.Entry<String, String> entry : headers.entrySet()) {
+				msgToSet.setHeader(entry.getKey(), entry.getValue());
 			}
 		}
+	}
 
-		// message data and attachments
-		List<EmailMessage> messages = email.getAllMessages();
-		List<EmailAttachment> attachments = email.getAttachments();
-		int totalMessages = messages.size();
+	/**
+	 * Sets FROM, REPLY-TO and recipients.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 */
+	private void setPeople(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		msgToSet.setFrom(emailWithData.from().toInternetAddress());
+		msgToSet.setReplyTo(EmailAddress.convert(emailWithData.replyTo()));
+		setRecipients(emailWithData, msgToSet);
+	}
 
-		if ((attachments == null) && (totalMessages == 1)) {
+	/**
+	 * Sets TO, CC and BCC in msgToSet with TO, CC and BCC from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private void setRecipients(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		// TO
+		final InternetAddress[] to = EmailAddress.convert(emailWithData.to());
+		if (to.length > 0) {
+			msgToSet.setRecipients(RecipientType.TO, to);
+		}
+
+		// CC
+		final InternetAddress[] cc = EmailAddress.convert(emailWithData.cc());
+		if (cc.length > 0) {
+			msgToSet.setRecipients(RecipientType.CC, cc);
+		}
+
+		// BCC
+		final InternetAddress[] bcc = EmailAddress.convert(emailWithData.bcc());
+		if (bcc.length > 0) {
+			msgToSet.setRecipients(RecipientType.BCC, bcc);
+		}
+	}
+
+	/**
+	 * Adds message data and attachments.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private void addBodyData(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		final List<EmailMessage> messages = emailWithData.messages();
+
+		final int totalMessages = messages.size();
+
+		// Need to use new list since filterEmbeddedAttachments(List) removes attachments from the source List
+		final List<EmailAttachment<? extends DataSource>> attachments = new ArrayList<>(emailWithData.attachments());
+
+		if (attachments.isEmpty() && totalMessages == 1) {
 			// special case: no attachments and just one content
-			EmailMessage emailMessage = messages.get(0);
-
-			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
+			setContent(messages.get(0), msgToSet);
 
 		} else {
-			Multipart multipart = new MimeMultipart();
-			Multipart msgMultipart = multipart;
+			final MimeMultipart multipart = new MimeMultipart();
 
-			if (totalMessages > 1) {
-				MimeBodyPart bodyPart = new MimeBodyPart();
-				msgMultipart = new MimeMultipart(ALTERNATIVE);
-				bodyPart.setContent(msgMultipart);
-				multipart.addBodyPart(bodyPart);
+			final MimeMultipart msgMultipart = new MimeMultipart(ALTERNATIVE);
+			multipart.addBodyPart(getBaseBodyPart(msgMultipart));
+			for (final EmailMessage emailMessage : messages) {
+				msgMultipart.addBodyPart(getBodyPart(emailMessage, attachments));
 			}
 
-			for (EmailMessage emailMessage : messages) {
-				// detect embedded attachments
-				List<EmailAttachment> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
+			addAnyAttachments(attachments, multipart);
 
-				MimeBodyPart bodyPart = new MimeBodyPart();
-
-				if (embeddedAttachments == null) {
-					// no embedded attachments, just add message
-					bodyPart.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
-				} else {
-					// embedded attachments detected, join them as related
-					MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
-
-					MimeBodyPart messageData = new MimeBodyPart();
-
-					messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
-
-					relatedMultipart.addBodyPart(messageData);
-
-					for (EmailAttachment att : embeddedAttachments) {
-						MimeBodyPart attBodyPart = createAttachmentBodyPart(att);
-						relatedMultipart.addBodyPart(attBodyPart);
-					}
-
-					bodyPart.setContent(relatedMultipart);
-				}
-
-				msgMultipart.addBodyPart(bodyPart);
-
-			}
-
-			if (attachments != null) {
-				// attach remaining attachments
-				for (EmailAttachment att : attachments) {
-					MimeBodyPart attBodyPart = createAttachmentBodyPart(att);
-					multipart.addBodyPart(attBodyPart);
-				}
-			}
-
-			msg.setContent(multipart);
+			msgToSet.setContent(multipart);
 		}
-		return msg;
+	}
+
+	/**
+	 * Returns new {@link MimeBodyPart} with content set as msgMultipart.
+	 *
+	 * @param msgMultipart {@link MimeMultipart} to add to the new {@link MimeBodyPart}.
+	 * @return new {@link MimeBodyPart} with content set as msgMultipart.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private MimeBodyPart getBaseBodyPart(final MimeMultipart msgMultipart) throws MessagingException {
+		final MimeBodyPart bodyPart = new MimeBodyPart();
+		bodyPart.setContent(msgMultipart);
+		return bodyPart;
+	}
+
+	/**
+	 * @param emailMessage {@link EmailMessage} with data.
+	 * @param attachments  {@link List} of {@link EmailAttachment}s.
+	 * @return new {@link MimeBodyPart} with data from emailMessage and attachments.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private MimeBodyPart getBodyPart(final EmailMessage emailMessage, final List<EmailAttachment<? extends DataSource>> attachments) throws MessagingException {
+
+		final MimeBodyPart bodyPart = new MimeBodyPart();
+
+		// detect embedded attachments
+		final List<EmailAttachment<? extends DataSource>> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
+
+		if (embeddedAttachments.isEmpty()) {
+			// no embedded attachments, just add message
+			setContent(emailMessage, bodyPart);
+		} else {
+			attachments.removeAll(embeddedAttachments);
+
+			// embedded attachments detected, join them as related
+			final MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
+
+			final MimeBodyPart messageData = new MimeBodyPart();
+
+			setContent(emailMessage, messageData);
+
+			relatedMultipart.addBodyPart(messageData);
+
+			addAnyAttachments(embeddedAttachments, relatedMultipart);
+
+			bodyPart.setContent(relatedMultipart);
+		}
+
+		return bodyPart;
+	}
+
+	/**
+	 * Sets emailWithData content into msgToSet.
+	 *
+	 * @param emailWithData {@link EmailMessage} with data.
+	 * @param partToSet     {@link Part} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private void setContent(final EmailMessage emailWithData, final Part partToSet) throws MessagingException {
+		partToSet.setContent(emailWithData.getContent(), emailWithData.getMimeType() + CHARSET + emailWithData.getEncoding());
 	}
 
 	/**
 	 * Creates attachment body part. Handles regular and inline attachments.
+	 *
+	 * @param attachment Body part {@link EmailAttachment}.
+	 * @return {@link MimeBodyPart} which represents body part attachment.
+	 * @throws MessagingException if there is a failure.
 	 */
-	protected MimeBodyPart createAttachmentBodyPart(EmailAttachment attachment) throws MessagingException {
-		MimeBodyPart attBodyPart = new MimeBodyPart();
+	protected MimeBodyPart createAttachmentBodyPart(final EmailAttachment<? extends DataSource> attachment) throws MessagingException {
+		final MimeBodyPart part = new MimeBodyPart();
 
-		String attachmentName = attachment.getEncodedName();
+		final String attachmentName = attachment.getEncodedName();
 		if (attachmentName != null) {
-			attBodyPart.setFileName(attachmentName);
+			part.setFileName(attachmentName);
 		}
 
-		attBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
-		if (attachment.isInline()) {
-			attBodyPart.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
-			attBodyPart.setDisposition(INLINE);
+		part.setDataHandler(new DataHandler(attachment.getDataSource()));
+
+		if (attachment.getContentId() != null) {
+			part.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
 		}
-		return attBodyPart;
+		if (attachment.isInline()) {
+			part.setDisposition(INLINE);
+		}
+
+		return part;
 	}
 
 	/**
-	 * Filters out the list of embedded attachments for given message. If none found, returns <code>null</code>.
+	 * Filters out the {@link List} of embedded {@link EmailAttachment}s for given {@link EmailMessage}.
+	 * This will remove the embedded attachments from the {@link List} and return them in a new {@link List}.
+	 *
+	 * @param attachments  {@link List} of attachments to search for in emailMessage.
+	 * @param emailMessage {@link EmailMessage} to see if attachment is embedded into.
+	 * @return {@link List} of embedded {@link EmailAttachment}s; otherwise, returns empty {@link List}.
 	 */
-	protected List<EmailAttachment> filterEmbeddedAttachments(List<EmailAttachment> attachments, EmailMessage emailMessage) {
-		if (attachments == null) {
-			return null;
+	protected List<EmailAttachment<? extends DataSource>> filterEmbeddedAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final EmailMessage emailMessage) {
+		final List<EmailAttachment<? extends DataSource>> embeddedAttachments = new ArrayList<>();
+
+		if (attachments == null || attachments.isEmpty() || emailMessage == null) {
+			return embeddedAttachments;
 		}
 
-		List<EmailAttachment> embeddedAttachments = null;
-
-		Iterator<EmailAttachment> iterator = attachments.iterator();
+		final Iterator<EmailAttachment<? extends DataSource>> iterator = attachments.iterator();
 
 		while (iterator.hasNext()) {
-			EmailAttachment emailAttachment = iterator.next();
+			final EmailAttachment<? extends DataSource> emailAttachment = iterator.next();
 
 			if (emailAttachment.isEmbeddedInto(emailMessage)) {
-
-				if (embeddedAttachments == null) {
-					embeddedAttachments = new ArrayList<>();
-				}
-
 				embeddedAttachments.add(emailAttachment);
-
 				iterator.remove();
 			}
 		}
 
 		return embeddedAttachments;
+	}
+
+	/**
+	 * Adds {@link List} of {@link EmailAttachment}s to multipart.
+	 *
+	 * @param attachments {@link List} of {@link EmailAttachment}s to add to multipart. This can be {@code null}.
+	 * @param multipart   {@link MimeMultipart} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 */
+	private void addAnyAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final MimeMultipart multipart) throws MessagingException {
+		for (final EmailAttachment<? extends DataSource> attachment : attachments) {
+			final MimeBodyPart bodyPart = createAttachmentBodyPart(attachment);
+			multipart.addBodyPart(bodyPart);
+		}
 	}
 
 }

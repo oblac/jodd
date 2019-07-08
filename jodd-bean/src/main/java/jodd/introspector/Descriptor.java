@@ -33,7 +33,7 @@ public abstract class Descriptor {
 	protected final ClassDescriptor classDescriptor;
 	protected final boolean isPublic;
 
-	protected Descriptor(ClassDescriptor classDescriptor, boolean isPublic) {
+	protected Descriptor(final ClassDescriptor classDescriptor, final boolean isPublic) {
 		this.classDescriptor = classDescriptor;
 		this.isPublic = isPublic;
 	}
@@ -55,7 +55,7 @@ public abstract class Descriptor {
 	/**
 	 * Returns <code>true</code> if descriptor content matches required declared flag.
 	 */
-	public boolean matchDeclared(boolean declared) {
+	public boolean matchDeclared(final boolean declared) {
 		if (!declared) {
 			return isPublic;
 		}

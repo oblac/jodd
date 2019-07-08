@@ -25,74 +25,57 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.Abstra;
-import jodd.proxetta.data.Abstra2;
-import jodd.proxetta.data.Foo;
-import jodd.proxetta.data.FooProxyAdvice;
-import jodd.proxetta.data.Inter;
-import jodd.proxetta.data.InvalidAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import org.junit.Test;
+import jodd.proxetta.fixtures.data.Abstra;
+import jodd.proxetta.fixtures.data.Abstra2;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
+import jodd.proxetta.fixtures.data.Inter;
+import jodd.proxetta.fixtures.data.InvalidAdvice;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class AbstractsTest {
+class AbstractsTest {
 
 	@Test
-	public void testAbstract1() throws Exception {
-		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+	void testAbstract1() {
+		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
-		Abstra aaa = (Abstra) ProxyProxetta.withAspects(proxyAspect).builder(Abstra.class).newInstance();
+		Abstra aaa = (Abstra) Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Abstra.class).newInstance();
 		assertNotNull(aaa);
 		aaa.foo();
 	}
 
 	@Test
-	public void testAbstract2() {
-		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+	void testAbstract2() {
+		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 		try {
-			ProxyProxetta.withAspects(proxyAspect).builder(Abstra2.class).newInstance();
-			fail();
+			Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Abstra2.class).newInstance();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}
 
 	@Test
-	public void testInterface() {
-		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+	void testInterface() {
+		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 		try {
-			ProxyProxetta.withAspects(proxyAspect).builder(Inter.class).newInstance();
-			fail();
+			Proxetta.proxyProxetta().withAspects(proxyAspect).proxy().setTarget(Inter.class).newInstance();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}
 
 	@Test
-	public void testAdviceWithInnerClass() {
-		ProxyAspect proxyAspect = new ProxyAspect(InvalidAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+	void testAdviceWithInnerClass() {
+		ProxyAspect proxyAspect = new ProxyAspect(InvalidAdvice.class, methodInfo -> true);
 
 		try {
-			ProxyProxetta.withAspects(proxyAspect).builder(Foo.class).newInstance();
-			fail();
+			Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Foo.class).newInstance();
+			fail("error");
 		} catch (ProxettaException ignore) {
 			System.out.println(ignore);
 		}

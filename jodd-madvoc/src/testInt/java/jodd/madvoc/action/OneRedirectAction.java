@@ -27,6 +27,8 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.result.PermRedirect;
+import jodd.madvoc.result.Redirect;
 
 @MadvocAction
 public class OneRedirectAction {
@@ -34,21 +36,21 @@ public class OneRedirectAction {
 	String value;
 
 	@Action
-	public String execute() {
+	public Redirect execute() {
 		value = "333";
-		return "redirect:/<two>?value=${value}";
+		return Redirect.to("/<two>?value={value}");
 	}
 
 	@Action
-	public String perm() {
+	public PermRedirect perm() {
 		value = "444";
-		return "url:/<two>?value=${value}";
+		return PermRedirect.to("/<two>?value={value}");
 	}
 
 	@Action
-	public String permGoogle() {
+	public PermRedirect permGoogle() {
 		value = "444";
-		return "url:http://google.com";
+		return PermRedirect.to("http://google.com");
 	}
 
 }

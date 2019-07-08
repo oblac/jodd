@@ -25,42 +25,72 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
-import jodd.madvoc.ActionRequest;
-import jodd.util.MimeTypes;
+import jodd.madvoc.meta.RenderWith;
+import jodd.net.HttpStatus;
+import jodd.net.MimeTypes;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
+import java.util.Objects;
 
 /**
- * Text result returns a result value, i.e. a string.
- * Useful for JSON responses, when resulting string is built
- * in the action.
+ * Text result.
  */
-public class TextResult extends BaseActionResult<String> {
+@RenderWith(TextActionResult.class)
+public class TextResult {
 
-	public static final String NAME = "text";
+	private final String value;
+	private int status = 200;
+	private String mimeType = MimeTypes.MIME_TEXT_PLAIN;
 
-	public TextResult() {
-		super(NAME);
+	public static TextResult of(final String value) {
+		return new TextResult(value);
 	}
 
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+	public TextResult(final String value) {
+		this.value = value;
+	}
 
-		String encoding = response.getCharacterEncoding();
-		response.setContentType(MimeTypes.MIME_TEXT_PLAIN);
-		response.setCharacterEncoding(encoding);
+	/**
+	 * Sets content type to HTML.
+	 */
+	public TextResult asHtml() {
+		mimeType = MimeTypes.MIME_TEXT_HTML;
+		return this;
+	}
 
-		byte[] data = resultValue.getBytes(encoding);
-		response.setContentLength(data.length);
+	/**
+	 * Defines custom content type.
+	 */
+	public TextResult as(final String contentType) {
+		Objects.requireNonNull(contentType);
+		mimeType = contentType;
+		return this;
+	}
 
-		OutputStream out = null;
-		try {
-			out = response.getOutputStream();
-			out.write(data);
-		} finally {
-			StreamUtil.close(out);
-		}
+	public TextResult status(final int status) {
+		this.status = status;
+		return this;
+	}
+
+	public TextResult status(final HttpStatus httpStatus) {
+		this.status = httpStatus.status();
+		return this;
+	}
+
+	/**
+	 * Returns text content.
+	 */
+	public String value() {
+		return value;
+	}
+
+	/**
+	 * Returns status.
+	 */
+	public int status() {
+		return status;
+	}
+
+	public String contentType() {
+		return mimeType;
 	}
 }

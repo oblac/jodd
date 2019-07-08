@@ -84,7 +84,7 @@ public enum JtxStatus {
 
 	private int value;
 
-	JtxStatus(int value) {
+	JtxStatus(final int value) {
 		this.value = value;
 	}
 

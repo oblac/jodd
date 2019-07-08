@@ -38,9 +38,11 @@ import static jodd.util.StringPool.NULL;
 public class JsonWriter {
 
 	protected final Appendable out;
+	protected final boolean strictStringEncoding;
 
-	public JsonWriter(Appendable out) {
+	public JsonWriter(final Appendable out, final boolean strictStringEncoding) {
 		this.out = out;
+		this.strictStringEncoding = strictStringEncoding;
 	}
 
 	// ---------------------------------------------------------------- push
@@ -54,7 +56,7 @@ public class JsonWriter {
 	 * serialized (e.g. it may be excluded), in that case we do not need to
 	 * write the name.
 	 */
-	public void pushName(String name, boolean withComma) {
+	public void pushName(final String name, final boolean withComma) {
 		pushedName = name;
 		pushedComma = withComma;
 		isPushed = true;
@@ -105,7 +107,7 @@ public class JsonWriter {
 	/**
 	 * Writes object's property name: string and a colon.
 	 */
-	public void writeName(String name) {
+	public void writeName(final String name) {
 		if (name != null) {
 			writeString(name);
 		}
@@ -134,7 +136,7 @@ public class JsonWriter {
 	/**
 	 * Write a quoted and escaped value to the output.
 	 */
-	public void writeString(String value) {
+	public void writeString(final String value) {
 		popName();
 
 		write(StringPool.QUOTE);
@@ -152,7 +154,12 @@ public class JsonWriter {
 					write("\\\\");
 					break;
 				case '/':
-					write("\\/");
+					if (strictStringEncoding) {
+						write("\\/");
+					}
+					else {
+						write(c);
+					}
 					break;
 				case '\b':
 					write("\\b");
@@ -185,7 +192,7 @@ public class JsonWriter {
 	/**
 	 * Writes unicode representation of a character.
 	 */
-	protected void unicode(char c) {
+	protected void unicode(final char c) {
 		write("\\u");
 		int n = c;
 		for (int i = 0; i < 4; ++i) {
@@ -208,7 +215,7 @@ public class JsonWriter {
 	/**
 	 * Appends char sequence to the buffer. Used for numbers, nulls, booleans, etc.
 	 */
-	public void write(CharSequence charSequence) {
+	public void write(final CharSequence charSequence) {
 		popName();
 		try {
 			out.append(charSequence);
@@ -217,7 +224,7 @@ public class JsonWriter {
 		}
 	}
 
-	public void writeNumber(Number number) {
+	public void writeNumber(final Number number) {
 		if (number == null) {
 			write(StringPool.NULL);
 			return;
@@ -228,7 +235,7 @@ public class JsonWriter {
 	/**
 	 * Appends char to the buffer. Used internally.
 	 */
-	protected void write(char c) {
+	protected void write(final char c) {
 		try {
 			out.append(c);
 		} catch (IOException ioex) {

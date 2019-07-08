@@ -37,12 +37,12 @@ import jodd.util.CharUtil;
  */
 public abstract class UrlRewriterTagAdapter extends TagAdapter {
 
-	public UrlRewriterTagAdapter(TagVisitor target) {
+	public UrlRewriterTagAdapter(final TagVisitor target) {
 		super(target);
 	}
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (tag.getType().isStartingTag()) {
 			CharSequence tagName = tag.getName();
 

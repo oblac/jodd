@@ -25,19 +25,19 @@
 
 package jodd.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FastCharArrayTest {
+class FastCharArrayTest {
 
 	@Test
-	public void testFcat() throws IOException {
+	void testFcat() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter();
 
 		fcaw.write(65);
@@ -51,7 +51,7 @@ public class FastCharArrayTest {
 	}
 
 	@Test
-	public void testFcatSingle() throws IOException {
+	void testFcatSingle() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter();
 
 		fcaw.write(73);
@@ -67,7 +67,7 @@ public class FastCharArrayTest {
 	}
 
 	@Test
-	public void testWriteTo() throws IOException {
+	void testWriteTo() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter(2);
 		fcaw.write("Hello");
 		fcaw.write(' ');

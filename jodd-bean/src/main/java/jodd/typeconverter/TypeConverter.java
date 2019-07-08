@@ -28,8 +28,9 @@ package jodd.typeconverter;
 /**
  * Object converter interface.
  *
- * @see jodd.typeconverter.TypeConverterManagerBean
+ * @see TypeConverterManager
  */
+@FunctionalInterface
 public interface TypeConverter<T> {
 
 	/**
@@ -44,5 +45,20 @@ public interface TypeConverter<T> {
 	 * @throws TypeConversionException if conversion fails
 	 */
 	T convert(Object value);
+
+	/**
+	 * Converts object and returns default value if conversion fails.
+	 */
+	default T convert(final Object value, final T defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		try {
+			return convert(value);
+		}
+		catch (Exception e) {
+			return defaultValue;
+		}
+	}
 
 }

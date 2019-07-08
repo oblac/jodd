@@ -57,7 +57,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	/**
 	 * Constructs a response adaptor wrapping the given response.
 	 */
-	public MadvocResponseWrapper(HttpServletResponse response) {
+	public MadvocResponseWrapper(final HttpServletResponse response) {
 		super(response);
 	}
 
@@ -67,7 +67,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	protected String characterEncoding;
 
 	@Override
-	public void setHeader(String name, String value) {
+	public void setHeader(final String name, final String value) {
 		if (name.equalsIgnoreCase(CONTENT_TYPE)) {
 			setContentType(value);
 		} else {
@@ -76,7 +76,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	@Override
-	public void addHeader(String name, String value) {
+	public void addHeader(final String name, final String value) {
 		if (name.equalsIgnoreCase(CONTENT_TYPE)) {
 			setContentType(value);
 		} else {
@@ -90,7 +90,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	 * as never set.
 	 */
 	@Override
-	public void setContentType(String type) {
+	public void setContentType(final String type) {
 		if (type == null) {
 			mimeType = null;
 			characterEncoding = null;
@@ -107,7 +107,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	 * Sets just character encoding. Setting to <code>null</code> resets it.
 	 */
 	@Override
-	public void setCharacterEncoding(String charset) {
+	public void setCharacterEncoding(final String charset) {
 		characterEncoding = charset;
 	}
 

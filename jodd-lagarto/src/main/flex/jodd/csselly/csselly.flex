@@ -66,6 +66,7 @@ num       =[0-9]+|[0-9]*\.[0-9]+
 string    ={string1}|{string2}
 string1   =\"([^\n\r\f\"]|\\{nl}|{nonascii}|{escape})*\"
 string2   =\'([^\n\r\f\']|\\{nl}|{nonascii}|{escape})*\'
+string_bracket   =([^\n\r\f\)]|\\{nl}|{nonascii}|{escape})*
 nl        =\n|\r\n|\r|\f
 whitespace=[ \t\r\n\f]
 w         ={whitespace}*
@@ -117,7 +118,7 @@ dimension ={num}{ident}
 <PSEUDO_FN> {
 	(
 		{w}
-		(( "+" | "-" | {dimension} | {num} | {string} | {ident} )+ {w})+
+		(( "+" | "-" | {dimension} | {num} | {string} | {string_bracket} | {ident} )+ {w})+
 	)
 	")"				{ cssSelector.addPseudoFunctionSelector(pseudoFnName, yytext(0, 1)); stateSelector(); }
 }

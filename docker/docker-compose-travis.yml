@@ -1,0 +1,19 @@
+version: '2'
+services:
+
+  postgres:
+    image: postgres:9.4.4
+    environment:
+      - POSTGRES_DB=jodd_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root!
+      - LC_ALL=C.UTF-8
+    ports:
+       - "5432:5432"
+  mysql:
+    image: mysql:5.6
+    environment:
+      - MYSQL_DATABASE=jodd_test
+      - MYSQL_ROOT_PASSWORD=root!
+    ports:
+      - "3306:3306"

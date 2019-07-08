@@ -25,23 +25,32 @@
 
 package jodd.db;
 
-import org.junit.After;
-import org.junit.Test;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.pool.CoreConnectionPool;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DbSessionProviderTest extends DbHsqldbTestCase {
-
-	@After
-	public void tearDown() {
-		DbManager.resetAll();
-	}
+class DbSessionProviderTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testThreadSessionProvider() {
+	void testThreadSessionProvider() {
 		// set connection provider and thread session manager
-		DbManager.getInstance().setConnectionProvider(cp);
-		DbManager.getInstance().setSessionProvider(new ThreadDbSessionProvider());
+
+		DbOom.get().shutdown();     // kill default DbOom used in tests
+
+		cp = new CoreConnectionPool();  // create new CP.
+		super.setupPool(cp);
+
+		DbOom dbOom = DbOom.create()
+			.withConnectionProvider(cp)
+			.withSessionProvider(new ThreadDbSessionProvider())
+			.get()
+			.connect();
 
 		for (int i = 0; i < 2; i++) {
 			// create thread session
@@ -52,7 +61,7 @@ public class DbSessionProviderTest extends DbHsqldbTestCase {
 			int availableConnections = cp.getConnectionsCount().getAvailableCount();
 
 			// creates new db query and implicitly open connection
-			DbQuery dbQuery = new DbQuery("select 173 from (VALUES(0))");
+			DbQuery dbQuery = DbQuery.query("select 173 from (VALUES(0))");
 			long value = dbQuery.executeCount();
 			assertEquals(173, value);
 

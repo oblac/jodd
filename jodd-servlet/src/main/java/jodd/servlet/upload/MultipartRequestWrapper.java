@@ -25,17 +25,17 @@
 
 package jodd.servlet.upload;
 
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.FileUploadFactory;
 import jodd.servlet.ServletUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.FileUploadFactory;
 
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
-import java.util.Collections;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Multi-part HTTP servlet request wrapper.
@@ -49,7 +49,7 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 	MultipartRequest mreq;
 	HttpServletRequest req;
 
-	public MultipartRequestWrapper(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
+	public MultipartRequestWrapper(final HttpServletRequest request, final FileUploadFactory fileUploadFactory, final String encoding) throws IOException {
 		super(request);
 		req = request;
 		if (ServletUtil.isMultipartRequest(request)) {
@@ -57,14 +57,14 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 		}
 	}
 
-	public MultipartRequestWrapper(HttpServletRequest request, FileUploadFactory fileUploadFactory) throws IOException {
+	public MultipartRequestWrapper(final HttpServletRequest request, final FileUploadFactory fileUploadFactory) throws IOException {
 		super(request);
 		if (ServletUtil.isMultipartRequest(request)) {
 			mreq = MultipartRequest.getInstance(request, fileUploadFactory, null);
 		}
 	}
 
-	public MultipartRequestWrapper(MultipartRequest mpreq) {
+	public MultipartRequestWrapper(final MultipartRequest mpreq) {
 		super(mpreq.getServletRequest());
 		mreq = mpreq;
 	}
@@ -101,14 +101,14 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 	 * @param fieldName input field name
 	 * @return a File[] object for files associated with the specified input field name
 	 */
-	public FileUpload[] getFiles(String fieldName) {
+	public FileUpload[] getFiles(final String fieldName) {
 		if (mreq == null) {
 			return null;
 		}
 		return mreq.getFiles(fieldName);
 	}
 
-	public FileUpload getFile(String fieldName) {
+	public FileUpload getFile(final String fieldName) {
 		if (mreq == null) {
 			return null;
 		}
@@ -120,7 +120,7 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 	 * @see javax.servlet.http.HttpServletRequest#getParameter(String)
 	 */
 	@Override
-	public String getParameter(String name) {
+	public String getParameter(final String name) {
 		if (mreq == null) {
 			return super.getParameter(name);
 		}
@@ -160,7 +160,7 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 	 * @see javax.servlet.http.HttpServletRequest#getParameterValues(String)
 	 */
 	@Override
-	public String[] getParameterValues(String name) {
+	public String[] getParameterValues(final String name) {
 		if (mreq == null) {
 			return super.getParameterValues(name);
 		}

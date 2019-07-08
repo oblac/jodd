@@ -26,16 +26,15 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm5.AnnotationVisitor;
+import jodd.asm.EmptyAnnotationVisitor;
+import jodd.asm7.AnnotationVisitor;
+import jodd.proxetta.AnnotationInfo;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
-
-import jodd.proxetta.AnnotationInfo;
-import jodd.asm.EmptyAnnotationVisitor;
 
 
 /**
@@ -44,12 +43,14 @@ import jodd.asm.EmptyAnnotationVisitor;
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class AnnotationReader extends EmptyAnnotationVisitor implements AnnotationInfo {
 
+	public static final AnnotationInfo[] NO_ANNOTATIONS = new AnnotationInfo[0];
+
 	protected final String desc;
 	protected final String className;
 	protected final boolean visible;
 	protected final Map<String, Object> elements;
 
-	public AnnotationReader(String desc, boolean visible) {
+	public AnnotationReader(final String desc, final boolean visible) {
 		this.desc = desc;
 		this.visible = visible;
 		this.elements = new HashMap<>();
@@ -58,22 +59,27 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 	// ---------------------------------------------------------------- info
 
+	@Override
 	public String getAnnotationClassname() {
 		return className;
 	}
 
+	@Override
 	public String getAnnotationSignature() {
 		return desc;
 	}
 
+	@Override
 	public boolean isVisible() {
 		return visible;
 	}
 
-	public Object getElement(String name) {
+	@Override
+	public Object getElement(final String name) {
 		return elements.get(name);
 	}
 
+	@Override
 	public Set<String> getElementNames() {
 		return elements.keySet();
 	}
@@ -82,17 +88,17 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 
 	@Override
-	public void visit(String name, Object value) {
+	public void visit(final String name, final Object value) {
 		elements.put(name, value);
 	}
 
 	@Override
-	public void visitEnum(String name, String desc, String value) {
+	public void visitEnum(final String name, final String desc, final String value) {
 		elements.put(name, new String[]{desc, value});		
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String name, String desc) {
+	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
 		AnnotationReader nestedAnnotation = new AnnotationReader(desc, true);
 		elements.put(name, nestedAnnotation);
 		return nestedAnnotation;
@@ -104,13 +110,13 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 		return new EmptyAnnotationVisitor() {
 
 			@Override
-			public void visit(String name, Object value) {
+			public void visit(final String name, final Object value) {
 				array.add(value);
 			}
 
 			@Override
 			public void visitEnd() {
-				Object[] data = array.toArray(new Object[array.size()]);
+				Object[] data = array.toArray(new Object[0]);
 				elements.put(name, data);
 			}
 		};

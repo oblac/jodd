@@ -25,31 +25,33 @@
 
 package jodd.servlet;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import jodd.core.JoddCore;
+import jodd.io.FileNameUtil;
+import jodd.io.StreamUtil;
+import jodd.io.upload.FileUpload;
+import jodd.servlet.upload.MultipartRequest;
+import jodd.servlet.upload.MultipartRequestWrapper;
+import jodd.util.Base64;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
+import jodd.net.MimeTypes;
+import jodd.net.URLCoder;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import jodd.io.StreamUtil;
-import jodd.util.Base64;
-import jodd.util.StringPool;
-import jodd.util.MimeTypes;
-import jodd.io.FileNameUtil;
-import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.servlet.upload.MultipartRequest;
-import jodd.upload.FileUpload;
-import jodd.util.StringUtil;
-import jodd.util.URLCoder;
+import javax.servlet.jsp.PageContext;
+import java.io.BufferedReader;
+import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * Miscellaneous servlet utilities.
@@ -75,7 +77,7 @@ public class ServletUtil {
 	/**
 	 * Returns <code>true</code> if a request is multi-part request.
 	 */
-	public static boolean isMultipartRequest(HttpServletRequest request) {
+	public static boolean isMultipartRequest(final HttpServletRequest request) {
 		String type = request.getHeader(HEADER_CONTENT_TYPE);
 		return (type != null) && type.startsWith(TYPE_MULTIPART_FORM_DATA);
 	}
@@ -83,7 +85,7 @@ public class ServletUtil {
 	/**
 	 * Returns <code>true</code> if client supports gzip encoding.
 	 */
-	public static boolean isGzipSupported(HttpServletRequest request) {
+	public static boolean isGzipSupported(final HttpServletRequest request) {
 		String browserEncodings = request.getHeader(HEADER_ACCEPT_ENCODING);
 		return (browserEncodings != null) && (browserEncodings.contains("gzip"));
 	}
@@ -91,15 +93,18 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- authorization
 	/**
 	 * Decodes the "Authorization" header and retrieves the
-	 * user's name from it.  Returns <code>null</code> if the header is not present.
+	 * user's name from it. Returns <code>null</code> if the header is not present.
 	 */
-	public static String getAuthUsername(HttpServletRequest request) {
+	public static String resolveAuthUsername(final HttpServletRequest request) {
 		String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
 		}
-		String encoded = header.substring(header.indexOf(' ') + 1);
-		String decoded = new String(Base64.decode(encoded));
+		if (!header.contains("Basic ")) {
+			return null;
+		}
+		final String encoded = header.substring(header.indexOf(' ') + 1);
+		final String decoded = new String(Base64.decode(encoded));
 		return decoded.substring(0, decoded.indexOf(':'));
 	}
 
@@ -107,20 +112,39 @@ public class ServletUtil {
 	 * Decodes the "Authorization" header and retrieves the
 	 * password from it. Returns <code>null</code> if the header is not present.
 	 */
-	public static String getAuthPassword(HttpServletRequest request) {
+	public static String resolveAuthPassword(final HttpServletRequest request) {
 		String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
 		}
-		String encoded = header.substring(header.indexOf(' ') + 1);
-		String decoded = new String(Base64.decode(encoded));
+		if (!header.contains("Basic ")) {
+			return null;
+		}
+		final String encoded = header.substring(header.indexOf(' ') + 1);
+		final String decoded = new String(Base64.decode(encoded));
 		return decoded.substring(decoded.indexOf(':') + 1);
+	}
+
+	/**
+	 * Returns Bearer token.
+	 */
+	public static String resolveAuthBearerToken(final HttpServletRequest request) {
+		String header = request.getHeader(HEADER_AUTHORIZATION);
+		if (header == null) {
+			return null;
+		}
+		int ndx = header.indexOf("Bearer ");
+		if (ndx == -1) {
+			return null;
+		}
+
+		return header.substring(ndx + 7).trim();
 	}
 
 	/**
 	 * Sends correct headers to require basic authentication for the given realm.
 	 */
-	public static void requireAuthentication(HttpServletResponse resp, String realm) throws IOException {
+	public static void requireAuthentication(final HttpServletResponse resp, final String realm) throws IOException {
 		resp.setHeader(WWW_AUTHENTICATE, "Basic realm=\"" + realm + '\"');
 		resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
@@ -130,14 +154,14 @@ public class ServletUtil {
 	/**
 	 * Prepares response for file download. Mime type and size is resolved from the file.
 	 */
-	public static void prepareDownload(HttpServletResponse response, File file) {
+	public static void prepareDownload(final HttpServletResponse response, final File file) {
 		prepareDownload(response, file, null);
 	}
 
 	/**
 	 * Prepares response for file download with provided mime type.
 	 */
-	public static void prepareDownload(HttpServletResponse response, File file, String mimeType) {
+	public static void prepareDownload(final HttpServletResponse response, final File file, final String mimeType) {
 		if (!file.exists()) {
 			throw new IllegalArgumentException("File not found: " + file);
 		}
@@ -155,7 +179,7 @@ public class ServletUtil {
 	 * @param mimeType mime type with optional charset, may be <code>null</code>
 	 * @param fileSize if less then 0 it will be ignored
 	 */
-	public static void prepareResponse(HttpServletResponse response, String fileName, String mimeType, int fileSize) {
+	public static void prepareResponse(final HttpServletResponse response, final String fileName, String mimeType, final int fileSize) {
 		if ((mimeType == null) && (fileName != null)) {
 			String extension = FileNameUtil.getExtension(fileName);
 			mimeType = MimeTypes.getMimeType(extension);
@@ -169,9 +193,14 @@ public class ServletUtil {
 			response.setContentLength(fileSize);
 		}
 
+		// support internationalization
+		// See https://tools.ietf.org/html/rfc6266#section-5 for more information.
 		if (fileName != null) {
 			String name = FileNameUtil.getName(fileName);
-			response.setHeader(CONTENT_DISPOSITION, "attachment;filename=\"" + name + '\"');
+			String encodedFileName = URLCoder.encode(name);
+
+			response.setHeader(CONTENT_DISPOSITION,
+				"attachment;filename=\"" + name + "\";filename*=utf8''" + encodedFileName);
 		}
 	}
 
@@ -183,7 +212,7 @@ public class ServletUtil {
 	 * @see #getAllCookies(javax.servlet.http.HttpServletRequest, String)
 	 * @return cookie value or <code>null</code> if cookie with specified name doesn't exist.
 	 */
-	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
+	public static Cookie getCookie(final HttpServletRequest request, final String cookieName) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
@@ -199,7 +228,7 @@ public class ServletUtil {
 	 * Returns all cookies from client that matches provided name.
 	 * @see #getCookie(javax.servlet.http.HttpServletRequest, String) 
 	 */
-	public static Cookie[] getAllCookies(HttpServletRequest request, String cookieName) {
+	public static Cookie[] getAllCookies(final HttpServletRequest request, final String cookieName) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null) {
 			return null;
@@ -213,20 +242,48 @@ public class ServletUtil {
 		if (list.isEmpty()) {
 			return null;
 		}
-		return list.toArray(new Cookie[list.size()]);
+		return list.toArray(new Cookie[0]);
 	}
 
 	// ---------------------------------------------------------------- request body
 
 	/**
-	 * Reads HTTP request body. Useful only with POST requests. Once body is read,
+	 * Reads HTTP request body using the request reader. Once body is read,
 	 * it cannot be read again!
 	 */
-	public static String readRequestBody(HttpServletRequest request) throws IOException {
+	public static String readRequestBodyFromReader(final HttpServletRequest request) throws IOException {
 		BufferedReader buff = request.getReader();
 		StringWriter out = new StringWriter();
 		StreamUtil.copy(buff, out);
 		return out.toString();
+	}
+
+	/**
+	 * Reads HTTP request body using the request stream. Once body is read,
+	 * it cannot be read again!
+	 */
+	public static String readRequestBodyFromStream(final HttpServletRequest request) throws IOException {
+		String charEncoding = request.getCharacterEncoding();
+		if (charEncoding == null) {
+			charEncoding = JoddCore.encoding;
+		}
+		CharArrayWriter charArrayWriter = new CharArrayWriter();
+		BufferedReader bufferedReader = null;
+
+		try {
+			InputStream inputStream = request.getInputStream();
+			if (inputStream != null) {
+				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charEncoding));
+
+				StreamUtil.copy(bufferedReader, charArrayWriter);
+			} else {
+				return StringPool.EMPTY;
+			}
+		} finally {
+			StreamUtil.close(bufferedReader);
+		}
+
+		return charArrayWriter.toString();
 	}
 
 
@@ -240,7 +297,7 @@ public class ServletUtil {
 	 * starts with a "/" character but does not end with a "/" character.
 	 * For servlets in the default (root) context, this method returns "".
 	 */
-	public static String getContextPath(HttpServletRequest request) {
+	public static String getContextPath(final HttpServletRequest request) {
 		String contextPath = request.getContextPath();
 		if (contextPath == null || contextPath.equals(StringPool.SLASH)) {
 			contextPath = StringPool.EMPTY;
@@ -256,7 +313,7 @@ public class ServletUtil {
 	 * starts with a "/" character but does not end with a "/" character.
 	 * For servlets in the default (root) context, this method returns "".
 	 */
-	public static String getContextPath(ServletContext servletContext) {
+	public static String getContextPath(final ServletContext servletContext) {
 		String contextPath = servletContext.getContextPath();
 		if (contextPath == null || contextPath.equals(StringPool.SLASH)) {
 			contextPath = StringPool.EMPTY;
@@ -267,14 +324,14 @@ public class ServletUtil {
 	/**
 	 * @see #getContextPath(javax.servlet.ServletContext)
 	 */
-	public static String getContextPath(PageContext pageContext) {
+	public static String getContextPath(final PageContext pageContext) {
 		return getContextPath(pageContext.getServletContext());
 	}
 
 	/**
 	 * Stores context path in server context and request scope.
 	 */
-	public static void storeContextPath(PageContext pageContext, String contextPathVariableName) {
+	public static void storeContextPath(final PageContext pageContext, final String contextPathVariableName) {
 		String ctxPath = getContextPath(pageContext);
 
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -287,7 +344,7 @@ public class ServletUtil {
 	/**
 	 * Stores context path in page context and request scope.
 	 */
-	public static void storeContextPath(ServletContext servletContext, String contextPathVariableName) {
+	public static void storeContextPath(final ServletContext servletContext, final String contextPathVariableName) {
 		String ctxPath = getContextPath(servletContext);
 
 		servletContext.setAttribute(contextPathVariableName, ctxPath);
@@ -299,7 +356,7 @@ public class ServletUtil {
 	 * Returns non-<code>null</code> attribute value. Scopes are examined in the
 	 * following order: page, request, session, application.
 	 */
-	public static Object attribute(PageContext pageContext, String name) {
+	public static Object attribute(final PageContext pageContext, final String name) {
 		Object value = pageContext.getAttribute(name);
 		if (value != null) {
 			return value;
@@ -310,7 +367,7 @@ public class ServletUtil {
 	 * Returns non-<code>null</code> attribute value. Scopes are examined in the
 	 * following order: request, session, application.
 	 */
-	public static Object attribute(HttpServletRequest request, String name) {
+	public static Object attribute(final HttpServletRequest request, final String name) {
 		Object value = request.getAttribute(name);
 		if (value != null) {
 			return value;
@@ -319,7 +376,7 @@ public class ServletUtil {
 		if (value != null) {
 			return value;
 		}
-		return request.getSession().getServletContext().getAttribute(name);
+		return request.getServletContext().getAttribute(name);
 	}
 
 	/**
@@ -332,7 +389,7 @@ public class ServletUtil {
 	 *     <li>context attributes</li>
 	 * </ul>
 	 */
-	public static Object value(PageContext pageContext, String name) {
+	public static Object value(final PageContext pageContext, final String name) {
 		Object value = pageContext.getAttribute(name);
 		if (value != null) {
 			return value;
@@ -349,7 +406,7 @@ public class ServletUtil {
 	 *     <li>context attributes</li>
 	 * </ul>
 	 */
-	public static Object value(HttpServletRequest request, String name) {
+	public static Object value(final HttpServletRequest request, final String name) {
 		Object value = request.getAttribute(name);
 		if (value != null) {
 			return value;
@@ -380,7 +437,7 @@ public class ServletUtil {
 		if (value != null) {
 			return value;
 		}
-		return request.getSession().getServletContext().getAttribute(name);
+		return request.getServletContext().getAttribute(name);
 	}
 
 	// ---------------------------------------------------------------- scope attributes
@@ -388,7 +445,7 @@ public class ServletUtil {
 	/**
 	 * Sets scope attribute.
 	 */
-	public static void setScopeAttribute(String name, Object value, String scope, PageContext pageContext) {
+	public static void setScopeAttribute(final String name, final Object value, final String scope, final PageContext pageContext) {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
@@ -401,7 +458,7 @@ public class ServletUtil {
 			request.getSession().setAttribute(name, value);
 		}
 		else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().setAttribute(name, value);
+            request.getServletContext().setAttribute(name, value);
         }
 		else {
 			throw new IllegalArgumentException("Invalid scope: " + scope);
@@ -411,7 +468,7 @@ public class ServletUtil {
 	/**
 	 * Removes scope attribute.
 	 */
-	public static void removeScopeAttribute(String name, String scope, PageContext pageContext) {
+	public static void removeScopeAttribute(final String name, final String scope, final PageContext pageContext) {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
@@ -424,7 +481,7 @@ public class ServletUtil {
 			request.getSession().removeAttribute(name);
 		}
 		else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().removeAttribute(name);
+            request.getServletContext().removeAttribute(name);
         }
 		else {
 			throw new IllegalArgumentException("Invalid scope: " + scope);
@@ -441,7 +498,7 @@ public class ServletUtil {
 	/**
      * Returns <code>true</code> if current URL is absolute, <code>false</code> otherwise.
      */
-    public static boolean isAbsoluteUrl(String url) {
+    public static boolean isAbsoluteUrl(final String url) {
 	    if (url == null) {      	    // a null URL is not absolute
 		    return false;
 	    }
@@ -466,7 +523,7 @@ public class ServletUtil {
 	 * We thus remove anything we find between ";jsessionid=" (inclusive)
 	 * and either EOS or a subsequent ';' (exclusive).
 	 */
-	public static String stripSessionId(String url) {
+	public static String stripSessionId(final String url) {
 		StringBuilder u = new StringBuilder(url);
 		int sessionStart;
 		while ((sessionStart = u.toString().indexOf(";jsessionid=")) != -1) {
@@ -482,7 +539,7 @@ public class ServletUtil {
 		return u.toString();
 	}
 
-	public static String resolveUrl(String url, HttpServletRequest request) {
+	public static String resolveUrl(final String url, final HttpServletRequest request) {
 		if (isAbsoluteUrl(url)) {
 			return url;
 		}
@@ -493,7 +550,7 @@ public class ServletUtil {
 		}
 	}
 
-	public static String resolveUrl(String url, String context) {
+	public static String resolveUrl(final String url, final String context) {
 		if (isAbsoluteUrl(url)) {
 			return url;
 		}
@@ -512,7 +569,7 @@ public class ServletUtil {
 	/**
 	 * Returns HTTP request parameter as String or String[].
 	 */
-	public static Object getRequestParameter(ServletRequest request, String name) {
+	public static Object getRequestParameter(final ServletRequest request, final String name) {
 		String[] values = request.getParameterValues(name);
 		if (values == null) {
 			return null;
@@ -526,7 +583,7 @@ public class ServletUtil {
 	/**
 	 * Checks if some parameter is in GET parameters.
 	 */
-	public boolean isGetParameter(HttpServletRequest request, String name) {
+	public boolean isGetParameter(final HttpServletRequest request, String name) {
 		name = URLCoder.encodeQueryParam(name) + '=';
 		String query = request.getQueryString();
 		String[] nameValuePairs = StringUtil.splitc(query, '&');
@@ -541,17 +598,15 @@ public class ServletUtil {
 	/**
 	 * Prepares parameters for further processing.
 	 * @param paramValues	string array of param values
-	 * @param trimParams	trim parameters
 	 * @param treatEmptyParamsAsNull	empty parameters should be treated as <code>null</code>
 	 * @param ignoreEmptyRequestParams	if all parameters are empty, return <code>null</code>
 	 */
 	public static String[] prepareParameters(
-			String[] paramValues,
-			boolean trimParams,
-			boolean treatEmptyParamsAsNull,
-			boolean ignoreEmptyRequestParams) {
+		final String[] paramValues,
+		final boolean treatEmptyParamsAsNull,
+		final boolean ignoreEmptyRequestParams) {
 
-		if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
+		if (treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
 			int emptyCount = 0;
 			int total = paramValues.length;
 			for (int i = 0; i < paramValues.length; i++) {
@@ -559,9 +614,6 @@ public class ServletUtil {
 				if (paramValue == null) {
 					emptyCount++;
 					continue;
-				}
-				if (trimParams) {
-					paramValue = paramValue.trim();
 				}
 				if (paramValue.length() == 0) {
 					emptyCount++;
@@ -578,6 +630,19 @@ public class ServletUtil {
 		return paramValues;
 	}
 
+	// ---------------------------------------------------------------- types
+
+	/**
+	 * Returns {@code true} if request has JSON content type.
+	 */
+	public static boolean isJsonRequest(HttpServletRequest servletRequest) {
+		final String contentType = servletRequest.getContentType();
+		if (contentType == null) {
+			return false;
+		}
+
+		return contentType.equals(MimeTypes.MIME_APPLICATION_JSON);
+	}
 
 	// ---------------------------------------------------------------- copy
 
@@ -585,10 +650,9 @@ public class ServletUtil {
 	 * Copies all request parameters to attributes.
 	 */
 	public static void copyParamsToAttributes(
-			HttpServletRequest servletRequest,
-			boolean trimParams,
-			boolean treatEmptyParamsAsNull,
-			boolean ignoreEmptyRequestParams) {
+		final HttpServletRequest servletRequest,
+		final boolean treatEmptyParamsAsNull,
+		final boolean ignoreEmptyRequestParams) {
 
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
@@ -598,7 +662,7 @@ public class ServletUtil {
 			}
 
 			String[] paramValues = servletRequest.getParameterValues(paramName);
-			paramValues = prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+			paramValues = prepareParameters(paramValues, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 			if (paramValues == null) {
 				continue;
 			}
@@ -648,119 +712,27 @@ public class ServletUtil {
 	/**
 	 * Returns servlet error.
 	 */
-	public static Throwable getServletError(ServletRequest request) {
+	public static Throwable getServletError(final ServletRequest request) {
 		return (Throwable) request.getAttribute(JAVAX_SERVLET_ERROR_EXCEPTION);
 	}
 
 	/**
 	 * Sets servlet error.
 	 */
-	public static void setServletError(ServletRequest request, Throwable throwable) {
+	public static void setServletError(final ServletRequest request, final Throwable throwable) {
 		request.setAttribute(JAVAX_SERVLET_ERROR_EXCEPTION, throwable);
 	}
 
-
-	// ---------------------------------------------------------------- debug
-
-	/**
-	 * Returns a string with debug info from all servlet objects.
-	 * @see #debug(HttpServletRequest, PageContext)
-	 */
-	public static String debug(HttpServletRequest request) {
-		return debug(request,  null);
-	}
-	/**
-	 * Returns a string with debug info from all servlet objects.
-	 * @see #debug(HttpServletRequest, PageContext)
-	 */
-	public static String debug(PageContext pageContext) {
-		return debug((HttpServletRequest) pageContext.getRequest(),  pageContext);
-	}
-
-	/**
-	 * Returns a string with debug info from all servlet objects, including the page context.
-	 */
-	protected static String debug(HttpServletRequest request, PageContext pageContext) {
-		StringBuilder result = new StringBuilder();
-		result.append("\nPARAMETERS\n----------\n");
-		Enumeration enumeration = request.getParameterNames();
-		while (enumeration.hasMoreElements()) {
-			String name = (String) enumeration.nextElement();
-			Object[] value = request.getParameterValues(name);
-			result.append(name).append('=');
-			if (value == null) {
-				result.append("<null>");
-			} else if (value.length == 1) {
-				result.append(value[0]).append('\n');
-			} else {
-				result.append('[');
-				for (int i = 0, valueLength = value.length; i < valueLength; i++) {
-					if (i == 0) {
-						result.append(',');
-					}
-					result.append(value[i]);
-				}
-				result.append("]\n");
-			}
-		}
-
-		HttpSession session = request.getSession();
-		ServletContext context = session.getServletContext();
-
-		loop:
-		for (int i = 0; i < 4; i++) {
-			switch (i) {
-				case 0: result.append("\nREQUEST\n-------\n");
-						enumeration = request.getAttributeNames();
-						break;
-				case 1: result.append("\nSESSION\n-------\n");
-						enumeration = session.getAttributeNames();
-						break;
-				case 2: result.append("\nAPPLICATION\n-----------\n");
-						enumeration = context.getAttributeNames();
-						break;
-				case 3:	if (pageContext == null) {
-							break loop;
-						}
-						result.append("\nPAGE\n----\n");
-						enumeration = pageContext.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
-			}
-			while (enumeration.hasMoreElements()) {
-				String name = (String) enumeration.nextElement();
-				Object value = null;
-				switch (i) {
-					case 0: value = request.getAttribute(name); break;
-					case 1: value = session.getAttribute(name); break;
-					case 2: value = context.getAttribute(name); break;
-					case 3: value = pageContext.getAttribute(name); break;
-				}
-				result.append(name).append('=');
-				if (value == null) {
-					result.append("<null>\n");
-				} else {
-					String stringValue;
-					try {
-						stringValue = value.toString();
-					} catch (Exception ignore) {
-						stringValue = "<" + value.getClass() + ">\n";
-					}
-					result.append(stringValue).append('\n');
-				}
-			}
-		}
-		return result.toString();
-	}
 
 	// ---------------------------------------------------------------- cache
 
 	/**
 	 * Prevents HTTP cache.
 	 */
-	public static void preventCaching(HttpServletResponse response) {
+	public static void preventCaching(final HttpServletResponse response) {
 		response.setHeader("Cache-Control", "max-age=0, must-revalidate, no-cache, no-store, private, post-check=0, pre-check=0");  // HTTP 1.1
 		response.setHeader("Pragma","no-cache");        // HTTP 1.0
 		response.setDateHeader ("Expires", 0);          // prevents caching at the proxy server
 	}
-
 
 }

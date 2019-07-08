@@ -25,19 +25,19 @@
 
 package jodd.servlet.filter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GzipFilterTest {
+class GzipFilterTest {
 
 	@Test
-	public void testEligibleExtensions() {
+	void testEligibleExtensions() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -55,7 +55,7 @@ public class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleAll() {
+	void testEligibleAll() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = null;
@@ -73,7 +73,7 @@ public class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatches() {
+	void testEligibleWildcardMatches() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -97,7 +97,7 @@ public class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatchesAll() {
+	void testEligibleWildcardMatchesAll() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -118,7 +118,7 @@ public class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatchesExcludes() {
+	void testEligibleWildcardMatchesExcludes() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};

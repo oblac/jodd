@@ -39,7 +39,7 @@ public abstract class Selector {
 
 	protected final Type type;
 
-	protected Selector(Type type) {
+	protected Selector(final Type type) {
 		this.type = type;
 	}
 

@@ -26,10 +26,18 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.MethodAdapter;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.Label;
-import static jodd.asm5.Opcodes.*;
+import jodd.asm7.Label;
+import jodd.asm7.MethodVisitor;
 import jodd.proxetta.ProxettaException;
+
+import static jodd.asm7.Opcodes.BIPUSH;
+import static jodd.asm7.Opcodes.ICONST_0;
+import static jodd.asm7.Opcodes.ICONST_1;
+import static jodd.asm7.Opcodes.ICONST_2;
+import static jodd.asm7.Opcodes.ICONST_3;
+import static jodd.asm7.Opcodes.ICONST_4;
+import static jodd.asm7.Opcodes.ICONST_5;
+import static jodd.asm7.Opcodes.SIPUSH;
 
 /**
  * Method adapter that tracks history of previous instructions.
@@ -41,7 +49,7 @@ import jodd.proxetta.ProxettaException;
  */
 abstract class HistoryMethodAdapter extends MethodAdapter {
 
-	protected HistoryMethodAdapter(MethodVisitor methodVisitor) {
+	protected HistoryMethodAdapter(final MethodVisitor methodVisitor) {
 		super(methodVisitor);
 	}
 
@@ -90,7 +98,7 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	/**
 	 * Adds last LDC arguments to {@link #getLastTwoStringArguments() string arguments}.
 	 */
-	private void keepStringArgument(Object value) {
+	private void keepStringArgument(final Object value) {
 		strArgs[0] = strArgs[1];
 		strArgs[1] = value.toString();
 	}
@@ -98,7 +106,7 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	// ---------------------------------------------------------------- visitors
 
 	@Override
-	public void visitInsn(int opcode) {
+	public void visitInsn(final int opcode) {
 		this.opcode = opcode;
 		isPrevious = true;
 		traceNext = false;
@@ -106,7 +114,7 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitIntInsn(int opcode, int operand) {
+	public void visitIntInsn(final int opcode, final int operand) {
 		this.opcode = opcode;
 		this.operand = operand;
 		isPrevious = true;
@@ -115,42 +123,42 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitVarInsn(int opcode, int var) {
+	public void visitVarInsn(final int opcode, final int var) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitVarInsn(opcode, var);
 	}
 
 	@Override
-	public void visitTypeInsn(int opcode, String type) {
+	public void visitTypeInsn(final int opcode, final String type) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitTypeInsn(opcode, type);
 	}
 
 	@Override
-	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+	public void visitFieldInsn(final int opcode, final String owner, final String name, final String desc) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitFieldInsn(opcode, owner, name, desc);
 	}
 
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
+	public void visitMethodInsn(final int opcode, final String owner, final String name, final String desc, final boolean isInterface) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 	}
 
 	@Override
-	public void visitJumpInsn(int opcode, Label label) {
+	public void visitJumpInsn(final int opcode, final Label label) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitJumpInsn(opcode, label);
 	}
 
 	@Override
-	public void visitLdcInsn(Object cst) {
+	public void visitLdcInsn(final Object cst) {
 		isPrevious = false;
 		traceNext = false;
 
@@ -160,40 +168,40 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitIincInsn(int var, int increment) {
+	public void visitIincInsn(final int var, final int increment) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitIincInsn(var, increment);
 	}
 
 	@Override
-	public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {
+	public void visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label[] labels) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
 	@Override
-	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+	public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(String desc, int dims) {
+	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		isPrevious = false;
 		traceNext = false;
 		super.visitMultiANewArrayInsn(desc, dims);
 	}
 
 	@Override
-	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 		//super.visitLocalVariable(name, desc, signature, start, end, index);
 	}
 
 	@Override
-	public void visitLineNumber(int line, Label start) {
+	public void visitLineNumber(final int line, final Label start) {
 		//super.visitLineNumber(line, start);
 	}
 

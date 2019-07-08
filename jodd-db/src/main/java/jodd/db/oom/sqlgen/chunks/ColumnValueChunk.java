@@ -26,27 +26,28 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityManager;
 
 /**
  * {@link ValueChunk Value} for the <b>last</b> column.
  */
 public class ColumnValueChunk extends ValueChunk {
 
-	public ColumnValueChunk(String name, Object value) {
-		this(name, value, null);
+	public ColumnValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value) {
+		this(dbEntityManager, name, value, null);
 	}
 
-	public ColumnValueChunk(String objReference) {
-		this(null, null, objReference);
+	public ColumnValueChunk(final DbEntityManager dbEntityManager, final String objReference) {
+		this(dbEntityManager, null, null, objReference);
 	}
 
-	protected ColumnValueChunk(String name, Object value, String objReference) {
-		super(name, value, objReference);
+	private ColumnValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value, final String objReference) {
+		super(dbEntityManager, name, value, objReference);
 	}
 
 	// ---------------------------------------------------------------- define
 	@Override
-	protected void defineParameter(StringBuilder query, String name, Object value, DbEntityColumnDescriptor dec) {
+	protected void defineParameter(final StringBuilder query, final String name, final Object value, DbEntityColumnDescriptor dec) {
 		if (dec == null) {
 			dec = templateData.lastColumnDec;
 		}

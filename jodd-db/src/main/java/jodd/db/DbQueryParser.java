@@ -27,11 +27,10 @@ package jodd.db;
 
 import jodd.util.CharUtil;
 import jodd.util.StringUtil;
-import jodd.util.collection.IntArrayList;
 
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * SQL parameters parser that recognizes named and ordinal parameters.
@@ -41,51 +40,67 @@ class DbQueryParser {
 	public static final String SQL_SEPARATORS = " \n\r\f\t,()=<>&|+-=/*'^![]#~\\";
 
 	boolean prepared;
+	boolean callable;
 	String sql;
 
 	// ---------------------------------------------------------------- ctors
 
-	DbQueryParser() {
-	}
-
-	DbQueryParser(String sql) {
+	DbQueryParser(final String sql) {
 		parseSql(sql);
 	}
 
 	// ---------------------------------------------------------------- parameters
 
-	private Map<String, IntArrayList> namedParameterLocationMap;
+	private DbQueryNamedParameter rootNP;
 
-	private void storeNamedParameter(String name, int position) {
-		IntArrayList locations = namedParameterLocationMap.get(name);
-		if (locations == null) {
-			locations = new IntArrayList();
-			namedParameterLocationMap.put(name, locations);
+	void storeNamedParameter(final String name, final int position) {
+		DbQueryNamedParameter p = lookupNamedParameter(name);
+		if (p == null) {
+			p = new DbQueryNamedParameter(name);
+			p.indices = new int[] {position};
+			p.next = rootNP;
+			rootNP = p;
 		}
-		locations.add(position);
+		else {
+			p.add(position);
+		}
 	}
 
-	IntArrayList lookupNamedParameterIndices(String name) {
-		return namedParameterLocationMap.get(name);
+	/**
+	 * Lookup for named parameter.
+	 */
+	DbQueryNamedParameter lookupNamedParameter(final String name) {
+		DbQueryNamedParameter p = rootNP;
+		while (p != null) {
+			if (p.equalsName(name)) {
+				return p;
+			}
+			p = p.next;
+		}
+		return null;
 	}
 
-	IntArrayList getNamedParameterIndices(String name) {
-		IntArrayList positions = namedParameterLocationMap.get(name);
-		if (positions == null) {
+	int[] getNamedParameterIndices(final String name) {
+		final DbQueryNamedParameter p = lookupNamedParameter(name);
+		if (p == null) {
 			throw new DbSqlException("Named parameter not found: " + name + "\nQuery: " + sql);
 		}
-		return positions;
+		return p.indices;
 	}
 
-	Iterator<String> iterateNamedParameters() {
-		return namedParameterLocationMap.keySet().iterator();
+	void forEachNamedParameter(final Consumer<DbQueryNamedParameter> consumer) {
+		DbQueryNamedParameter p = rootNP;
+		while (p != null) {
+			consumer.accept(p);
+			p = p.next;
+		}
 	}
 
 	// ---------------------------------------------------------------- batch
 
 	private Map<String, Integer> batchParams;
 
-	private void saveBatchParameter(String name, int size) {
+	private void saveBatchParameter(final String name, final int size) {
 		if (batchParams == null) {
 			batchParams = new HashMap<>();
 		}
@@ -96,7 +111,7 @@ class DbQueryParser {
 	 * Returns the size of batch parameter. Returns <code>0</code>
 	 * if parameter does not exist.
 	 */
-	protected int getBatchParameterSize(String name) {
+	protected int getBatchParameterSize(final String name) {
 		if (batchParams == null) {
 			return 0;
 		}
@@ -109,22 +124,38 @@ class DbQueryParser {
 
 	// ---------------------------------------------------------------- parser
 
-	void parseSql(String sqlString) {
-		namedParameterLocationMap = new HashMap<>();
-		int stringLength = sqlString.length();
-		StringBuilder pureSql = new StringBuilder(stringLength);
+	void parseSql(final String sqlString) {
+		rootNP = null;
+		final int stringLength = sqlString.length();
+		final StringBuilder pureSql = new StringBuilder(stringLength);
 		boolean inQuote = false;
 		int index = 0;
 		int paramCount = 0;
+
 		while (index < stringLength) {
 			char c = sqlString.charAt(index);
 			if (inQuote) {
 				if (c == '\'') {
 					inQuote = false;
 				}
-			} else if (c == '\'') {
+			}
+			else if (c == '\'') {
 				inQuote = true;
-			} else if (c == ':') {
+			}
+			else if (c == ':' && index + 1 < stringLength
+					&& sqlString.charAt(index + 1) == ':') {
+				// don't treat '::foo' sequence as named parameter; skip this
+				// chunk
+				int right = StringUtil.indexOfChars(sqlString,
+						SQL_SEPARATORS, index + 2);
+				if (right < 0) {
+					right = stringLength;
+				}
+				pureSql.append(sqlString.substring(index, right));
+				index = right;
+				continue;
+			}
+			else if (c == ':') {
 				int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
 				boolean batch = false;
 
@@ -178,7 +209,8 @@ class DbQueryParser {
 
 				index = right;
 				continue;
-			} else if (c == '?') {		// either an ordinal or positional parameter
+			}
+			else if (c == '?') {		// either an ordinal or positional parameter
 				if ((index < stringLength - 1) && (Character.isDigit(sqlString.charAt(index + 1)))) {   // positional parameter
 					int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
 					if (right < 0) {
@@ -203,5 +235,9 @@ class DbQueryParser {
 		}
 		this.prepared = (paramCount != 0);
 		this.sql = pureSql.toString();
+
+		if (this.sql.startsWith("{")) {
+			this.callable = true;
+		}
 	}
 }

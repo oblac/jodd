@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableByte;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to {@link MutableByte}.
@@ -37,11 +37,12 @@ public class MutableByteConverter implements TypeConverter<MutableByte> {
 	protected final TypeConverter<Byte> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableByteConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Byte.class);
+	public MutableByteConverter(final TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Byte.class);
 	}
 
-	public MutableByte convert(Object value) {
+	@Override
+	public MutableByte convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -25,14 +25,42 @@
 
 package jodd.util.cl;
 
+import java.util.Objects;
+
 /**
  * Class loader strategy defines how classes should be loaded.
  */
+@FunctionalInterface
 public interface ClassLoaderStrategy {
+
+	/**
+	 * Default implementation of {@link ClassLoaderStrategy}.
+	 */
+	class Implementation {
+
+		private static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+
+		/**
+		 * Sets the instance.
+		 */
+		public static void set(final ClassLoaderStrategy classLoaderStrategy) {
+			Objects.requireNonNull(classLoaderStrategy);
+			Implementation.classLoaderStrategy = classLoaderStrategy;
+		}
+	}
+
+	/**
+	 * Returns the implementation.
+	 */
+	static ClassLoaderStrategy get() {
+		return Implementation.classLoaderStrategy;
+	}
+
+	// ---------------------------------------------------------------- interface
 
 	/**
 	 * Loads class with given name and optionally provided class loader.
 	 */
-	public Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException;
+	Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException;
 
 }

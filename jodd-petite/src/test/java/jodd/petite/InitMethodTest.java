@@ -25,24 +25,24 @@
 
 package jodd.petite;
 
-import jodd.petite.tst4.Bar;
-import jodd.petite.tst4.Foo;
-import jodd.petite.tst4.Foo2;
-import org.junit.Test;
+import jodd.petite.fixtures.tst4.Bar;
+import jodd.petite.fixtures.tst4.Foo;
+import jodd.petite.fixtures.tst4.Foo2;
+import org.junit.jupiter.api.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_CONSTRUCT;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InitMethodTest {
+class InitMethodTest {
 
 	private void defineBean(PetiteContainer petiteContainer, String beanName, Class type) {
-		petiteContainer.registerPetiteBean(type, beanName, null, null, true);
+		petiteContainer.registerPetiteBean(type, beanName, null, null, true, null);
 	}
 
 	@Test
-	public void testPostConstructor() {
+	void testPostConstructor() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -59,7 +59,7 @@ public class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor null null", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -67,7 +67,7 @@ public class InitMethodTest {
 	}
 
 	@Test
-	public void testPostDefine() {
+	void testPostDefine() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -84,7 +84,7 @@ public class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor bar null", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -92,7 +92,7 @@ public class InitMethodTest {
 	}
 
 	@Test
-	public void testPostInitialize() {
+	void testPostInitialize() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -109,7 +109,7 @@ public class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor bar data", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -117,7 +117,7 @@ public class InitMethodTest {
 	}
 
 	@Test
-	public void testPostAll() {
+	void testPostAll() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -136,7 +136,7 @@ public class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo2 foo = (Foo2) petiteContainer.getBean("foo");
+		Foo2 foo = petiteContainer.getBean("foo");
 
 		assertEquals("1 null null 2 bar null 3 bar data", foo.result);
 		assertEquals("bar", foo.bar.toString());

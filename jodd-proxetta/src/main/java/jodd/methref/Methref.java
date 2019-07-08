@@ -25,11 +25,11 @@
 
 package jodd.methref;
 
+import jodd.cache.TypeCache;
 import jodd.proxetta.ProxettaUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Super tool for getting method references (names) in compile-time.
@@ -37,8 +37,9 @@ import java.util.WeakHashMap;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Methref<C> {
 
+	public static TypeCache<Class> cache = TypeCache.createDefault();
+
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
-	private static final Map<Class, Class> cache = new WeakHashMap<>();
 
 	private final C instance;
 
@@ -49,7 +50,7 @@ public class Methref<C> {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public Methref(Class<C> target) {
-		target = ProxettaUtil.getTargetClass(target);
+		target = ProxettaUtil.resolveTargetClass(target);
 
 		Class proxyClass = cache.get(target);
 
@@ -59,11 +60,11 @@ public class Methref<C> {
 			cache.put(target, proxyClass);
 		}
 
-		C proxy;
+		final C proxy;
 
 		try {
-			proxy = (C) proxyClass.newInstance();
-		} catch (Exception ex) {
+			proxy = (C) ClassUtil.newInstance(proxyClass);
+		} catch (final Exception ex) {
 			throw new MethrefException(ex);
 		}
 
@@ -75,58 +76,58 @@ public class Methref<C> {
 	/**
 	 * Static factory, for convenient use.
 	 */
-	public static <T> Methref<T> on(Class<T> target) {
+	public static <T> Methref<T> of(final Class<T> target) {
 		return new Methref<>(target);
 	}
 
 	/**
-	 * Static factory that immediately returns {@link #to() method picker}.
+	 * Static factory that immediately returns {@link #get() method picker}.
 	 */
-	public static <T> T onto(Class<T> target) {
-		return new Methref<>(target).to();
+	public static <T> T get(final Class<T> target) {
+		return new Methref<>(target).get();
 	}
 
 	/**
 	 * Returns proxy instance of target class, so methods can be called
 	 * immediately after (fluent interface).
 	 */
-	public C to() {
+	public C get() {
 		return instance;
 	}
 
 	// ---------------------------------------------------------------- ref
 
-	public String ref(int dummy) {
+	public String ref(final int dummy) {
 		return ref(null);
 	}
-	public String ref(short dummy) {
+	public String ref(final short dummy) {
 		return ref(null);
 	}
-	public String ref(byte dummy) {
+	public String ref(final byte dummy) {
 		return ref(null);
 	}
-	public String ref(char dummy) {
+	public String ref(final char dummy) {
 		return ref(null);
 	}
-	public String ref(long dummy) {
+	public String ref(final long dummy) {
 		return ref(null);
 	}
-	public String ref(float dummy) {
+	public String ref(final float dummy) {
 		return ref(null);
 	}
-	public String ref(double dummy) {
+	public String ref(final double dummy) {
 		return ref(null);
 	}
-	public String ref(boolean dummy) {
+	public String ref(final boolean dummy) {
 		return ref(null);
 	}
 
 	/**
-	 * Resolves method name of method reference. Argument is used so {@link #to()}
+	 * Resolves method name of method reference. Argument is used so {@link #get()}
 	 * can be called in convenient way. For methods that returns string,
 	 * value will be returned immediately.
 	 */
-	public String ref(Object dummy) {
+	public String ref(final Object dummy) {
 		if (dummy != null) {
 			if (dummy instanceof String) {
 				return (String) dummy;
@@ -137,22 +138,45 @@ public class Methref<C> {
 	}
 
 	/**
-	 * Returns name of method reference. Target {@link #on(Class) method} has
-	 * to be {@link #to() called} before it can return its reference.
+	 * Returns name of method reference. Target {@link #of(Class) method} has
+	 * to be {@link #get() called} before it can return its reference.
 	 */
 	public String ref() {
 		if (instance == null) {
 			return null;
 		}
 		try {
-			Field f = instance.getClass().getDeclaredField("$__methodName$0");
+			final Field f = instance.getClass().getDeclaredField("$__methodName$0");
 			f.setAccessible(true);
-			Object name = f.get(instance);
+			final Object name = f.get(instance);
 			if (name == null) {
 				throw new MethrefException("Target method not collected");
 			}
 			return name.toString();
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
+			if (ex instanceof MethrefException) {
+				throw ((MethrefException) ex);
+			}
+			throw new MethrefException("Methref field not found", ex);
+		}
+	}
+
+	/**
+	 * Returns current count.
+	 */
+	public Integer count() {
+		if (instance == null) {
+			return null;
+		}
+		try {
+			final Field f = instance.getClass().getDeclaredField("$__methodCount$0");
+			f.setAccessible(true);
+			final Integer count = (Integer) f.get(instance);
+			if (count == null) {
+				throw new MethrefException("Target method not collected");
+			}
+			return count;
+		} catch (final Exception ex) {
 			if (ex instanceof MethrefException) {
 				throw ((MethrefException) ex);
 			}

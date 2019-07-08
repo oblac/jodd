@@ -26,13 +26,16 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.InjectorsManager;
-import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.FileUploader;
+import jodd.madvoc.component.MadvocEncoding;
+import jodd.madvoc.component.ScopeResolver;
+import jodd.madvoc.config.Targets;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -45,30 +48,35 @@ import javax.servlet.http.HttpServletRequest;
  * <li>performs the outjection.</li>
  * </ul>
  */
-public class ServletConfigInterceptor extends BaseActionInterceptor {
+public class ServletConfigInterceptor implements ActionInterceptor {
 
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
+	@In @MadvocContext
+	protected ScopeResolver scopeResolver;
 
-	@In(scope = ScopeType.CONTEXT)
-	protected InjectorsManager injectorsManager;
+	@In @MadvocContext
+	protected MadvocEncoding madvocEncoding;
+
+	@In @MadvocContext
+	protected FileUploader fileUploader;
+
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	@Override
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		// detect multipart request
 		if (ServletUtil.isMultipartRequest(servletRequest)) {
-			servletRequest = new MultipartRequestWrapper(servletRequest, madvocConfig.getFileUploadFactory(), madvocConfig.getEncoding());
-			actionRequest.setHttpServletRequest(servletRequest);
+			servletRequest = new MultipartRequestWrapper(servletRequest, fileUploader.get(), madvocEncoding.getEncoding());
+			actionRequest.bind(servletRequest);
 		}
 
 		// do it
 		inject(actionRequest);
 
-		Object result = actionRequest.invoke();
+		final Object result = actionRequest.invoke();
 
 		outject(actionRequest);
 
@@ -78,36 +86,32 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	/**
 	 * Performs injection.
 	 */
-	protected void inject(ActionRequest actionRequest) {
+	protected void inject(final ActionRequest actionRequest) {
+		final Targets targets = actionRequest.getTargets();
+		final ServletContext servletContext = actionRequest.getHttpServletRequest().getServletContext();
 
-		injectorsManager.getMadvocContextScopeInjector().inject(actionRequest);
+		scopeResolver.forEachScope(madvocScope -> madvocScope.inject(servletContext, targets));
+		scopeResolver.forEachScope(madvocScope -> madvocScope.inject(actionRequest, targets));
 
-		// no need to inject madvoc params, as this can be slow
-		// and its better to use some single data object instead
-		//madvocContextInjector.injectMadvocParams(target);
-
-		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
-
-		injectorsManager.getSessionScopeInjector().inject(actionRequest);
-
-		injectorsManager.getRequestScopeInjector().prepare(actionRequest);		// todo check if needed
-		injectorsManager.getRequestScopeInjector().inject(actionRequest);
-
-		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
+		// insert all default values
+		targets.forEachTargetAndIn((target, injectionPoint) -> {
+			final String defaultValue = injectionPoint.defaultValue();
+			if (!defaultValue.isEmpty()) {
+				final Object value = target.readValue(injectionPoint);
+				if (value == null) {
+					target.writeValue(injectionPoint, defaultValue, true);
+				}
+			}
+		});
 	}
 
 	/**
 	 * Performs outjection.
 	 */
-	protected void outject(ActionRequest actionRequest) {
+	protected void outject(final ActionRequest actionRequest) {
+		final Targets targets = actionRequest.getTargets();
 
-		injectorsManager.getServletContextScopeInjector().outject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().outject(actionRequest);
-
-		injectorsManager.getSessionScopeInjector().outject(actionRequest);
-
-		injectorsManager.getRequestScopeInjector().outject(actionRequest);
+		scopeResolver.forEachScope(madvocScope -> madvocScope.outject(actionRequest, targets));
 	}
 
 }

@@ -28,6 +28,7 @@ package jodd.json;
 /**
  * Value converter for {@link jodd.json.JsonParser}.
  */
+@FunctionalInterface
 public interface ValueConverter<S, T> {
 
 	/**

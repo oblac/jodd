@@ -25,35 +25,32 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ActionConfig;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import jodd.util.ClassUtil;
 
-import javax.servlet.AsyncContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Madvoc controller invokes actions for action path and renders action results.
  * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
-public class MadvocController {
+public class MadvocController extends MadvocControllerCfg implements MadvocComponentLifecycle.Ready{
 
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
 	@PetiteInject
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -64,42 +61,24 @@ public class MadvocController {
 	@PetiteInject
 	protected ResultsManager resultsManager;
 
-	protected ServletContext applicationContext;
+	@PetiteInject
+	protected ServletContextProvider servletContextProvider;
 
-	protected Executor executor;
+	@PetiteInject
+	protected AsyncActionExecutor asyncActionExecutor;
 
-	/**
-	 * Initializes controller by providing application context.
-	 * Application context can be <code>null</code>
-	 * if application is not started in web environment (eg tests).
-	 */
-	public void init(ServletContext servletContext) {
-		this.applicationContext = servletContext;
-
+	@Override
+	public void ready() {
 		if (actionsManager.isAsyncModeOn()) {
-			executor = createAsyncExecutor();
+			asyncActionExecutor.start();
 		}
-	}
-
-	/**
-	 * Creates async executor.
-	 */
-	protected Executor createAsyncExecutor() {
-		MadvocConfig.AsyncConfig asyncConfig = madvocConfig.getAsyncConfig();
-
-		return new ThreadPoolExecutor(
-				asyncConfig.getCorePoolSize(),
-				asyncConfig.getMaximumPoolSize(),
-				asyncConfig.getKeepAliveTimeMillis(),
-				TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(asyncConfig.getQueueCapacity()));
 	}
 
 	/**
 	 * Returns application context set during the initialization.
 	 */
 	public ServletContext getApplicationContext() {
-		return applicationContext;
+		return servletContextProvider.get();
 	}
 
 	// ---------------------------------------------------------------- invoke
@@ -109,36 +88,47 @@ public class MadvocController {
 	 * Invokes action registered to provided action path, Provides action chaining, by invoking the next action request.
 	 * Returns <code>null</code> if action path is consumed and has been invoked by this controller; otherwise
 	 * the action path string is returned (it might be different than original one, provided in arguments).
-	 * On first invoke, initializes the action configuration before further proceeding.
+	 * On first invoke, initializes the action runtime before further proceeding.
 	 */
-	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-		ActionRequest actionRequest = null;
-
+	public String invoke(String actionPath, final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) throws Exception {
+		final String originalActionPath = actionPath;
 		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Action path: " + actionPath);
-			}
-
 			// build action path
-			String httpMethod = servletRequest.getMethod().toUpperCase();
+			final String httpMethod = servletRequest.getMethod().toUpperCase();
+
+			if (log.isDebugEnabled()) {
+				log.debug("Action path: " + httpMethod + " " + actionPath);
+			}
 
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
-			// resolve action configuration
-			ActionConfig actionConfig = actionsManager.lookup(actionPath, httpMethod);
-			if (actionConfig == null) {
-				return actionPath;
+			String[] actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
+
+			// resolve action runtime
+			ActionRuntime actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
+
+			if (actionRuntime == null) {
+
+				// special case!
+				if (actionPath.endsWith(welcomeFile)) {
+					actionPath = actionPath.substring(0, actionPath.length() - (welcomeFile.length() - 1));
+					actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
+					actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
+				}
+				if (actionRuntime == null) {
+					return originalActionPath;
+				}
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionConfig.actionClass.getSimpleName());
+				log.debug("Invoke action for '" + actionPath + "' using " + actionRuntime.createActionString());
 			}
 
 			// set character encoding
-			if (!characterEncodingSet && madvocConfig.isApplyCharacterEncoding()) {
+			if (!characterEncodingSet && applyCharacterEncoding) {
 
-				String encoding = madvocConfig.getEncoding();
+				final String encoding = madvocEncoding.getEncoding();
 
 				if (encoding != null) {
 					servletRequest.setCharacterEncoding(encoding);
@@ -149,17 +139,26 @@ public class MadvocController {
 			}
 
 			// create action object
-			Object action = createAction(actionConfig.actionClass);
+			final Object action;
 
-			// create action request
-			ActionRequest previousRequest = actionRequest;
-			actionRequest = createActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
-			actionRequest.setPreviousActionRequest(previousRequest);
+			if (actionRuntime.isActionHandlerDefined()) {
+				action = actionRuntime.getActionHandler();
+			}
+			else {
+				action = createAction(actionRuntime.getActionClass());
+			}
+
+			final ActionRequest actionRequest = createActionRequest(
+				actionPath,
+				actionPathChunks,
+				actionRuntime,
+				action,
+				servletRequest,
+				servletResponse);
 
 			// invoke and render
-			if (actionConfig.isAsync()) {
-				AsyncContext asyncContext = servletRequest.startAsync();
-				executor.execute(new ActionRequestInvoker(asyncContext, actionRequest));
+			if (actionRuntime.isAsync()) {
+				asyncActionExecutor.invoke(actionRequest);
 			} else {
 				actionRequest.invoke();
 			}
@@ -167,33 +166,6 @@ public class MadvocController {
 			actionPath = actionRequest.getNextActionPath();
 		}
 		return null;
-	}
-
-	/**
-	 * Async request invoker.
-	 */
-	public static class ActionRequestInvoker implements Runnable {
-
-		private final ActionRequest actionRequest;
-		private final AsyncContext asyncContext;
-
-		public ActionRequestInvoker(AsyncContext asyncContext, ActionRequest actionRequest) {
-			this.actionRequest = actionRequest;
-			this.asyncContext = asyncContext;
-		}
-
-		public void run() {
-			try {
-				if (log.isDebugEnabled()) {
-					log.debug("Async call to: " + actionRequest);
-				}
-				actionRequest.invoke();
-			} catch (Exception ex) {
-				log.error("Invoking action path failed: " , ex);
-			} finally {
-				asyncContext.complete();
-			}
-		}
 	}
 
 
@@ -216,16 +188,18 @@ public class MadvocController {
 	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
-		ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
+	public void render(final ActionRequest actionRequest, final Object resultObject) throws Exception {
+		final ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
 
 		if (actionResult == null) {
 			throw new MadvocException("Action result not found");
 		}
 
-		if (madvocConfig.isPreventCaching()) {
+		if (preventCaching) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
+
+		log.debug(() -> "Result type: " + actionResult.getClass().getSimpleName());
 
 		actionResult.render(actionRequest, actionRequest.getActionResult());
 	}
@@ -233,11 +207,11 @@ public class MadvocController {
 	// ---------------------------------------------------------------- create
 
 	/**
-	 * Creates new action object from {@link ActionConfig} using default constructor.
+	 * Creates new action object from {@link ActionRuntime} using default constructor.
 	 */
-	protected Object createAction(Class actionClass) {
+	protected Object createAction(final Class actionClass) {
 		try {
-			return actionClass.newInstance();
+			return ClassUtil.newInstance(actionClass);
 		} catch (Exception ex) {
 			throw new MadvocException("Invalid Madvoc action", ex);
 		}
@@ -246,20 +220,21 @@ public class MadvocController {
 	/**
 	 * Creates new action request.
 	 * @param actionPath		action path
-	 * @param actionConfig		action configuration
+	 * @param actionRuntime		action runtime
 	 * @param action			action object
 	 * @param servletRequest	http request
 	 * @param servletResponse	http response
 	 * @return action request
 	 */
 	protected ActionRequest createActionRequest(
-			String actionPath,
-			ActionConfig actionConfig,
-			Object action,
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) {
+		final String actionPath,
+		final String[] actionPathChunks,
+		final ActionRuntime actionRuntime,
+		final Object action,
+		final HttpServletRequest servletRequest,
+		final HttpServletResponse servletResponse) {
 
-		return new ActionRequest(this, actionPath, actionConfig, action, servletRequest, servletResponse);
+		return new ActionRequest(this, actionPath, actionPathChunks, actionRuntime, action, servletRequest, servletResponse);
 	}
 
 }

@@ -32,15 +32,15 @@ import jodd.proxetta.ProxettaException;
  */
 public class PathrefException extends ProxettaException {
 
-	public PathrefException(String message) {
+	public PathrefException(final String message) {
 		super(message);
 	}
 
-	public PathrefException(Throwable throwable) {
+	public PathrefException(final Throwable throwable) {
 		super(throwable);
 	}
 
-	public PathrefException(String string, Throwable throwable) {
+	public PathrefException(final String string, final Throwable throwable) {
 		super(string, throwable);
 	}
 

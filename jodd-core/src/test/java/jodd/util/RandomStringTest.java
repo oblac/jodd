@@ -25,28 +25,14 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class RandomStringTest {
-
-	@Test
-	public void testRepeatableSequence() {
-		RandomString randomString = new RandomString(123);
-
-		String rnd = randomString.randomAlpha(2);
-
-		RandomString randomString2 = new RandomString(123);
-
-		String rnd2 = randomString2.randomAlpha(2);
-
-		assertEquals(rnd, rnd2);
-	}
+class RandomStringTest {
 
 	@Test
-	public void testRandomBase64() {
+	void testRandomBase64() {
 		long iter = 10000;
 
 		RandomString randomString = new RandomString();

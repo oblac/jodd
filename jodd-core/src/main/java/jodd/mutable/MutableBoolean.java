@@ -30,22 +30,26 @@ package jodd.mutable;
  */
 public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneable {
 
+	public static MutableBoolean of(final boolean value) {
+		return new MutableBoolean(value);
+	}
+
 	public MutableBoolean() {
 	}
 
-	public MutableBoolean(boolean value) {
+	public MutableBoolean(final boolean value) {
 		this.value = value;
 	}
 
-	public MutableBoolean(String value) {
+	public MutableBoolean(final String value) {
 		this.value = Boolean.valueOf(value).booleanValue();
 	}
 
-	public MutableBoolean(Boolean value) {
+	public MutableBoolean(final Boolean value) {
 		this.value = value.booleanValue();
 	}
 
-	public MutableBoolean(Number number) {
+	public MutableBoolean(final Number number) {
 		this.value = number.intValue() != 0;
 	}
 
@@ -60,18 +64,22 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	/**
 	 * Returns mutable value.
 	 */
-	public boolean getValue() {
+	public boolean get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(boolean value) {
+	public void set(final boolean value) {
 		this.value = value;
 	}
 
-	public void setValue(Boolean value) {
+	/**
+	 * Sets mutable value. Throws exception if boolean value is
+	 * <code>null</code>.
+	 */
+	public void set(final Boolean value) {
 		this.value = value.booleanValue();
 	}
 
@@ -102,7 +110,7 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Boolean)this.value).getClass() == obj.getClass() ) {
 				return value == ((Boolean) obj).booleanValue();
@@ -119,7 +127,8 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	/**
 	 * Compares value of two same instances.
 	 */
-	public int compareTo(MutableBoolean o) {
+	@Override
+	public int compareTo(final MutableBoolean o) {
 		return (value == o.value) ? 0 : (!value ? -1 : 1);
 	}
 

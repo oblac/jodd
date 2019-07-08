@@ -27,7 +27,9 @@ package jodd.petite;
 
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
+
+import java.util.function.Consumer;
 
 /**
  * Petite registry helps with manual registration
@@ -40,7 +42,7 @@ public class PetiteRegistry {
 	/**
 	 * Starts with fluent registration.
 	 */
-	public static PetiteRegistry petite(PetiteContainer petiteContainer) {
+	public static PetiteRegistry of(final PetiteContainer petiteContainer) {
 		return new PetiteRegistry(petiteContainer);
 	}
 
@@ -51,8 +53,15 @@ public class PetiteRegistry {
 	/**
 	 * Creates Petite registry.
 	 */
-	public PetiteRegistry(PetiteContainer petiteContainer) {
+	public PetiteRegistry(final PetiteContainer petiteContainer) {
 		this.petiteContainer = petiteContainer;
+	}
+
+	/**
+	 * Returns {@link PetiteContainer}.
+	 */
+	public PetiteContainer petiteContainer() {
+		return petiteContainer;
 	}
 
 	// ---------------------------------------------------------------- register bean
@@ -61,21 +70,22 @@ public class PetiteRegistry {
 	 * Starts with bean registration. Example:
 	 * <code>bean(Foo.class).name("").scope(...).wiringMode(...).define().register();</code>
 	 *
-	 * @see PetiteBeans#registerPetiteBean(Class, String, Class, WiringMode, boolean)
+	 * @see PetiteBeans#registerPetiteBean(Class, String, Class, WiringMode, boolean, Consumer)
 	 */
-	public BeanRegister bean(Class beanType) {
+	public BeanRegister bean(final Class beanType) {
 		return new BeanRegister(beanType);
 	}
 
-	public class BeanRegister {
+	public class BeanRegister<T> {
 
-		protected final Class beanType;
-		protected String beanName;
-		protected Class<? extends Scope> scopeType;
-		protected WiringMode wiringMode;
-		protected boolean define;
+		private final Class<T> beanType;
+		private String beanName;
+		private Class<? extends Scope> scopeType;
+		private WiringMode wiringMode;
+		private boolean define;
+		private Consumer<T> consumer;
 
-		private BeanRegister(Class beanType) {
+		private BeanRegister(final Class<T> beanType) {
 			this.beanType = beanType;
 		}
 
@@ -83,7 +93,7 @@ public class PetiteRegistry {
 		 * Defines bean name. If missing, it will be
 		 * resolved from type name.
 		 */
-		public BeanRegister name(String name) {
+		public BeanRegister name(final String name) {
 			this.beanName = name;
 			return this;
 		}
@@ -91,7 +101,7 @@ public class PetiteRegistry {
 		/**
 		 * Defines beans scope.
 		 */
-		public BeanRegister scope(Class<? extends Scope> scope) {
+		public BeanRegister scope(final Class<? extends Scope> scope) {
 			this.scopeType = scope;
 			return this;
 		}
@@ -99,7 +109,7 @@ public class PetiteRegistry {
 		/**
 		 * Defines beans wire mode.
 		 */
-		public BeanRegister wire(WiringMode wiringMode) {
+		public BeanRegister wire(final WiringMode wiringMode) {
 			this.wiringMode = wiringMode;
 			return this;
 		}
@@ -112,11 +122,16 @@ public class PetiteRegistry {
 			return this;
 		}
 
+		public BeanRegister with(final Consumer<T> consumer) {
+			this.consumer = consumer;
+			return this;
+		}
+
 		/**
 		 * Registers a bean.
 		 */
 		public void register() {
-			petiteContainer.registerPetiteBean(beanType, beanName, scopeType, wiringMode, define);
+			petiteContainer.registerPetiteBean(beanType, beanName, scopeType, wiringMode, define, consumer);
 		}
 	}
 
@@ -125,12 +140,10 @@ public class PetiteRegistry {
 	/**
 	 * Starts with defining injection points (i.e. wiring) for existing bean.
 	 */
-	public BeanWire wire(String beanName) {
+	public BeanWire wire(final String beanName) {
 		petiteContainer.lookupExistingBeanDefinition(beanName);
 		return new BeanWire(beanName);
 	}
-
-	// todo wire(class)
 
 	/**
 	 * Bean wiring.
@@ -139,7 +152,7 @@ public class PetiteRegistry {
 
 		protected final String beanName;
 
-		private BeanWire(String beanName) {
+		private BeanWire(final String beanName) {
 			this.beanName = beanName;
 		}
 
@@ -150,7 +163,7 @@ public class PetiteRegistry {
 		 * <code>wire("").property("").ref(...).bind();</code>
 		 * @see PetiteBeans#registerPetitePropertyInjectionPoint(String, String, String)
 		 */
-		public BeanWireProperty property(String propertyName) {
+		public BeanWireProperty property(final String propertyName) {
 			return new BeanWireProperty(propertyName);
 		}
 
@@ -159,14 +172,14 @@ public class PetiteRegistry {
 			protected final String propertyName;
 			protected String reference;
 
-			private BeanWireProperty(String propertyName) {
+			private BeanWireProperty(final String propertyName) {
 				this.propertyName = propertyName;
 			}
 
 			/**
 			 * Defines property reference,
 			 */
-			public BeanWireProperty ref(String reference) {
+			public BeanWireProperty ref(final String reference) {
 				this.reference = reference;
 				return this;
 			}
@@ -185,7 +198,7 @@ public class PetiteRegistry {
 		 * Wires beans constructor.
 		 * @see PetiteBeans#registerPetiteCtorInjectionPoint(String, Class[], String[])
 		 */
-		public BeanWireCtor ctor(Class... ctorArgumentTypes) {
+		public BeanWireCtor ctor(final Class... ctorArgumentTypes) {
 			return new BeanWireCtor(ctorArgumentTypes);
 		}
 
@@ -225,7 +238,7 @@ public class PetiteRegistry {
 		 * Wires beans method.
 		 * @see PetiteBeans#registerPetiteCtorInjectionPoint(String, Class[], String[])
 		 */
-		public BeanWireMethod method(String methodName) {
+		public BeanWireMethod method(final String methodName) {
 			return new BeanWireMethod(methodName);
 		}
 
@@ -235,7 +248,7 @@ public class PetiteRegistry {
 			protected Class[] methodArgumentTypes;
 			protected String[] references;
 
-			private BeanWireMethod(String methodName) {
+			private BeanWireMethod(final String methodName) {
 				this.methodName = methodName;
 			}
 
@@ -276,7 +289,7 @@ public class PetiteRegistry {
 		 * <code>wire("").set("").ref(...).bind();</code>
 		 * @see PetiteBeans#registerPetitePropertyInjectionPoint(String, String, String)
 		 */
-		public BeanWireSet set(String setPropertyName) {
+		public BeanWireSet set(final String setPropertyName) {
 			return new BeanWireSet(setPropertyName);
 		}
 
@@ -285,14 +298,14 @@ public class PetiteRegistry {
 			protected final String setPropertyName;
 			protected String reference;
 
-			private BeanWireSet(String setPropertyName) {
+			private BeanWireSet(final String setPropertyName) {
 				this.setPropertyName = setPropertyName;
 			}
 
 			/**
 			 * Defines set references.
 			 */
-			public BeanWireSet ref(String reference) {
+			public BeanWireSet ref(final String reference) {
 				this.reference = reference;
 				return this;
 			}
@@ -311,7 +324,7 @@ public class PetiteRegistry {
 	/**
 	 * Starts registration of init method.
 	 */
-	public BeanInit init(String beanName) {
+	public BeanInit init(final String beanName) {
 		petiteContainer.lookupExistingBeanDefinition(beanName);
 		return new BeanInit(beanName);
 	}
@@ -322,7 +335,7 @@ public class PetiteRegistry {
 		protected String[] methods;
 		protected InitMethodInvocationStrategy strategy;
 
-		private BeanInit(String beanName) {
+		private BeanInit(final String beanName) {
 			this.beanName = beanName;
 		}
 
@@ -340,7 +353,7 @@ public class PetiteRegistry {
 		/**
 		 * Defines init method invocation strategy,
 		 */
-		public BeanInit invoke(InitMethodInvocationStrategy strategy) {
+		public BeanInit invoke(final InitMethodInvocationStrategy strategy) {
 			this.strategy = strategy;
 			return this;
 		}
@@ -358,7 +371,7 @@ public class PetiteRegistry {
 	/**
 	 * Starts registration of destroy method.
 	 */
-	public BeanDestroy destroy(String beanName) {
+	public BeanDestroy destroy(final String beanName) {
 		petiteContainer.lookupExistingBeanDefinition(beanName);
 		return new BeanDestroy(beanName);
 	}
@@ -368,7 +381,7 @@ public class PetiteRegistry {
 		protected final String beanName;
 		protected String[] methods;
 
-		private BeanDestroy(String beanName) {
+		private BeanDestroy(final String beanName) {
 			this.beanName = beanName;
 		}
 
@@ -396,7 +409,7 @@ public class PetiteRegistry {
 	/**
 	 * Starts with provider definition.
 	 */
-	public BeanProvider provider(String providerName) {
+	public BeanProvider provider(final String providerName) {
 		return new BeanProvider(providerName);
 	}
 
@@ -408,14 +421,14 @@ public class PetiteRegistry {
 		protected String methodName;
 		protected Class[] methodArgsTypes;
 
-		private BeanProvider(String providerName) {
+		private BeanProvider(final String providerName) {
 			this.providerName = providerName;
 		}
 
 		/**
 		 * Defines bean name.
 		 */
-		public BeanProvider bean(String beanName) {
+		public BeanProvider bean(final String beanName) {
 			if (type != null) {
 				throw new PetiteException("Petite provider type already defined");
 			}
@@ -426,7 +439,7 @@ public class PetiteRegistry {
 		/**
 		 * Defines bean type.
 		 */
-		public BeanProvider type(Class type) {
+		public BeanProvider type(final Class type) {
 			if (beanName != null) {
 				throw new PetiteException("Petite provider bean name already defined");
 			}
@@ -437,7 +450,7 @@ public class PetiteRegistry {
 		/**
 		 * Defines provider method name.
 		 */
-		public BeanProvider method(String methodName) {
+		public BeanProvider method(final String methodName) {
 			this.methodName = methodName;
 			return this;
 		}
@@ -447,7 +460,7 @@ public class PetiteRegistry {
 		 */
 		public BeanProvider args(Class... methodArgsTypes) {
 			if (methodArgsTypes.length == 0) {
-				methodArgsTypes = ReflectUtil.NO_PARAMETERS;
+				methodArgsTypes = ClassUtil.EMPTY_CLASS_ARRAY;
 			}
 			this.methodArgsTypes = methodArgsTypes;
 			return this;

@@ -25,6 +25,9 @@
 
 package jodd.madvoc.action;
 
+import jodd.madvoc.meta.RenderWith;
+
+@RenderWith(BookActionResult.class)
 public class Book {
 
 	private String name;

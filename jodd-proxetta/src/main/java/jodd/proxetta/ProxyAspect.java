@@ -25,8 +25,6 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.pointcuts.AllMethodsPointcut;
-
 /**
  * Proxy aspect contains advice and pointcut rules for applying advice.
  */
@@ -35,17 +33,14 @@ public class ProxyAspect {
 	protected final Class<? extends ProxyAdvice> advice;
 	protected final ProxyPointcut pointcut;
 
-	/**
-	 * Creates aspect defined with provided advice and pointcut for all class methods.
-	 */
-	public ProxyAspect(Class<? extends ProxyAdvice> advice) {
-		this(advice, new AllMethodsPointcut());
+	public static ProxyAspect of(final Class<? extends ProxyAdvice> advice, final ProxyPointcut pointcut) {
+		return new ProxyAspect(advice, pointcut);
 	}
 
 	/**
 	 * Creates aspect defined with provided advice and pointcut.
 	 */
-	public ProxyAspect(Class<? extends ProxyAdvice> advice, ProxyPointcut pointcut) {
+	public ProxyAspect(final Class<? extends ProxyAdvice> advice, final ProxyPointcut pointcut) {
 		this.advice = advice;
 		this.pointcut = pointcut;
 	}
@@ -53,14 +48,14 @@ public class ProxyAspect {
 	/**
 	 * Returns proxy advice class.
 	 */
-	public Class<? extends ProxyAdvice> getAdvice() {
+	public Class<? extends ProxyAdvice> advice() {
 		return advice;
 	}
 
 	/**
 	 * Returns proxy pointcut.
 	 */
-	public ProxyPointcut getPointcut() {
+	public ProxyPointcut pointcut() {
 		return pointcut;
 	}
 

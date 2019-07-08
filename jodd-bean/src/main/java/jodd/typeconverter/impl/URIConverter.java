@@ -34,7 +34,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * Convert given object to <code>URI</code>.
+ * Converter given object to <code>URI</code>.
  * Conversion rules:
  * <ul>
  * <li><code>null</code> value is returned as <code>null</code></li>
@@ -46,7 +46,8 @@ import java.net.URL;
  */
 public class URIConverter implements TypeConverter<URI> {
 
-	public URI convert(Object value) {
+	@Override
+	public URI convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -27,205 +27,256 @@ package jodd.mail;
 
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
-import jodd.mail.att.ByteArrayAttachment;
-import jodd.mail.att.FileAttachment;
-import jodd.mail.att.InputStreamAttachment;
-import jodd.util.MimeTypes;
+import jodd.net.MimeTypes;
 
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static jodd.mail.EmailUtil.NO_NAME;
+
 /**
- * Helper class for convenient attachment creation.
+ * Helper class for convenient {@link EmailAttachment} creation.
  */
 public class EmailAttachmentBuilder {
 
-	private byte[] sourceBytes;
-	private File sourceFile;
-	private InputStream sourceInputStream;
+	// ---------------------------------------------------------------- constructor
 
-	private String contentType;
-	private String name;
-	private String contentId;
-	private boolean inline;
-
-	protected EmailAttachmentBuilder() {}
-
-	// ---------------------------------------------------------------- bytes
-
-	public EmailAttachmentBuilder bytes(byte[] bytes) {
-		checkIfSourceSpecified();
-		sourceBytes = bytes;
-		return this;
-	}
-
-	public EmailAttachmentBuilder bytes(InputStream inputStream) {
-		checkIfSourceSpecified();
-		try {
-			sourceBytes = StreamUtil.readBytes(inputStream);
-		} catch (IOException ioex) {
-			throw new MailException(ioex);
-		}
-		return this;
-	}
-
-	public EmailAttachmentBuilder bytes(File file) {
-		checkIfSourceSpecified();
-		try {
-			sourceBytes = FileUtil.readBytes(file);
-			name = file.getName();
-		} catch (IOException ioex) {
-			throw new MailException(ioex);
-		}
-		return this;
-	}
-
-	// ---------------------------------------------------------------- file
-
-	public EmailAttachmentBuilder file(File file) {
-		checkIfSourceSpecified();
-		sourceFile = file;
-		name = file.getName();
-		return this;
-	}
-
-	public EmailAttachmentBuilder file(String fileName) {
-		file(new File(fileName));
-		return this;
-	}
-
-	// ---------------------------------------------------------------- stream
-
-	public EmailAttachmentBuilder stream(InputStream inputStream) {
-		checkIfSourceSpecified();
-		sourceInputStream = inputStream;
-		return this;
-	}
-
-	public EmailAttachmentBuilder stream(File file) {
-		checkIfSourceSpecified();
-		try {
-			sourceInputStream = new FileInputStream(file);
-			name = file.getName();
-		} catch (FileNotFoundException fnfex) {
-			throw new MailException(fnfex);
-		}
-		return this;
+	/**
+	 * Only allow instantiation from {@link EmailAttachment} class
+	 */
+	protected EmailAttachmentBuilder() {
 	}
 
 	// ---------------------------------------------------------------- properties
 
-	public EmailAttachmentBuilder setName(String name) {
-		this.name = name;
-		return this;
-	}
+	/**
+	 * {@link String} with name of {@link EmailAttachment}.
+	 */
+	private String name;
 
-	public EmailAttachmentBuilder setContentType(String contentType) {
-		this.contentType = contentType;
-		return this;
-	}
+	/**
+	 * Content ID of {@link EmailAttachment}.
+	 */
+	private String contentId;
 
-	public EmailAttachmentBuilder setInline(boolean inline) {
-		this.inline = inline;
-		if (!inline) {
-			contentId = null;
+	/**
+	 * Whether the {@link EmailAttachment} is inline. Defaults to false.
+	 */
+	private boolean isInline = false;
+
+	/**
+	 * {@link DataSource} containing {@link EmailAttachment} content.
+	 */
+	private DataSource dataSource;
+
+	/**
+	 * Target {@link EmailMessage}.
+	 */
+	private EmailMessage targetMessage;
+
+	// ---------------------------------------------------------------- data
+
+	/**
+	 * Sets file name.
+	 *
+	 * @param name File name to set.
+	 * @return this
+	 */
+	public EmailAttachmentBuilder name(final String name) {
+		if (name != null && !name.trim().isEmpty()) {
+			this.name = name;
 		}
 		return this;
 	}
 
-	public EmailAttachmentBuilder setInline(String contentId) {
-		if (contentId != null) {
-			this.inline = true;
-			this.contentId = contentId;
-		} else {
-			this.inline = false;
-			this.contentId = null;
-		}
+	/**
+	 * Sets content ID.
+	 *
+	 * @param contentId content ID of {@link EmailAttachment}.
+	 * @return this
+	 */
+	public EmailAttachmentBuilder contentId(final String contentId) {
+		this.contentId = contentId;
 		return this;
 	}
 
-	// ---------------------------------------------------------------- factory
+	/**
+	 * Sets whether {@link EmailAttachment} is inline.
+	 *
+	 * @param isInline {@code true} for inline.
+	 * @return this
+	 */
+	public EmailAttachmentBuilder inline(final boolean isInline) {
+		this.isInline = isInline;
+		return this;
+	}
+
+	/**
+	 * Sets target {@link EmailMessage}.
+	 *
+	 * @param targetMessage Target {@link EmailMessage}.
+	 * @return this
+	 */
+	public EmailAttachmentBuilder embeddedMessage(final EmailMessage targetMessage) {
+		this.targetMessage = targetMessage;
+		return this;
+	}
+
+	/**
+	 * Sets the {@link DataSource}. Common {@link DataSource}s include {@link ByteArrayDataSource} and
+	 * {@link FileDataSource}.
+	 *
+	 * @param dataSource {@link DataSource}
+	 * @return this
+	 */
+	public <T extends DataSource> EmailAttachmentBuilder content(final T dataSource) {
+		this.dataSource = dataSource;
+		name(dataSource.getName());
+		return this;
+	}
+
+	/**
+	 * Creates new {@link ByteArrayDataSource} and then calls {@link #content(DataSource)}.
+	 *
+	 * @param inputStream {@link InputStream}
+	 * @param contentType content type from {@link EmailAttachment}.
+	 * @return this
+	 * @throws IOException if {@link ByteArrayDataSource} cannot be created from {@link InputStream}
+	 * @see #content(DataSource)
+	 */
+	public EmailAttachmentBuilder content(final InputStream inputStream, final String contentType)
+		throws IOException {
+		return content(new ByteArrayDataSource(inputStream, resolveContentType(contentType)));
+	}
+
+	/**
+	 * Creates new {@link ByteArrayDataSource} and then calls {@link #content(DataSource)}.
+	 *
+	 * @param bytes       array of bytes
+	 * @param contentType content type from {@link EmailAttachment}.
+	 * @return this
+	 * @see #content(DataSource)
+	 */
+	public EmailAttachmentBuilder content(final byte[] bytes, final String contentType) {
+		return content(new ByteArrayDataSource(bytes, resolveContentType(contentType)));
+	}
+
+	/**
+	 * Uses {@code null} contentType.
+	 *
+	 * @see #content(byte[], String)
+	 */
+	public EmailAttachmentBuilder content(final byte[] bytes) {
+		return content(bytes, null);
+	}
+
+	/**
+	 * Creates new {@link FileDataSource} and then calls {@link #content(DataSource)}
+	 *
+	 * @param file {@link File}
+	 * @return this
+	 * @see #content(DataSource)
+	 */
+	public EmailAttachmentBuilder content(final File file) {
+		return content(new FileDataSource(file));
+	}
+
+	/**
+	 * @param fileName String representing file name.
+	 * @return this
+	 * @see #content(File)
+	 */
+	public EmailAttachmentBuilder content(final String fileName) {
+		return content(new File(fileName));
+	}
+
+	// ---------------------------------------------------------------- factory/builder
 
 	/**
 	 * Creates {@link EmailAttachment}.
+	 *
+	 * @return {@link EmailAttachment}.
+	 * @throws MailException if issue with {@link DataSource}.
 	 */
-	public EmailAttachment create() {
-		if (sourceBytes != null) {
-			return createByteArrayAttachment();
-		}
-		if (sourceInputStream != null) {
-			return createInputStreamAttachment();
-		}
-		if (sourceFile != null) {
-			return createFileAttachment();
-		}
-		throw new MailException("No source");
-	}
-
-	/**
-	 * Checks if no source content is specified. Throws
-	 * an exception if content is already specified.
-	 */
-	protected void checkIfSourceSpecified() {
-		int count = 0;
-		if (sourceFile != null) {
-			count++;
-		}
-		if (sourceBytes != null) {
-			count++;
-		}
-		if (sourceInputStream != null) {
-			count++;
-		}
-
-		if (count > 0) {
-			throw new MailException("Attachment source already specified");
+	public EmailAttachment<ByteArrayDataSource> buildByteArrayDataSource() throws MailException {
+		try {
+			final ByteArrayDataSource bads;
+			if (dataSource instanceof ByteArrayDataSource) {
+				bads = (ByteArrayDataSource) dataSource;
+			} else {
+				bads = new ByteArrayDataSource(dataSource.getInputStream(), dataSource.getContentType());
+			}
+			checkDataSource();
+			return new EmailAttachment<>(name, contentId, isInline, bads).setEmbeddedMessage(targetMessage);
+		} catch (final IOException ioexc) {
+			throw new MailException(ioexc);
 		}
 	}
 
 	/**
-	 * Creates {@link ByteArrayAttachment}.
+	 * Creates {@link EmailAttachment}.
+	 *
+	 * @return {@link EmailAttachment}.
+	 * @throws MailException if issue with {@link DataSource}.
 	 */
-	protected ByteArrayAttachment createByteArrayAttachment() {
-		String name = this.name;
-		String contentType = resolveContentType();
-		String contentId = resolveContentId();
-
-		return new ByteArrayAttachment(sourceBytes, contentType, name, contentId);
+	public EmailAttachment<FileDataSource> buildFileDataSource(final String messageId, final File attachmentStorage) throws MailException {
+		try {
+			final FileDataSource fds;
+			if (dataSource instanceof FileDataSource) {
+				fds = (FileDataSource) dataSource;
+			} else {
+				final File file = new File(attachmentStorage, messageId);
+				FileUtil.writeStream(file, dataSource.getInputStream());
+				fds = new FileDataSource(file);
+			}
+			checkDataSource();
+			return new EmailAttachment<>(name, contentId, isInline, fds).setEmbeddedMessage(targetMessage);
+		} catch (final IOException ioexc) {
+			throw new MailException(ioexc);
+		}
 	}
 
 	/**
-	 * Creates {@link InputStreamAttachment}.
+	 * Check to ensure {@link DataSource} ds is valid.
+	 *
+	 * @throws MailException if DataSource is {@code null}.
 	 */
-	protected InputStreamAttachment createInputStreamAttachment() {
-		String name = this.name;
-		String contentType = resolveContentType();
-		String contentId = resolveContentId();
-
-		return new InputStreamAttachment(sourceInputStream, contentType, name, contentId);
+	private void checkDataSource() {
+		if (dataSource == null) {
+			throw new MailException("dataSource must be valid. It can be set using #content().");
+		}
 	}
+
+	// ---------------------------------------------------------------- properties
 
 	/**
-	 * Creates {@link FileAttachment}. Content type is ignored,
-	 * as it is set by <code>javax.mail</code>.
+	 * Set content ID if it is missing.
+	 *
+	 * @return this
+	 * @see #contentId(String)
 	 */
-	protected FileAttachment createFileAttachment() {
-		String name = this.name;
-		String contentId = resolveContentId();
-
-		return new FileAttachment(sourceFile, name, contentId);
+	protected EmailAttachmentBuilder setContentIdFromNameIfMissing() {
+		if (contentId == null) {
+			if (name != null) {
+				contentId(FileNameUtil.getName(name));
+			} else {
+				contentId(NO_NAME);
+			}
+		}
+		return this;
 	}
-
-	// ---------------------------------------------------------------- tools
 
 	/**
 	 * Resolves content type from all data.
+	 *
+	 * @param contentType Content type if we know it. {@code null} is fine to use.
+	 * @return content type
 	 */
-	protected String resolveContentType() {
+	protected String resolveContentType(final String contentType) {
 		if (contentType != null) {
 			return contentType;
 		}
@@ -233,20 +284,8 @@ public class EmailAttachmentBuilder {
 			return MimeTypes.MIME_APPLICATION_OCTET_STREAM;
 		}
 
-		String extension = FileNameUtil.getExtension(name);
+		final String extension = FileNameUtil.getExtension(name);
 		return MimeTypes.getMimeType(extension);
 	}
 
-	/**
-	 * Resolves content id from all data.
-	 */
-	protected String resolveContentId() {
-		if (inline) {
-			if (contentId != null) {
-				return contentId;
-			}
-			return FileNameUtil.getName(name);
-		}
-		return null;
-	}
 }

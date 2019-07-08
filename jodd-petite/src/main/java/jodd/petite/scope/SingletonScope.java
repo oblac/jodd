@@ -27,10 +27,10 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
-import jodd.petite.PetiteUtil;
+import jodd.petite.PetiteContainer;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Singleton scope pools all bean instances so they will be created only once in
@@ -38,38 +38,59 @@ import java.util.HashMap;
  */
 public class SingletonScope implements Scope {
 
+	private final PetiteContainer pc;
+
+	public SingletonScope(final PetiteContainer pc) {
+		this.pc = pc;
+	}
+
+
 	protected Map<String, BeanData> instances = new HashMap<>();
 
-	public Object lookup(String name) {
+	@Override
+	public Object lookup(final String name) {
 		BeanData beanData = instances.get(name);
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.bean();
 	}
 
-	public void register(BeanDefinition beanDefinition, Object bean) {
-		BeanData beanData = new BeanData(beanDefinition, bean);
-		instances.put(beanDefinition.getName(), beanData);
+	@Override
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
+		instances.put(beanDefinition.name(), new BeanData(pc, beanDefinition, bean));
 	}
 
-	public void remove(String name) {
+	@Override
+	public void remove(final String name) {
 		instances.remove(name);
 	}
 
 	/**
 	 * Allows only singleton scoped beans to be injected into the target singleton bean.
 	 */
-	public boolean accept(Scope referenceScope) {
-		return (referenceScope.getClass() == SingletonScope.class);
+	@Override
+	public boolean accept(final Scope referenceScope) {
+		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
+
+		if (refScopeType == SingletonScope.class) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * Iterate all beans and invokes registered destroy methods.
 	 */
+	@Override
 	public void shutdown() {
-		for (BeanData beanData : instances.values()) {
-			PetiteUtil.callDestroyMethods(beanData);
+		for (final BeanData beanData : instances.values()) {
+			beanData.callDestroyMethods();
 		}
 		instances.clear();
 	}

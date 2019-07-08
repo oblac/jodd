@@ -25,57 +25,51 @@
 
 package jodd.vtor;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class VtorMatchProfilesWithResetedProfilesTest {
+class VtorMatchProfilesWithResetedProfilesTest {
     private Vtor vtor;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         //given
         vtor = new Vtor();
         vtor.resetProfiles();
     }
 
     @Test
-    public void testValidateAllProfilesByDefaultIsTrue() {
+    void testValidateAllProfilesByDefaultIsTrue() {
         vtor.setValidateAllProfilesByDefault(true);
-        assertTrue("any profile must match when property ValidateAllProfilesByDefault is active",
-                vtor.matchProfiles(new String[]{"testProfile"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile"}));
     }
 
     @Test
-    public void testNullProfiles() {
-        assertTrue("result mast be true when match null value instead of profiles",
-                vtor.matchProfiles(null));
+    void testNullProfiles() {
+        assertTrue(vtor.matchProfiles(null));
     }
 
     @Test
-    public void testEmptyListOfProfiles() {
-        assertTrue("result mast be true when match an empty list of profiles",
-                vtor.matchProfiles(new String[]{}));
+    void testEmptyListOfProfiles() {
+        assertTrue(vtor.matchProfiles(new String[]{}));
     }
 
     @Test
-    public void testOneProfileIsEmpty() {
-        assertTrue("result mast be true when match a list with an empty profile",
-                vtor.matchProfiles(new String[]{"", "testProfile"}));
+    void testOneProfileIsEmpty() {
+        assertTrue(vtor.matchProfiles(new String[]{"", "testProfile"}));
     }
 
     @Test
-    public void testOneProfileIsDefault() {
-        assertTrue("result mast be true when match a list with a default profile",
-                vtor.matchProfiles(new String[]{Vtor.DEFAULT_PROFILE, "testProfile"}));
+    void testOneProfileIsDefault() {
+        assertTrue(vtor.matchProfiles(new String[]{Vtor.DEFAULT_PROFILE, "testProfile"}));
     }
 
     @Test
-    public void testNonSpecialProfiles(){
-        assertFalse("result must be false when match non special profiles",
-                vtor.matchProfiles(new String[]{"testProfile1", "testProfile2"}));
+    void testNonSpecialProfiles(){
+        assertFalse(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2"}));
     }
 
 }

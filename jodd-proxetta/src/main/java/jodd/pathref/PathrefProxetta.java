@@ -25,9 +25,10 @@
 
 package jodd.pathref;
 
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 /**
@@ -42,7 +43,7 @@ public class PathrefProxetta {
 	public PathrefProxetta() {
 		ProxyAspect aspects = new ProxyAspect(PathrefAdvice.class, new AllMethodsPointcut());
 
-		proxetta = ProxyProxetta.withAspects(aspects);
+		proxetta = Proxetta.proxyProxetta().withAspect(aspects);
 
 		proxetta.setClassNameSuffix(PATHREF_CLASSNAME_SUFFIX);
 	}
@@ -50,8 +51,8 @@ public class PathrefProxetta {
 	/**
 	 * Generates new class.
 	 */
-	public Class defineProxy(Class target) {
-		ProxyProxettaBuilder builder = proxetta.builder();
+	public Class defineProxy(final Class target) {
+		ProxyProxettaFactory builder = proxetta.proxy();
 		builder.setTarget(target);
 		return builder.define();
 	}

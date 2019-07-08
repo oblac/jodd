@@ -23,17 +23,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.advice.DelegateAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
-import org.junit.Test;
+import jodd.proxetta.impl.WrapperProxettaFactory;
+import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class GenericsInDefaultTest {
+class GenericsInDefaultTest {
 
 	public static class Bar<T> {
 	}
@@ -45,21 +47,23 @@ public class GenericsInDefaultTest {
 
 	public static class Foo implements IFoo {
 		private String id;
+		@Override
 		public String getId() {
 			return id;
 		}
 		// remove the generic and it works
+		@Override
 		public Bar<Foo> getFoo() {
 			return null;
 		}
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueWrapperDefault() {
+	void testClassesWithGenericsAsReturnValueWrapperDefault() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			WrapperProxetta proxetta = WrapperProxetta.withAspects(aspect);
-			WrapperProxettaBuilder builder = proxetta.builder(Foo.class, IFoo.class);
+			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
+			WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(aspect);
+			WrapperProxettaFactory builder = proxetta.proxy().setTarget(Foo.class).setTargetInterface(IFoo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
@@ -69,11 +73,11 @@ public class GenericsInDefaultTest {
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueProxyDefault() {
+	void testClassesWithGenericsAsReturnValueProxyDefault() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
-			ProxyProxettaBuilder builder = proxetta.builder(Foo.class);
+			ProxyAspect aspect = ProxyAspect.of(DelegateAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(Foo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {

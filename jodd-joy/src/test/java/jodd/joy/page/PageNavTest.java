@@ -25,14 +25,14 @@
 
 package jodd.joy.page;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PageNavTest {
+class PageNavTest {
 
 	@Test
-	public void testPage() {
+	void testPage() {
 		PageNav nav = new PageNav(9, 3, 10);
 		assertEquals(1, nav.getFrom());
 		assertEquals(9, nav.getTo());

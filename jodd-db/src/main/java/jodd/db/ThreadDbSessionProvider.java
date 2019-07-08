@@ -40,10 +40,11 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DbSession getDbSession() {
 		log.debug("Requesting thread session");
 
-		DbSession session = ThreadDbSessionHolder.get();
+		final DbSession session = ThreadDbSessionHolder.get();
 
 		if (session == null) {
 			throw new DbSqlException(

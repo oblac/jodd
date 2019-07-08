@@ -26,9 +26,9 @@
 package jodd.db.type;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class URLSqlType extends SqlType<URL> {
 
@@ -36,7 +36,7 @@ public class URLSqlType extends SqlType<URL> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public URL get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public URL get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getURL(index);
 	}
 
@@ -44,7 +44,7 @@ public class URLSqlType extends SqlType<URL> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, URL value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final URL value, final int dbSqlType) throws SQLException {
 		st.setURL(index, value);
 	}
 

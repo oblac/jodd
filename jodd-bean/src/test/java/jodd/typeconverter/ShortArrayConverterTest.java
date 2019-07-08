@@ -26,17 +26,20 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ShortArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arro;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ShortArrayConverterTest {
+class ShortArrayConverterTest {
 
 	@Test
-	public void testConversion() {
-		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.lookup(short[].class);
+	void testConversion() {
+		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.get().lookup(short[].class);
 
 		assertNull(shortArrayConverter.convert(null));
 

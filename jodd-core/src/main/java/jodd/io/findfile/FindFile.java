@@ -25,24 +25,24 @@
 
 package jodd.io.findfile;
 
+import jodd.inex.InExRules;
+import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
+import jodd.util.MultiComparator;
+import jodd.util.StringUtil;
+import jodd.util.function.Consumers;
+
 import java.io.File;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
-import jodd.util.InExRules;
-import jodd.util.MultiComparator;
-import jodd.util.NaturalOrderComparator;
-import jodd.util.StringUtil;
-import jodd.util.collection.JoddArrayList;
+import java.util.function.Consumer;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
@@ -52,10 +52,19 @@ import jodd.util.collection.JoddArrayList;
  *
  * @see WildcardFindFile
  * @see RegExpFindFile
- * @see jodd.util.InExRules
+ * @see InExRules
  */
-@SuppressWarnings("unchecked")
-public class FindFile<T extends FindFile> {
+public class FindFile implements Iterable<File> {
+
+	public static WildcardFindFile createWildcardFF() {
+		return new WildcardFindFile();
+	}
+	public static RegExpFindFile createRegExpFF() {
+		return new RegExpFindFile();
+	}
+	public static FindFile create() {
+		return new FindFile();
+	}
 
 	/**
 	 * Match type.
@@ -85,44 +94,28 @@ public class FindFile<T extends FindFile> {
 	protected boolean walking = true;
 	protected Match matchType = Match.FULL_PATH;
 
-	public boolean isRecursive() {
-		return recursive;
-	}
-
 	/**
 	 * Activates recursive search.
 	 */
-	public T setRecursive(boolean recursive) {
+	public FindFile recursive(final boolean recursive) {
 		this.recursive = recursive;
-		return (T) this;
-	}
-
-	public boolean isIncludeDirs() {
-		return includeDirs;
+		return this;
 	}
 
 	/**
 	 * Include directories in search.
 	 */
-	public T setIncludeDirs(boolean includeDirs) {
+	public FindFile includeDirs(final boolean includeDirs) {
 		this.includeDirs = includeDirs;
-		return (T) this;
-	}
-
-	public boolean isIncludeFiles() {
-		return includeFiles;
+		return this;
 	}
 
 	/**
 	 * Include files in search.
 	 */
-	public T setIncludeFiles(boolean includeFiles) {
+	public FindFile includeFiles(final boolean includeFiles) {
 		this.includeFiles = includeFiles;
-		return (T) this;
-	}
-
-	public boolean isWalking() {
-		return walking;
+		return this;
 	}
 
 	/**
@@ -134,23 +127,49 @@ public class FindFile<T extends FindFile> {
 	 * When walking mode is turned off, folders are processed once
 	 * all files are processed, one after the other. The order is
 	 * not natural, but memory consumption is optimal.
-	 * @see #setRecursive(boolean)
+	 * @see #recursive(boolean)
 	 */
-	public T setWalking(boolean walking) {
+	public FindFile walking(final boolean walking) {
 		this.walking = walking;
-		return (T) this;
-	}
-
-	public Match getMatchType() {
-		return matchType;
+		return this;
 	}
 
 	/**
 	 * Set {@link Match matching type}.
 	 */
-	public T setMatchType(Match match) {
+	public FindFile matchType(final Match match) {
 		this.matchType = match;
-		return (T) this;
+		return this;
+	}
+
+	public FindFile matchOnlyFileName() {
+		this.matchType = Match.NAME;
+		return this;
+	}
+	public FindFile matchFullPath() {
+		this.matchType = Match.FULL_PATH;
+		return this;
+	}
+	public FindFile matchRelativePath() {
+		this.matchType = Match.RELATIVE_PATH;
+		return this;
+	}
+
+	// ---------------------------------------------------------------- consumer
+
+	private Consumers<File> consumers;
+
+	/**
+	 * Registers file consumer
+	 */
+	public FindFile onFile(final Consumer<File> fileConsumer) {
+		if (consumers == null) {
+			consumers = Consumers.of(fileConsumer);
+		}
+		else {
+			consumers.add(fileConsumer);
+		}
+		return this;
 	}
 
 	// ---------------------------------------------------------------- search path
@@ -158,19 +177,19 @@ public class FindFile<T extends FindFile> {
 	/**
 	 * Specifies single search path.
 	 */
-	public T searchPath(File searchPath) {
+	public FindFile searchPath(final File searchPath) {
 		addPath(searchPath);
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies a set of search paths.
 	 */
-	public T searchPath(File... searchPath) {
+	public FindFile searchPath(final File... searchPath) {
 		for (File file : searchPath) {
 			addPath(file);
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
@@ -178,7 +197,7 @@ public class FindFile<T extends FindFile> {
 	 * {@link File#pathSeparator} than string will be tokenized
 	 * and each part will be added separately as a search path. 
 	 */
-	public T searchPath(String searchPath) {
+	public FindFile searchPath(final String searchPath) {
 		if (searchPath.indexOf(File.pathSeparatorChar) != -1) {
 			String[] paths = StringUtil.split(searchPath, File.pathSeparator);
 			for (String path : paths) {
@@ -187,24 +206,24 @@ public class FindFile<T extends FindFile> {
 		} else {
 			addPath(new File(searchPath));
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies search paths.
 	 * @see #searchPath(String) 
 	 */
-	public T searchPath(String... searchPaths) {
+	public FindFile searchPaths(final String... searchPaths) {
 		for (String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies the search path. Throws an exception if URI is invalid.
 	 */
-	public T searchPath(URI searchPath) {
+	public FindFile searchPath(final URI searchPath) {
 		File file;
 		try {
 			file = new File(searchPath);
@@ -214,39 +233,39 @@ public class FindFile<T extends FindFile> {
 
 		addPath(file);
 
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies the search path.
 	 */
-	public T searchPath(URI... searchPath) {
+	public FindFile searchPaths(final URI... searchPath) {
 		for (URI uri : searchPath) {
 			searchPath(uri);
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies the search path. Throws an exception if URL is invalid.
 	 */
-	public T searchPath(URL searchPath) {
-		File file = FileUtil.toFile(searchPath);
+	public FindFile searchPath(final URL searchPath) {
+		File file = FileUtil.toContainerFile(searchPath);
 		if (file == null) {
 			throw new FindFileException("URL error: " + searchPath);
 		}
 		addPath(file);
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Specifies the search path.
 	 */
-	public T searchPath(URL... searchPath) {
+	public FindFile searchPaths(final URL... searchPath) {
 		for (URL url : searchPath) {
 			searchPath(url);
 		}
-		return (T) this;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- files iterator
@@ -261,7 +280,7 @@ public class FindFile<T extends FindFile> {
 		protected final String[] fileNames;
 		protected final File[] files;
 
-		public FilesIterator(File folder) {
+		public FilesIterator(final File folder) {
 			this.folder = folder;
 			if (sortComparators != null) {
 				this.files = folder.listFiles();
@@ -277,7 +296,7 @@ public class FindFile<T extends FindFile> {
 			}
 		}
 
-		public FilesIterator(String[] fileNames) {
+		public FilesIterator(final String[] fileNames) {
 			this.folder = null;
 			if (sortComparators != null) {
 				int fileNamesLength = fileNames.length;
@@ -373,65 +392,65 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected final InExRules<String, String> rules = createRulesEngine();
+	protected final InExRules<String, String, ?> rules = createRulesEngine();
 
 	/**
 	 * Creates rule engine.
 	 */
-	protected InExRules createRulesEngine() {
+	protected InExRules<String, String, ?> createRulesEngine() {
 		return new InExRules<>();
 	}
 
 	/**
 	 * Defines include pattern.
 	 */
-	public T include(String pattern) {
+	public FindFile include(final String pattern) {
 		rules.include(pattern);
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Defines include patterns.
 	 */
-	public T include(String... patterns) {
+	public FindFile include(final String... patterns) {
 		for (String pattern : patterns) {
 			rules.include(pattern);
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Enables whitelist mode.
 	 */
-	public T excludeAll() {
+	public FindFile excludeAll() {
 		rules.whitelist();
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Enables blacklist mode.
 	 */
-	public T includeAll() {
+	public FindFile includeAll() {
 		rules.blacklist();
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Defines exclude pattern.
 	 */
-	public T exclude(String pattern) {
+	public FindFile exclude(final String pattern) {
 		rules.exclude(pattern);
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Defines exclude patterns.
 	 */
-	public T exclude(String... patterns) {
+	public FindFile exclude(final String... patterns) {
 		for (String pattern : patterns) {
 			rules.exclude(pattern);
 		}
-		return (T) this;
+		return this;
 	}
 
 	/**
@@ -439,19 +458,25 @@ public class FindFile<T extends FindFile> {
 	 * rules. Called on each file entry (file or directory) and
 	 * returns <code>true</code> if file passes search criteria.
 	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
-	 * @see jodd.util.InExRules
+	 * @see InExRules
 	 */
-	protected boolean acceptFile(File file) {
+	protected boolean acceptFile(final File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		return rules.match(matchingFilePath);
+		if (rules.match(matchingFilePath)) {
+			if (consumers != null) {
+				consumers.accept(file);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Resolves file path depending on {@link Match matching type}
 	 * Returned path is formatted in unix style.
 	 */
-	protected String getMatchingFilePath(File file) {
+	protected String getMatchingFilePath(final File file) {
 
 		String path = null;
 
@@ -474,10 +499,10 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- next file
 
-	protected JoddArrayList<File> pathList;
-	protected JoddArrayList<File> pathListOriginal;
-	protected JoddArrayList<File> todoFolders;
-	protected JoddArrayList<FilesIterator> todoFiles;
+	protected LinkedList<File> pathList;
+	protected LinkedList<File> pathListOriginal;
+	protected LinkedList<File> todoFolders;
+	protected LinkedList<FilesIterator> todoFiles;
 
 	protected File lastFile;
 	protected File rootFile;
@@ -496,12 +521,12 @@ public class FindFile<T extends FindFile> {
 	 * Non existing files are ignored.
 	 * If path is a folder, it will be scanned for all files.
 	 */
-	protected void addPath(File path) {
+	protected void addPath(final File path) {
 		if (!path.exists()) {
 			return;
 		}
 		if (pathList == null) {
-			pathList = new JoddArrayList<>();
+			pathList = new LinkedList<>();
 		}
 
 		pathList.add(path);
@@ -598,46 +623,34 @@ public class FindFile<T extends FindFile> {
 	}
 
 	/**
-	 * Performs scanning.
+	 * Finds all files and returns list of founded files.
 	 */
-	@SuppressWarnings("StatementWithEmptyBody")
-	public void find() {
-		while (nextFile() != null) {
+	public List<File> findAll() {
+		List<File> allFiles = new ArrayList<>();
+		File file;
+		while ((file = nextFile()) != null) {
+			allFiles.add(file);
 		}
-	}
-
-	/**
-	 * Finds a file.
-	 */
-	public void find(FileConsumer fileConsumer) {
-		File f;
-		while ((f = nextFile()) != null) {
-			boolean next = fileConsumer.onFile(f);
-
-			if (!next) {
-				break;
-			}
-		}
+		return allFiles;
 	}
 
 	/**
 	 * Initializes file walking.
 	 * Separates input files and folders.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void init() {
-		rules.smartMode();
+		rules.detectMode();
 
-		todoFiles = new JoddArrayList<>();
-		todoFolders = new JoddArrayList<>();
+		todoFiles = new LinkedList<>();
+		todoFolders = new LinkedList<>();
 
 		if (pathList == null) {
-			pathList = new JoddArrayList<>();
+			pathList = new LinkedList<>();
 			return;
 		}
 
 		if (pathListOriginal == null) {
-			pathListOriginal = (JoddArrayList<File>) pathList.clone();
+			pathListOriginal = (LinkedList<File>) pathList.clone();
 		}
 		String[] files = new String[pathList.size()];
 
@@ -661,16 +674,19 @@ public class FindFile<T extends FindFile> {
 	/**
 	 * Returns file walking iterator.
 	 */
+	@Override
 	public Iterator<File> iterator() {
 
 		return new Iterator<File>() {
 			private File nextFile;
 
+			@Override
 			public boolean hasNext() {
 				nextFile = nextFile();
 				return nextFile != null;
 			}
 
+			@Override
 			public File next() {
 				if (nextFile == null) {
 					throw new NoSuchElementException();
@@ -678,6 +694,7 @@ public class FindFile<T extends FindFile> {
 				return nextFile;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -688,7 +705,7 @@ public class FindFile<T extends FindFile> {
 
 	protected List<Comparator<File>> sortComparators;
 
-	protected void addComparator(Comparator<File> comparator) {
+	protected void addComparator(final Comparator<File> comparator) {
 		if (sortComparators == null) {
 			sortComparators = new ArrayList<>(4);
 		}
@@ -698,184 +715,81 @@ public class FindFile<T extends FindFile> {
 	/**
 	 * Removes ALL sorting options.
 	 */
-	public T sortNone() {
+	public FindFile sortNone() {
 		sortComparators = null;
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Adds generic sorting.
 	 */
-	public T sortWith(Comparator<File> fileComparator) {
+	public FindFile sortWith(final Comparator<File> fileComparator) {
 		addComparator(fileComparator);
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Puts folders before files.
 	 */
-	public T sortFoldersFirst() {
+	public FindFile sortFoldersFirst() {
 		addComparator(new FolderFirstComparator(true));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Puts files before folders.
 	 */
-	public T sortFoldersLast() {
+	public FindFile sortFoldersLast() {
 		addComparator(new FolderFirstComparator(false));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by file name, using <b>natural</b> sort.
 	 */
-	public T sortByName() {
+	public FindFile sortByName() {
 		addComparator(new FileNameComparator(true));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by file names descending, using <b>natural</b> sort.
 	 */
-	public T sortByNameDesc() {
+	public FindFile sortByNameDesc() {
 		addComparator(new FileNameComparator(false));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by file extension.
 	 */
-	public T sortByExtension() {
+	public FindFile sortByExtension() {
 		addComparator(new FileExtensionComparator(true));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by file extension descending.
 	 */
-	public T sortByExtensionDesc() {
+	public FindFile sortByExtensionDesc() {
 		addComparator(new FileExtensionComparator(false));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by last modified time.
 	 */
-	public T sortByTime() {
+	public FindFile sortByTime() {
 		addComparator(new FileLastModifiedTimeComparator(true));
-		return (T) this;
+		return this;
 	}
 
 	/**
 	 * Sorts files by last modified time descending.
 	 */
-	public T sortByTimeDesc() {
+	public FindFile sortByTimeDesc() {
 		addComparator(new FileLastModifiedTimeComparator(false));
-		return (T) this;
+		return this;
 	}
 
-	// ---------------------------------------------------------------- comparators
-
-	public static class FolderFirstComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
-		protected final int order;
-
-		public FolderFirstComparator(boolean foldersFirst) {
-			if (foldersFirst) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			if (file1.isFile() && file2.isDirectory()) {
-				return order;
-			}
-			if (file1.isDirectory() && file2.isFile()) {
-				return -order;
-			}
-			return 0;
-		}
-	}
-
-	public static class FileNameComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
-		protected final int order;
-		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true);
-
-		public FileNameComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
-			if (result == 0) {
-				return result;
-			}
-			if (result > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileExtensionComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
-		protected final int order;
-
-		public FileExtensionComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			String ext1 = FileNameUtil.getExtension(file1.getName());
-			String ext2 = FileNameUtil.getExtension(file2.getName());
-			long diff = ext1.compareToIgnoreCase(ext2);
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
-		protected final int order;
-
-		public FileLastModifiedTimeComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			long diff = file1.lastModified() - file2.lastModified();
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
 }

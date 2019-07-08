@@ -25,13 +25,31 @@
 
 package jodd.util;
 
+import jodd.bridge.JavaIncompatible;
+import jodd.core.JoddCore;
+import jodd.system.SystemUtil;
+
 /**
  * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
  * See: http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/
  *
  * Thanx to Gatling (http://gatling-tool.org)!
  */
+@JavaIncompatible
 public class UnsafeUtil {
+
+	// IMPORTANT - the order of declaration here is important! we need to detect
+	// first the Android, and then to check for the unsafe field.
+
+	private static final boolean IS_ANDROID = SystemUtil.info().isAndroid();
+	private static final boolean HAS_UNSAFE = !IS_ANDROID && UnsafeInternal.hasUnsafe();
+
+	/**
+	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
+	 */
+	public static boolean hasUnsafe() {
+		return HAS_UNSAFE;
+	}
 
 	/**
 	 * Returns String characters in most performing way.
@@ -39,29 +57,16 @@ public class UnsafeUtil {
 	 * If not, <code>toCharArray()</code> will be called.
 	 * Returns <code>null</code> when argument is <code>null</code>.
 	 */
-	public static char[] getChars(String string) {
+	public static char[] getChars(final String string) {
 		if (string == null) {
 			return null;
 		}
-		if (!SystemUtil.hasUnsafe()) {
+
+		if (!HAS_UNSAFE || !JoddCore.unsafeUsageEnabled) {
 			return string.toCharArray();
 		}
 
-		return PlatformInternal.unsafeGetChars(string);
-	}
-
-	/**
-	 * Creates (mutable) string from given char array.
-	 */
-	public static String createString(char[] chars) {
-		if (chars == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return new String(chars);
-		}
-
-		return PlatformInternal.unsafeCreateString(chars);
+		return UnsafeInternal.unsafeGetChars(string);
 	}
 
 }

@@ -27,6 +27,7 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,13 @@ import java.util.Map;
  */
 public class ThreadLocalScope implements Scope {
 
+	private final PetiteContainer pc;
+
+	public ThreadLocalScope(final PetiteContainer pc) {
+		this.pc = pc;
+	}
+
+
 	protected static ThreadLocal<Map<String, BeanData>> context = new ThreadLocal<Map<String, BeanData>>() {
 		@Override
 		protected synchronized Map<String, BeanData> initialValue() {
@@ -46,22 +54,24 @@ public class ThreadLocalScope implements Scope {
 		}
 	};
 
-	public Object lookup(String name) {
+	@Override
+	public Object lookup(final String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		BeanData beanData = threadLocalMap.get(name);
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.bean();
 	}
 
-	public void register(BeanDefinition beanDefinition, Object bean) {
-		BeanData beanData = new BeanData(beanDefinition, bean);
+	@Override
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		Map<String, BeanData> threadLocalMap = context.get();
-		threadLocalMap.put(beanDefinition.getName(), beanData);
+		threadLocalMap.put(beanDefinition.name(), new BeanData(pc, beanDefinition, bean));
 	}
 
-	public void remove(String name) {
+	@Override
+	public void remove(final String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.remove(name);
 	}
@@ -70,8 +80,13 @@ public class ThreadLocalScope implements Scope {
 	 * Defines allowed referenced scopes that can be injected into the
 	 * thread-local scoped bean.
 	 */
-	public boolean accept(Scope referenceScope) {
+	@Override
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
 
 		if (refScopeType == SingletonScope.class) {
 			return true;
@@ -84,6 +99,7 @@ public class ThreadLocalScope implements Scope {
 		return false;
 	}
 
+	@Override
 	public void shutdown() {
 	}
 

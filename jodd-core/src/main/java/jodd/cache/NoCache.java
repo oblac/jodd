@@ -25,7 +25,8 @@
 
 package jodd.cache;
 
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Simple no-cache implementations of {@link Cache} for situation when cache
@@ -34,51 +35,63 @@ import java.util.Iterator;
 public class NoCache<K, V> implements Cache<K, V> {
 
 
-	public int getCacheSize() {
+	@Override
+	public int limit() {
 		return 0;
 	}
 
-	public long getCacheTimeout() {
+	@Override
+	public long timeout() {
 		return 0;
 	}
 
-	public void put(K key, V object) {
+	@Override
+	public void put(final K key, final V object) {
 		// ignore
 	}
 
-	public void put(K key, V object, long timeout) {
+	@Override
+	public void put(final K key, final V object, final long timeout) {
 		// ignore
 	}
 
-	public V get(K key) {
+	@Override
+	public V get(final K key) {
 		return null;
 	}
 
-	public Iterator<V> iterator() {
-		return null;
-	}
-
+	@Override
 	public int prune() {
 		return 0;
 	}
 
+	@Override
 	public boolean isFull() {
 		return true;
 	}
 
-	public void remove(K key) {
-		// ignore
+	@Override
+	public V remove(final K key) {
+		return null;
 	}
 
+	@Override
 	public void clear() {
 		// ignore
 	}
 
+	@Override
 	public int size() {
 		return 0;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return true;
+	}
+
+	@Override
+	public Map<K, V> snapshot() {
+		return Collections.emptyMap();
 	}
 }

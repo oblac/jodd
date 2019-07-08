@@ -31,6 +31,7 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
+import jodd.json.meta.TypeData;
 
 import java.lang.reflect.Modifier;
 
@@ -45,9 +46,9 @@ public abstract class TypeJsonVisitor {
 	protected final Class type;
 
 	protected int count;
-	protected final JsonAnnotationManager.TypeData typeData;
+	protected final TypeData typeData;
 
-	public TypeJsonVisitor(JsonContext jsonContext, Class type) {
+	public TypeJsonVisitor(final JsonContext jsonContext, final Class type) {
 		this.jsonContext = jsonContext;
 		this.count = 0;
 		this.declared = false;
@@ -55,14 +56,14 @@ public abstract class TypeJsonVisitor {
 
 		this.type = type;
 
-		typeData = JoddJson.annotationManager.lookupTypeData(type);
+		this.typeData = JsonAnnotationManager.get().lookupTypeData(type);
 	}
 
 	/**
 	 * Visits a type.
 	 */
 	public void visit() {
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
 		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'
@@ -96,9 +97,9 @@ public abstract class TypeJsonVisitor {
 	 * {@link #onSerializableProperty(String, jodd.introspector.PropertyDescriptor)}.
 	 */
 	protected void onProperty(
-			String propertyName,
-			PropertyDescriptor propertyDescriptor,
-			boolean isTransient) {
+		String propertyName,
+		final PropertyDescriptor propertyDescriptor,
+		final boolean isTransient) {
 
 		Class propertyType = propertyDescriptor == null ?  null : propertyDescriptor.getType();
 

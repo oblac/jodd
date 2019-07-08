@@ -27,13 +27,13 @@ package jodd.servlet;
 
 import jodd.util.StringPool;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -46,7 +46,7 @@ public class DispatcherUtil {
 	/**
 	 * Include page which path is relative to the current HTTP request.
 	 */
-	public static boolean include(ServletRequest request, ServletResponse response, String page) throws IOException, ServletException {
+	public static boolean include(final ServletRequest request, final ServletResponse response, final String page) throws IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 		if (dispatcher != null) {
 			dispatcher.include(request, response);
@@ -58,15 +58,15 @@ public class DispatcherUtil {
 	/**
 	 * Include named resource.
 	 */
-	public static boolean includeNamed(HttpServletRequest request, ServletResponse response, String resource) throws IOException, ServletException {
-		return includeNamed(request.getSession().getServletContext(), request, response, resource);
+	public static boolean includeNamed(final HttpServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
+		return includeNamed(request.getServletContext(), request, response, resource);
 	}
 
 
 	/**
 	 * Include named resource.
 	 */
-	public static boolean includeNamed(ServletContext context, ServletRequest request, ServletResponse response, String page) throws IOException, ServletException {
+	public static boolean includeNamed(final ServletContext context, final ServletRequest request, final ServletResponse response, final String page) throws IOException, ServletException {
 		RequestDispatcher dispatcher = context.getNamedDispatcher(page);
 		if (dispatcher != null) {
 			dispatcher.include(request, response);
@@ -80,15 +80,15 @@ public class DispatcherUtil {
 	/**
 	 * Include page which path relative to the root of the ServletContext.
 	 */
-	public static boolean includeAbsolute(HttpServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
-		return includeAbsolute(request.getSession().getServletContext(), request, response, page);
+	public static boolean includeAbsolute(final HttpServletRequest request, final HttpServletResponse response, final String page) throws IOException, ServletException {
+		return includeAbsolute(request.getServletContext(), request, response, page);
 	}
 
 
 	/**
 	 * Include page which path relative to the root of the ServletContext.
 	 */
-	public static boolean includeAbsolute(ServletContext context, ServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
+	public static boolean includeAbsolute(final ServletContext context, final ServletRequest request, final HttpServletResponse response, final String page) throws IOException, ServletException {
 		RequestDispatcher dispatcher = context.getRequestDispatcher(page);
 		if (dispatcher != null) {
 			dispatcher.include(request, response);
@@ -102,7 +102,7 @@ public class DispatcherUtil {
 	/**
 	 * Forward to page which path is relative to the current HTTP request.
 	 */
-	public static boolean forward(ServletRequest request, ServletResponse response, String page) throws IOException, ServletException {
+	public static boolean forward(final ServletRequest request, final ServletResponse response, final String page) throws IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 		if (dispatcher != null) {
 			dispatcher.forward(request, response);
@@ -114,14 +114,14 @@ public class DispatcherUtil {
 	/**
 	 * Forward to named resource.
 	 */
-	public static boolean forwardNamed(HttpServletRequest request, ServletResponse response, String resource) throws IOException, ServletException {
-		return forwardNamed(request.getSession().getServletContext(), request, response, resource);
+	public static boolean forwardNamed(final HttpServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
+		return forwardNamed(request.getServletContext(), request, response, resource);
 	}
 
 	/**
 	 * Forward to named resource.
 	 */
-	public static boolean forwardNamed(ServletContext context, ServletRequest request, ServletResponse response, String resource) throws IOException, ServletException {
+	public static boolean forwardNamed(final ServletContext context, final ServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
 		RequestDispatcher dispatcher = context.getNamedDispatcher(resource);
 		if (dispatcher != null) {
 			dispatcher.forward(request, response);
@@ -133,14 +133,14 @@ public class DispatcherUtil {
 	/**
 	 * Forward to page path relative to the root of the ServletContext.
 	 */
-	public static boolean forwardAbsolute(HttpServletRequest request, ServletResponse response, String page) throws IOException, ServletException {
-		return forwardAbsolute(request.getSession().getServletContext(), request, response, page);
+	public static boolean forwardAbsolute(final HttpServletRequest request, final ServletResponse response, final String page) throws IOException, ServletException {
+		return forwardAbsolute(request.getServletContext(), request, response, page);
 	}
 
 	/**
 	 * Forward to page path relative to the root of the ServletContext.
 	 */
-	public static boolean forwardAbsolute(ServletContext context, ServletRequest request, ServletResponse response, String resource) throws IOException, ServletException {
+	public static boolean forwardAbsolute(final ServletContext context, final ServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
 		RequestDispatcher dispatcher = context.getRequestDispatcher(resource);
 		if (dispatcher != null) {
 			dispatcher.forward(request, response);
@@ -155,7 +155,7 @@ public class DispatcherUtil {
 	/**
 	 * Performs redirection (302) to specified url.
 	 */
-	public static void redirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+	public static void redirect(final HttpServletRequest request, final HttpServletResponse response, String url) throws IOException {
 		if (url.startsWith(StringPool.SLASH)) {
 			url = ServletUtil.getContextPath(request) + url;
 		}
@@ -165,7 +165,7 @@ public class DispatcherUtil {
 	/**
 	 * Performs permanent redirection (301) to specified url.
 	 */
-	public static void redirectPermanent(HttpServletRequest request, HttpServletResponse response, String url) {
+	public static void redirectPermanent(final HttpServletRequest request, final HttpServletResponse response, String url) {
 		if (url.startsWith(StringPool.SLASH)) {
 			url = ServletUtil.getContextPath(request) + url;
 		}
@@ -179,7 +179,7 @@ public class DispatcherUtil {
 	/**
 	 * Returns full URL: uri + query string, including the context path.
 	 */
-	public static String getFullUrl(HttpServletRequest request) {
+	public static String getFullUrl(final HttpServletRequest request) {
 		String url = request.getRequestURI();
 		String query = request.getQueryString();
 		if ((query != null) && (query.length() != 0)) {
@@ -191,7 +191,7 @@ public class DispatcherUtil {
 	/**
 	 * Returns url, without context path, convenient for request dispatcher.
 	 */
-	public static String getUrl(HttpServletRequest request) {
+	public static String getUrl(final HttpServletRequest request) {
 		String servletPath = request.getServletPath();
 		String query = request.getQueryString();
 		if ((query != null) && (query.length() != 0)) {
@@ -210,23 +210,23 @@ public class DispatcherUtil {
 	public static final String INCLUDE_QUERY_STRING = "javax.servlet.include.query_string";
 
 
-	public static String getIncludeRequestUri(HttpServletRequest request) {
+	public static String getIncludeRequestUri(final HttpServletRequest request) {
 		return (String) request.getAttribute(INCLUDE_REQUEST_URI);
 	}
 
-	public static String getIncludeContextPath(HttpServletRequest request) {
+	public static String getIncludeContextPath(final HttpServletRequest request) {
 		return (String) request.getAttribute(INCLUDE_CONTEXT_PATH);
 	}
 
-	public static String getIncludeServletPath(HttpServletRequest request) {
+	public static String getIncludeServletPath(final HttpServletRequest request) {
 		return (String) request.getAttribute(INCLUDE_SERVLET_PATH);
 	}
 
-	public static String getIncludePathInfo(HttpServletRequest request) {
+	public static String getIncludePathInfo(final HttpServletRequest request) {
 		return (String) request.getAttribute(INCLUDE_PATH_INFO);
 	}
 
-	public static String getIncludeQueryString(HttpServletRequest request) {
+	public static String getIncludeQueryString(final HttpServletRequest request) {
 		return (String) request.getAttribute(INCLUDE_QUERY_STRING);
 	}
 
@@ -238,23 +238,23 @@ public class DispatcherUtil {
 	public static final String FORWARD_PATH_INFO = "javax.servlet.forward.path_info";
 	public static final String FORWARD_QUERY_STRING = "javax.servlet.forward.query_string";
 
-	public static String getForwardRequestUri(HttpServletRequest request) {
+	public static String getForwardRequestUri(final HttpServletRequest request) {
 		return (String) request.getAttribute(FORWARD_REQUEST_URI);
 	}
 
-	public static String getForwardContextPath(HttpServletRequest request) {
+	public static String getForwardContextPath(final HttpServletRequest request) {
 		return (String) request.getAttribute(FORWARD_CONTEXT_PATH);
 	}
 
-	public static String getForwardServletPath(HttpServletRequest request) {
+	public static String getForwardServletPath(final HttpServletRequest request) {
 		return (String) request.getAttribute(FORWARD_SERVLET_PATH);
 	}
 
-	public static String getForwardPathInfo(HttpServletRequest request) {
+	public static String getForwardPathInfo(final HttpServletRequest request) {
 		return (String) request.getAttribute(FORWARD_PATH_INFO);
 	}
 
-	public static String getForwardQueryString(HttpServletRequest request) {
+	public static String getForwardQueryString(final HttpServletRequest request) {
 		return (String) request.getAttribute(FORWARD_QUERY_STRING);
 	}
 
@@ -263,7 +263,7 @@ public class DispatcherUtil {
 	/**
 	 * Returns <code>true</code> if current page is included.
 	 */
-	public static boolean isPageIncluded(HttpServletRequest request, HttpServletResponse response) {
+	public static boolean isPageIncluded(final HttpServletRequest request, final HttpServletResponse response) {
 		return (response.isCommitted() || (getIncludeServletPath(request) != null));
 	}
 
@@ -271,7 +271,7 @@ public class DispatcherUtil {
 	 * Returns <code>true</code> if request is a top-level one, i.e. previously
 	 * not included or forwarded.
 	 */
-	public static boolean isTopLevelRequest(HttpServletRequest request) {
+	public static boolean isTopLevelRequest(final HttpServletRequest request) {
 		return (getForwardRequestUri(request) == null) && (getIncludeRequestUri(request) == null);
 	}
 
@@ -280,7 +280,7 @@ public class DispatcherUtil {
 	/**
 	 * Returns the base (top-level) uri.
 	 */
-	public static String getBaseRequestUri(HttpServletRequest request) {
+	public static String getBaseRequestUri(final HttpServletRequest request) {
 		String result = getForwardRequestUri(request);
 		if (result == null) {
 			result = request.getRequestURI();
@@ -290,7 +290,7 @@ public class DispatcherUtil {
 	/**
 	 * Get current request uri.
 	 */
-	public static String getRequestUri(HttpServletRequest request) {
+	public static String getRequestUri(final HttpServletRequest request) {
 		String result = getIncludeRequestUri(request);
 		if (result == null) {
 			result = request.getRequestURI();
@@ -298,14 +298,14 @@ public class DispatcherUtil {
 		return result;
 	}
 
-	public static String getBaseContextPath(HttpServletRequest request) {
+	public static String getBaseContextPath(final HttpServletRequest request) {
 		String result = getForwardContextPath(request);
 		if (result == null) {
 			result = ServletUtil.getContextPath(request);
 		}
 		return result;
 	}
-	public static String getContextPath(HttpServletRequest request) {
+	public static String getContextPath(final HttpServletRequest request) {
 		String result = getIncludeContextPath(request);
 		if (result == null) {
 			result = ServletUtil.getContextPath(request);
@@ -314,14 +314,14 @@ public class DispatcherUtil {
 	}
 
 
-	public static String getBaseServletPath(HttpServletRequest request) {
+	public static String getBaseServletPath(final HttpServletRequest request) {
 		String result = getForwardServletPath(request);
 		if (result == null) {
 			result = request.getServletPath();
 		}
 		return result;
 	}
-	public static String getServletPath(HttpServletRequest request) {
+	public static String getServletPath(final HttpServletRequest request) {
 		String result = getIncludeServletPath(request);
 		if (result == null) {
 			result = request.getServletPath();
@@ -330,14 +330,14 @@ public class DispatcherUtil {
 	}
 
 
-	public static String getBasePathInfo(HttpServletRequest request) {
+	public static String getBasePathInfo(final HttpServletRequest request) {
 		String result = getForwardPathInfo(request);
 		if (result == null) {
 			result = request.getPathInfo();
 		}
 		return result;
 	}
-	public static String getPathInfo(HttpServletRequest request) {
+	public static String getPathInfo(final HttpServletRequest request) {
 		String result = getIncludePathInfo(request);
 		if (result == null) {
 			result = request.getPathInfo();
@@ -346,14 +346,14 @@ public class DispatcherUtil {
 	}
 
 
-	public static String getBaseQueryString(HttpServletRequest request) {
+	public static String getBaseQueryString(final HttpServletRequest request) {
 		String result = getForwardQueryString(request);
 		if (result == null) {
 			result = request.getQueryString();
 		}
 		return result;
 	}
-	public static String getQueryString(HttpServletRequest request) {
+	public static String getQueryString(final HttpServletRequest request) {
 		String result = getIncludeQueryString(request);
 		if (result == null) {
 			result = request.getQueryString();

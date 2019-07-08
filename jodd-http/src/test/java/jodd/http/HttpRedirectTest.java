@@ -25,36 +25,30 @@
 
 package jodd.http;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class HttpRedirectTest {
+class HttpRedirectTest {
 
 	static TestServer testServer;
 
-	@BeforeClass
-	public static void startServer() throws Exception {
+	@BeforeAll
+	static void startServer() throws Exception {
 		testServer = new TomcatServer();
 		testServer.start();
 	}
 
-	@AfterClass
-	public static void stopServer() throws Exception {
+	@AfterAll
+	static void stopServer() throws Exception {
 		testServer.stop();
 	}
 
-	@Before
-	public void setUp() {
-		EchoServlet.testinit();
-	}
-
 	@Test
-	public void testRedirect() {
+	void testRedirect() {
 		HttpRequest httpRequest = HttpRequest.get("localhost:8173/redirect");
 
 		HttpResponse httpResponse = httpRequest.send();

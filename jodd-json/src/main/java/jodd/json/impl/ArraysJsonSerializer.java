@@ -37,22 +37,27 @@ public class ArraysJsonSerializer<K> extends ValueJsonSerializer<Object> {
 	/**
 	 * Returns array's length.
 	 */
-	protected int getLength(K[] array) {
+	protected int getLength(final K[] array) {
 		return Array.getLength(array);
 	}
 
 	/**
 	 * Returns array's element at given index.
 	 */
-	protected K get(K[] array, int index) {
+	protected K get(final K[] array, final int index) {
 		return (K) Array.get(array, index);
 	}
 
 	@Override
-	public void serializeValue(JsonContext jsonContext, Object array) {
+	public void serializeValue(final JsonContext jsonContext, final Object array) {
+		final int length = getLength((K[]) array);
+
+		if (length == 0 && jsonContext.isExcludeEmpty()) {
+			return;
+		}
+
 		jsonContext.writeOpenArray();
 
-		int length = getLength((K[]) array);
 		int count = 0;
 
 		for (int i = 0; i < length; i++) {

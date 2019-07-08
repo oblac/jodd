@@ -30,36 +30,47 @@ package jodd.lagarto;
  */
 public class EmptyTagVisitor implements TagVisitor {
 
+	@Override
 	public void start() {
 	}
 
+	@Override
 	public void end() {
 	}
 
-	public void tag(Tag tag) {
+	@Override
+	public void tag(final Tag tag) {
 	}
 
-	public void script(Tag tag, CharSequence body) {
+	@Override
+	public void script(final Tag tag, final CharSequence body) {
 	}
 
-	public void comment(CharSequence comment) {
+	@Override
+	public void comment(final CharSequence comment) {
 	}
 
-	public void text(CharSequence text) {
+	@Override
+	public void text(final CharSequence text) {
 	}
 
-	public void cdata(CharSequence cdata) {
+	@Override
+	public void cdata(final CharSequence cdata) {
 	}
 
-	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+	@Override
+	public void xml(final CharSequence version, final CharSequence encoding, final CharSequence standalone) {
 	}
 
-	public void doctype(Doctype doctype) {
+	@Override
+	public void doctype(final Doctype doctype) {
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	@Override
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 	}
 }

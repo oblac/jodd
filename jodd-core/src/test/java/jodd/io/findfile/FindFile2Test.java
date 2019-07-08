@@ -26,20 +26,23 @@
 package jodd.io.findfile;
 
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FindFile2Test {
+class FindFile2Test {
 
 	protected String dataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -48,7 +51,7 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testAcceptAndWalk() {
+	void testAcceptAndWalk() {
 		final StringBuilder s1 = new StringBuilder();
 		final StringBuilder s2 = new StringBuilder();
 
@@ -60,11 +63,11 @@ public class FindFile2Test {
 				return true;
 			}
 		};
-		ff.setIncludeDirs(true);
-		ff.setIncludeFiles(true);
-		ff.setRecursive(true);
+		ff.includeDirs(true);
+		ff.includeFiles(true);
+		ff.recursive(true);
 		ff.sortByName();
-		ff.setWalking(true);
+		ff.walking(true);
 		ff.searchPath(dataRoot);
 
 		assertNull(ff.lastFile());
@@ -85,7 +88,7 @@ public class FindFile2Test {
 		s2.setLength(0);
 
 		ff.reset();
-		ff.setWalking(false);
+		ff.walking(false);
 
 		while ((f = ff.nextFile()) != null) {
 			s2.append(f.getName());
@@ -98,14 +101,14 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testTwoRoots() {
+	void testTwoRoots() {
 
 		FindFile ff =
 			new WildcardFindFile()
-				.setIncludeDirs(true)
-				.setIncludeFiles(true)
-				.setRecursive(true)
-				.setWalking(true)
+				.includeDirs(true)
+				.includeFiles(true)
+				.recursive(true)
+				.walking(true)
 				.searchPath(dataRoot + "/beta")
 				.searchPath(dataRoot + "/sumo")
 				.include("**");
@@ -118,7 +121,7 @@ public class FindFile2Test {
 		assertEquals(5, count);
 
 		ff.reset();
-		ff.setIncludeDirs(false);
+		ff.includeDirs(false);
 
 		count = 0;
 		while (ff.nextFile() != null) {
@@ -130,17 +133,17 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testTwoRootsAndWildcardMatchTypes() {
+	void testTwoRootsAndWildcardMatchTypes() {
 
 		WildcardFindFile wff = new WildcardFindFile();
-		wff.setIncludeDirs(true);
-		wff.setIncludeFiles(true);
-		wff.setRecursive(true);
-		wff.setWalking(true);
+		wff.includeDirs(true);
+		wff.includeFiles(true);
+		wff.recursive(true);
+		wff.walking(true);
 		wff.searchPath(dataRoot + "/beta");
 		wff.searchPath(dataRoot + "/sumo");
 
-		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.matchType(WildcardFindFile.Match.FULL_PATH);
 		wff.include("**/sumo/*");
 		int count = 0;
 		while (wff.nextFile() != null) {
@@ -151,7 +154,7 @@ public class FindFile2Test {
 		wff.reset();
 
 		wff
-			.setMatchType(WildcardFindFile.Match.FULL_PATH)
+			.matchType(WildcardFindFile.Match.FULL_PATH)
 			.include("**/sumo/**");
 		count = 0;
 		while (wff.nextFile() != null) {
@@ -160,7 +163,7 @@ public class FindFile2Test {
 		assertEquals(2, count);
 
 		wff.reset();
-		wff.setMatchType(WildcardFindFile.Match.NAME);
+		wff.matchType(WildcardFindFile.Match.NAME);
 		wff.include("*.txt");
 		count = 0;
 		while (wff.nextFile() != null) {
@@ -169,7 +172,7 @@ public class FindFile2Test {
 		assertEquals(3, count);
 
 		wff.reset();
-		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
+		wff.matchType(WildcardFindFile.Match.RELATIVE_PATH);
 		wff.include("/gamma/*");
 		count = 0;
 		while (wff.nextFile() != null) {
@@ -178,7 +181,7 @@ public class FindFile2Test {
 		assertEquals(1, count);
 
 		wff.reset();
-		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
+		wff.matchType(WildcardFindFile.Match.RELATIVE_PATH);
 		wff.include("/*a*.txt");
 		count = 0;
 		while (wff.nextFile() != null) {
@@ -188,16 +191,16 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testNonExisting() {
+	void testNonExisting() {
 		FindFile wff = new FindFile();
 
-		wff.setIncludeDirs(true);
-		wff.setIncludeFiles(true);
-		wff.setRecursive(true);
-		wff.setWalking(true);
+		wff.includeDirs(true);
+		wff.includeFiles(true);
+		wff.recursive(true);
+		wff.walking(true);
 		wff.searchPath(dataRoot + "/void");
 
-		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.matchType(WildcardFindFile.Match.FULL_PATH);
 		int count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -206,16 +209,16 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testNotFound() {
+	void testNotFound() {
 		WildcardFindFile wff = new WildcardFindFile();
-		wff.setIncludeDirs(true);
-		wff.setIncludeFiles(true);
-		wff.setRecursive(true);
-		wff.setWalking(true);
+		wff.includeDirs(true);
+		wff.includeFiles(true);
+		wff.recursive(true);
+		wff.walking(true);
 		wff.searchPath(dataRoot + "/beta");
 		wff.searchPath(dataRoot + "/sumo");
 
-		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.matchType(WildcardFindFile.Match.FULL_PATH);
 		wff.include("**/xxxxxxx/*");
 
 		int count = 0;
@@ -227,13 +230,13 @@ public class FindFile2Test {
 
 
 	@Test
-	public void testSort() {
+	void testSort() {
 		final StringBuilder str = new StringBuilder();
 
 		FindFile ff = new FindFile();
-		ff.setIncludeDirs(true);
-		ff.setIncludeFiles(true);
-		ff.setRecursive(false);
+		ff.includeDirs(true);
+		ff.includeFiles(true);
+		ff.recursive(false);
 		ff.sortByName();
 		ff.searchPath(dataRoot);
 
@@ -295,11 +298,11 @@ public class FindFile2Test {
 	}
 
 	@Test
-	public void testJustFoldersAndFiles() {
+	void testJustFoldersAndFiles() {
 		FindFile ff = new FindFile();
-		ff.setIncludeDirs(false);
-		ff.setIncludeFiles(true);
-		ff.setRecursive(false);
+		ff.includeDirs(false);
+		ff.includeFiles(true);
+		ff.recursive(false);
 		ff.sortByName();
 		ff.searchPath(dataRoot);
 
@@ -312,9 +315,9 @@ public class FindFile2Test {
 		assertEquals("alpha.txt | jodd1.txt | jodd10.txt | zero.txt | ", str.toString());
 
 		ff = new FindFile();
-		ff.setIncludeDirs(true);
-		ff.setIncludeFiles(false);
-		ff.setRecursive(false);
+		ff.includeDirs(true);
+		ff.includeFiles(false);
+		ff.recursive(false);
 		ff.sortByName();
 		ff.searchPath(dataRoot);
 
@@ -324,7 +327,6 @@ public class FindFile2Test {
 		}
 
 		assertEquals("beta | sumo | ", str.toString());
-
 	}
 
 

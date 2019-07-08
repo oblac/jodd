@@ -27,79 +27,77 @@ package jodd.vtor.constraint;
 
 import jodd.vtor.ValidationConstraintContext;
 import jodd.vtor.VtorException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
+class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testValidate_withNullValue() {
-        assertTrue("result must be true when validate null value",
-                EqualToDeclaredFieldConstraint.validate(new Object(), null, "someField"));
+    void testValidate_withNullValue() {
+        assertTrue(EqualToDeclaredFieldConstraint.validate(new Object(), null, "someField"));
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint();
         assertNull(equalToDeclaredFieldConstraint.getFieldName());
         String fieldName = "testField";
         equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint(fieldName);
-        assertEquals("field name must be the same as was given to constructor", equalToDeclaredFieldConstraint.getFieldName(), fieldName);
+        assertEquals(fieldName, equalToDeclaredFieldConstraint.getFieldName());
     }
 
     @Test
-    public void testSetFieldName() {
+    void testSetFieldName() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint();
         String fieldName = "someField";
         equalToDeclaredFieldConstraint.setFieldName(fieldName);
-        assertEquals("value must be the same as was given to set method", equalToDeclaredFieldConstraint.getFieldName(), fieldName);
+        assertEquals(fieldName, equalToDeclaredFieldConstraint.getFieldName());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint();
         //set a field name through an annotation
         EqualToDeclaredField fldAnnotation = mock(EqualToDeclaredField.class);
         String field = "anotherField";
-        stub(fldAnnotation.value()).toReturn(field);
+        when(fldAnnotation.value()).thenReturn(field);
 
         equalToDeclaredFieldConstraint.configure(fldAnnotation);
-        assertEquals("field name must be the same as was set to annotation when configure",
-                equalToDeclaredFieldConstraint.getFieldName(), field);
+        assertEquals(field, equalToDeclaredFieldConstraint.getFieldName());
     }
 
     @Test
-    public void testIsValid_forEqualValues() {
+    void testIsValid_forEqualValues() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
-        stub(cvv.getTarget()).toReturn(new TestValue("someValue"));
+        when(cvv.getTarget()).thenReturn(new TestValue("someValue"));
 
-        assertTrue("result must be true when field and value are equals",  equalToDeclaredFieldConstraint.isValid(cvv, "someValue"));
+        assertTrue(equalToDeclaredFieldConstraint.isValid(cvv, "someValue"));
     }
 
     @Test
-    public void testIsValid_forDifferentValues() {
+    void testIsValid_forDifferentValues() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
-        stub(cvv.getTarget()).toReturn(new TestValue("someValue"));
+        when(cvv.getTarget()).thenReturn(new TestValue("someValue"));
 
-        assertFalse("result must be false when validated field and value are different",  equalToDeclaredFieldConstraint.isValid(cvv, "wrongValue"));
+        assertFalse(equalToDeclaredFieldConstraint.isValid(cvv, "wrongValue"));
     }
 
-    @Test(expected = VtorException.class)
-    public void testValidate_FieldNotFound() {
+    @Test
+    void testValidate_FieldNotFound() {
         TestValue testVal = new TestValue("someValue");
-        EqualToDeclaredFieldConstraint.validate(testVal, "someValue", "wrongField");
-        fail("EqualToDeclaredFieldConstraint should throw VtorException when receive nonexistent field name");
+        assertThrows(VtorException.class,
+            () -> EqualToDeclaredFieldConstraint.validate(testVal, "someValue", "wrongField"));
     }
 
     @Test
-    public void testValidate_FieldValueIsNull() {
+    void testValidate_FieldValueIsNull() {
         TestValue testVal = new TestValue(null);
-        assertFalse("result must be false when field value is null", EqualToDeclaredFieldConstraint.validate(testVal, "someValue", "testField"));
+        assertFalse(EqualToDeclaredFieldConstraint.validate(testVal, "someValue", "testField"));
     }
 
     public static class TestValue {

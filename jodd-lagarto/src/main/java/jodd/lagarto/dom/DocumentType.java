@@ -33,7 +33,7 @@ public class DocumentType extends Node {
 	protected final String publicId;
 	protected final String systemId;
 
-	public DocumentType(Document ownerDocument, String value, String publicId, String systemId) {
+	public DocumentType(final Document ownerDocument, final String value, final String publicId, final String systemId) {
 		super(ownerDocument, NodeType.DOCUMENT_TYPE, null);
 		this.nodeValue = value;
 		this.publicId = publicId;
@@ -59,7 +59,7 @@ public class DocumentType extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.documentType(this);
 	}
 }

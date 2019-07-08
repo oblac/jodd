@@ -26,49 +26,36 @@
 package jodd.log.impl;
 
 import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.log.impl.fixtures.LoggerConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
-public class Slf4jLoggerTest extends LoggerTestBase {
+class Slf4jLoggerTest extends LoggerTestBase {
 
 	private org.slf4j.Logger log;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		log = mock(org.slf4j.Logger.class);
 		logger = new Slf4jLogger(log);
 	}
 
 	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
-	}
-
-	@Test
-	public void testGetName() {
+	void testGetName() {
 		//given
 		when(log.getName()).thenReturn(LoggerConstants.LOG);
 
 		//then
-		assertEquals("Name must be equal log as we set log to the logger", LoggerConstants.LOG, logger.getName());
+		assertEquals(logger.getName(), LoggerConstants.LOG);
 	}
 
 	@Test
-	public void testIsEnabled() {
-		super.testIsEnabled();
-	}
-
-	@Test
-	public void testLog() {
+	void testLog() {
 		//when
 		logger.log(Level.TRACE, LoggerConstants.SIMPLE_MESSAGE);
 
@@ -101,7 +88,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLevel() {
+	void testLevel() {
 		//when
 		logger.trace(LoggerConstants.TRACE_MESSAGE);
 
@@ -134,7 +121,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testErrorWithThrowable() {
+	void testErrorWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -146,7 +133,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testWarnWithThrowable() {
+	void testWarnWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -158,15 +145,14 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testJCLLoggerFactory() {
+	void testSl4jLoggerFactory() {
 		//given
-		loggerFactory = new Slf4jLoggerFactory();
+		loggerProvider = Slf4jLogger.PROVIDER;
 
 		//when
-		logger = (Slf4jLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type JCLLogger", logger.getClass(),
-			is(instanceOf(Slf4jLogger.class.getClass())));
+		assertEquals(Slf4jLogger.class, logger.getClass());
 	}
 }

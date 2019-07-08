@@ -26,7 +26,6 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.filter.DefaultWebAppFilters;
 
 import java.util.Set;
 
@@ -37,18 +36,8 @@ import java.util.Set;
 public class FiltersManager extends WrapperManager<ActionFilter> {
 
 	@Override
-	protected ActionFilter[] createArray(int len) {
+	protected ActionFilter[] createArray(final int len) {
 		return new ActionFilter[len];
-	}
-
-	@Override
-	protected Class<? extends ActionFilter> getDefaultWebAppWrapper() {
-		return DefaultWebAppFilters.class;
-	}
-
-	@Override
-	protected Class<? extends ActionFilter>[] getDefaultWrappers() {
-		return madvocConfig.getDefaultFilters();
 	}
 
 	/**

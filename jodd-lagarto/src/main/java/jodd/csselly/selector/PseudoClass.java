@@ -41,7 +41,7 @@ public abstract class PseudoClass {
 	 */
 	public static class FIRST_CHILD extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getSiblingElementIndex() == 0;
 		}
 	}
@@ -51,7 +51,7 @@ public abstract class PseudoClass {
 	 */
 	public static class LAST_CHILD extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getSiblingElementIndex() == node.getParentNode().getChildElementsCount() - 1;
 		}
 	}
@@ -63,7 +63,7 @@ public abstract class PseudoClass {
 	 */
 	public static class ONLY_CHILD extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return (node.getSiblingElementIndex() == 0) && (node.getParentNode().getChildElementsCount() == 1);
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class PseudoClass {
 	 */
 	public static class FIRST_OF_TYPE extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getSiblingNameIndex() == 0;
 		}
 	}
@@ -85,7 +85,7 @@ public abstract class PseudoClass {
 	 */
 	public static class LAST_OF_TYPE extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getNextSiblingName() == null;
 		}
 	}
@@ -96,7 +96,7 @@ public abstract class PseudoClass {
 	 */
 	public static class ROOT extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getParentNode().getNodeType() == Node.NodeType.DOCUMENT;
 		}
 	}
@@ -106,7 +106,7 @@ public abstract class PseudoClass {
 	 */
 	public static class EMPTY extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getChildNodesCount() == 0;
 		}
 	}
@@ -119,7 +119,7 @@ public abstract class PseudoClass {
 	 */
 	public static class ONLY_OF_TYPE extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return (node.getSiblingNameIndex() == 0) && (node.getNextSiblingName() == null);
 		}
 	}
@@ -131,12 +131,12 @@ public abstract class PseudoClass {
 	 */
 	public static class FIRST extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index) {
 			if (currentResults.isEmpty()) {
 				return false;
 			}
@@ -155,12 +155,12 @@ public abstract class PseudoClass {
 	 */
 	public static class LAST extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index) {
 			int size = currentResults.size();
 			if (size == 0) {
 				return false;
@@ -178,7 +178,7 @@ public abstract class PseudoClass {
 	 */
 	public static class BUTTON extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -192,7 +192,7 @@ public abstract class PseudoClass {
 	 */
 	public static class CHECKBOX extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -206,7 +206,7 @@ public abstract class PseudoClass {
 	 */
 	public static class FILE extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -220,7 +220,7 @@ public abstract class PseudoClass {
 	 */
 	public static class HEADER extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String name = node.getNodeName();
 			if (name == null) {
 				return false;
@@ -242,7 +242,7 @@ public abstract class PseudoClass {
 	 */
 	public static class IMAGE extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -256,7 +256,7 @@ public abstract class PseudoClass {
 	 */
 	public static class INPUT extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String tagName = node.getNodeName();
 			if (tagName == null) {
 				return false;
@@ -284,7 +284,7 @@ public abstract class PseudoClass {
 	 */
 	public static class PARENT extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.getChildNodesCount() != 0;
 		}
 	}
@@ -294,7 +294,7 @@ public abstract class PseudoClass {
 	 */
 	public static class PASSWORD extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -308,7 +308,7 @@ public abstract class PseudoClass {
 	 */
 	public static class RADIO extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -322,7 +322,7 @@ public abstract class PseudoClass {
 	 */
 	public static class RESET extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -336,7 +336,7 @@ public abstract class PseudoClass {
 	 */
 	public static class SELECTED extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.hasAttribute("selected");
 		}
 	}
@@ -346,7 +346,7 @@ public abstract class PseudoClass {
 	 */
 	public static class CHECKED extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return node.hasAttribute("checked");
 		}
 	}
@@ -356,7 +356,7 @@ public abstract class PseudoClass {
 	 */
 	public static class SUBMIT extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -370,7 +370,7 @@ public abstract class PseudoClass {
 	 */
 	public static class TEXT extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			String type = node.getAttribute("type");
 			if (type == null) {
 				return false;
@@ -384,12 +384,12 @@ public abstract class PseudoClass {
 	 */
 	public static class EVEN extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index) {
 			return index % 2 == 0;
 		}
 	}
@@ -399,12 +399,12 @@ public abstract class PseudoClass {
 	 */
 	public static class ODD extends PseudoClass {
 		@Override
-		public boolean match(Node node) {
+		public boolean match(final Node node) {
 			return true;
 		}
 
 		@Override
-		public boolean match(List<Node> currentResults, Node node, int index) {
+		public boolean match(final List<Node> currentResults, final Node node, final int index) {
 			return index % 2 != 0;
 		}
 	}
@@ -420,7 +420,7 @@ public abstract class PseudoClass {
 	/**
 	 * Returns <code>true</code> if node matches the pseudoclass within current results.
 	 */
-	public boolean match(List<Node> currentResults, Node node, int index) {
+	public boolean match(final List<Node> currentResults, final Node node, final int index) {
 		return true;
 	}
 

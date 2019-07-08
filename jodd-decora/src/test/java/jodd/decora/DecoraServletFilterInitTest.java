@@ -25,45 +25,35 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.reflect.Whitebox.setInternalState;
+import jodd.decora.parser.DecoraParser;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import jodd.decora.parser.DecoraParser;
-import jodd.util.ClassLoaderUtil;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ClassLoaderUtil.class, DecoraResponseWrapper.class })
-public class DecoraServletFilterInitTest {
+class DecoraServletFilterInitTest {
 
 	private DecoraServletFilter decoraServletFilter;
 	private FilterConfig filterConfigMock;
 	private DecoraParser decoraParser;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 		filterConfigMock = mock(FilterConfig.class);
 		decoraParser = null;
 	}
 
 	@Test
-	public final void testInitManagerNullParserNull() throws ServletException {
+	void testInitManagerNullParserNull() throws ServletException {
 		// setup
-		setInternalState(decoraServletFilter, "decoraParser", decoraParser);
+		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn(null);
 
@@ -71,68 +61,62 @@ public class DecoraServletFilterInitTest {
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("Decora parser should be set.", getInternalState(decoraServletFilter, "decoraParser"));
+		assertNotNull(decoraServletFilter.decoraParser);
 	}
 
-	@Test(expected = ServletException.class)
-	public final void testInitManagerThrowException() throws ServletException {
+	@Test
+	void testInitManagerThrowException() throws ServletException {
 		// setup
-		setInternalState(decoraServletFilter, "decoraParser", decoraParser);
+		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn("TEST");
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn(null);
 
 		// when
-		decoraServletFilter.init(filterConfigMock);
-
-		// then
-		fail("A ServletException must have occured because ClassLoaderUtil class shouldn't load decoraParserClass.");
+		assertThrows(ServletException.class, () -> {
+			decoraServletFilter.init(filterConfigMock);
+		});
 	}
 
-	@Test(expected = ServletException.class)
-	public final void testInitParserThrowException() throws ServletException {
+	@Test
+	void testInitParserThrowException() throws ServletException {
 		// setup
-		setInternalState(decoraServletFilter, "decoraParser", decoraParser);
+		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn("TEST");
 
 		// when
-		decoraServletFilter.init(filterConfigMock);
-
-		// then
-		fail("A ServletException must have occured because ClassLoaderUtil class shouldn't load decoraManagerClass.");
+		assertThrows(ServletException.class, () -> {
+			decoraServletFilter.init(filterConfigMock);
+		});
 	}
 
 	@Test
-	public final void testInitManagerSetted() throws ServletException, ClassNotFoundException {
+	void testInitManagerSetted() throws ServletException, ClassNotFoundException {
 		// setup
 		DecoraManager decoraManager = null;
-		setInternalState(decoraServletFilter, "decoraManager", decoraManager);
-		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn("TEST");
+		decoraServletFilter.decoraManager = decoraManager;
+		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(DecoraManager.class.getName());
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn(null);
-		mockStatic(ClassLoaderUtil.class);
-		when(ClassLoaderUtil.loadClass("TEST")).thenReturn(DecoraManager.class);
 
 		// when
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("DecoraManager should be set.", getInternalState(decoraServletFilter, "decoraManager"));
+		assertNotNull(decoraServletFilter.decoraManager);
 	}
 
 	@Test
-	public final void testInitParserSetted() throws ServletException, ClassNotFoundException {
+	void testInitParserSetted() throws ServletException, ClassNotFoundException {
 		// setup
-		setInternalState(decoraServletFilter, "decoraParser", decoraParser);
+		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);
-		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn("TEST");
-		mockStatic(ClassLoaderUtil.class);
-		when(ClassLoaderUtil.loadClass("TEST")).thenReturn(DecoraParser.class);
+		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn(DecoraParser.class.getName());
 
 		// when
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("DecoraParser should be set.", getInternalState(decoraServletFilter, "decoraParser"));
+		assertNotNull(decoraServletFilter.decoraParser);
 	}
 
 }

@@ -25,51 +25,41 @@
 
 package jodd.core;
 
-import jodd.Jodd;
-import jodd.io.FileUtilParams;
 import jodd.util.StringPool;
-import jodd.util.cl.ClassLoaderStrategy;
-import jodd.util.cl.DefaultClassLoaderStrategy;
+
+import java.security.Security;
 
 /**
- * Jodd CORE module.
- * Contains some global defaults.
+ * Jodd library-wide properties.
  */
 public class JoddCore {
 
+	static {
+		// Starting from Java8 u151, the `Unlimited Strength Jurisdiction Policy Files`
+		// are included with Java, but has to be enabled.
+		// They are enabled on Java9 by default.
+		Security.setProperty("crypto.policy", "unlimited");
+	}
+
+	// ---------------------------------------------------------------- settings
+
 	/**
-	 * Default temp file prefix.
+	 * Default prefix for temporary files.
 	 */
 	public static String tempFilePrefix = "jodd-";
 
 	/**
-	 * Default file encoding (UTF8).
+	 * The encoding used across the Jodd classes, "UTF-8" by default.
 	 */
 	public static String encoding = StringPool.UTF_8;
 
 	/**
-	 * Default IO buffer size (16 KB).
+	 * Buffer size for various I/O operations.
 	 */
 	public static int ioBufferSize = 16384;
-
 	/**
-	 * Default parameters used in {@link jodd.io.FileUtil} operations.
+	 * Flag that controls the {@code Unsafe} usage (if system detects it). Enabled by default.
 	 */
-	public static FileUtilParams fileUtilParams = new FileUtilParams();
-
-	/**
-	 * Default class loader strategy.
-	 */
-	public static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
-
-	// ---------------------------------------------------------------- module
-
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddCore.class);
-	}
+	public static boolean unsafeUsageEnabled = true;
 
 }

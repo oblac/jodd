@@ -25,28 +25,28 @@
 
 package jodd.proxetta;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.data.DateDao;
-import jodd.proxetta.data.PerformanceMeasureProxyAdvice;
+import jodd.proxetta.fixtures.data.DateDao;
+import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import jodd.util.SystemUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertNotNull;
+import java.time.LocalDateTime;
 
-public class ProxyInfoTest {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ProxyInfoTest {
 
 	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		proxetta.setDebugFolder(SystemUtil.userHome());
+	void testProxyInfo_createNotRightAfterTheMethod() {
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspects());
+		//proxetta.setDebugFolder(SystemUtil.userHome());
 
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
+		DateDao dateDateProxy = (DateDao) proxetta.proxy().setTarget(DateDao.class).newInstance();
 
-		JDateTime jDateTime = dateDateProxy.currentTime();
+		LocalDateTime localDateTime = dateDateProxy.currentTime();
 
-		assertNotNull(jDateTime);
+		assertNotNull(localDateTime);
 	}
 
 	private ProxyAspect[] aspects() {

@@ -26,30 +26,35 @@
 package jodd.introspector;
 
 import jodd.bean.BeanUtil;
-import jodd.introspector.tst.Abean;
-import jodd.introspector.tst.Ac;
-import jodd.introspector.tst.Bbean;
-import jodd.introspector.tst.Bc;
-import jodd.introspector.tst.Cbean;
-import jodd.introspector.tst.Mojo;
-import jodd.introspector.tst.One;
-import jodd.introspector.tst.OneSub;
-import jodd.introspector.tst.Overload;
-import jodd.introspector.tst.TwoSub;
-import org.junit.Test;
+import jodd.introspector.fixtures.Abean;
+import jodd.introspector.fixtures.Ac;
+import jodd.introspector.fixtures.Bbean;
+import jodd.introspector.fixtures.Bc;
+import jodd.introspector.fixtures.Cbean;
+import jodd.introspector.fixtures.Mojo;
+import jodd.introspector.fixtures.One;
+import jodd.introspector.fixtures.OneSub;
+import jodd.introspector.fixtures.Overload;
+import jodd.introspector.fixtures.TwoSub;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IntrospectorTest {
+class IntrospectorTest {
 
 	@Test
-	public void testBasic() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
+	void testBasic() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Abean.class);
 		assertNotNull(cd);
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
@@ -59,11 +64,7 @@ public class IntrospectorTest {
 		}
 		assertEquals(2, c);
 
-		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
-			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		Arrays.sort(properties, Comparator.comparing(PropertyDescriptor::getName));
 
 		PropertyDescriptor pd = properties[0];
 		assertEquals("fooProp", pd.getName());
@@ -91,8 +92,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testExtends() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
+	void testExtends() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Bbean.class);
 		assertNotNull(cd);
 
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
@@ -112,6 +113,7 @@ public class IntrospectorTest {
 		assertEquals(4, properties.length);
 
 		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
+			@Override
 			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
@@ -156,8 +158,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testCtors() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Ac.class);
+	void testCtors() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Ac.class);
 		CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
 		int c = 0;
 		for (CtorDescriptor ctor : ctors) {
@@ -172,7 +174,7 @@ public class IntrospectorTest {
 		Constructor ctor = cd.getCtorDescriptor(new Class[] {Integer.class}, true).getConstructor();
 		assertNotNull(ctor);
 
-		cd = ClassIntrospector.lookup(Bc.class);
+		cd = ClassIntrospector.get().lookup(Bc.class);
 		ctors = cd.getAllCtorDescriptors();
 		c = 0;
 		for (CtorDescriptor ccc : ctors) {
@@ -192,8 +194,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testSameFieldDifferentClass() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
+	void testSameFieldDifferentClass() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Abean.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("shared", false);
 		assertNull(fd);
@@ -201,7 +203,7 @@ public class IntrospectorTest {
 		fd = cd.getFieldDescriptor("shared", true);
 		assertNotNull(fd);
 
-		ClassDescriptor cd2 = ClassIntrospector.lookup(Bbean.class);
+		ClassDescriptor cd2 = ClassIntrospector.get().lookup(Bbean.class);
 		FieldDescriptor fd2 = cd2.getFieldDescriptor("shared", true);
 
 		assertNotEquals(fd, fd2);
@@ -209,8 +211,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertyMatches() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Cbean.class);
+	void testPropertyMatches() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Cbean.class);
 
 		PropertyDescriptor pd;
 
@@ -251,8 +253,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testOverload() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Overload.class);
+	void testOverload() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Overload.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
@@ -266,15 +268,15 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testSerialUid() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
+	void testSerialUid() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Bbean.class);
 
 		assertNull(cd.getFieldDescriptor("serialVersionUID", true));
 	}
 
 	@Test
-	public void testStaticFieldsForProperties() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Mojo.class);
+	void testStaticFieldsForProperties() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Mojo.class);
 
 		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
 		assertEquals(3, fieldDescriptors.length);
@@ -296,8 +298,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = ClassIntrospector.lookup(One.class);
+	void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(One.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -345,8 +347,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = ClassIntrospector.lookup(OneSub.class);
+	void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(OneSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -385,8 +387,8 @@ public class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = ClassIntrospector.lookup(TwoSub.class);
+	void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(TwoSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 

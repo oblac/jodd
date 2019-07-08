@@ -31,7 +31,8 @@ import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
+import jodd.util.Wildcard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class MapToBean {
 	protected final JsonParserBase jsonParser;
 	protected final String classMetadataName;
 
-	public MapToBean(JsonParserBase jsonParser, String classMetadataName) {
+	public MapToBean(final JsonParserBase jsonParser, final String classMetadataName) {
 		this.jsonParser = jsonParser;
 		this.classMetadataName = classMetadataName;
 	}
@@ -56,7 +57,7 @@ public class MapToBean {
 	/**
 	 * Converts map to target type.
 	 */
-	public Object map2bean(Map map, Class targetType) {
+	public Object map2bean(final Map map, Class targetType) {
 		Object target = null;
 
 		// create targets type
@@ -69,6 +70,8 @@ public class MapToBean {
 			}
 		}
 		else {
+			checkClassName(jsonParser.classnameWhitelist, className);
+
 			try {
 				targetType = ClassLoaderUtil.loadClass(className);
 			} catch (ClassNotFoundException cnfex) {
@@ -80,7 +83,7 @@ public class MapToBean {
 			target = jsonParser.newObjectInstance(targetType);
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
+		ClassDescriptor cd = ClassIntrospector.get().lookup(target.getClass());
 
 		boolean targetIsMap = target instanceof Map;
 
@@ -114,7 +117,7 @@ public class MapToBean {
 				}
 				else if (value instanceof Map) {
 					// if the value we want to inject is a Map...
-					if (!ReflectUtil.isTypeOf(propertyType, Map.class)) {
+					if (!ClassUtil.isTypeOf(propertyType, Map.class)) {
 						// ... and if target is NOT a map
 						value = map2bean((Map) value, propertyType);
 					}
@@ -145,10 +148,21 @@ public class MapToBean {
 		return target;
 	}
 
+	private void checkClassName(final List<String> classnameWhitelist, final String className) {
+		if (classnameWhitelist == null) {
+			return;
+		}
+		classnameWhitelist.forEach(pattern -> {
+			if (!Wildcard.equalsOrMatch(className, pattern)) {
+				throw new JsonException("Class can't be loaded as it is not whitelisted: " + className);
+			}
+		});
+	}
+
 	/**
 	 * Converts type of all list elements to match the component type.
 	 */
-	private Object generifyList(List list, Class componentType) {
+	private Object generifyList(final List list, final Class componentType) {
 		for (int i = 0; i < list.size(); i++) {
 			Object element = list.get(i);
 
@@ -169,7 +183,7 @@ public class MapToBean {
 	/**
 	 * Sets the property value.
 	 */
-	private void setValue(Object target, PropertyDescriptor pd, Object value) throws InvocationTargetException, IllegalAccessException {
+	private void setValue(final Object target, final PropertyDescriptor pd, Object value) throws InvocationTargetException, IllegalAccessException {
 		Class propertyType;
 
 		Setter setter = pd.getSetter(true);
@@ -185,7 +199,7 @@ public class MapToBean {
 	/**
 	 * Change map elements to match key and value types.
 	 */
-	protected <K,V> Map<K, V> generifyMap(Map<Object, Object> map, Class<K> keyType, Class<V> valueType) {
+	protected <K,V> Map<K, V> generifyMap(final Map<Object, Object> map, final Class<K> keyType, final Class<V> valueType) {
 
 		if (keyType == String.class) {
 			// only value type is changed, we can make value replacements
@@ -216,7 +230,7 @@ public class MapToBean {
 		return newMap;
 	}
 
-	protected Object convert(Object value, Class targetType) {
+	protected Object convert(final Object value, final Class targetType) {
 		Class valueClass = value.getClass();
 
 		if (valueClass == targetType) {
@@ -232,7 +246,7 @@ public class MapToBean {
 		}
 
 		try {
-			return TypeConverterManager.convertType(value, targetType);
+			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);

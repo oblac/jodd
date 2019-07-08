@@ -25,9 +25,11 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.util.StringUtil;
 import jodd.util.StringPool;
-import static jodd.util.CharUtil.*;
+import jodd.util.StringUtil;
+
+import static jodd.util.CharUtil.isAlpha;
+import static jodd.util.CharUtil.isDigit;
 
 /**
  * Internal template parser.
@@ -45,7 +47,7 @@ class TemplateParser {
 	/**
 	 * Parses template and returns generated sql builder.
 	 */
-	public void parse(DbSqlBuilder sqlBuilder, String template) {
+	public void parse(final DbSqlBuilder sqlBuilder, final String template) {
 		int length = template.length();
 		int last = 0;
 		while (true) {
@@ -105,7 +107,7 @@ class TemplateParser {
 		}
 	}
 
-	protected static boolean isReferenceChar(String template, int index) {
+	protected static boolean isReferenceChar(final String template, final int index) {
 		char c = template.charAt(index);
 		if ((c == '+') && (template.charAt(index - 1) == '.')) {
 			return true;
@@ -118,7 +120,7 @@ class TemplateParser {
 	/**
 	 * Finds macros end.
 	 */
-	protected int findMacroEnd(String template, int fromIndex) {
+	protected int findMacroEnd(final String template, final int fromIndex) {
 		int endIndex = template.indexOf('}', fromIndex);
 		if (endIndex == -1) {
 			throw new DbSqlBuilderException("Template syntax error, some macros are not closed. Error at: '..." + template.substring(fromIndex));
@@ -129,7 +131,7 @@ class TemplateParser {
 	/**
 	 * Count escapes to the left.
 	 */
-	protected int countEscapes(String template, int macroIndex) {
+	protected int countEscapes(final String template, int macroIndex) {
 		macroIndex--;
 		int escapeCount = 0;
 		while (macroIndex >= 0) {
@@ -144,14 +146,14 @@ class TemplateParser {
 
 	// ---------------------------------------------------------------- handlers
 
-	protected void onTable(DbSqlBuilder sqlBuilder, String allTables) {
+	protected void onTable(final DbSqlBuilder sqlBuilder, final String allTables) {
 		String[] tables = StringUtil.split(allTables, StringPool.COMMA);
 		for (String table : tables) {
 			sqlBuilder.table(table);
 		}
 	}
 
-	protected void onColumn(DbSqlBuilder sqlBuilder, String allColumns) {
+	protected void onColumn(final DbSqlBuilder sqlBuilder, final String allColumns) {
 		int len = allColumns.length();
 		int lastNdx = 0;
 
@@ -175,15 +177,15 @@ class TemplateParser {
 		sqlBuilder.column(allColumns.substring(lastNdx));
 	}
 
-	protected void onReference(DbSqlBuilder sqlBuilder, String reference) {
+	protected void onReference(final DbSqlBuilder sqlBuilder, final String reference) {
 		sqlBuilder.ref(reference);
 	}
 
-	protected void onMatch(DbSqlBuilder sqlBuilder, String expression) {
+	protected void onMatch(final DbSqlBuilder sqlBuilder, final String expression) {
 		sqlBuilder.match(expression);
 	}
 
-	protected void onValue(DbSqlBuilder sqlBuilder, String expression) {
+	protected void onValue(final DbSqlBuilder sqlBuilder, final String expression) {
 		sqlBuilder.columnValue(expression);
 	}
 

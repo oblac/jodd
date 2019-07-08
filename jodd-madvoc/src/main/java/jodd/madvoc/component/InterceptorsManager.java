@@ -26,7 +26,6 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 
 import java.util.Set;
 
@@ -38,19 +37,10 @@ import java.util.Set;
 public class InterceptorsManager extends WrapperManager<ActionInterceptor> {
 
 	@Override
-	protected ActionInterceptor[] createArray(int len) {
+	protected ActionInterceptor[] createArray(final int len) {
 		return new ActionInterceptor[len];
 	}
 
-	@Override
-	protected Class<? extends ActionInterceptor> getDefaultWebAppWrapper() {
-		return DefaultWebAppInterceptors.class;
-	}
-
-	@Override
-	protected Class<? extends ActionInterceptor>[] getDefaultWrappers() {
-		return madvocConfig.getDefaultInterceptors();
-	}
 
 	/**
 	 * Returns all interceptors.

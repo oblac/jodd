@@ -68,14 +68,14 @@ public class SessionMonitor implements HttpSessionListener {
 	/**
 	 * Registers new session listener.
 	 */
-	public void registerListener(HttpSessionListener listener) {
+	public void registerListener(final HttpSessionListener listener) {
 		listeners.add(listener);
 	}
 
 	/**
 	 * Removes existing session listener.
 	 */
-	public void removeListener(HttpSessionListener listener) {
+	public void removeListener(final HttpSessionListener listener) {
 		listeners.remove(listener);
 	}
 
@@ -84,7 +84,8 @@ public class SessionMonitor implements HttpSessionListener {
 	/**
 	 * Stores session in map and broadcasts event to registered listeners.
 	 */
-	public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+	@Override
+	public void sessionCreated(final HttpSessionEvent httpSessionEvent) {
 		HttpSession session = httpSessionEvent.getSession();
 		sessionMap.putIfAbsent(session.getId(), session);
 
@@ -96,7 +97,8 @@ public class SessionMonitor implements HttpSessionListener {
 	/**
 	 * Removes session from a map and broadcasts event to registered listeners.
 	 */
-	public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+	@Override
+	public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
 		HttpSession session = httpSessionEvent.getSession();
 		sessionMap.remove(session.getId());
 
@@ -111,7 +113,7 @@ public class SessionMonitor implements HttpSessionListener {
 	 * Returns session for given session id. Returns <code>null</code>
 	 * if session expired.
 	 */
-	public HttpSession getSession(String sessionId) {
+	public HttpSession getSession(final String sessionId) {
 		return sessionMap.get(sessionId);
 	}
 

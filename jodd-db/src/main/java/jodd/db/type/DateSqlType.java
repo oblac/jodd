@@ -25,10 +25,10 @@
 
 package jodd.db.type;
 
-import java.sql.Timestamp;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class DateSqlType extends SqlType<Date> {
@@ -37,7 +37,7 @@ public class DateSqlType extends SqlType<Date> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Date get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Date get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getDate(index);
 	}
 
@@ -45,7 +45,7 @@ public class DateSqlType extends SqlType<Date> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Date value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Date value, final int dbSqlType) throws SQLException {
 		st.setTimestamp(index, new Timestamp(value.getTime()));
 	}
 

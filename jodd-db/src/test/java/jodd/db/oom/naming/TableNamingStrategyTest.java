@@ -25,14 +25,14 @@
 
 package jodd.db.oom.naming;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TableNamingStrategyTest {
+class TableNamingStrategyTest {
 
 	@Test
-	public void testEntityNameToTableName() {
+	void testEntityNameToTableName() {
 		assertEquals("FOO_BOO_ZOO", convertClassNameToTableName("FooBooZoo", true));
 		assertEquals("foo_boo_zoo", convertClassNameToTableName("FooBooZoo", false));
 		assertEquals("FOO", convertClassNameToTableName("Foo", true));
@@ -61,7 +61,7 @@ public class TableNamingStrategyTest {
 	}
 
 	@Test
-	public void testEntityNameToTableName2() {
+	void testEntityNameToTableName2() {
 		TableNamingStrategy tns = new TableNamingStrategy();
 
 		assertEquals("JODD_USER", tns.convertEntityNameToTableName("JoddUser"));
@@ -88,7 +88,7 @@ public class TableNamingStrategyTest {
 	}
 
 	@Test
-	public void testSpecialEntityNameToTableName() {
+	void testSpecialEntityNameToTableName() {
 		assertEquals("FOO_BOO_ZOO", convertClassNameToTableName("FooBooZoo$xxx", true));
 		assertEquals("foo_boo_zoo", convertClassNameToTableName("FooBooZoo$xxx", false));
 		assertEquals("qwe_foo_boo_zoo_xxx", convertClassNameToTableName("FooBooZoo$xxx", "QWE_", "_XXX", false));
@@ -96,7 +96,7 @@ public class TableNamingStrategyTest {
 
 
 	@Test
-	public void testTableNameToEntityName() {
+	void testTableNameToEntityName() {
 		assertEquals("FooBooZoo", convertTableNameToClassName("FOO_BOO_ZOO", null, null));
 		assertEquals("FooBooZoo", convertTableNameToClassName("foo_boo_zoo", null, null));
 		assertEquals("FooBooZoo", convertTableNameToClassName("FOO_BOO_ZOO_", null, null));
@@ -127,7 +127,7 @@ public class TableNamingStrategyTest {
 	}
 
 	@Test
-	public void testTableNameToEntityName2() {
+	void testTableNameToEntityName2() {
 		TableNamingStrategy tns = new TableNamingStrategy();
 
 		assertEquals("JoddUser", tns.convertTableNameToEntityName("JODD_USER"));
@@ -153,7 +153,7 @@ public class TableNamingStrategyTest {
 	}
 
 	@Test
-	public void testApplyToTableName() {
+	void testApplyToTableName() {
 		TableNamingStrategy tns = new TableNamingStrategy();
 
 		assertEquals("JODD_USER", tns.applyToTableName("JODD_USER"));
@@ -175,7 +175,7 @@ public class TableNamingStrategyTest {
 	}
 
 	@Test
-	public void testApplyToColumnName() {
+	void testApplyToColumnName() {
 		ColumnNamingStrategy cns = new ColumnNamingStrategy();
 
 		assertEquals("JODD_USER", cns.applyToColumnName("JODD_USER"));

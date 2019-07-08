@@ -25,12 +25,14 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Collection of {@link FieldDescriptor field descriptors}.
@@ -38,7 +40,7 @@ import java.util.HashMap;
 public class Fields {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, FieldDescriptor> fieldsMap;
+	protected final Map<String, FieldDescriptor> fieldsMap;
 
 	// cache
 	private FieldDescriptor[] allFields;
@@ -46,7 +48,7 @@ public class Fields {
 	/**
 	 * Creates new fields collection.
 	 */
-	public Fields(ClassDescriptor classDescriptor) {
+	public Fields(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.fieldsMap = inspectFields();
 	}
@@ -54,16 +56,19 @@ public class Fields {
 	/**
 	 * Inspects fields and returns map of {@link FieldDescriptor field descriptors}.
 	 */
-	protected HashMap<String, FieldDescriptor> inspectFields() {
-		boolean scanAccessible = classDescriptor.isScanAccessible();
-		Class type = classDescriptor.getType();
+	private Map<String, FieldDescriptor> inspectFields() {
+		if (classDescriptor.isSystemClass()) {
+			return emptyFields();
+		}
+		final boolean scanAccessible = classDescriptor.isScanAccessible();
+		final Class type = classDescriptor.getType();
 
-		Field[] fields = scanAccessible ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
+		final Field[] fields = scanAccessible ? ClassUtil.getAccessibleFields(type) : ClassUtil.getSupportedFields(type);
 
-		HashMap<String, FieldDescriptor> map = new HashMap<>(fields.length);
+		final HashMap<String, FieldDescriptor> map = new HashMap<>(fields.length);
 
-		for (Field field : fields) {
-			String fieldName = field.getName();
+		for (final Field field : fields) {
+			final String fieldName = field.getName();
 
 			if (fieldName.equals("serialVersionUID")) {
 				continue;
@@ -76,9 +81,17 @@ public class Fields {
 	}
 
 	/**
+	 * Defines empty fields for special cases.
+	 */
+	private Map<String, FieldDescriptor> emptyFields() {
+		allFields = FieldDescriptor.EMPTY_ARRAY;
+		return Collections.emptyMap();
+	}
+
+	/**
 	 * Creates new {@code FieldDescriptor}.
 	 */
-	protected FieldDescriptor createFieldDescriptor(Field field) {
+	protected FieldDescriptor createFieldDescriptor(final Field field) {
 		return new FieldDescriptor(classDescriptor, field);
 	}
 
@@ -89,7 +102,7 @@ public class Fields {
 	 * Returns {@link FieldDescriptor field descriptor} for given field name
 	 * or <code>null</code> if field does not exist.
 	 */
-	public FieldDescriptor getFieldDescriptor(String name) {
+	public FieldDescriptor getFieldDescriptor(final String name) {
 		return fieldsMap.get(name);
 	}
 
@@ -107,11 +120,7 @@ public class Fields {
 				index++;
 			}
 
-			Arrays.sort(allFields, new Comparator<FieldDescriptor>() {
-				public int compare(FieldDescriptor fd1, FieldDescriptor fd2) {
-					return fd1.getField().getName().compareTo(fd2.getField().getName());
-				}
-			});
+			Arrays.sort(allFields, Comparator.comparing(fd -> fd.getField().getName()));
 
 			this.allFields = allFields;
 		}

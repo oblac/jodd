@@ -43,7 +43,7 @@ public class ProxyInfo {
 	private final String proxyPassword;
 	private final ProxyType proxyType;
 
-	public ProxyInfo(ProxyType proxyType, String proxyHost, int proxyPort, String proxyUser, String proxyPassword) {
+	public ProxyInfo(final ProxyType proxyType, final String proxyHost, final int proxyPort, final String proxyUser, final String proxyPassword) {
 		this.proxyType = proxyType;
 		this.proxyAddress = proxyHost;
 		this.proxyPort = proxyPort;
@@ -63,21 +63,21 @@ public class ProxyInfo {
 	/**
 	 * Creates SOCKS4 proxy.
 	 */
-	public static ProxyInfo socks4Proxy(String proxyAddress, int proxyPort, String proxyUser) {
+	public static ProxyInfo socks4Proxy(final String proxyAddress, final int proxyPort, final String proxyUser) {
 		return new ProxyInfo(ProxyType.SOCKS4, proxyAddress, proxyPort, proxyUser, null);
 	}
 
 	/**
 	 * Creates SOCKS5 proxy.
 	 */
-	public static ProxyInfo socks5Proxy(String proxyAddress, int proxyPort, String proxyUser, String proxyPassword) {
+	public static ProxyInfo socks5Proxy(final String proxyAddress, final int proxyPort, final String proxyUser, final String proxyPassword) {
 		return new ProxyInfo(ProxyType.SOCKS5, proxyAddress, proxyPort, proxyUser, proxyPassword);
 	}
 
 	/**
 	 * Creates HTTP proxy.
 	 */
-	public static ProxyInfo httpProxy(String proxyAddress, int proxyPort, String proxyUser, String proxyPassword) {
+	public static ProxyInfo httpProxy(final String proxyAddress, final int proxyPort, final String proxyUser, final String proxyPassword) {
 		return new ProxyInfo(ProxyType.HTTP, proxyAddress, proxyPort, proxyUser, proxyPassword);
 	}
 

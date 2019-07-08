@@ -25,21 +25,21 @@
 
 package jodd.json;
 
-import jodd.json.mock.Address;
-import jodd.json.mock.Employee;
-import jodd.json.mock.Network;
-import jodd.json.mock.Person;
-import jodd.json.mock.Phone;
-import jodd.json.mock.PhoneNumberType;
-import jodd.json.mock.Zipcode;
-import jodd.json.mock.superhero.Flight;
-import jodd.json.mock.superhero.HeatVision;
-import jodd.json.mock.superhero.Hero;
-import jodd.json.mock.superhero.Invincible;
-import jodd.json.mock.superhero.SecretIdentity;
-import jodd.json.mock.superhero.SecretLair;
-import jodd.json.mock.superhero.Villian;
-import jodd.json.mock.superhero.XRayVision;
+import jodd.json.fixtures.mock.Address;
+import jodd.json.fixtures.mock.Employee;
+import jodd.json.fixtures.mock.Network;
+import jodd.json.fixtures.mock.Person;
+import jodd.json.fixtures.mock.Phone;
+import jodd.json.fixtures.mock.PhoneNumberType;
+import jodd.json.fixtures.mock.Zipcode;
+import jodd.json.fixtures.mock.superhero.Flight;
+import jodd.json.fixtures.mock.superhero.HeatVision;
+import jodd.json.fixtures.mock.superhero.Hero;
+import jodd.json.fixtures.mock.superhero.Invincible;
+import jodd.json.fixtures.mock.superhero.SecretIdentity;
+import jodd.json.fixtures.mock.superhero.SecretLair;
+import jodd.json.fixtures.mock.superhero.Villian;
+import jodd.json.fixtures.mock.superhero.XRayVision;
 
 import java.sql.Timestamp;
 import java.util.Calendar;

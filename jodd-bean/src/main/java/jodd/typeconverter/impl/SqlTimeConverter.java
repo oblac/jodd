@@ -25,12 +25,15 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
+import jodd.time.JulianDate;
+import jodd.time.TimeUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.StringUtil;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,15 +45,17 @@ import java.util.Date;
  * <li>object of destination type is simply casted</li>
  * <li><code>Calendar</code> object is converted</li>
  * <li><code>Date</code> object is converted</li>
- * <li><code>JDateTime</code> object is converted</li>
+ * <li><code>JulianDate</code> object is converted</li>
+ * <li><code>LocalDateTime</code> object is converted</li>
+ * <li><code>LocalDate</code> object is converted</li>
  * <li><code>Number</code> is used as number of milliseconds</li>
- * <li>finally, if string value contains only numbers it is parsed as milliseconds;
- * otherwise as JDateTime pattern</li>
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds</li>
  * </ul>
  */
 public class SqlTimeConverter implements TypeConverter<Time> {
 
-	public Time convert(Object value) {
+	@Override
+	public Time convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +69,21 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		if (value instanceof Date) {
 			return new Time(((Date)value).getTime());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToSqlTime();
+		if (value instanceof JulianDate) {
+			return new Time(((JulianDate) value).toMilliseconds());
+		}
+		if (value instanceof LocalDateTime) {
+			return new Time(TimeUtil.toMilliseconds((LocalDateTime) value));
+		}
+		if (value instanceof LocalDate) {
+			return new Time(TimeUtil.toMilliseconds((LocalDate) value));
 		}
 		if (value instanceof Number) {
 			return new Time(((Number) value).longValue());
 		}
 
-		String stringValue = value.toString().trim();
+
+		final String stringValue = value.toString().trim();
 
 		// try yyyy-mm-dd for valueOf
 		if (!StringUtil.containsOnlyDigits(stringValue)) {

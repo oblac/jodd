@@ -25,46 +25,46 @@
 
 package jodd.petite;
 
-import jodd.petite.data.Biz;
-import jodd.petite.data.DefaultBiz;
-import jodd.petite.data.DefaultBizImpl;
+import jodd.petite.fixtures.data.Biz;
+import jodd.petite.fixtures.data.DefaultBiz;
+import jodd.petite.fixtures.data.DefaultBizImpl;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.scope.ProtoScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Zoo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MiscTest {
+class MiscTest {
 
 	@Test
-	public void testOne() {
+	void testOne() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		assertEquals(1, pc.getTotalBeans());
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
+		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
 		assertTrue(bizI instanceof DefaultBizImpl);
 
 		pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override!
-		assertEquals(1, pc.getTotalBeans());
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
+		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false, null);            // override!
+		assertEquals(1, pc.beansCount());
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 		pc.registerPetitePropertyInjectionPoint("biz", "foo", null);
 		pc.registerPetiteInitMethods("biz", POST_INITIALIZE, "init", "init2");
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
 		assertFalse(bizI instanceof DefaultBizImpl);
@@ -75,10 +75,10 @@ public class MiscTest {
 	}
 
 	@Test
-	public void testTwo() {
+	void testTwo() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		assertEquals(1, pc.getTotalBeans());
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
+		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -86,8 +86,8 @@ public class MiscTest {
 		assertTrue(bizI instanceof DefaultBizImpl);
 
 		//pc = new PetiteContainer();			// same container!!!
-		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override! instance will be removed from the scope
-		assertEquals(1, pc.getTotalBeans());
+		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false, null);            // override! instance will be removed from the scope
+		assertEquals(1, pc.beansCount());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
 		assertFalse(bizI instanceof DefaultBizImpl);
@@ -96,7 +96,7 @@ public class MiscTest {
 
 
 	@Test
-	public void testAdd() {
+	void testAdd() {
 		PetiteContainer pc = new PetiteContainer();
 		Foo foo = new Foo();
 		pc.addBean("foo", foo);
@@ -106,11 +106,11 @@ public class MiscTest {
 	}
 
 	@Test
-	public void testAdd2WithCircDep() {
+	void testAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
 
 		Foo foo = (Foo) pc.getBean("foo");
 		Boo boo = new Boo();
@@ -149,12 +149,12 @@ public class MiscTest {
 	}
 
 	@Test
-	public void testNoAdd2WithCircDep() {
+	void testNoAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
 
 		Boo boo = (Boo) pc.getBean("boo");
 		Foo foo = (Foo) pc.getBean("foo");
@@ -185,7 +185,7 @@ public class MiscTest {
 	}
 
 	@Test
-	public void test243() {
+	void test243() {
 		PetiteContainer pc = new PetiteContainer();
 		new PetiteRegistry(pc).provider("provider").type(PetiteDemo.class).method("getOne").args().register();
 	}
@@ -208,10 +208,10 @@ public class MiscTest {
 	}
 
 	@Test
-	public void test244() {
+	void test244() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(BeanOne.class, null, null, null, false);
-		pc.registerPetiteBean(BeanTwo.class, null, null, null, false);
+		pc.registerPetiteBean(BeanOne.class, null, null, null, false, null);
+		pc.registerPetiteBean(BeanTwo.class, null, null, null, false, null);
 
 		BeanOne petiteBean = pc.getBean(BeanOne.class);
 

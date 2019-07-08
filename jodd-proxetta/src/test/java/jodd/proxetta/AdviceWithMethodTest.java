@@ -25,29 +25,29 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.CollectorAdvice;
-import jodd.proxetta.data.Foo;
+import jodd.proxetta.fixtures.data.CollectorAdvice;
+import jodd.proxetta.fixtures.data.Foo;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class AdviceWithMethodTest {
+class AdviceWithMethodTest {
 
 	@Test
-	public void testCollector() throws NoSuchFieldException, IllegalAccessException {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+	void testCollector() throws NoSuchFieldException, IllegalAccessException {
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(CollectorAdvice.class, new AllTopMethodsPointcut())
 		);
 
 //		proxetta.setDebugFolder("d:\\");
 
-		Foo foo = (Foo) proxetta.builder(Foo.class).newInstance();
+		Foo foo = (Foo) proxetta.proxy().setTarget(Foo.class).newInstance();
 
 		Field field = foo.getClass().getDeclaredField("$__methods$0");
 

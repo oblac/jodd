@@ -74,7 +74,7 @@ public class PseudoFunctionExpression {
 	/**
 	 * Parses int value or throws <code>CSSellyException</code> on failure.
 	 */
-	protected int parseInt(String value) {
+	protected int parseInt(final String value) {
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException nfex) {
@@ -100,7 +100,7 @@ public class PseudoFunctionExpression {
 	/**
 	 * Matches expression with the value.
 	 */
-	public boolean match(int value) {
+	public boolean match(final int value) {
 		if (a == 0) {
 			return value == b;
 		}

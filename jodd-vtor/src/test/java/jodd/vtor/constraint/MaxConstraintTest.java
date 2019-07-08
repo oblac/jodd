@@ -25,51 +25,52 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class MaxConstraintTest extends ConstraintTestBase {
+class MaxConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MaxConstraint maxConstraint = new MaxConstraint();
-        assertEquals("value must be default", maxConstraint.getMax(), 0.0, 0.01);
+        assertEquals(0.0, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MaxConstraint maxConstraint = new MaxConstraint(0.1);
-        assertEquals("max value must be the same as was given to constructor", maxConstraint.getMax(), 0.1, 0.01);
+        assertEquals(0.1, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testSetMax() {
+    void testSetMax() {
         MaxConstraint maxConstraint = new MaxConstraint();
         maxConstraint.setMax(0.1);
-        assertEquals("max value must be the same as was given to set method", maxConstraint.getMax(), 0.1, 0.01);
+        assertEquals(0.1, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MaxConstraint maxConstraint = new MaxConstraint();
         Max annotation = mock(Max.class);
-        stub(annotation.value()).toReturn(0.1);
+        when(annotation.value()).thenReturn(0.1);
 
         maxConstraint.configure(annotation);
-        assertEquals("max value must be the same as was set to annotation when configure", maxConstraint.getMax(), 0.1, 0.01);    }
+        assertEquals(0.1, maxConstraint.getMax(), 0.01);
+    }
 
 
     @Test
-    public void testValidate_WithNullValue() {
-        assertTrue("result must be true when validate a null value", MaxConstraint.validate(null, 12.1));
+    void testValidate_WithNullValue() {
+        assertTrue(MaxConstraint.validate(null, 12.1));
     }
 
     @Test
-    public void testIsValid() {
-        assertTrue("result must be true when validated value is less than max", new MaxConstraint(12.5).isValid(mockContext(), "12.1"));
-        assertFalse("result must be true when validated value is grater than max", new MaxConstraint(12.5).isValid(mockContext(), "12.6"));
+    void testIsValid() {
+        assertTrue(new MaxConstraint(12.5).isValid(mockContext(), "12.1"));
+        assertFalse(new MaxConstraint(12.5).isValid(mockContext(), "12.6"));
     }
 }

@@ -25,7 +25,7 @@
 
 package jodd.asm;
 
-import jodd.asm5.AnnotationVisitor;
+import jodd.asm7.AnnotationVisitor;
 
 /**
  * Annotation visitor adapter.
@@ -34,27 +34,27 @@ public class AnnotationVisitorAdapter extends EmptyAnnotationVisitor {
 
 	protected final AnnotationVisitor dest;
 
-	public AnnotationVisitorAdapter(AnnotationVisitor dest) {
+	public AnnotationVisitorAdapter(final AnnotationVisitor dest) {
 		this.dest = dest;
 	}
 
 	@Override
-	public void visit(String name, Object value) {
+	public void visit(final String name, final Object value) {
 		dest.visit(name, value);
 	}
 
 	@Override
-	public void visitEnum(String name, String desc, String value) {
+	public void visitEnum(final String name, final String desc, final String value) {
 		dest.visitEnum(name, desc, value);
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String name, String desc) {
+	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
 		return new AnnotationVisitorAdapter(dest.visitAnnotation(name, desc));
 	}
 
 	@Override
-	public AnnotationVisitor visitArray(String name) {
+	public AnnotationVisitor visitArray(final String name) {
 		return new AnnotationVisitorAdapter(dest.visitArray(name));
 	}
 

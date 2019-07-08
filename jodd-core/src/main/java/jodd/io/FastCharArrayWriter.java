@@ -25,16 +25,17 @@
 
 package jodd.io;
 
-import jodd.util.buffer.FastCharBuffer;
+import jodd.buffer.FastCharBuffer;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Similar as {@link jodd.io.FastByteArrayOutputStream} but for {@link Writer}.
+ * Similar to {@link FastByteArrayOutputStream} but for {@link Writer}.
  */
 public class FastCharArrayWriter extends Writer {
-	
+
 	private final FastCharBuffer buffer;
 
 	/**
@@ -46,21 +47,21 @@ public class FastCharArrayWriter extends Writer {
 	}
 
 	/**
-	 * Creates a new char array writer, with a buffer capacity of
+	 * Creates a new char array {@link Writer}, with a buffer capacity of
 	 * the specified size, in bytes.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastCharArrayWriter(int size) {
+	public FastCharArrayWriter(final int size) {
 		buffer = new FastCharBuffer(size);
 	}
 
 	/**
-	 * @see java.io.Writer#write(char[], int, int)
+	 * @see Writer#write(char[], int, int)
 	 */
 	@Override
-	public void write(char[] b, int off, int len) {
+	public void write(final char[] b, final int off, final int len) {
 		buffer.append(b, off, len);
 	}
 
@@ -68,26 +69,26 @@ public class FastCharArrayWriter extends Writer {
 	 * Writes single byte.
 	 */
 	@Override
-	public void write(int b) {
+	public void write(final int b) {
 		buffer.append((char) b);
 	}
 
 	@Override
-	public void write(String s, int off, int len) {
+	public void write(final String s, final int off, final int len) {
 		write(s.toCharArray(), off, len);
 	}
 
 	/**
-	 * @see java.io.CharArrayWriter#size()
+	 * @see CharArrayWriter#size()
 	 */
 	public int size() {
 		return buffer.size();
 	}
 
 	/**
-	 * Closing a <code>FastCharArrayWriter</code> has no effect. The methods in
+	 * Closing a {@link FastCharArrayWriter} has no effect. The methods in
 	 * this class can be called after the stream has been closed without
-	 * generating an <code>IOException</code>.
+	 * generating an {@link IOException}.
 	 */
 	@Override
 	public void close() {
@@ -95,7 +96,7 @@ public class FastCharArrayWriter extends Writer {
 	}
 
 	/**
-	 * Flushing a <code>FastCharArrayWriter</code> has no effects.
+	 * Flushing a {@link FastCharArrayWriter} has no effects.
 	 */
 	@Override
 	public void flush() {
@@ -103,33 +104,28 @@ public class FastCharArrayWriter extends Writer {
 	}
 
 	/**
-	 * @see java.io.CharArrayWriter#reset()
+	 * @see CharArrayWriter#reset()
 	 */
 	public void reset() {
 		buffer.clear();
 	}
 
 	/**
-	 * @see java.io.CharArrayWriter#writeTo(java.io.Writer)
+	 * @see CharArrayWriter#writeTo(Writer)
 	 */
-	public void writeTo(Writer out) throws IOException {
-		int index = buffer.index();
-		for (int i = 0; i < index; i++) {
-			char[] buf = buffer.array(i);
-			out.write(buf);
-		}
-		out.write(buffer.array(index), 0, buffer.offset());
+	public void writeTo(final Writer out) throws IOException {
+		out.write(buffer.toArray());
 	}
 
 	/**
-	 * @see java.io.CharArrayWriter#toCharArray()
+	 * @see CharArrayWriter#toCharArray()
 	 */
 	public char[] toCharArray() {
 		return buffer.toArray();
 	}
 
 	/**
-	 * @see java.io.CharArrayWriter#toString()
+	 * @see CharArrayWriter#toString()
 	 */
 	@Override
 	public String toString() {

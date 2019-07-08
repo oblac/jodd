@@ -26,17 +26,25 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.FloatArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arrd;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arro;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class FloatArrayConverterTest {
+class FloatArrayConverterTest {
+
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
-	public void testConversion() {
-		FloatArrayConverter floatArrayConverter = (FloatArrayConverter) TypeConverterManager.lookup(float[].class);
+	void testConversion() {
+		FloatArrayConverter floatArrayConverter = (FloatArrayConverter) typeConverterManager.lookup(float[].class);
 
 		assertNull(floatArrayConverter.convert(null));
 

@@ -25,34 +25,33 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.tst.Enumerator;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Enumerator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static jodd.db.oom.sqlgen.DbEntitySql.insert;
+class DbEnumTest extends DbHsqldbTestCase {
 
-public class DbEnumTest extends DbHsqldbTestCase {
-
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	@BeforeEach
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Enumerator.class);
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
+		dbEntityManager.registerEntity(Enumerator.class);
 	}
 
 	@Test
-	public void testEnums() {
+	void testEnums() {
 		DbSession session = new DbThreadSession(cp);
 
 		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";
 
-		DbQuery query = new DbQuery(sql);
+		DbQuery query = new DbQuery(DbOom.get(), sql);
 		query.executeUpdate();
 
 		Enumerator e = new Enumerator();
@@ -60,8 +59,7 @@ public class DbEnumTest extends DbHsqldbTestCase {
 		e.name = "Ikigami";
 		e.status = Enumerator.STATUS.ONE;
 
-		DbSqlGenerator gen = insert(e);
-		query = new DbOomQuery(gen);
+		query = DbOomQuery.query(dbOom.entities().insert(e));
 		query.executeUpdate();
 
 		session.closeSession();

@@ -33,11 +33,11 @@ public class GooNav {
 	protected int from;
 	protected int to;
 
-	public GooNav(PageData pageData, int pages) {
+	public GooNav(final PageData pageData, final int pages) {
 		this(pageData.getTotalPages(), pageData.getCurrentPage(), pages);
 	}
 
-	public GooNav(int total, int current, int pages) {
+	public GooNav(final int total, final int current, final int pages) {
 		if (total == 0) {
 			return;
 		}

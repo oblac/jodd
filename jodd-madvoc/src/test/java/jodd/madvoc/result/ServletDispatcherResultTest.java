@@ -26,14 +26,15 @@
 package jodd.madvoc.result;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
-import jodd.util.ReflectUtil;
-import org.junit.Test;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.util.ClassUtil;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,20 +43,20 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ServletDispatcherResultTest {
+class ServletDispatcherResultTest {
 
 	@Test
-	public void testServletDispatcherLookup() throws Exception {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
+	void testServletDispatcherLookup() throws Exception {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
 		final List<String> targets = new ArrayList<>();
 
-		ServletDispatcherResult sdr = new ServletDispatcherResult() {
+		ServletDispatcherActionResult sdr = new ServletDispatcherActionResult() {
 			@Override
 			protected boolean targetExists(ActionRequest actionRequest, String target) {
 				targets.add(target);
@@ -63,11 +64,11 @@ public class ServletDispatcherResultTest {
 			}
 		};
 
-		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);
 
 		ActionRequest actionRequest = createActionRequest("/hello.world.html");
-		sdr.render(actionRequest, "ok");
+		sdr.render(actionRequest, Forward.to("ok"));
 
 		assertEquals("[" +
 				"/hello.world.html.ok.jspf, " +
@@ -92,7 +93,7 @@ public class ServletDispatcherResultTest {
 		targets.clear();
 
 		actionRequest = createActionRequest("/pak/hello.world.html");
-		sdr.render(actionRequest, "ok");
+		sdr.render(actionRequest, Forward.to("ok"));
 
 		assertEquals("[" +
 				"/pak/hello.world.html.ok.jspf, " +
@@ -140,17 +141,18 @@ public class ServletDispatcherResultTest {
 		MadvocController madvocController = new MadvocController();
 
 		Object action = new Object();
-		ActionConfig actionConfig = new ActionConfig(
+		ActionRuntime actionRuntime = new ActionRuntime(
+				null,
 				Action.class,
-				ReflectUtil.findMethod(Action.class, "view"),
+				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
-				new ActionDef(actionPath, "GET"),
-				null, false, null, null);
+				new ActionDefinition(actionPath, "GET"),
+				ServletDispatcherActionResult.class, null, false, false, null, null);
 
-		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
+		return new ActionRequest(madvocController, actionRuntime.getActionPath(), MadvocUtil.splitPathToChunks(actionRuntime.getActionPath()), actionRuntime, action, servletRequest, servletResponse);
 	}
 
-	public class Action {
+	class Action {
 		public void view() {}
 	}
 

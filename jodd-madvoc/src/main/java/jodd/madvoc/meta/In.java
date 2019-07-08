@@ -25,8 +25,6 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.ScopeType;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -42,13 +40,10 @@ import java.lang.annotation.Target;
 public @interface In {
 
 	/**
-	 * Specifies parameter scope.
-	 */
-	ScopeType scope() default ScopeType.REQUEST;
-
-	/**
 	 * Specifies non-default parameter name.
 	 */
 	String value() default "";
+
+	String defaultValue() default "";
 
 }

@@ -31,7 +31,7 @@ import jodd.util.StringUtil;
 /**
  * Common class for <code>PathMacro</code> implementations.
  * Assume that macros are defined in the following way:
- * <code>prefix${name:pattern}suffix</code>.
+ * <code>prefix{name:pattern}suffix</code>.
  * Pattern is optional, and if missing all values are matched.
  */
 public abstract class BasePathMacros implements PathMacros {
@@ -44,7 +44,8 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean init(final String actionPath, String[] separators) {
+	@Override
+	public boolean init(final String actionPath, final String[] separators) {
 		String prefix = separators[0];
 		String split = separators[1];
 		String suffix = separators[2];
@@ -63,7 +64,6 @@ public abstract class BasePathMacros implements PathMacros {
 		int i = 0;
 
 		while (true) {
-
 			int[] ndx = StringUtil.indexOfRegion(actionPath, prefix, suffix, offset);
 
 			if (ndx == null) {
@@ -104,28 +104,32 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getNames() {
+	@Override
+	public String[] names() {
 		return names;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getPatterns() {
+	@Override
+	public String[] patterns() {
 		return patterns;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getMacrosCount() {
+	@Override
+	public int macrosCount() {
 		return macrosCount;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int match(String actionPath) {
+	@Override
+	public int match(final String actionPath) {
 		String[] values = process(actionPath, true);
 
 		if (values == null) {
@@ -151,7 +155,8 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] extract(String actionPath) {
+	@Override
+	public String[] extract(final String actionPath) {
 		return process(actionPath, false);
 	}
 
@@ -162,7 +167,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * Process action path in two modes: matching mode and extracting mode.
 	 * @return string array of extracted macro values (null element is allowed) or null
 	 */
-	private String[] process(String actionPath, boolean match) {
+	private String[] process(final String actionPath, final boolean match) {
 		// first check the first fixed as a prefix
 		if (match && !actionPath.startsWith(fixed[0])) {
 			return null;

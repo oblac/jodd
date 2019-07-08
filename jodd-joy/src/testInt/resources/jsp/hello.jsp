@@ -1,1 +1,1 @@
-Hello <pp:name id="Jupiter"/> <%= "zap!" %>
+Hello!

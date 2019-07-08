@@ -5,12 +5,11 @@ ext.moduleDescription = 'Jodd Servlet is set of web tools, including the nice ta
 dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
-	compile project(':jodd-upload')
 
 	provided lib.servlet
 	provided lib.jsp
 
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.mockito
 	testCompile lib.el_api
 }

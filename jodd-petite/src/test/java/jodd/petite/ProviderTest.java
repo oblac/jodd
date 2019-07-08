@@ -25,25 +25,25 @@
 
 package jodd.petite;
 
-import jodd.petite.tst5.Solar;
-import jodd.petite.tst5.Solar2;
-import jodd.petite.tst5.Solar3;
-import jodd.petite.tst5.Sun;
-import jodd.petite.tst5.Sun2;
-import jodd.petite.tst5.Planet;
-import jodd.util.ReflectUtil;
-import org.junit.Test;
+import jodd.petite.fixtures.tst5.Planet;
+import jodd.petite.fixtures.tst5.Solar;
+import jodd.petite.fixtures.tst5.Solar2;
+import jodd.petite.fixtures.tst5.Solar3;
+import jodd.petite.fixtures.tst5.Sun;
+import jodd.petite.fixtures.tst5.Sun2;
+import jodd.util.ClassUtil;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProviderTest {
+class ProviderTest {
 
 	@Test
-	public void testInstanceMethodProvider() {
+	void testInstanceMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar.class, null, null, null, false);
-		pc.registerPetiteBean(Sun.class, null, null, null, false);
+		pc.registerPetiteBean(Solar.class, null, null, null, false, null);
+		pc.registerPetiteBean(Sun.class, null, null, null, false, null);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -52,13 +52,13 @@ public class ProviderTest {
 
 
 	@Test
-	public void testInstanceMethodProviderManualRegistration() {
+	void testInstanceMethodProviderManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar2.class, null, null, null, false);
-		pc.registerPetiteBean(Sun2.class, null, null, null, false);
+		pc.registerPetiteBean(Solar2.class, null, null, null, false, null);
+		pc.registerPetiteBean(Sun2.class, null, null, null, false, null);
 
-		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ReflectUtil.NO_PARAMETERS);
+		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ClassUtil.EMPTY_CLASS_ARRAY);
 		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
 
 		Sun2 sun = pc.getBean(Sun2.class);
@@ -68,11 +68,11 @@ public class ProviderTest {
 
 
 	@Test
-	public void testInstanceStaticMethodProvider() {
+	void testInstanceStaticMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar3.class, null, null, null, false);	// still needs to be a bean
-		pc.registerPetiteBean(Sun.class, null, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false, null);	// still needs to be a bean
+		pc.registerPetiteBean(Sun.class, null, null, null, false, null);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -82,12 +82,12 @@ public class ProviderTest {
 
 
 	@Test
-	public void testProviderLookup() {
+	void testProviderLookup() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar3.class, null, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false, null);
 
-		Planet earth = (Planet) pc.getBean("planet");
+		Planet earth = pc.getBean("planet");
 
 		assertEquals("Earth", earth.toString());
 	}

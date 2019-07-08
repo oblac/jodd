@@ -31,7 +31,7 @@ import java.io.IOException;
 public class SocketHttpSecureConnection extends SocketHttpConnection {
 	private final SSLSocket sslSocket;
 
-	public SocketHttpSecureConnection(SSLSocket socket) {
+	public SocketHttpSecureConnection(final SSLSocket socket) {
 		super(socket);
 		this.sslSocket = socket;
 	}

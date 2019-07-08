@@ -25,10 +25,10 @@
 
 package jodd.jtx;
 
-import jodd.util.HashCode;
-import static jodd.util.HashCode.hash;
-import static jodd.jtx.JtxPropagationBehavior.*;
-import static jodd.jtx.JtxIsolationLevel.*;
+import java.util.Objects;
+
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_SUPPORTS;
 
 /**
  * Transaction mode is defined by {@link JtxPropagationBehavior propagation behavior},
@@ -36,160 +36,57 @@ import static jodd.jtx.JtxIsolationLevel.*;
  */
 public class JtxTransactionMode {
 
-	public JtxTransactionMode() {
-		this.propagationBehavior = PROPAGATION_SUPPORTS;
-		this.isolationLevel = ISOLATION_DEFAULT;
-		this.readOnlyMode = READ_ONLY;
+	public JtxTransactionMode(
+			final JtxPropagationBehavior propagationBehavior,
+			final JtxIsolationLevel isolationLevel,
+			final boolean readOnly,
+			final int timeout) {
+		this.propagationBehavior = propagationBehavior;
+		this.isolationLevel = isolationLevel;
+		this.readOnlyMode = readOnly;
+		this.timeout = timeout;
+	}
+	public JtxTransactionMode(
+			final JtxPropagationBehavior propagationBehavior,
+			final boolean readOnly) {
+		this.propagationBehavior = propagationBehavior;
+		this.isolationLevel = JtxIsolationLevel.ISOLATION_DEFAULT;
+		this.readOnlyMode = readOnly;
 		this.timeout = DEFAULT_TIMEOUT;
 	}
 
 	// ---------------------------------------------------------------- propagation behaviour
 
-	protected JtxPropagationBehavior propagationBehavior;
+	protected final JtxPropagationBehavior propagationBehavior;
 
 	public JtxPropagationBehavior getPropagationBehavior() {
 		return propagationBehavior;
 	}
 
-	/**
-	 * Specifies new propagation behaviour.
-s	 */
-	public void setPropagationBehaviour(JtxPropagationBehavior propagation) {
-		this.propagationBehavior = propagation;
-	}
-
-	/**
-	 * Propagation required.
-	 * <pre>{@code
-	 * None -> T2 (same session, new tx)
-	 * T1 -> T1 (same session, join tx)
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationRequired() {
-		this.propagationBehavior = PROPAGATION_REQUIRED;
-		return this;
-	}
-
-	/**
-	 * Propagation supports.
-	 * <pre>{@code
-	 * None -> None (same session)
-	 * T1 -> T1 (same session, join tx)
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationSupports() {
-		this.propagationBehavior = PROPAGATION_SUPPORTS;
-		return this;
-	}
-
-	/**
-	 * Propagation mandatory.
-	 * <pre>{@code
-	 * None -> Error
-	 * T1 -> T1 (same session, join tx)
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationMandatory() {
-		this.propagationBehavior = PROPAGATION_MANDATORY;
-		return this;
-	}
-
-	/**
-	 * Propagation requires new.
-	 * <pre>{@code
-	 * None -> T2 (same session, new tx)
-	 * T1 -> T2  (new session, new tx)
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationRequiresNew() {
-		this.propagationBehavior = PROPAGATION_REQUIRES_NEW;
-		return this;
-	}
-
-	/**
-	 * Propagation not supported.
-	 * <pre>{@code
-	 * None -> None (same session)
-	 * T1 -> None (new session, no tx)
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationNotSupported() {
-		this.propagationBehavior = PROPAGATION_NOT_SUPPORTED;
-		return this;
-	}
-	/**
-	 * Propagation never.
-	 * <pre>{@code
-	 * None -> None (same session)
-	 * T1 -> Error
-	 * }</pre>
-	 */
-	public JtxTransactionMode propagationNever() {
-		this.propagationBehavior = PROPAGATION_NEVER;
-		return this;
-	}
-
-
 	// ---------------------------------------------------------------- isolation
 
-	private JtxIsolationLevel isolationLevel;
+	private final JtxIsolationLevel isolationLevel;
 
 	public JtxIsolationLevel getIsolationLevel() {
 		return isolationLevel;
 	}
-
-	public void setIsolationLevel(JtxIsolationLevel isolation) {
-		this.isolationLevel = isolation;
-	}
-
-	public JtxTransactionMode isolationNone() {
-		this.isolationLevel = ISOLATION_NONE;
-		return this;
-	}
-	public JtxTransactionMode isolationReadUncommitted() {
-		this.isolationLevel = ISOLATION_READ_UNCOMMITTED;
-		return this;
-	}
-	public JtxTransactionMode isolationReadCommitted() {
-		this.isolationLevel = ISOLATION_READ_COMMITTED;
-		return this;
-	}
-	public JtxTransactionMode isolationRepeatableRead() {
-		this.isolationLevel = ISOLATION_REPEATABLE_READ;
-		return this;
-	}
-	public JtxTransactionMode isolationSerializable() {
-		this.isolationLevel = ISOLATION_SERIALIZABLE;
-		return this;
-	}
-
-
 
 	// ---------------------------------------------------------------- read-only
 
 	public static final boolean READ_ONLY		= true;
 	public static final boolean READ_WRITE		= false;
 
-	private boolean readOnlyMode;
+	private final boolean readOnlyMode;
 
 	public boolean isReadOnly() {
 		return readOnlyMode;
-	}
-
-	public void setReadOnly(boolean readOnly) {
-		this.readOnlyMode = readOnly;
-	}
-
-	public JtxTransactionMode readOnly(boolean readOnly) {
-		this.readOnlyMode = readOnly;
-		return this;
 	}
 
 	// ---------------------------------------------------------------- time-out
 
 	public static final int DEFAULT_TIMEOUT = -1;
 
-	private int timeout;
+	private final int timeout;
 
 	/**
 	 * Returns transaction timeout in seconds.
@@ -198,25 +95,10 @@ s	 */
 		return timeout;
 	}
 
-	/**
-	 * Sets transaction timeout in seconds.
-	 */
-	public void setTransactionTimeout(int timeout) {
-		if (timeout < DEFAULT_TIMEOUT) {
-			throw new JtxException("Invalid TX timeout: " + timeout);
-		}
-		this.timeout = timeout;
-	}
-
-	public JtxTransactionMode transactionTimeout(int timeout) {
-		setTransactionTimeout(timeout);
-		return this;
-	}
-
 	// ---------------------------------------------------------------- equals & hashCode
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (this == object) {
 			return true;
 		}
@@ -232,13 +114,12 @@ s	 */
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, propagationBehavior);
-		result = hash(result, readOnlyMode);
-		result = hash(result, isolationLevel);
-		result = hash(result, timeout);
-		return result;
+		return Objects.hash(propagationBehavior, readOnlyMode, isolationLevel, timeout);
 	}
+
+	// ---------------------------------------------------------------- defaults
+
+	public static final JtxTransactionMode PROPAGATION_SUPPORTS_READ_ONLY = new JtxTransactionMode(PROPAGATION_SUPPORTS, ISOLATION_DEFAULT, READ_ONLY, DEFAULT_TIMEOUT);
 
 
 	// ---------------------------------------------------------------- to string
@@ -248,9 +129,9 @@ s	 */
 	 */
 	@Override
 	public String toString() {
-		return new StringBuilder().append("jtx{").append(propagationBehavior)
-				.append(',').append(readOnlyMode ? "readonly" : "readwrite")
-				.append(',').append(isolationLevel.toString()).append(',')
-				.append(timeout).append('}').toString();
+		return "jtx{" + propagationBehavior +
+			',' + (readOnlyMode ? "readonly" : "readwrite") +
+			',' + isolationLevel.toString() + ',' +
+			timeout + '}';
 	}
 }

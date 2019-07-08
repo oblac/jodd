@@ -25,294 +25,500 @@
 
 package jodd.mail;
 
-import jodd.io.FastByteArrayOutputStream;
-import jodd.io.StreamUtil;
-import jodd.mail.att.ByteArrayAttachment;
 import jodd.util.StringPool;
 
 import javax.mail.Address;
 import javax.mail.Flags;
-import javax.mail.Header;
+import javax.mail.Flags.Flag;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
  * Received email.
  */
-public class ReceivedEmail extends CommonEmail {
+public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 
-	public ReceivedEmail(Message message) {
+	public static final ReceivedEmail[] EMPTY_ARRAY = new ReceivedEmail[0];
+	private File attachmentStorage;
+
+	/**
+	 * Static constructor for fluent interface.
+	 *
+	 * @return new {@link ReceivedEmail}.
+	 */
+	public static ReceivedEmail create() {
+		return new ReceivedEmail();
+	}
+
+	@Override
+	public ReceivedEmail clone() {
+		return create()
+			//original message
+			.originalMessage(originalMessage())
+
+			// flags
+			.flags(flags())
+
+			// message number and id
+			.messageNumber(messageNumber())
+			.messageId(messageId())
+
+			// from / reply-to
+			.from(from())
+			.replyTo(replyTo())
+
+			// recipients
+			.to(to())
+			.cc(cc())
+
+			// subject
+			.subject(subject(), subjectEncoding())
+
+			// dates
+			.receivedDate(receivedDate())
+			.sentDate(sentDate())
+
+			// headers - includes priority
+			.headers(headers())
+
+			// content / attachments
+			.message(messages())
+			.storeAttachments(attachments())
+			.attachedMessages(attachedMessages());
+	}
+
+	/**
+	 * Creates an empty {@link ReceivedEmail}.
+	 */
+	private ReceivedEmail() {
+	}
+
+	/**
+	 * Creates a {@link ReceivedEmail} from a given {@link Message}.
+	 *
+	 * @param msg {@link Message}
+	 * @param envelope flag if this is an envelope
+	 */
+	public ReceivedEmail(final Message msg, final boolean envelope, final File attachmentStorage) {
+		this.attachmentStorage = attachmentStorage;
+		this.originalMessage = msg;
 		try {
-			parseMessage(message);
-		} catch (Exception ex) {
+			parseMessage(msg, envelope);
+		} catch (final Exception ex) {
 			throw new MailException("Message parsing failed", ex);
 		}
 	}
 
 	/**
-	 * Parse java <code>Message</code> and extracts all data for the received message.
+	 * Parses {@link Message} and extracts all data for the received message.
+	 *
+	 * @param msg {@link Message} to parse.
+	 * @throws IOException        if there is an error with the content
+	 * @throws MessagingException if there is an error.
 	 */
-	@SuppressWarnings("unchecked")
-	protected void parseMessage(Message msg) throws MessagingException, IOException {
+	protected void parseMessage(final Message msg, final boolean envelope) throws MessagingException, IOException {
 		// flags
-		setFlags(msg.getFlags());
+		flags(msg.getFlags());
 
-		// msg no
-		setMessageNumber(msg.getMessageNumber());
+		// message number
+		messageNumber(msg.getMessageNumber());
+
+		if (msg instanceof MimeMessage) {
+			messageId(((MimeMessage) msg).getMessageID());
+		}
+
 
 		// single from
-		Address[] addresses = msg.getFrom();
+		final Address[] addresses = msg.getFrom();
 
 		if (addresses != null && addresses.length > 0) {
-			setFrom(new MailAddress(addresses[0]));
+			from(addresses[0]);
 		}
 
-		// common field
-		setTo(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.TO)));
-		setCc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.CC)));
-		setBcc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.BCC)));
+		// reply-to
+		replyTo(msg.getReplyTo());
 
-		// reply to
-		setReplyTo(MailAddress.createFrom(msg.getReplyTo()));
+		// recipients
+		to(msg.getRecipients(Message.RecipientType.TO));
+		cc(msg.getRecipients(Message.RecipientType.CC));
+		// no BCC because this will always be empty
 
-		setSubject(msg.getSubject());
+		// subject
+		subject(msg.getSubject());
 
-		setReceiveDate(parseReceiveDate(msg));
-		setSentDate(parseSendDate(msg));
+		// dates
+		receivedDate(msg.getReceivedDate());
+		sentDate(msg.getSentDate());
 
-		// copy headers
-		Enumeration<Header> headers = msg.getAllHeaders();
-		while (headers.hasMoreElements()) {
-			Header header = headers.nextElement();
-			setHeader(header.getName(), header.getValue());
-		}
+		// headers
+		headers(msg.getAllHeaders());
 
 		// content
-		processPart(this, msg);
+		if (!envelope) {
+			processPart(msg);
+		}
+	}
+
+
+	/**
+	 * Process part of the received message. All parts are simply added to the {@link ReceivedEmail},
+	 * i.e. hierarchy is not saved.
+	 *
+	 * @param part {@link Part} of received message
+	 * @throws IOException        if there is an error with the content.
+	 * @throws MessagingException if there is an error.
+	 */
+	protected void processPart(final Part part) throws MessagingException, IOException {
+		final Object content = part.getContent();
+
+		if (content instanceof String) {
+			addStringContent(part, (String) content);
+		} else if (content instanceof Multipart) {
+			processMultipart((Multipart) content);
+		} else if (content instanceof InputStream) {
+			addAttachment(part, (InputStream) content, attachmentStorage);
+		} else if (content instanceof MimeMessage) {
+			final MimeMessage mimeMessage = (MimeMessage) content;
+			attachedMessage(new ReceivedEmail(mimeMessage, false, attachmentStorage));
+		} else {
+			addAttachment(part, part.getInputStream(), attachmentStorage);
+		}
 	}
 
 	/**
-	 * Process single part of received message. All parts are simple added to the message, i.e. hierarchy is not saved.
+	 * Process the {@link Multipart}.
+	 *
+	 * @param mp {@link Multipart}
+	 * @throws MessagingException if there is a failure.
+	 * @throws IOException        if there is an issue with the {@link Multipart}.
 	 */
-	protected void processPart(ReceivedEmail email, Part part) throws IOException, MessagingException {
-		Object content = part.getContent();
-
-		if (content instanceof String) {
-			String stringContent = (String) content;
-
-			String disposition = part.getDisposition();
-			if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
-				String contentType = part.getContentType();
-
-				String mimeType = EmailUtil.extractMimeType(contentType);
-				String encoding = EmailUtil.extractEncoding(contentType);
-				String fileName = part.getFileName();
-				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
-
-				if (encoding == null) {
-					encoding = StringPool.US_ASCII;
-				}
-
-				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(encoding));
-			} else {
-				String contentType = part.getContentType();
-				String encoding = EmailUtil.extractEncoding(contentType);
-				String mimeType = EmailUtil.extractMimeType(contentType);
-
-				if (encoding == null) {
-					encoding = StringPool.US_ASCII;
-				}
-
-				email.addMessage(stringContent, mimeType, encoding);
-			}
-		}
-		else if (content instanceof Multipart) {
-			Multipart mp = (Multipart) content;
-			int count = mp.getCount();
-			for (int i = 0; i < count; i++) {
-				Part innerPart = mp.getBodyPart(i);
-				processPart(email, innerPart);
-			}
-		}
-		else if (content instanceof InputStream) {
-			String fileName = EmailUtil.resolveFileName(part);
-			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
-			String mimeType = EmailUtil.extractMimeType(part.getContentType());
-
-			InputStream is = (InputStream) content;
-			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
-			StreamUtil.copy(is, fbaos);
-
-			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
-		}
-		else if (content instanceof MimeMessage) {
-			MimeMessage mimeMessage = (MimeMessage) content;
-
-			addAttachmentMessage(new ReceivedEmail(mimeMessage));
-		}
-		else {
-			String fileName = part.getFileName();
-			String contentId = (part instanceof MimePart) ? ((MimePart) part).getContentID() : null;
-			String mimeType = EmailUtil.extractMimeType(part.getContentType());
-
-			InputStream is = part.getInputStream();
-			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
-			StreamUtil.copy(is, fbaos);
-			StreamUtil.close(is);
-
-			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
+	private void processMultipart(final Multipart mp) throws MessagingException, IOException {
+		final int count = mp.getCount();
+		for (int i = 0; i < count; i++) {
+			final Part innerPart = mp.getBodyPart(i);
+			processPart(innerPart);
 		}
 	}
 
-	protected Date parseReceiveDate(Message msg) throws MessagingException {
-		return msg.getReceivedDate();
+	/**
+	 * Adds String content as either {@link EmailAttachment} or as {@link EmailMessage}.
+	 *
+	 * @param part    {@link Part}
+	 * @param content Content as {@link String}
+	 * @throws MessagingException           if there is a failure.
+	 * @throws UnsupportedEncodingException if the named charset is not supported.
+	 * @see #message(String, String, String)
+	 */
+	private void addStringContent(final Part part, final String content) throws MessagingException, UnsupportedEncodingException {
+		final String contentType = part.getContentType();
+		final String encoding = EmailUtil.extractEncoding(contentType, StringPool.US_ASCII);
+
+		final String disposition = part.getDisposition();
+
+		if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+			addAttachment(part, content.getBytes(encoding));
+		} else {
+			final String mimeType = EmailUtil.extractMimeType(contentType);
+			message(content, mimeType, encoding);
+		}
 	}
 
-	protected Date parseSendDate(Message msg) throws MessagingException {
-		return msg.getSentDate();
+	/**
+	 * Returns the Content-ID of this {@link Part}. Returns {@code null} if none present.
+	 *
+	 * @param part {@link Part} the Part to parse.
+	 * @return String containing content ID.
+	 * @throws MessagingException if there is a failure.
+	 * @see MimePart#getContentID()
+	 */
+	protected static String parseContentId(final Part part) throws MessagingException {
+		if (part instanceof MimePart) {
+			final MimePart mp = (MimePart) part;
+			return mp.getContentID();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns {@code true} if the {@link Part} is inline.
+	 *
+	 * @param part {@link Part} to parse.
+	 * @return {@code true} if the {@link Part} is inline.
+	 * @throws MessagingException if there is a failure.
+	 */
+	protected static boolean parseInline(final Part part) throws MessagingException {
+		if (part instanceof MimePart) {
+			final String dispositionId = part.getDisposition();
+			return dispositionId != null && dispositionId.equalsIgnoreCase("inline");
+		}
+		return false;
+	}
+
+	// ---------------------------------------------------------------- original message
+
+	/**
+	 * {@link Message} for this {@link ReceivedEmail}.
+	 */
+	private Message originalMessage;
+
+	/**
+	 * @return {@link Message}
+	 */
+	public Message originalMessage() {
+		return originalMessage;
+	}
+
+	/**
+	 * Sets the original message.
+	 *
+	 * @param originalMessage {@link Message} to set.
+	 */
+	public ReceivedEmail originalMessage(final Message originalMessage) {
+		this.originalMessage = originalMessage;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- flags
 
-	protected Flags flags;
+	/**
+	 * {@link Flags} for this {@link ReceivedEmail}.
+	 */
+	private Flags flags;
 
-	public Flags getFlags() {
+	/**
+	 * @return {@link Flags}
+	 */
+	public Flags flags() {
 		return flags;
 	}
 
-	public void setFlags(Flags flags) {
+	/**
+	 * Sets the flags.
+	 *
+	 * @param flags {@link Flags} to set.
+	 */
+	public ReceivedEmail flags(final Flags flags) {
 		this.flags = flags;
+		return this;
 	}
 
 	/**
-	 * Returns <code>true</code> if message is answered.
+	 * Returns {@code true} if message is answered.
+	 *
+	 * @return {@code true} if message is answered.
 	 */
 	public boolean isAnswered() {
-		return flags.contains(Flags.Flag.ANSWERED);
+		return flags.contains(Flag.ANSWERED);
 	}
 
 	/**
-	 * Returns <code>true</code> if message is deleted.
+	 * Returns {@code true} if message is deleted.
+	 *
+	 * @return {@code true} if message is deleted.
 	 */
 	public boolean isDeleted() {
-		return flags.contains(Flags.Flag.DELETED);
+		return flags.contains(Flag.DELETED);
 	}
 
 	/**
-	 * Returns <code>true</code> if message is draft.
+	 * Returns {@code true} if message is draft.
 	 */
-	public boolean isDraf() {
-		return flags.contains(Flags.Flag.DRAFT);
+	public boolean isDraft() {
+		return flags.contains(Flag.DRAFT);
 	}
 
 	/**
-	 * Returns <code>true</code> is message is flagged.
+	 * Returns {@code true} is message is flagged.
+	 *
+	 * @return {@code true} is message is flagged.
 	 */
 	public boolean isFlagged() {
-		return flags.contains(Flags.Flag.FLAGGED);
+		return flags.contains(Flag.FLAGGED);
 	}
 
 	/**
-	 * Returns <code>true</code> if message is recent.
+	 * Returns {@code true} if message is recent.
+	 *
+	 * @return {@code true} if message is recent.
 	 */
 	public boolean isRecent() {
-		return flags.contains(Flags.Flag.RECENT);
+		return flags.contains(Flag.RECENT);
 	}
 
 	/**
-	 * Returns <code>true</code> if message is seen.
+	 * Returns {@code true} if message is seen.
+	 *
+	 * @return {@code true} if message is seen.
 	 */
 	public boolean isSeen() {
-		return flags.contains(Flags.Flag.SEEN);
+		return flags.contains(Flag.SEEN);
 	}
 
 	// ---------------------------------------------------------------- additional properties
 
-	protected int messageNumber;
-	protected Date recvDate;
+	private int messageNumber;
+	private String messageId;
 
 	/**
 	 * Returns message number.
+	 *
+	 * @return message number
 	 */
-	public int getMessageNumber() {
+	public int messageNumber() {
 		return messageNumber;
 	}
 
 	/**
+	 * Returns message ID if set by server.
+	 */
+	public String messageId() {
+		return messageId;
+	}
+
+	/**
 	 * Sets message number.
+	 *
+	 * @param messageNumber The message number to set.
+	 * @return this
 	 */
-	public void setMessageNumber(int messageNumber) {
+	public ReceivedEmail messageNumber(final int messageNumber) {
 		this.messageNumber = messageNumber;
+		return this;
 	}
 
 	/**
-	 * Sets e-mails receive date.
+	 * Sets message ID.
 	 */
-	public void setReceiveDate(Date date) {
-		recvDate = date;
+	public ReceivedEmail messageId(final String messageId) {
+		this.messageId = messageId;
+		return this;
+	}
+
+	private Date receivedDate;
+
+	/**
+	 * Sets email's received {@link Date}.
+	 *
+	 * @param date The received {@link Date} to set.
+	 * @return this
+	 */
+	public ReceivedEmail receivedDate(final Date date) {
+		receivedDate = date;
+		return this;
 	}
 
 	/**
-	 * Returns emails received date.
+	 * Returns email's received {@link Date}.
+	 *
+	 * @return The email's received {@link Date}.
 	 */
-	public Date getReceiveDate() {
-		return recvDate;
+	public Date receivedDate() {
+		return receivedDate;
 	}
 
 	// ---------------------------------------------------------------- attachments
 
-	protected List<EmailAttachment> attachments;
+	/**
+	 * Adds received attachment.
+	 *
+	 * @param part    {@link Part}.
+	 * @param content Content as {@link InputStream}.
+	 * @return this
+	 * @see #attachment(EmailAttachment)
+	 */
+	private ReceivedEmail addAttachment(final Part part, final InputStream content, final File attachmentStorage) throws MessagingException, IOException {
+		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
+		builder.content(content, part.getContentType());
+		if (attachmentStorage != null) {
+			String name = messageId + "-" + (this.attachments().size() + 1);
+			return storeAttachment(builder.buildFileDataSource(name, attachmentStorage));
+		}
+		return storeAttachment(builder.buildByteArrayDataSource());
+	}
 
 	/**
 	 * Adds received attachment.
+	 *
+	 * @param part    {@link Part}.
+	 * @param content Content as byte array.
+	 * @return this
+	 * @see #attachment(EmailAttachment)
 	 */
-	public void addAttachment(String filename, String mimeType, String contentId, byte[] content) {
-		if (attachments == null) {
-			attachments = new ArrayList<>();
-		}
-		EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename, contentId);
-		emailAttachment.setSize(content.length);
-		attachments.add(emailAttachment);
+	private ReceivedEmail addAttachment(final Part part, final byte[] content) throws MessagingException {
+		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
+		builder.content(content, part.getContentType());
+		final EmailAttachment<ByteArrayDataSource> attachment = builder.buildByteArrayDataSource();
+		attachment.setSize(content.length);
+		return storeAttachment(attachment);
 	}
 
 	/**
-	 * Returns the list of all attachments.
-	 * If no attachment is available, returns <code>null</code>.
+	 * Creates {@link EmailAttachmentBuilder} from {@link Part} and sets Content ID, inline and name.
+	 *
+	 * @param part {@link Part}.
+	 * @return this
+	 * @see #attachment(EmailAttachment)
 	 */
-	public List<EmailAttachment> getAttachments() {
-		return attachments;
-	}
+	private static EmailAttachmentBuilder addAttachmentInfo(final Part part) throws MessagingException {
 
+		final String fileName = EmailUtil.resolveFileName(part);
+		final String contentId = parseContentId(part);
+		final boolean isInline = parseInline(part);
+
+		return new EmailAttachmentBuilder()
+			.name(fileName)
+			.contentId(contentId)
+			.inline(isInline);
+	}
 
 	// ---------------------------------------------------------------- inner messages
 
-	protected List<ReceivedEmail> attachedMessages;
+	/**
+	 * {@link List} of attached {@link ReceivedEmail}s.
+	 */
+	private final List<ReceivedEmail> attachedMessages = new ArrayList<>();
 
 	/**
-	 * Adds attached messages.
+	 * Adds attached {@link ReceivedEmail}s.
+	 *
+	 * @param emails {@link List} of {@link ReceivedEmail}s to attach.
 	 */
-	public void addAttachmentMessage(ReceivedEmail receivedEmail) {
-		if (attachedMessages == null) {
-			attachedMessages = new ArrayList<>();
-		}
-		attachedMessages.add(receivedEmail);
+	public ReceivedEmail attachedMessages(final List<ReceivedEmail> emails) {
+		attachedMessages.addAll(emails);
+		return this;
 	}
 
 	/**
-	 * Returns the list of attached messages.
-	 * If not attached message is available, returns <code>null</code>.
+	 * Adds attached {@link ReceivedEmail}.
+	 *
+	 * @param email {@link ReceivedEmail} to attach.
+	 * @return this
 	 */
-	public List<ReceivedEmail> getAttachedMessages() {
+	public ReceivedEmail attachedMessage(final ReceivedEmail email) {
+		attachedMessages.add(email);
+		return this;
+	}
+
+	/**
+	 * Returns the {@link List} of attached messages.
+	 * If no attached message is available, returns an empty {@link List}.
+	 *
+	 * @return {@link List} of {@link ReceivedEmail}s.
+	 */
+	public List<ReceivedEmail> attachedMessages() {
 		return attachedMessages;
 	}
 

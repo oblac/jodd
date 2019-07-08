@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -34,7 +34,7 @@ public class MaxConstraint implements ValidationConstraint<Max> {
 	public MaxConstraint() {
 	}
 
-	public MaxConstraint(double max) {
+	public MaxConstraint(final double max) {
 		this.max = max;
 	}
 
@@ -46,27 +46,29 @@ public class MaxConstraint implements ValidationConstraint<Max> {
 		return max;
 	}
 
-	public void setMax(double max) {
+	public void setMax(final double max) {
 		this.max = max;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(Max annotation) {
+	@Override
+	public void configure(final Max annotation) {
 		this.max = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, max);
 	}
 
-	public static boolean validate(Object value, double max) {
+	public static boolean validate(final Object value, final double max) {
 		if (value == null) {
 			return true;
 		}
-		double val = Convert.toDoubleValue(value);
+		double val = Converter.get().toDoubleValue(value);
 		return val < max;
 	}
 

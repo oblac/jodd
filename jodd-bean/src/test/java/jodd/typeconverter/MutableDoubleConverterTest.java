@@ -27,17 +27,19 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableDouble;
 import jodd.typeconverter.impl.MutableDoubleConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class MutableDoubleConverterTest {
+class MutableDoubleConverterTest {
 
 	@Test
-	public void testConversion() {
-		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.lookup(MutableDouble.class);
+	void testConversion() {
+		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.get().lookup(MutableDouble.class);
 
 		assertNull(mutableDoubleConverter.convert(null));
 
@@ -50,7 +52,7 @@ public class MutableDoubleConverterTest {
 
 		try {
 			mutableDoubleConverter.convert("aaaa");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

@@ -29,13 +29,14 @@ package jodd.proxetta;
  * Invoke aspect defines method pointcuts that should be replaced and
  * their advice replacements.
  */
-public abstract class InvokeAspect {
+@FunctionalInterface
+public interface InvokeAspect {
 
 	/**
 	 * Determines if some method should be scanned for pointcuts.
 	 * Returns <code>true</code> if method should be scanned.
 	 */
-	public boolean apply(MethodInfo methodInfo) {
+	default boolean apply(final MethodInfo methodInfo) {
 		return true;
 	}
 
@@ -50,6 +51,6 @@ public abstract class InvokeAspect {
 	 * constructor that will be replaced, there must be an advice replacement method
 	 * with the same description.
 	 */
-	public abstract InvokeReplacer pointcut(InvokeInfo invokeInfo);
+	InvokeReplacer pointcut(InvokeInfo invokeInfo);
 
 }

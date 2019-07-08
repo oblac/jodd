@@ -42,7 +42,7 @@ public class CsvUtil {
 	/**
 	 * Parse fields as csv string,
 	 */
-	public static String toCsvString(Object... elements) {
+	public static String toCsvString(final Object... elements) {
 		StringBuilder line = new StringBuilder();
 		int last = elements.length -1;
 		for (int i = 0; i < elements.length; i++) {
@@ -90,7 +90,7 @@ public class CsvUtil {
 	/**
 	 * Converts CSV line to string array.
 	 */
-	public static String[] toStringArray(String line) {
+	public static String[] toStringArray(final String line) {
 		List<String> row = new ArrayList<>();
 
         boolean inQuotedField = false;
@@ -122,10 +122,10 @@ public class CsvUtil {
         if (len > 0 && fieldStart <= len) {
             addField(row, line, fieldStart, len, inQuotedField);
         }
-        return row.toArray(new String[row.size()]);
+        return row.toArray(new String[0]);
 	}
 
-	private static void addField(List<String> row, String line, int startIndex, int endIndex, boolean inQuoted) {
+	private static void addField(final List<String> row, final String line, final int startIndex, final int endIndex, final boolean inQuoted) {
         String field = line.substring(startIndex, endIndex);
 		if (inQuoted) {
 			field = StringUtil.replace(field, DOUBLE_QUOTE, "\"");

@@ -26,17 +26,17 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.URIConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URI;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class URIConverterTest {
+class URIConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		URIConverter uriConverter = new URIConverter();
 
 		File f = new File("/folder/file.ext");

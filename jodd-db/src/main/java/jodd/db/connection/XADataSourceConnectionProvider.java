@@ -27,13 +27,13 @@ package jodd.db.connection;
 
 import jodd.db.DbSqlException;
 
-import javax.sql.XADataSource;
 import javax.sql.XAConnection;
+import javax.sql.XADataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * DataSource connection provider.
+ * XA-DataSource connection provider.
  */
 public class XADataSourceConnectionProvider implements ConnectionProvider {
 
@@ -41,18 +41,20 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 	private final String username;
 	private final String password;
 
-	public XADataSourceConnectionProvider(XADataSource dataSource) {
+	public XADataSourceConnectionProvider(final XADataSource dataSource) {
 		this.xaDataSource = dataSource;
 		this.username = this.password = null;
 	}
-	public XADataSourceConnectionProvider(XADataSource dataSource, String user, String pass) {
+	public XADataSourceConnectionProvider(final XADataSource dataSource, final String user, final String pass) {
 		this.xaDataSource = dataSource;
 		this.username = user;
 		this.password = pass;
 	}
 
+	@Override
 	public void init() {}
 
+	@Override
 	public Connection getConnection() {
 		try {
 			XAConnection xaConnection;
@@ -67,7 +69,8 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
-	public void closeConnection(Connection connection) {
+	@Override
+	public void closeConnection(final Connection connection) {
 		try {
 			connection.close();
 		} catch (SQLException sex) {
@@ -75,5 +78,6 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void close() {}
 }

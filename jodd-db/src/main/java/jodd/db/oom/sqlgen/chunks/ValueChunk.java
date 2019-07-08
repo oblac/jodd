@@ -25,6 +25,8 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
+import jodd.db.oom.DbEntityManager;
+
 import java.util.Collection;
 
 /**
@@ -40,23 +42,23 @@ public class ValueChunk extends SqlChunk {
 	protected Object value;
 	protected final String objReference;
 
-	public ValueChunk(String name, Object value) {
-		this(name, value, null);
+	public ValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value) {
+		this(dbEntityManager, name, value, null);
 	}
 
-	public ValueChunk(String objReference) {
-		this(null, null, objReference);
+	public ValueChunk(final DbEntityManager dbEntityManager, final String objReference) {
+		this(dbEntityManager, null, null, objReference);
 	}
 
-	protected ValueChunk(String name, Object value, String objReference) {
-		super(CHUNK_VALUE);
+	protected ValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value, final String objReference) {
+		super(dbEntityManager, CHUNK_VALUE);
 		this.name = name;
 		this.value = value;
 		this.objReference = objReference;
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		if (objReference != null) {
 			value = templateData.lookupObject(objReference);
 		}

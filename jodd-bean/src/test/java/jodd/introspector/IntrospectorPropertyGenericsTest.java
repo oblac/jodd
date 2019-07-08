@@ -25,11 +25,11 @@
 
 package jodd.introspector;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IntrospectorPropertyGenericsTest {
+class IntrospectorPropertyGenericsTest {
 
 	static class BaseAction<A, B> {
 		A input;
@@ -49,8 +49,8 @@ public class IntrospectorPropertyGenericsTest {
 	}
 
 	@Test
-	public void testGenAction() {
-		ClassDescriptor cd = ClassIntrospector.lookup(GenAction.class);
+	void testGenAction() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(GenAction.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);
 
@@ -73,8 +73,8 @@ public class IntrospectorPropertyGenericsTest {
 	}
 
 	@Test
-	public void testNormal() {
-		ClassDescriptor cd = ClassIntrospector.lookup(Normal.class);
+	void testNormal() {
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Normal.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);
 

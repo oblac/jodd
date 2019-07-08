@@ -31,20 +31,10 @@ import jodd.madvoc.BaseActionWrapperStack;
 /**
  * Action filter stack.
  */
-public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> implements ActionFilter {
+public abstract class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> implements ActionFilter {
 
-	public ActionFilterStack() {
-	}
-
-	public ActionFilterStack(Class<? extends ActionFilter>... filterClasses) {
+	public ActionFilterStack(final Class<? extends ActionFilter>... filterClasses) {
 		super(filterClasses);
-	}
-
-	/**
-	 * Sets filter classes.
-	 */
-	public void setFilters(Class<? extends ActionFilter>... filters) {
-		this.wrappers = filters;
 	}
 
 	/**
@@ -58,8 +48,9 @@ public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> impl
 	/**
 	 * Filter is not used since this is just an filter container.
 	 */
-	public final Object filter(ActionRequest actionRequest) throws Exception {
-		return invoke(actionRequest);
+	@Override
+	public final Object filter(final ActionRequest actionRequest) {
+		return apply(actionRequest);
 	}
 
 }

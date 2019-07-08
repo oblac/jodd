@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableInteger;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to an {@link MutableInteger}.
@@ -37,11 +37,12 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 	protected final TypeConverter<Integer> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableIntegerConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Integer.class);
+	public MutableIntegerConverter(final TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Integer.class);
 	}
 
-	public MutableInteger convert(Object value) {
+	@Override
+	public MutableInteger convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

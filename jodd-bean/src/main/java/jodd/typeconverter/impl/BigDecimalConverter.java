@@ -41,7 +41,8 @@ import java.math.BigDecimal;
  */
 public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 
-	public BigDecimal convert(Object value) {
+	@Override
+	public BigDecimal convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

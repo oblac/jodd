@@ -25,8 +25,8 @@
 
 package jodd.bean;
 
-import jodd.bean.data.FooBean;
-import org.junit.Test;
+import jodd.bean.fixtures.FooBean;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,12 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BeanWalkerTest {
+class BeanWalkerTest {
 
 	@Test
-	public void testBeanWalking() {
+	void testBeanWalking() {
 		final List<String> names = new ArrayList<>();
 
 		BeanWalker beanWalker = BeanWalker.walk(new BeanWalker.BeanWalkerCallback() {
@@ -68,7 +68,7 @@ public class BeanWalkerTest {
 	}
 
 	@Test
-	public void testBeanWalkingMap() {
+	void testBeanWalkingMap() {
 		Map<String, String> map = new HashMap<>();
 
 		map.put("simple", "qwe");

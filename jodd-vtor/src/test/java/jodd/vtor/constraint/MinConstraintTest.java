@@ -25,51 +25,51 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
-public class MinConstraintTest extends ConstraintTestBase {
+class MinConstraintTest extends ConstraintTestBase {
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MinConstraint minConstraint = new MinConstraint();
-        assertEquals("value must be default", minConstraint.getMin(), 0.0, 0.01);
+        assertEquals(0.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MinConstraint minConstraint = new MinConstraint(10.0);
-        assertEquals("max value must be the same as was given to constructor", minConstraint.getMin(), 10.0, 0.01);
+        assertEquals(10.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testSetMin() {
+    void testSetMin() {
         MinConstraint minConstraint = new MinConstraint();
         minConstraint.setMin(10);
-        assertEquals("method must return the same value as was given to set method", minConstraint.getMin(), 10.0, 0.01);
+        assertEquals(10.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MinConstraint minConstraint = new MinConstraint();
         Min annotation = mock(Min.class);
-        stub(annotation.value()).toReturn(10.0);
+        when(annotation.value()).thenReturn(10.0);
 
         minConstraint.configure(annotation);
-        assertEquals("method must return the same value as was set to annotation when configure", minConstraint.getMin(), 10.0, 0.01);
+        assertEquals(10.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         MinConstraint minConstraint = new MinConstraint(12.5);
-        assertTrue("result must be true when validate a value which is greater than minValue", minConstraint.isValid(mockContext(), "12.6"));
-        assertFalse("result must be false when validate a value which is less than minValue", minConstraint.isValid(mockContext(), "12.1"));
+        assertTrue(minConstraint.isValid(mockContext(), "12.6"));
+        assertFalse(minConstraint.isValid(mockContext(), "12.1"));
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", MinConstraint.validate(null, 12.5));
+    void testValidate_WithValIsNull() {
+        assertTrue(MinConstraint.validate(null, 12.5));
     }
 }

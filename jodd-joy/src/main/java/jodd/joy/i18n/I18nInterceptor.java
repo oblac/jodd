@@ -26,7 +26,7 @@
 package jodd.joy.i18n;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.proxetta.ProxettaUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Prepares bundle name for current request.
  */
-public class I18nInterceptor extends BaseActionInterceptor {
+public class I18nInterceptor implements ActionInterceptor {
 
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	@Override
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 
 		// defines request bundle of this http request
@@ -48,10 +49,10 @@ public class I18nInterceptor extends BaseActionInterceptor {
 	/**
 	 * Returns correct action class name. Detects Proxetta classes.
 	 */
-	protected String getActionClassName(Object action) {
+	protected String getActionClassName(final Object action) {
 		Class clazz = action.getClass();
 
-		clazz = ProxettaUtil.getTargetClass(clazz);
+		clazz = ProxettaUtil.resolveTargetClass(clazz);
 
 		return clazz.getName();
 	}

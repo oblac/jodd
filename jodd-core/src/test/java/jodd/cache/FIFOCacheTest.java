@@ -26,19 +26,16 @@
 package jodd.cache;
 
 import jodd.util.ThreadUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
-
-public class FIFOCacheTest {
+class FIFOCacheTest extends BaseCacheTest {
 
 	@Test
-	public void testCache() {
+	void testCache() {
 		Cache<String, String> cache = new FIFOCache<>(3);
-		assertEquals(3, cache.getCacheSize());
+		assertEquals(3, cache.limit());
 		assertEquals(0, cache.size());
 
 		cache.put("1", "1");
@@ -64,12 +61,12 @@ public class FIFOCacheTest {
 		assertNotNull(cache.get("1"));
 
 		cache.clear();
-		assertEquals(3, cache.getCacheSize());
+		assertEquals(3, cache.limit());
 		assertEquals(0, cache.size());
 	}
 
 	@Test
-	public void testCacheTime() {
+	void testCacheTime() {
 		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -82,37 +79,15 @@ public class FIFOCacheTest {
 		assertNotNull(cache.get("2"));
 		assertNull(cache.get("3"));
 		assertNotNull(cache.get("4"));
-
 	}
 
 	@Test
-	public void testCacheIterator() {
-		Cache<String, String> cache = new FIFOCache<>(3);
-		cache.put("1", "1");
-		cache.put("2", "2");
-		cache.put("3", "3", 50);
-
-		ThreadUtil.sleep(100);
-
-		Iterator<String> it = cache.iterator();
-		int count = 0;
-		while (it.hasNext()) {
-			String s = it.next();
-			if (s.equals("3")) {
-				fail();
-			}
-			count++;
-		}
-		assertEquals(2, count);
-	}
-
-	@Test
-	public void testCacheTime2() {
+	void testCacheTime2() {
 		Cache<String, String> cache = new FIFOCache<>(3, 50);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertEquals(2, cache.size());
-		assertEquals(50, cache.getCacheTimeout());
+		assertEquals(50, cache.timeout());
 
 		ThreadUtil.sleep(100);
 		assertEquals(2, cache.prune());
@@ -121,7 +96,7 @@ public class FIFOCacheTest {
 	}
 
 	@Test
-	public void testPrune() {
+	void testPrune() {
 		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -132,7 +107,7 @@ public class FIFOCacheTest {
 	}
 
 	@Test
-	public void testOrder() {
+	void testOrder() {
 		FIFOCache<String, Integer> fifoCache = new FIFOCache<>(3);
 		fifoCache.put("1", Integer.valueOf(1));
 		fifoCache.put("2", Integer.valueOf(2));
@@ -140,12 +115,16 @@ public class FIFOCacheTest {
 		fifoCache.put("1", Integer.valueOf(1));
 		fifoCache.put("1", Integer.valueOf(11));
 
-		assertThat(3, equalTo(fifoCache.size()));
+		assertEquals(3, fifoCache.size());
 
-		assertThat(11, equalTo(fifoCache.get("1")));
-		assertThat(2, equalTo(fifoCache.get("2")));
-		assertThat(3, equalTo(fifoCache.get("3")));
+		assertEquals(Integer.valueOf(11), fifoCache.get("1"));
+		assertEquals(Integer.valueOf(2), fifoCache.get("2"));
+		assertEquals(Integer.valueOf(3), fifoCache.get("3"));
+	}
 
+	@Override
+	protected final <K,V> Cache<K,V> createCache(int size) {
+		return new FIFOCache<>(size);
 	}
 
 }

@@ -25,18 +25,18 @@
 
 package jodd.db.oom;
 
+import jodd.bean.BeanUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.ArraysUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
-import jodd.bean.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Joins an array of objects using provided hints.
@@ -44,7 +44,7 @@ import java.util.HashMap;
  */
 public class JoinHintResolver {
 
-	public Object[] join(Object[] data, String hints) {
+	public Object[] join(final Object[] data, final String hints) {
 		if (hints == null) {
 			return data;
 		}
@@ -54,7 +54,7 @@ public class JoinHintResolver {
 	/**
 	 * Joins entity array using provided string hints.
 	 */
-	public Object[] join(Object[] data, String[] hints) {
+	public Object[] join(final Object[] data, final String[] hints) {
 		if (hints == null) {
 			return data;
 		}
@@ -96,7 +96,7 @@ public class JoinHintResolver {
 				Class hintPropertyType = BeanUtil.pojo.getPropertyType(value, hintPropertyName);
 
 				if (hintPropertyType != null) {
-					ClassDescriptor cd = ClassIntrospector.lookup(hintPropertyType);
+					ClassDescriptor cd = ClassIntrospector.get().lookup(hintPropertyType);
 
 					if (cd.isCollection()) {
 						// add element to collection
@@ -104,7 +104,7 @@ public class JoinHintResolver {
 							Collection collection = BeanUtil.declared.getProperty(value, hintPropertyName);
 
 							if (collection == null) {
-								collection = (Collection) ReflectUtil.newInstance(hintPropertyType);
+								collection = (Collection) ClassUtil.newInstance(hintPropertyType);
 								BeanUtil.declaredSilent.setProperty(value, hintPropertyName, collection);
 							}
 
@@ -162,7 +162,7 @@ public class JoinHintResolver {
 		return result;
 	}
 
-	protected Object resolveValueInSpecialCase(Object value, String name) {
+	protected Object resolveValueInSpecialCase(Object value, final String name) {
 		String[] elements = StringUtil.splitc(name, '.');
 
 		for (String element : elements) {

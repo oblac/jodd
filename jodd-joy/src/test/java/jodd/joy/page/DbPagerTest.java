@@ -26,20 +26,20 @@
 package jodd.joy.page;
 
 import jodd.joy.page.db.HsqlDbPager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DbPagerTest {
+class DbPagerTest {
 
-	public class MyHsqlDbPager extends HsqlDbPager {
+	class MyHsqlDbPager extends HsqlDbPager {
 		public String buildCountSql2(String sql) {
 			return super.buildCountSql(sql);
 		}
 	}
 
 	@Test
-	public void testHsqlDbPager() {
+	void testHsqlDbPager() {
 		MyHsqlDbPager hsqlDbPager = new MyHsqlDbPager();
 
 		String sql = hsqlDbPager.buildCountSql2("select * from User u where u.id > 10");

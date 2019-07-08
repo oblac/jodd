@@ -27,8 +27,8 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.MethodDescriptor;
-import jodd.petite.DestroyMethodPoint;
 import jodd.petite.PetiteException;
+import jodd.petite.def.DestroyMethodPoint;
 import jodd.petite.meta.PetiteDestroyMethod;
 
 import java.lang.reflect.Method;
@@ -40,9 +40,7 @@ import java.util.List;
  */
 public class DestroyMethodResolver {
 
-	public DestroyMethodPoint[] resolve(Object bean) {
-		Class<?> type = bean.getClass();
-
+	public DestroyMethodPoint[] resolve(final Class<?> type) {
 		// lookup methods
 		List<DestroyMethodPoint> list = new ArrayList<>();
 		ClassDescriptor cd = new ClassDescriptor(type, false, false, false, null);
@@ -66,7 +64,7 @@ public class DestroyMethodResolver {
 		if (list.isEmpty()) {
 			methods = DestroyMethodPoint.EMPTY;
 		} else {
-			methods = list.toArray(new DestroyMethodPoint[list.size()]);
+			methods = list.toArray(new DestroyMethodPoint[0]);
 		}
 
 		return methods;

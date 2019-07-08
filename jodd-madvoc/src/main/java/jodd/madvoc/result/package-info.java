@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Madvoc result handlers.
+ * Madvoc result handlers and result types.
  */
 package jodd.madvoc.result;

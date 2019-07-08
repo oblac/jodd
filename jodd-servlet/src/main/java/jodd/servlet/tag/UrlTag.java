@@ -25,17 +25,16 @@
 
 package jodd.servlet.tag;
 
-import jodd.util.URLCoder;
 import jodd.util.StringPool;
+import jodd.net.URLCoder;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import javax.servlet.jsp.tagext.DynamicAttributes;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.DynamicAttributes;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Url tag creates full URL.
@@ -46,7 +45,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Sets base url value.
 	 */
-	public void set_(String value) {
+	public void set_(final String value) {
 		this.baseUrl = value;
 	}
 
@@ -54,18 +53,19 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Sets optional variable name.
 	 */
-	public void set_var(String value) {
+	public void set_var(final String value) {
 		this.var = value;
 	}
 
 	private final List<String> attrs = new ArrayList<>();
-	public void setDynamicAttribute(String uri, String localName, Object value) {
+	@Override
+	public void setDynamicAttribute(final String uri, final String localName, final Object value) {
 		attrs.add(localName);
 		attrs.add(value == null ? StringPool.EMPTY : value.toString());
 	}
 
 	@Override
-	public void doTag() throws JspException {
+	public void doTag() {
 		PageContext pageContext = (PageContext) getJspContext();
 		URLCoder.Builder builder = URLCoder.build(baseUrl);
 
@@ -76,12 +76,12 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 		if (var == null) {
 			JspWriter out = pageContext.getOut();
 			try {
-				out.print(builder.toString());
+				out.print(builder.get());
 			} catch (IOException ioex) {
 				// ignore
 			}
 		} else {
-			pageContext.setAttribute(var, builder.toString());
+			pageContext.setAttribute(var, builder.get());
 		}
 	}
 }

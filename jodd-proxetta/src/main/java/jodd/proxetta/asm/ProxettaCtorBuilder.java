@@ -25,15 +25,16 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.AnnotationVisitor;
-import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.asm5.Opcodes.ALOAD;
-import static jodd.asm5.Opcodes.RETURN;
-import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
-import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
-import static jodd.proxetta.JoddProxetta.initMethodName;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.asm7.AnnotationVisitor;
+import jodd.asm7.MethodVisitor;
+import jodd.proxetta.ProxettaNames;
+
+import static jodd.asm7.Opcodes.ALOAD;
+import static jodd.asm7.Opcodes.INVOKESPECIAL;
+import static jodd.asm7.Opcodes.RETURN;
+import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 
 /**
  * Destination ctor builder
@@ -44,20 +45,20 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 	protected final MethodVisitor methodVisitor;
 	protected final WorkData wd;
 
-	public ProxettaCtorBuilder(MethodVisitor methodVisitor, MethodSignatureVisitor msign, WorkData wd) {
+	public ProxettaCtorBuilder(final MethodVisitor methodVisitor, final MethodSignatureVisitor msign, final WorkData wd) {
 		this.methodVisitor = methodVisitor;
 		this.msign = msign;
 		this.wd = wd;
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		methodVisitor.visitAnnotation(desc, visible);
 		return null;
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 		methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return null;
 	}
@@ -87,7 +88,7 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitMethodInsn(
 			INVOKESPECIAL,
 			wd.thisReference,
-			initMethodName, DESC_VOID,
+			ProxettaNames.initMethodName, DESC_VOID,
 			false);
 
 		methodVisitor.visitInsn(RETURN);

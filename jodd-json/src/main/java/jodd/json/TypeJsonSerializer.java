@@ -28,6 +28,7 @@ package jodd.json;
 /**
  * Type JSON Serializer defines how a type is serialized into JSON string.
  */
+@FunctionalInterface
 public interface TypeJsonSerializer<T> {
 
 	/**

@@ -25,11 +25,12 @@
 
 package jodd.util;
 
+import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
+import jodd.test.DisabledOnJava;
 import jodd.util.cl.ExtendedURLClassLoader;
-import jodd.util.testdata.A;
-import org.junit.Assert;
-import org.junit.Test;
+import jodd.util.fixtures.testdata.A;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,28 +38,29 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ExtendedURLClassLoaderTest {
+class ExtendedURLClassLoaderTest {
 
-	private final URLClassLoader cl = (URLClassLoader) this.getClass().getClassLoader();
+	private final ClassLoader thisClassLoader = this.getClass().getClassLoader();
 
 	@Test
-	public void testLoadSystemClasses() throws ClassNotFoundException {
+	void testLoadSystemClasses() throws ClassNotFoundException {
 		URL[] urls = new URL[0];
 
 		// parent-first
-		ExtendedURLClassLoader cl1 = new ExtendedURLClassLoader(urls, cl, true);
+		ExtendedURLClassLoader cl1 = new ExtendedURLClassLoader(urls, thisClassLoader, true);
 
 		Class c1 = cl1.loadClass("java.lang.String");
 		assertEquals(String.class, c1);
 
 		// parent-last, still loaded by system loader
-		ExtendedURLClassLoader cl2 = new ExtendedURLClassLoader(urls, cl, false);
+		ExtendedURLClassLoader cl2 = new ExtendedURLClassLoader(urls, thisClassLoader, false);
 
 		Class c2 = cl2.loadClass("java.lang.String");
 		assertEquals(String.class, c2);
@@ -67,9 +69,11 @@ public class ExtendedURLClassLoaderTest {
 	}
 
 	@Test
-	public void testParentFirst() throws ClassNotFoundException {
-		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
-		URL[] urls = parentCL.getURLs();
+	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
+	void testParentFirst() throws ClassNotFoundException {
+		ClassLoader parentCL = A.class.getClassLoader();
+
+		URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-first
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, true);
@@ -88,14 +92,15 @@ public class ExtendedURLClassLoaderTest {
 		ecl.addParentOnlyRules(A.class.getName());
 		try {
 			ecl.loadClass(A.class.getName());
-			Assert.fail();
+			fail("error");
 		} catch (ClassNotFoundException ignore) {}
 	}
 
 	@Test
-	public void testParentLast() throws ClassNotFoundException {
-		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
-		URL[] urls = parentCL.getURLs();
+	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
+	void testParentLast() throws ClassNotFoundException {
+		ClassLoader parentCL = A.class.getClassLoader();
+		URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-last
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, false);
@@ -113,12 +118,12 @@ public class ExtendedURLClassLoaderTest {
 		ecl.addLoaderOnlyRules(A.class.getName());
 		try {
 			ecl.loadClass(A.class.getName());
-			Assert.fail();
+			fail("error");
 		} catch (ClassNotFoundException ignore) {}
 	}
 
 	@Test
-	public void testGetResource() throws IOException {
+	void testGetResource() throws IOException {
 		File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
 		File temp = new File(tempRoot, "pckg");
 		FileUtil.mkdir(temp);
@@ -130,7 +135,7 @@ public class ExtendedURLClassLoaderTest {
 
 		// parent-first
 
-		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, cl, true);
+		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, thisClassLoader, true);
 		URL res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
@@ -139,13 +144,13 @@ public class ExtendedURLClassLoaderTest {
 		assertEquals(res, enums.nextElement());
 
 		// parent-first, parent-only
-		ecl = new ExtendedURLClassLoader(urls, cl, true);
+		ecl = new ExtendedURLClassLoader(urls, thisClassLoader, true);
 		ecl.addParentOnlyRules("pckg.data");
 		res = ecl.getResource("pckg/data");
 		assertNull(res);
 
 		//// dot variant
-		ecl = new ExtendedURLClassLoader(urls, cl, true);
+		ecl = new ExtendedURLClassLoader(urls, thisClassLoader, true);
 		ecl.setMatchResourcesAsPackages(false);
 		ecl.addParentOnlyRules("pckg/data");
 		res = ecl.getResource("pckg/data");
@@ -154,7 +159,7 @@ public class ExtendedURLClassLoaderTest {
 
 		// parent-last
 
-		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl = new ExtendedURLClassLoader(urls, thisClassLoader, false);
 		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
@@ -163,7 +168,7 @@ public class ExtendedURLClassLoaderTest {
 		assertEquals(res, enums.nextElement());
 
 		// parent-last, parent-only
-		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl = new ExtendedURLClassLoader(urls, thisClassLoader, false);
 		ecl.addLoaderOnlyRules("pckg.data");
 		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
@@ -172,7 +177,7 @@ public class ExtendedURLClassLoaderTest {
 		assertNull(res);
 
 		//// dot variant
-		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl = new ExtendedURLClassLoader(urls, thisClassLoader, false);
 		ecl.setMatchResourcesAsPackages(false);
 		ecl.addLoaderOnlyRules("pckg/data");
 		res = ecl.getResource("pckg/data");

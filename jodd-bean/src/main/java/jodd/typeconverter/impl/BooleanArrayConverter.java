@@ -26,30 +26,30 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>boolean[]</code>.
  */
 public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public BooleanArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public BooleanArrayConverter(final TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
-	public boolean[] convert(Object value) {
+	@Override
+	public boolean[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
 
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (!valueClass.isArray()) {
 			// source is not an array
@@ -63,14 +63,14 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected boolean convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, boolean.class).booleanValue();
+	protected boolean convertType(final Object value) {
+		return typeConverterManager.convertType(value, boolean.class).booleanValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected boolean[] convertToSingleElementArray(Object value) {
+	protected boolean[] convertToSingleElementArray(final Object value) {
 		return new boolean[] {convertType(value)};
 	}
 
@@ -79,24 +79,13 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected boolean[] convertValueToArray(Object value) {
-		if (value instanceof List) {
-			List list = (List) value;
-			boolean[] target = new boolean[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-			return target;
-		}
-
+	protected boolean[] convertValueToArray(final Object value) {
 		if (value instanceof Collection) {
-			Collection collection = (Collection) value;
-			boolean[] target = new boolean[collection.size()];
+			final Collection collection = (Collection) value;
+			final boolean[] target = new boolean[collection.size()];
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				target[i] = convertType(element);
 				i++;
 			}
@@ -104,19 +93,19 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		}
 
 		if (value instanceof Iterable) {
-			Iterable iterable = (Iterable) value;
+			final Iterable iterable = (Iterable) value;
 
-			ArrayList<Boolean> booleanArrayList = new ArrayList<>();
+			final ArrayList<Boolean> booleanArrayList = new ArrayList<>();
 
-			for (Object element : iterable) {
-				boolean convertedValue = convertType(element);
+			for (final Object element : iterable) {
+				final boolean convertedValue = convertType(element);
 				booleanArrayList.add(Boolean.valueOf(convertedValue));
             }
 			
-			boolean[] array = new boolean[booleanArrayList.size()];
+			final boolean[] array = new boolean[booleanArrayList.size()];
 
 			for (int i = 0; i < booleanArrayList.size(); i++) {
-				Boolean b = booleanArrayList.get(i);
+				final Boolean b = booleanArrayList.get(i);
 				array[i] = b.booleanValue();
 			}
 			
@@ -124,7 +113,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
+			final String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 
@@ -135,22 +124,16 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected boolean[] convertArrayToArray(Object value) {
-		Class valueComponentType = value.getClass().getComponentType();
+	protected boolean[] convertArrayToArray(final Object value) {
+		final Class valueComponentType = value.getClass().getComponentType();
 
-		if (valueComponentType == boolean.class) {
-			// equal types, no conversion needed
-			return (boolean[]) value;
-		}
-
-		boolean[] result;
+		final boolean[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			// convert primitive array to target array
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
 			// convert object array to target array
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = new boolean[array.length];
 
 			for (int i = 0; i < array.length; i++) {
@@ -165,57 +148,57 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected boolean[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected boolean[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		boolean[] result = null;
 
-		if (primitiveComponentType == boolean[].class) {
+		if (primitiveComponentType == boolean.class) {
 			return (boolean[]) value;
 		}
 
 		if (primitiveComponentType == int.class) {
-			int[] array = (int[]) value;
+			final int[] array = (int[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == long.class) {
-			long[] array = (long[]) value;
+			final long[] array = (long[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == float.class) {
-			float[] array = (float[]) value;
+			final float[] array = (float[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == double.class) {
-			double[] array = (double[]) value;
+			final double[] array = (double[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == short.class) {
-			short[] array = (short[]) value;
+			final short[] array = (short[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == byte.class) {
-			byte[] array = (byte[]) value;
+			final byte[] array = (byte[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;
 			}
 		}
 		else if (primitiveComponentType == char.class) {
-			char[] array = (char[]) value;
+			final char[] array = (char[]) value;
 			result = new boolean[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] != 0;

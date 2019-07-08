@@ -25,11 +25,9 @@
 
 package jodd.lagarto.dom;
 
-import jodd.util.HtmlDecoder;
-import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
-
-import java.io.IOException;
+import jodd.net.HtmlDecoder;
+import jodd.net.HtmlEncoder;
 
 /**
  * Text node. Text value is stored as node value in decoded, readable form.
@@ -40,7 +38,7 @@ public class Text extends Node {
 
 	protected String encodedText;
 
-	public Text(Document ownerDocument, String text) {
+	public Text(final Document ownerDocument, final String text) {
 		super(ownerDocument, NodeType.TEXT, null);
 		this.nodeValue = text;
 		this.encodedText = null;
@@ -67,7 +65,7 @@ public class Text extends Node {
 	 * Sets the plain text as node value.
 	 */
 	@Override
-	public void setNodeValue(String value) {
+	public void setNodeValue(final String value) {
 		encodedText = null;
 		super.setNodeValue(value);
 	}
@@ -75,7 +73,7 @@ public class Text extends Node {
 	/**
 	 * Sets HTML text, but decodes it first.
 	 */
-	public void setTextContent(String text) {
+	public void setTextValue(final String text) {
 		encodedText = text;
 		nodeValue = HtmlDecoder.decode(text);
 	}
@@ -83,28 +81,15 @@ public class Text extends Node {
 	/**
 	 * Returns encoded HTML text.
 	 */
-	@Override
-	public String getTextContent() {
+	public String getTextValue() {
 		if (encodedText == null) {
 			encodedText = HtmlEncoder.text(nodeValue);
 		}
 		return encodedText;
 	}
 
-	/**
-	 * Appends the text content to <code>Appendable</code>.
-	 */
 	@Override
-	public void appendTextContent(Appendable appendable) {
-		try {
-			appendable.append(getTextContent());
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
-		}
-	}
-
-	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.text(this);
 	}
 }

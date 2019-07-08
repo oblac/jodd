@@ -25,7 +25,7 @@
 
 package jodd.lagarto;
 
-import jodd.util.HtmlEncoder;
+import jodd.net.HtmlEncoder;
 
 import java.io.IOException;
 
@@ -36,11 +36,11 @@ public class TagWriter implements TagVisitor {
 
 	protected Appendable appendable;
 
-	public TagWriter(Appendable appendable) {
+	public TagWriter(final Appendable appendable) {
 		this.appendable = appendable;
 	}
 
-	public void setOutput(Appendable out) {
+	public void setOutput(final Appendable out) {
 		this.appendable = out;
 	}
 
@@ -50,21 +50,21 @@ public class TagWriter implements TagVisitor {
 
 	// ---------------------------------------------------------------- visitor
 
+	@Override
 	public void start() {
 	}
 
+	@Override
 	public void end() {
 	}
 
-	public void tag(Tag tag) {
-		try {
-			tag.writeTo(appendable);
-		} catch (IOException ioex) {
-			throw new LagartoException(ioex);
-		}
+	@Override
+	public void tag(final Tag tag) {
+		tag.writeTo(appendable);
 	}
 
-	public void script(Tag tag, CharSequence body) {
+	@Override
+	public void script(final Tag tag, final CharSequence body) {
 		try {
 			tag.writeTo(appendable);
 			if (body != null) {
@@ -76,7 +76,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void comment(CharSequence comment) {
+	@Override
+	public void comment(final CharSequence comment) {
 		try {
 			TagWriterUtil.writeComment(appendable, comment);
 		} catch (IOException ioex) {
@@ -84,7 +85,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void text(CharSequence text) {
+	@Override
+	public void text(final CharSequence text) {
 		try {
 			appendable.append(HtmlEncoder.text(text));
 		} catch (IOException ioex) {
@@ -92,7 +94,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void cdata(CharSequence cdata) {
+	@Override
+	public void cdata(final CharSequence cdata) {
 		try {
 			TagWriterUtil.writeCData(appendable, cdata);
 		} catch (IOException ioex) {
@@ -100,7 +103,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+	@Override
+	public void xml(final CharSequence version, final CharSequence encoding, final CharSequence standalone) {
 		try {
 			TagWriterUtil.writeXml(appendable, version, encoding, standalone);
 		} catch (IOException ioex) {
@@ -108,7 +112,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void doctype(Doctype doctype) {
+	@Override
+	public void doctype(final Doctype doctype) {
 		try {
 			TagWriterUtil.writeDoctype(
 					appendable,
@@ -120,7 +125,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	@Override
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 		try {
 			TagWriterUtil.writeConditionalComment(appendable, expression, isStartingTag, isHidden, isHiddenEndTag);
 		} catch (IOException ioex) {
@@ -128,7 +134,8 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 	}
 
 }

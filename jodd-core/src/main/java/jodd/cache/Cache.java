@@ -25,7 +25,7 @@
 
 package jodd.cache;
 
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Cache interface.
@@ -35,12 +35,12 @@ public interface Cache<K, V> {
 	/**
 	 * Returns cache size or <code>0</code> if there is no size limit.
 	 */
-	int getCacheSize();
+	int limit();
 
 	/**
 	 * Returns default timeout or <code>0</code> if it is not set.
 	 */
-	long getCacheTimeout();
+	long timeout();
 
 	/**
 	 * Adds an object to the cache with default timeout.
@@ -51,6 +51,7 @@ public interface Cache<K, V> {
 	/**
 	 * Adds an object to the cache with specified timeout after which it becomes expired.
 	 * If cache is full, {@link #prune()} is invoked to make room for new object.
+	 * Cached value must be non-null.
 	 */
 	void put(K key, V object, long timeout);
 
@@ -59,11 +60,6 @@ public interface Cache<K, V> {
 	 * is not longer in cache or if it is expired.
 	 */
 	V get(K key);
-
-	/**
-	 * Returns iterator over non-expired values.
-	 */
-	Iterator<V> iterator();
 
 	/**
 	 * Prunes objects from cache and returns the number of removed objects.
@@ -78,9 +74,10 @@ public interface Cache<K, V> {
 	boolean isFull();
 
 	/**
-	 * Removes an object from the cache.
+	 * Removes an object from the cache and returns removed value of {@code null}
+	 * if object was not in the cache or was expired.
 	 */
-	void remove(K key);
+	V remove(K key);
 
 	/**
 	 * Clears current cache.
@@ -96,4 +93,11 @@ public interface Cache<K, V> {
 	 * Returns <code>true</code> if cache is empty.
 	 */
 	boolean isEmpty();
+
+	/**
+	 * Creates a snapshot from current cache values. Returned values may not
+	 * longer be valid or they might be already expired! Cache is locked during
+	 * the snapshot creation.
+	 */
+	Map<K, V> snapshot();
 }

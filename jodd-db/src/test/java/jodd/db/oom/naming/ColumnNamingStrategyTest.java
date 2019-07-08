@@ -25,14 +25,14 @@
 
 package jodd.db.oom.naming;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ColumnNamingStrategyTest {
+class ColumnNamingStrategyTest {
 
 	@Test
-	public void testColumnNameToPropertyName() {
+	void testColumnNameToPropertyName() {
 		assertEquals("fooBooZoo", convertColumnNameToPropertyName("FOO_BOO_ZOO"));
 		assertEquals("fooBooZoo", convertColumnNameToPropertyName("foo_boo_zoo"));
 		assertEquals("fooBooZoo", convertColumnNameToPropertyName("FOO_BOO_ZOO_"));
@@ -43,7 +43,7 @@ public class ColumnNamingStrategyTest {
 	}
 
 	@Test
-	public void testColumnNameToPropertyName2() {
+	void testColumnNameToPropertyName2() {
 		ColumnNamingStrategy cns = new ColumnNamingStrategy();
 
 		assertEquals("foo", cns.convertColumnNameToPropertyName("FOO"));
@@ -56,7 +56,7 @@ public class ColumnNamingStrategyTest {
 	}
 
 	@Test
-	public void testPropertyNameToColumnName() {
+	void testPropertyNameToColumnName() {
 		assertEquals("FOO_BOO_ZOO", convertPropertyNameToColumnName("fooBooZoo", true));
 		assertEquals("foo_boo_zoo", convertPropertyNameToColumnName("fooBooZoo", false));
 		assertEquals("FOO", convertPropertyNameToColumnName("foo", true));
@@ -65,7 +65,7 @@ public class ColumnNamingStrategyTest {
 	}
 
 	@Test
-	public void testPropertyNameToColumnName2() {
+	void testPropertyNameToColumnName2() {
 		ColumnNamingStrategy cns = new ColumnNamingStrategy();
 
 		assertEquals("FOO", cns.convertPropertyNameToColumnName("foo"));

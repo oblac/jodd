@@ -27,6 +27,7 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.servlet.RequestContextListener;
 
@@ -39,6 +40,29 @@ import java.util.Map;
  */
 public class RequestScope implements Scope {
 
+	private final PetiteContainer pc;
+
+	public RequestScope(final PetiteContainer pc) {
+		this.pc = pc;
+	}
+
+	/**
+	 * Since request map is stored in the requests, app server may want to
+	 * persist it during the restart (for example).
+	 */
+	private class TransientBeanData {
+
+		private final transient BeanData beanData;
+
+		private TransientBeanData(final BeanData beanData) {
+			this.beanData = beanData;
+		}
+
+		public BeanData get() {
+			return beanData;
+		}
+	}
+
 	// ---------------------------------------------------------------- request map
 
 	protected static final String ATTR_NAME = RequestScope.class.getName() + ".MAP.";
@@ -47,22 +71,22 @@ public class RequestScope implements Scope {
 	 * Returns instance map from http request.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, BeanData> getRequestMap(HttpServletRequest servletRequest) {
-		return (Map<String, BeanData>) servletRequest.getAttribute(ATTR_NAME);
+	protected Map<String, TransientBeanData> getRequestMap(final HttpServletRequest servletRequest) {
+		return (Map<String, TransientBeanData>) servletRequest.getAttribute(ATTR_NAME);
 	}
 
 	/**
 	 * Removes instance map from the request.
 	 */
-	protected void removeRequestMap(HttpServletRequest servletRequest) {
+	protected void removeRequestMap(final HttpServletRequest servletRequest) {
 		servletRequest.removeAttribute(ATTR_NAME);
 	}
 
 	/**
 	 * Creates instance map and stores it in the request.
 	 */
-	protected Map<String, BeanData> createRequestMap(HttpServletRequest servletRequest) {
-		Map<String, BeanData> map = new HashMap<>();
+	protected Map<String, TransientBeanData> createRequestMap(final HttpServletRequest servletRequest) {
+		Map<String, TransientBeanData> map = new HashMap<>();
 		servletRequest.setAttribute(ATTR_NAME, map);
 		return map;
 	}
@@ -70,44 +94,52 @@ public class RequestScope implements Scope {
 
 	// ---------------------------------------------------------------- scope
 
+	@Override
 	public void shutdown() {
 	}
 
-	public Object lookup(String name) {
+	@Override
+	public Object lookup(final String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
 			return null;
 		}
 
-		BeanData beanData = map.get(name);
+		BeanData beanData = map.get(name).get();
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.bean();
 	}
 
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	@Override
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
 			map = createRequestMap(servletRequest);
 		}
 
-		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.getName(), beanData);
+		map.put(beanDefinition.name(), new TransientBeanData(new BeanData(pc, beanDefinition, bean)));
 	}
 
-	public void remove(String name) {
+	@Override
+	public void remove(final String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map != null) {
 			map.remove(name);
 		}
 	}
 
-	public boolean accept(Scope referenceScope) {
+	@Override
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
 
 		if (refScopeType == SingletonScope.class) {
 			return true;

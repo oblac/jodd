@@ -25,32 +25,33 @@
 
 package jodd.madvoc;
 
-import org.junit.Test;
+import jodd.madvoc.component.RootPackages;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class RootPackagesTest {
+class RootPackagesTest {
 
 	@Test
-	public void testRootPackagesPackagePath() {
+	void testRootPackagesPackagePath() {
 		RootPackages rootPackages = new RootPackages();
 
 		rootPackages.addRootPackage("xx");
 		rootPackages.addRootPackage("xx.admin.actions", "admin");
 		rootPackages.addRootPackage("xx.cms.actions", "cms");
 
-		assertEquals("", rootPackages.findPackagePathForActionPackage("xx"));
-		assertNull(rootPackages.getPackageActionPath("xx"));
-		assertEquals("/admin", rootPackages.findPackagePathForActionPackage("xx.admin.actions"));
-		assertEquals("/admin/hey", rootPackages.findPackagePathForActionPackage("xx.admin.actions.hey"));
-		assertEquals("/cms", rootPackages.findPackagePathForActionPackage("xx.cms.actions"));
-		assertEquals("/cms/hay", rootPackages.findPackagePathForActionPackage("xx.cms.actions.hay"));
+		for (int i = 0; i < 2; i++) {   // test cache
+			assertEquals("", rootPackages.findPackagePathForActionPackage("xx"));
+			assertEquals("/admin", rootPackages.findPackagePathForActionPackage("xx.admin.actions"));
+			assertEquals("/admin/hey", rootPackages.findPackagePathForActionPackage("xx.admin.actions.hey"));
+			assertEquals("/cms", rootPackages.findPackagePathForActionPackage("xx.cms.actions"));
+			assertEquals("/cms/hay", rootPackages.findPackagePathForActionPackage("xx.cms.actions.hay"));
+		}
 	}
 
 	@Test
-	public void testRootPackagesFindForPath() {
+	void testRootPackagesFindForPath() {
 		RootPackages rootPackages = new RootPackages();
 
 		rootPackages.addRootPackage("xx");
@@ -65,12 +66,12 @@ public class RootPackagesTest {
 	}
 
 	@Test
-	public void testDuplicateRootPackages() {
+	void testDuplicateRootPackages() {
 		RootPackages rootPackages = new RootPackages();
 		rootPackages.addRootPackage("xx.zz", "foo");
 		try {
 			rootPackages.addRootPackage("xx.zz", "bar");
-			fail();
+			fail("error");
 		} catch (MadvocException ignore) {}
 	}
 

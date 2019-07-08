@@ -28,8 +28,8 @@ package jodd.lagarto.dom;
 import jodd.csselly.CSSelly;
 import jodd.csselly.CssSelector;
 import jodd.io.FileUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +37,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class NodeSelectorTest {
+class NodeSelectorTest {
 
 	protected String testDataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -53,7 +56,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testTags() throws IOException {
+	void testTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div");
@@ -68,7 +71,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testMoreTags() throws IOException {
+	void testMoreTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div b");
@@ -90,7 +93,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testIdClass() throws IOException {
+	void testIdClass() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div#fiona");
@@ -121,7 +124,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testAttributes() throws IOException {
+	void testAttributes() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div[id]");
@@ -162,7 +165,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testCombinators() throws IOException {
+	void testCombinators() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > span");
@@ -185,7 +188,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testPseudoClasses() throws IOException {
+	void testPseudoClasses() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > em:first-child");
@@ -233,7 +236,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testPseudoFunctions() throws IOException {
+	void testPseudoFunctions() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > em:nth-child(2n+1)");
@@ -264,7 +267,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testDuplicatesRemoval() throws IOException {
+	void testDuplicatesRemoval() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div div");
@@ -273,10 +276,11 @@ public class NodeSelectorTest {
 
 
 	@Test
-	public void testNodeSelector() throws IOException {
+	void testNodeSelector() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select(new NodeFilter() {
+			@Override
 			public boolean accept(Node node) {
 				if (node.getNodeType() != Node.NodeType.ELEMENT) {
 					return false;
@@ -295,7 +299,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testTwoHtml() throws IOException {
+	void testTwoHtml() throws IOException {
 		File file = new File(testDataRoot, "two.html");
 		String htmlContent = FileUtil.readString(file);
 
@@ -329,7 +333,7 @@ public class NodeSelectorTest {
 	}
 
 	@Test
-	public void testGroupOfSelectors() throws IOException {
+	void testGroupOfSelectors() throws IOException {
 		File file = new File(testDataRoot, "one.html");
 		String htmlContent = FileUtil.readString(file);
 
@@ -340,9 +344,24 @@ public class NodeSelectorTest {
 
 		assertTrue(document.check());
 	}
+	
+	@Test
+	void testClassWithTabs() throws IOException {
+		File file = new File(testDataRoot, "class-tabs.html");
+		String htmlContent = FileUtil.readString(file);
+
+		Document document = new LagartoDOMBuilder().parse(htmlContent);
+
+		List<Node> nodes = new NodeSelector(document).select(".hey");
+		assertEquals(1, nodes.size());
+
+		Node n = nodes.get(0);
+		assertEquals("div", n.getNodeName());
+		assertEquals("jodd", n.getAttribute("id"));
+	}
 
 	@Test
-	public void testCollectionOfSelectors() throws IOException {
+	void testCollectionOfSelectors() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<CssSelector> selectors1 = new CSSelly("body").parse();

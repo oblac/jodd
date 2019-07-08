@@ -25,32 +25,32 @@
 
 package jodd.bean;
 
-import jodd.bean.data.LifeBean;
+import jodd.bean.fixtures.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.JoddIntrospector;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BeanPrefixTest {
+class BeanPrefixTest {
 
 	@Test
-	public void testFieldPrefix1() {
+	void testFieldPrefix1() {
 		LifeBean lifeBean = new LifeBean();
 
 		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
-		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_"});
+		ClassIntrospector.Implementation.set(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
-		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -61,25 +61,25 @@ public class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals(null, pds[2].getFieldDescriptor());
 
-		JoddIntrospector.introspector = new CachingIntrospector();
+		ClassIntrospector.Implementation.set(new CachingIntrospector());
 	}
 
 	@Test
-	public void testFieldPrefix1withEmpty() {
+	void testFieldPrefix1withEmpty() {
 		LifeBean lifeBean = new LifeBean();
 
 		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
-		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_", ""});
+		ClassIntrospector.Implementation.set(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
 
-		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -90,11 +90,11 @@ public class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals("www", pds[2].getFieldDescriptor().getName());
 
-		JoddIntrospector.introspector = new CachingIntrospector();
+		ClassIntrospector.Implementation.set(new CachingIntrospector());
 	}
 
 	@Test
-	public void testFieldPrefix2() {
+	void testFieldPrefix2() {
 		BeanUtilBean beanUtilBean = new BeanUtilBean();
 
 		LifeBean lifeBean = new LifeBean();

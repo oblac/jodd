@@ -25,12 +25,13 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * A descriptor class for all methods/fields/properties/constructors of a class.
@@ -58,9 +59,8 @@ public class ClassDescriptor {
 	protected final String[] propertyFieldPrefix;
 	protected final Class[] interfaces;
 	protected final Class[] superclasses;
-	protected int usageCount;
 
-	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
+	public ClassDescriptor(final Class type, final boolean scanAccessible, final boolean extendedProperties, final boolean includeFieldsAsProperties, final String[] propertyFieldPrefix) {
 		this.type = type;
 		this.scanAccessible = scanAccessible;
 		this.extendedProperties = extendedProperties;
@@ -68,13 +68,17 @@ public class ClassDescriptor {
 		this.propertyFieldPrefix = propertyFieldPrefix;
 
 		isArray = type.isArray();
-		isMap = ReflectUtil.isTypeOf(type, Map.class);
-		isList = ReflectUtil.isTypeOf(type, List.class);
-		isSet = ReflectUtil.isTypeOf(type, Set.class);
-		isCollection = ReflectUtil.isTypeOf(type, Collection.class);
+		isMap = ClassUtil.isTypeOf(type, Map.class);
+		isList = ClassUtil.isTypeOf(type, List.class);
+		isSet = ClassUtil.isTypeOf(type, Set.class);
+		isCollection = ClassUtil.isTypeOf(type, Collection.class);
+		isSupplier = ClassUtil.isTypeOf(type, Supplier.class);
 
-		interfaces = ReflectUtil.resolveAllInterfaces(type);
-		superclasses = ReflectUtil.resolveAllSuperclasses(type);
+		interfaces = ClassUtil.resolveAllInterfaces(type);
+		superclasses = ClassUtil.resolveAllSuperclasses(type);
+
+		isSystemClass = type.getName().startsWith("java.") &&
+			!type.getName().startsWith("java.awt.geom.");
 	}
 
 	/**
@@ -115,23 +119,6 @@ public class ClassDescriptor {
 	 */
 	public String[] getPropertyFieldPrefix() {
 		return propertyFieldPrefix;
-	}
-
-	/**
-	 * Increases usage count.
-	 */
-	protected void increaseUsageCount() {
-		usageCount++;
-	}
-
-	/**
-	 * Returns number of class descriptor usages. That is number
-	 * of times when class descriptor for some class has been
-	 * lookuped. Higher usage count means that some class is
-	 * more frequently being used.
-	 */
-	public int getUsageCount() {
-		return usageCount;
 	}
 
 	// ---------------------------------------------------------------- special
@@ -176,6 +163,25 @@ public class ClassDescriptor {
 		return isCollection;
 	}
 
+	private final boolean isSupplier;
+
+	/**
+	 * Returns <code>true</code> if type is a supplier.
+	 */
+	public boolean isSupplier() {
+		return isSupplier;
+	}
+
+	private boolean isSystemClass;
+
+	/**
+	 * Returns <code>true</code> is class is a system class and should not
+	 * expose fields or declared methods.
+	 */
+	public boolean isSystemClass() {
+		return isSystemClass;
+	}
+
 	// ---------------------------------------------------------------- fields
 
 	private Fields fields;
@@ -194,8 +200,8 @@ public class ClassDescriptor {
 	/**
 	 * Returns field descriptor.
 	 */
-	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
-		FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
+	public FieldDescriptor getFieldDescriptor(final String name, final boolean declared) {
+		final FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
 
 		if (fieldDescriptor != null) {
 			if (!fieldDescriptor.matchDeclared(declared)) {
@@ -231,8 +237,8 @@ public class ClassDescriptor {
 	/**
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
-	public MethodDescriptor getMethodDescriptor(String name, boolean declared) {
-		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
+	public MethodDescriptor getMethodDescriptor(final String name, final boolean declared) {
+		final MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
 
 		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
 			return methodDescriptor;
@@ -245,8 +251,8 @@ public class ClassDescriptor {
 	/**
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
-	public MethodDescriptor getMethodDescriptor(String name, Class[] params, boolean declared) {
-		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
+	public MethodDescriptor getMethodDescriptor(final String name, final Class[] params, final boolean declared) {
+		final MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
 
 		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
 			return methodDescriptor;
@@ -258,7 +264,7 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods with the same name.
 	 */
-	public MethodDescriptor[] getAllMethodDescriptors(String name) {
+	public MethodDescriptor[] getAllMethodDescriptors(final String name) {
 		return getMethods().getAllMethodDescriptors(name);
 	}
 
@@ -288,7 +294,7 @@ public class ClassDescriptor {
 	 * Returns property descriptor. Declared flag is matched on both read and write
 	 * methods.
 	 */
-	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
+	public PropertyDescriptor getPropertyDescriptor(final String name, final boolean declared) {
 		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
 		if ((propertyDescriptor != null) && propertyDescriptor.matchDeclared(declared)) {
@@ -323,7 +329,7 @@ public class ClassDescriptor {
 	/**
 	 * Returns the default ctor or <code>null</code> if not found.
 	 */
-	public CtorDescriptor getDefaultCtorDescriptor(boolean declared) {
+	public CtorDescriptor getDefaultCtorDescriptor(final boolean declared) {
 		CtorDescriptor defaultCtor = getCtors().getDefaultCtor();
 
 		if ((defaultCtor != null) && defaultCtor.matchDeclared(declared)) {
@@ -335,7 +341,7 @@ public class ClassDescriptor {
 	/**
 	 * Returns the constructor identified by arguments or <code>null</code> if not found.
 	 */
-	public CtorDescriptor getCtorDescriptor(Class[] args, boolean declared) {
+	public CtorDescriptor getCtorDescriptor(final Class[] args, final boolean declared) {
 		CtorDescriptor ctorDescriptor = getCtors().getCtorDescriptor(args);
 
 		if ((ctorDescriptor != null) && ctorDescriptor.matchDeclared(declared)) {

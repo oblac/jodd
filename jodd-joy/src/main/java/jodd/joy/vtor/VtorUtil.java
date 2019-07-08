@@ -43,7 +43,7 @@ public class VtorUtil {
 	 * <li>msg - message code i.e. constraint class name</li>
 	 * </ul>
 	 */
-	public static String createViolationsJsonString(HttpServletRequest request, List<Violation> violations) {
+	public static String createViolationsJsonString(final HttpServletRequest request, final List<Violation> violations) {
 		if (violations == null) {
 			return StringPool.EMPTY;
 		}
@@ -66,12 +66,12 @@ public class VtorUtil {
 	 * Prepares validation messages.
 	 * Key is either validation constraint class name or violation name.
 	 */
-	public static String resolveValidationMessage(HttpServletRequest request, Violation violation) {
+	public static String resolveValidationMessage(final HttpServletRequest request, final Violation violation) {
 		ValidationConstraint vc = violation.getConstraint();
 		String key = vc != null ? vc.getClass().getName() : violation.getName();
 		String msg = LocalizationUtil.findMessage(request, key);
 		if (msg != null) {
-			return beanTemplateParser.parse(msg, violation);
+			return beanTemplateParser.parseWithBean(msg, violation);
 		}
 		return null;
 	}

@@ -35,7 +35,7 @@ import jodd.json.JsonContext;
 public class ObjectJsonSerializer extends ValueJsonSerializer<Object> {
 
 	@Override
-	public void serializeValue(final JsonContext jsonContext, Object value) {
+	public void serializeValue(final JsonContext jsonContext, final Object value) {
 		jsonContext.writeOpenObject();
 
 		BeanSerializer beanVisitor = new BeanSerializer(jsonContext, value);

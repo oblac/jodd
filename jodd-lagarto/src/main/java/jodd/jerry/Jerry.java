@@ -32,6 +32,7 @@ import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeSelector;
 import jodd.lagarto.dom.Text;
 import jodd.util.ArraysUtil;
+import jodd.util.Format;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -55,7 +56,7 @@ public class Jerry implements Iterable<Jerry> {
 	@SuppressWarnings("CloneableClassWithoutClone")
 	private static class NodeList extends ArrayList<Node> {
 
-		private NodeList(int initialCapacity) {
+		private NodeList(final int initialCapacity) {
 			super(initialCapacity);
 		}
 
@@ -63,7 +64,7 @@ public class Jerry implements Iterable<Jerry> {
 		}
 
 		@Override
-		public boolean add(Node o) {
+		public boolean add(final Node o) {
 			for (Node node : this) {
 				if (node == o) {
 					return false;
@@ -78,14 +79,14 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Parses input sequence and creates new <code>Jerry</code>.
 	 */
-	public static Jerry jerry(char[] content) {
+	public static Jerry jerry(final char[] content) {
 		return jerry().parse(content);
 	}
 
 	/**
 	 * Parses input content and creates new <code>Jerry</code>.
 	 */
-	public static Jerry jerry(String content) {
+	public static Jerry jerry(final String content) {
 		return jerry().parse(content);
 	}
 
@@ -101,7 +102,7 @@ public class Jerry implements Iterable<Jerry> {
 		public JerryParser() {
 			this.domBuilder = new LagartoDOMBuilder();
 		}
-		public JerryParser(DOMBuilder domBuilder) {
+		public JerryParser(final DOMBuilder domBuilder) {
 			this.domBuilder = domBuilder;
 		}
 
@@ -115,7 +116,7 @@ public class Jerry implements Iterable<Jerry> {
 		/**
 		 * Invokes parsing on {@link DOMBuilder}.
 		 */
-		public Jerry parse(char[] content) {
+		public Jerry parse(final char[] content) {
 			Document doc = domBuilder.parse(content);
 			return new Jerry(domBuilder, doc);
 		}
@@ -144,7 +145,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Creates new {@link jodd.jerry.Jerry.JerryParser Jerry runner} with
 	 * provided implementation of {@link jodd.lagarto.dom.DOMBuilder}.
 	 */
-	public static JerryParser jerry(DOMBuilder domBuilder) {
+	public static JerryParser jerry(final DOMBuilder domBuilder) {
 		return new JerryParser(domBuilder);
 	}
 
@@ -157,7 +158,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Creates root Jerry.
 	 */
-	protected Jerry(DOMBuilder builder, Node... nodes) {
+	protected Jerry(final DOMBuilder builder, final Node... nodes) {
 		this.parent = null;
 		this.nodes = nodes;
 		this.builder = builder;
@@ -166,7 +167,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Creates child Jerry.
 	 */
-	protected Jerry(Jerry parent, Node... nodes) {
+	protected Jerry(final Jerry parent, final Node... nodes) {
 		this.parent = parent;
 		this.nodes = nodes;
 		this.builder = parent.builder;
@@ -175,7 +176,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Creates child Jerry.
 	 */
-	protected Jerry(Jerry parent, Node[] nodes1, Node[] nodes2) {
+	protected Jerry(final Jerry parent, final Node[] nodes1, final Node[] nodes2) {
 		this.parent = parent;
 		this.nodes = ArraysUtil.join(nodes1, nodes2);
 		this.builder = parent.builder;
@@ -184,8 +185,8 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Creates child Jerry.
 	 */
-	protected Jerry(Jerry parent, List<Node> nodeList) {
-		this(parent, nodeList.toArray(new Node[nodeList.size()]));
+	protected Jerry(final Jerry parent, final List<Node> nodeList) {
+		this(parent, nodeList.toArray(new Node[0]));
 	}
 
 	// ---------------------------------------------------------------- this
@@ -208,7 +209,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Returns node at given index. Returns <code>null</code>
 	 * if index is out of bounds.
 	 */
-	public Node get(int index) {
+	public Node get(final int index) {
 		if ((index < 0) || (index >= nodes.length)) {
 			return null;
 		}
@@ -226,7 +227,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Searches for a given <code>Node</code> from among the matched elements.
 	 */
-	public int index(Node element) {
+	public int index(final Node element) {
 		if (nodes.length == 0) {
 			return -1;
 		}
@@ -254,6 +255,21 @@ public class Jerry implements Iterable<Jerry> {
 				Node[] children = node.getChildElements();
 
 				Collections.addAll(result, children);
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
+	* Get the children of each element in the set of matched elements, 
+	* including text and comment nodes.
+	*/
+	public Jerry contents() {
+		List<Node> result = new NodeList(nodes.length);
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node[] contents = node.getChildNodes();
+				Collections.addAll(result, contents);
 			}
 		}
 		return new Jerry(this, result);
@@ -308,6 +324,25 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
+	 * Get all following siblings of each element in the set of matched 
+	 * elements, optionally filtered by a selector.
+	 */
+	public Jerry nextAll() {
+		List<Node> result = new NodeList(nodes.length);
+
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node currentSiblingElement = node.getNextSiblingElement();
+				while (currentSiblingElement != null) {
+					result.add(currentSiblingElement);
+					currentSiblingElement = currentSiblingElement.getNextSiblingElement();
+				}
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
 	 * Gets the immediately preceding sibling of each element in the
 	 * set of matched elements.
 	 */
@@ -323,10 +358,29 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
+	 * Get all preceding siblings of each element in the set of matched 
+	 * elements, optionally filtered by a selector.
+	 */
+	public Jerry prevAll() {
+		List<Node> result = new NodeList(nodes.length);
+
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node currentSiblingElement = node.getPreviousSiblingElement();
+				while (currentSiblingElement != null) {
+					result.add(currentSiblingElement);
+					currentSiblingElement = currentSiblingElement.getPreviousSiblingElement();
+				}
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
 	 *  Gets the descendants of each element in the current set of matched elements,
 	 *  filtered by a selector.
 	 */
-	public Jerry find(String cssSelector) {
+	public Jerry find(final String cssSelector) {
 		final List<Node> result = new NodeList();
 
 		if (nodes.length > 0) {
@@ -341,35 +395,39 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
-	 * @see #find(String)
+	 * @deprecated use {@link #s(String)} instead as the name is not supported in new VMs.
 	 */
-	public Jerry $(String cssSelector) {
+	public Jerry $(final String cssSelector) {
 		return find(cssSelector);
 	}
 
 	/**
-	 * Shortcut for <code>context.find(css)</code>.
+	 * Selects nodes.
+	 *
+	 * @see #find(String)
 	 */
-	public static Jerry $(String cssSelector, Jerry context) {
-		return context.find(cssSelector);
+	public Jerry s(final String cssSelector) {
+		return find(cssSelector);
 	}
 
 	/**
 	 * Creates node selector.
 	 */
-	protected NodeSelector createNodeSelector(Node node) {
+	protected NodeSelector createNodeSelector(final Node node) {
 		return new NodeSelector(node);
 	}
 
 	/**
 	 * Iterates over a jQuery object, executing a function for
 	 * each matched element.
+	 * @see #eachNode(JerryNodeFunction)
 	 */
-	public Jerry each(JerryFunction function) {
+	public Jerry each(final JerryFunction function) {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
 			Jerry $this = new Jerry(this, node);
-			if (!function.onNode($this, i)) {
+			Boolean result = function.onNode($this, i);
+			if (result != null && result == Boolean.FALSE) {
 				break;
 			}
 		}
@@ -379,8 +437,9 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Iterates over a jQuery object, executing a function for
 	 * each matched element.
+	 * @see #each(JerryFunction)
 	 */
-	public Jerry each(JerryNodeFunction function) {
+	public Jerry eachNode(final JerryNodeFunction function) {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
 			if (!function.onNode(node, i)) {
@@ -395,7 +454,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Adds elements to the set of matched elements.
 	 */
-	public Jerry add(String selector) {
+	public Jerry add(final String selector) {
 		return new Jerry(this, nodes, root().find(selector).nodes);
 	}
 
@@ -410,7 +469,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Removes elements from the set of matched elements.
 	 */
-	public Jerry not(String cssSelector) {
+	public Jerry not(final String cssSelector) {
 		Node[]  notNodes = root().find(cssSelector).nodes;
 		List<Node> result = new NodeList(nodes.length);
 
@@ -466,7 +525,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Reduces the set of matched elements to the one at the specified index.
 	 */
-	public Jerry eq(int value) {
+	public Jerry eq(final int value) {
 		List<Node> result = new NodeList(1);
 		int matchingIndex = value >= 0 ? value : nodes.length + value;
 
@@ -487,7 +546,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Reduces the set of matched elements to the one at an index greater
 	 * than specified index.
 	 */
-	public Jerry gt(int value) {
+	public Jerry gt(final int value) {
 		List<Node> result = new NodeList(nodes.length);
 
 		if (nodes.length > 0) {
@@ -507,7 +566,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Reduces the set of matched elements to the one at an index less
 	 * than specified index.
 	 */
-	public Jerry lt(int value) {
+	public Jerry lt(final int value) {
 		List<Node> result = new NodeList(nodes.length);
 
 		if (nodes.length > 0) {
@@ -527,7 +586,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * return <code>true</code> if at least one of these elements matches
 	 * the given arguments.
 	 */
-	public boolean is(String cssSelectors) {
+	public boolean is(final String cssSelectors) {
 		if (nodes.length == 0) {
 			return false;
 		}
@@ -553,7 +612,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Reduces the set of matched elements to those that match the selector.
 	 */
-	public Jerry filter(String cssSelectors) {
+	public Jerry filter(final String cssSelectors) {
 		List<Node> result = new NodeList(nodes.length);
 
 		if (nodes.length > 0) {
@@ -580,7 +639,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Reduces the set of matched elements to those that pass the
 	 * {@link JerryFunction function's} test.
 	 */
-	public Jerry filter(JerryFunction jerryFunction) {
+	public Jerry filter(final JerryFunction jerryFunction) {
 		List<Node> result = new NodeList(nodes.length);
 
 		for (int i = 0; i < nodes.length; i++) {
@@ -605,7 +664,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Reduce the set of matched elements to those that have a descendant that
 	 * matches the selector or DOM element.
 	 */
-	public Jerry has(String cssSelectors) {
+	public Jerry has(final String cssSelectors) {
 		List<Node> result = new NodeList(nodes.length);
 
 		if (nodes.length > 0) {
@@ -628,7 +687,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Gets the value of an attribute for the first element in the set of matched elements.
 	 * Returns <code>null</code> if set is empty.
 	 */
-	public String attr(String name) {
+	public String attr(final String name) {
 		if (nodes.length == 0) {
 			return null;
 		}
@@ -641,7 +700,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Sets one or more attributes for the set of matched elements.
 	 */
-	public Jerry attr(String name, String value) {
+	public Jerry attr(final String name, final String value) {
 		if (nodes.length == 0) {
 			return this;
 		}
@@ -654,7 +713,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Removes an attribute from each element in the set of matched elements.
 	 */
-	public Jerry removeAttr(String name) {
+	public Jerry removeAttr(final String name) {
 		if (name == null) {
 			return this;
 		}
@@ -677,7 +736,7 @@ public class Jerry implements Iterable<Jerry> {
 			return null;
 		}
 
-		propertyName = StringUtil.fromCamelCase(propertyName, '-');
+		propertyName = Format.fromCamelCase(propertyName, '-');
 
 		String styleAttrValue = nodes[0].getAttribute("style");
 		if (styleAttrValue == null) {
@@ -694,8 +753,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Note that this is different from jQuery, where this means
 	 * that property will be reset to previous value if existed.
 	 */
-	public Jerry css(String propertyName, String value) {
-		propertyName = StringUtil.fromCamelCase(propertyName, '-');
+	public Jerry css(String propertyName, final String value) {
+		propertyName = Format.fromCamelCase(propertyName, '-');
 
 		if (nodes.length == 0) {
 			return this;
@@ -718,7 +777,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
-	public Jerry css(String... css) {
+	public Jerry css(final String... css) {
 		if (nodes.length == 0) {
 			return this;
 		}
@@ -728,7 +787,7 @@ public class Jerry implements Iterable<Jerry> {
 
 			for (int i = 0; i < css.length; i += 2) {
 				String propertyName = css[i];
-				propertyName = StringUtil.fromCamelCase(propertyName, '-');
+				propertyName = Format.fromCamelCase(propertyName, '-');
 				String value = css[i + 1];
 				if (value.length() == 0) {
 					styles.remove(propertyName);
@@ -745,7 +804,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Adds the specified class(es) to each of the set of matched elements.
 	 */
-	public Jerry addClass(String... classNames) {
+	public Jerry addClass(final String... classNames) {
 		if (nodes.length == 0) {
 			return this;
 		}
@@ -769,7 +828,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Determines whether any of the matched elements are assigned the given class.
 	 */
-	public boolean hasClass(String... classNames) {
+	public boolean hasClass(final String... classNames) {
 		if (nodes.length == 0) {
 			return false;
 		}
@@ -789,7 +848,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Removes a single class, multiple classes, or all classes
 	 * from each element in the set of matched elements.
 	 */
-	public Jerry removeClass(String... classNames) {
+	public Jerry removeClass(final String... classNames) {
 		if (nodes.length == 0) {
 			return this;
 		}
@@ -815,7 +874,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * matched elements, depending on either the class's presence or
 	 * the value of the switch argument.
 	 */
-	public Jerry toggleClass(String... classNames) {
+	public Jerry toggleClass(final String... classNames) {
 		if (nodes.length == 0) {
 			return this;
 		}
@@ -890,7 +949,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * @see #html()
 	 * @param setIncluded if <code>true</code> than sets node are included in the output
 	 */
-	public String htmlAll(boolean setIncluded) {
+	public String htmlAll(final boolean setIncluded) {
 		if (nodes.length == 0) {
 			return StringPool.EMPTY;
 		}
@@ -949,6 +1008,26 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
+	 * Insert content, specified by the parameter, to the beginning of each 
+	 * element in the set of matched elements.
+	 */
+	public Jerry prepend(String html) {
+		if (html == null) {
+			html = StringPool.EMPTY;
+		}
+		final Document doc = builder.parse(html);
+
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Document workingDoc = doc.clone();
+			node.insertChild(workingDoc.getChildNodes(), 0);
+		}
+		return this;
+	}
+
+	/**
 	 * Inserts content, specified by the parameter, before each
 	 * element in the set of matched elements.
 	 */
@@ -964,6 +1043,55 @@ public class Jerry implements Iterable<Jerry> {
 			Document workingDoc = doc.clone();
 			node.insertBefore(workingDoc.getChildNodes(), node);
 		}
+		return this;
+	}
+
+	/**
+	 * Inserts content, specified by the parameter, after each
+	 * element in the set of matched elements.
+	 */
+	public Jerry after(String html) {
+		if (html == null) {
+			html = StringPool.EMPTY;
+		}
+		final Document doc = builder.parse(html);
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Document workingDoc = doc.clone();
+			node.insertAfter(workingDoc.getChildNodes(), node);
+		}
+		return this;
+	}
+
+	/**
+	 * Replace each element in the set of matched elements with the provided 
+	 * new content and return the set of elements that was removed.
+	 */
+	public Jerry replaceWith(String html) {
+ 		if (html == null) {
+			html = StringPool.EMPTY;
+		}
+		final Document doc = builder.parse(html);
+
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Node parent = node.getParentNode();
+			// if a node already is the root element, don't unwrap
+			if (parent == null) {
+				continue;
+			}
+
+			// replace, if possible
+			Document workingDoc = doc.clone();
+			int index = node.getSiblingIndex();
+			parent.insertChild(workingDoc.getFirstChild(), index);
+			node.detachFromParent();
+		}
+
 		return this;
 	}
 
@@ -1039,22 +1167,55 @@ public class Jerry implements Iterable<Jerry> {
 		return this;
 	}
 
+	/**
+	 * Remove the parents of the set of matched elements from the DOM, leaving 
+	 * the matched elements (and siblings, if any) in their place. 
+	 */
+	public Jerry unwrap() {
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Node parent = node.getParentNode();
+			// if a node already is the root element, don't unwrap
+			if (parent == null) {
+				continue;
+			}
+
+			// replace, if possible
+			Node grandparent = parent.getParentNode();
+			if (grandparent == null) {
+				continue;
+			}
+
+			Node[] siblings = parent.getChildNodes();
+			int index = parent.getSiblingIndex();
+			grandparent.insertChild(siblings, index);
+			parent.detachFromParent();
+		}
+
+		return this;
+	}
+
 	// ---------------------------------------------------------------- iterator
 
 	/**
 	 * Returns iterator over nodes contained in the Jerry object.
 	 * Each node is wrapped. Similar to {@link #each(JerryFunction)}.
 	 */
+	@Override
 	public Iterator<Jerry> iterator() {
 		final Jerry jerry = this;
 
 		return new Iterator<Jerry>() {
 			private int index = 0;
 
+			@Override
 			public boolean hasNext() {
 				return index < jerry.nodes.length;
 			}
 
+			@Override
 			public Jerry next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
@@ -1064,6 +1225,7 @@ public class Jerry implements Iterable<Jerry> {
 				return nextJerry;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -1076,7 +1238,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Processes all forms, collects all form parameters and calls back the
 	 * {@link JerryFormHandler}.
 	 */
-	public Jerry form(String formCssSelector, JerryFormHandler jerryFormHandler) {
+	public Jerry form(final String formCssSelector, final JerryFormHandler jerryFormHandler) {
 		Jerry form = find(formCssSelector);
 
 		// process each form
@@ -1087,87 +1249,86 @@ public class Jerry implements Iterable<Jerry> {
 
 			// process all input elements
 
-			singleForm.$("input").each(new JerryFunction() {
-				public boolean onNode(Jerry $inputTag, int index) {
+			singleForm.s("input").each(($inputTag, index) -> {
 
-					String type = $inputTag.attr("type");
+				String type = $inputTag.attr("type");
 
-					boolean isCheckbox = type.equals("checkbox");
-					boolean isRadio = type.equals("radio");
+				// An input element with no type attribute specified represents
+				// the same thing as an input element with its type attribute set to "text".
 
-					if (isRadio || isCheckbox) {
-						if (!($inputTag.nodes[0].hasAttribute("checked"))) {
-							return true;
-						}
-					}
+				if (type == null) {
+					type = "text";
+				}
 
-					String name = $inputTag.attr("name");
-					if (name == null) {
+				boolean isCheckbox = type.equals("checkbox");
+				boolean isRadio = type.equals("radio");
+
+				if (isRadio || isCheckbox) {
+					if (!($inputTag.nodes[0].hasAttribute("checked"))) {
 						return true;
 					}
+				}
 
-					String tagValue = $inputTag.attr("value");
-
-					if (tagValue == null) {
-						if (isCheckbox) {
-							tagValue = "on";
-						}
-					}
-
-					// add tag value
-					String[] value = parameters.get(name);
-
-					if (value == null) {
-						value = new String[] {tagValue};
-					} else {
-						value = ArraysUtil.append(value, tagValue);
-					}
-
-					parameters.put(name, value);
+				String name = $inputTag.attr("name");
+				if (name == null) {
 					return true;
 				}
+
+				String tagValue = $inputTag.attr("value");
+
+				if (tagValue == null) {
+					if (isCheckbox) {
+						tagValue = "on";
+					}
+				}
+
+				// add tag value
+				String[] value = parameters.get(name);
+
+				if (value == null) {
+					value = new String[] {tagValue};
+				} else {
+					value = ArraysUtil.append(value, tagValue);
+				}
+
+				parameters.put(name, value);
+				return true;
 			});
 
 			// process all select elements
 
-			singleForm.$("select").each(new JerryFunction() {
-				public boolean onNode(Jerry $selectTag, int index) {
-					final String name = $selectTag.attr("name");
+			singleForm.s("select").each(($selectTag, index) -> {
+				final String name = $selectTag.attr("name");
 
-					$selectTag.$("option").each(new JerryFunction() {
-						public boolean onNode(Jerry $optionTag, int index) {
-							if ($optionTag.nodes[0].hasAttribute("selected")) {
-								String tagValue = $optionTag.attr("value");
+				$selectTag.s("option").each(($optionTag, index1) -> {
+					if ($optionTag.nodes[0].hasAttribute("selected")) {
+						String tagValue = $optionTag.attr("value");
 
-								// add tag value
-								String[] value = parameters.get(name);
+						// add tag value
+						String[] value = parameters.get(name);
 
-								if (value == null) {
-									value = new String[] {tagValue};
-								} else {
-									value = ArraysUtil.append(value, tagValue);
-								}
-
-								parameters.put(name, value);
-							}
-							return true;
+						if (value == null) {
+							value = new String[] {tagValue};
+						} else {
+							value = ArraysUtil.append(value, tagValue);
 						}
-					});
 
+						parameters.put(name, value);
+					}
 					return true;
-				}
+				});
+
+				return true;
 			});
 
 			// process all text areas
 
-			singleForm.$("textarea").each(new JerryFunction() {
-				public boolean onNode(Jerry $textarea, int index) {
-					String name = $textarea.attr("name");
-					String value = $textarea.text();
+			singleForm.s("textarea").each(($textarea, index) -> {
+				String name = $textarea.attr("name");
+				String value = $textarea.text();
 
-					parameters.put(name, new String[] {value});
-					return true;
-				}
+				parameters.put(name, new String[] {value});
+				return true;
 			});
 
 			// done
@@ -1180,7 +1341,7 @@ public class Jerry implements Iterable<Jerry> {
 
 	// ---------------------------------------------------------------- internal
 
-	protected Set<String> createPropertiesSet(String attrValue, char propertiesDelimiter) {
+	protected Set<String> createPropertiesSet(final String attrValue, final char propertiesDelimiter) {
 		if (attrValue == null) {
 			return new LinkedHashSet<>();
 		}
@@ -1191,7 +1352,7 @@ public class Jerry implements Iterable<Jerry> {
 		return set;
 	}
 	
-	protected String generateAttributeValue(Set<String> set, char propertiesDelimiter) {
+	protected String generateAttributeValue(final Set<String> set, final char propertiesDelimiter) {
 		StringBuilder sb = new StringBuilder(set.size() * 16);
 		boolean first = true;
 		for (String entry : set) {
@@ -1205,7 +1366,7 @@ public class Jerry implements Iterable<Jerry> {
 		return sb.toString();
 	}
 	
-	protected Map<String, String> createPropertiesMap(String attrValue, char propertiesDelimiter, char valueDelimiter) {
+	protected Map<String, String> createPropertiesMap(final String attrValue, final char propertiesDelimiter, final char valueDelimiter) {
 		if (attrValue == null) {
 			return new LinkedHashMap<>();
 		}
@@ -1222,7 +1383,7 @@ public class Jerry implements Iterable<Jerry> {
 		return map;
 	}
 	
-	protected String generateAttributeValue(Map<String, String> map, char propertiesDelimiter, char valueDelimiter) {
+	protected String generateAttributeValue(final Map<String, String> map, final char propertiesDelimiter, final char valueDelimiter) {
 		StringBuilder sb = new StringBuilder(map.size() * 32);
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			sb.append(entry.getKey());

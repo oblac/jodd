@@ -25,10 +25,13 @@
 
 package jodd.props;
 
+import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
@@ -94,6 +97,14 @@ public class Props implements Cloneable {
 	protected volatile boolean initialized;
 
 	/**
+	 * Statis ctor.
+	 */
+	public static Props create() {
+		return new Props();
+	}
+
+
+	/**
 	 * Creates new props.
 	 */
 	public Props() {
@@ -135,69 +146,78 @@ public class Props implements Cloneable {
 	 * this method call, they might override active profiles
 	 * by using special property for active profiles (<code>@profiles</code>).
 	 */
-	public void setActiveProfiles(final String... activeProfiles) {
+	public Props setActiveProfiles(final String... activeProfiles) {
 		initialized = false;
 		this.activeProfiles = activeProfiles;
+		return this;
 	}
 
 	/**
 	 * Specifies the new line string when EOL is escaped.
 	 * Default value is an empty string.
 	 */
-	public void setEscapeNewLineValue(final String escapeNewLineValue) {
+	public Props setEscapeNewLineValue(final String escapeNewLineValue) {
 		parser.escapeNewLineValue = escapeNewLineValue;
+		return this;
 	}
 
 	/**
 	 * Specifies should the values be trimmed from the left.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimLeft(final boolean valueTrimLeft) {
+	public Props setValueTrimLeft(final boolean valueTrimLeft) {
 		parser.valueTrimLeft = valueTrimLeft;
+		return this;
 	}
 
 	/**
 	 * Specifies should the values be trimmed from the right.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimRight(final boolean valueTrimRight) {
+	public Props setValueTrimRight(final boolean valueTrimRight) {
 		parser.valueTrimRight = valueTrimRight;
+		return this;
 	}
 
 	/**
 	 * Defines if the prefix whitespaces should be ignored when value is split into the lines.
 	 */
-	public void setIgnorePrefixWhitespacesOnNewLine(final boolean ignorePrefixWhitespacesOnNewLine) {
+	public Props setIgnorePrefixWhitespacesOnNewLine(final boolean ignorePrefixWhitespacesOnNewLine) {
 		parser.ignorePrefixWhitespacesOnNewLine = ignorePrefixWhitespacesOnNewLine;
+		return this;
 	}
 
 	/**
 	 * Skips empty properties as they don't exist.
 	 */
-	public void setSkipEmptyProps(final boolean skipEmptyProps) {
+	public Props setSkipEmptyProps(final boolean skipEmptyProps) {
 		parser.skipEmptyProps = skipEmptyProps;
 		data.skipEmptyProps = skipEmptyProps;
+		return this;
 	}
 
 	/**
 	 * Appends duplicate props.
 	 */
-	public void setAppendDuplicateProps(final boolean appendDuplicateProps) {
+	public Props setAppendDuplicateProps(final boolean appendDuplicateProps) {
 		data.appendDuplicateProps = appendDuplicateProps;
+		return this;
 	}
 
 	/**
 	 * Ignore missing macros by replacing them with an empty string.
 	 */
-	public void setIgnoreMissingMacros(boolean ignoreMissingMacros) {
+	public Props setIgnoreMissingMacros(final boolean ignoreMissingMacros) {
 		data.ignoreMissingMacros = ignoreMissingMacros;
+		return this;
 	}
 
 	/**
 	 * Enables multiline values.
 	 */
-	public void setMultilineValues(final boolean multilineValues) {
+	public Props setMultilineValues(final boolean multilineValues) {
 		parser.multilineValues = multilineValues;
+		return this;
 	}
 
 	/**
@@ -213,15 +233,16 @@ public class Props implements Cloneable {
 	/**
 	 * Loads props from the string.
 	 */
-	public void load(final String data) {
+	public Props load(final String data) {
 		parse(data);
+		return this;
 	}
 
 	/**
 	 * Loads props from the file. Assumes UTF8 encoding unless
 	 * the file ends with '.properties', than it uses ISO 8859-1.
 	 */
-	public void load(final File file) throws IOException {
+	public Props load(final File file) throws IOException {
 		final String extension = FileNameUtil.getExtension(file.getAbsolutePath());
 		final String data;
 		if (extension.equalsIgnoreCase("properties")) {
@@ -230,39 +251,43 @@ public class Props implements Cloneable {
 			data = FileUtil.readString(file);
 		}
 		parse(data);
+		return this;
 	}
 
 	/**
 	 * Loads properties from the file in provided encoding.
 	 */
-	public void load(final File file, final String encoding) throws IOException {
+	public Props load(final File file, final String encoding) throws IOException {
 		parse(FileUtil.readString(file, encoding));
+		return this;
 	}
 
 	/**
 	 * Loads properties from input stream. Stream is not closed at the end.
 	 */
-	public void load(final InputStream in) throws IOException {
+	public Props load(final InputStream in) throws IOException {
 		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out);
 		parse(out.toString());
+		return this;
 	}
 
 	/**
 	 * Loads properties from input stream and provided encoding.
 	 * Stream is not closed at the end.
 	 */
-	public void load(final InputStream in, final String encoding) throws IOException {
+	public Props load(final InputStream in, final String encoding) throws IOException {
 		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out, encoding);
 		parse(out.toString());
+		return this;
 	}
 
 	/**
 	 * Loads base properties from the provided java properties.
 	 * Null values are ignored.
 	 */
-	public void load(final Map<?, ?> p) {
+	public Props load(final Map<?, ?> p) {
 		for (final Map.Entry<?, ?> entry : p.entrySet()) {
 			final String name = entry.getKey().toString();
 			final Object value = entry.getValue();
@@ -271,6 +296,7 @@ public class Props implements Cloneable {
 			}
 			data.putBaseProperty(name, value.toString(), false);
 		}
+		return this;
 	}
 
 	/**
@@ -278,7 +304,7 @@ public class Props implements Cloneable {
 	 * Null values are ignored.
 	 */
 	@SuppressWarnings("unchecked")
-	public void load(final Map<?, ?> map, final String prefix) {
+	public Props load(final Map<?, ?> map, final String prefix) {
 		String realPrefix = prefix;
 		realPrefix += '.';
 		for (final Map.Entry entry : map.entrySet()) {
@@ -289,25 +315,53 @@ public class Props implements Cloneable {
 			}
 			data.putBaseProperty(realPrefix + name, value.toString(), false);
 		}
+		return this;
 	}
 
 	/**
 	 * Loads system properties with given prefix.
 	 * If prefix is <code>null</code> it will not be ignored.
 	 */
-	public void loadSystemProperties(final String prefix) {
+	public Props loadSystemProperties(final String prefix) {
 		final Properties environmentProperties = System.getProperties();
 		load(environmentProperties, prefix);
+		return this;
 	}
 
 	/**
 	 * Loads environment properties with given prefix.
 	 * If prefix is <code>null</code> it will not be used.
 	 */
-	public void loadEnvironment(final String prefix) {
+	public Props loadEnvironment(final String prefix) {
 		final Map<String, String> environmentMap = System.getenv();
 		load(environmentMap, prefix);
+		return this;
 	}
+
+	/**
+	 * Loads props and properties from the classpath.
+	 */
+	public Props loadFromClasspath(final String... patterns) {
+		ClassScanner.create()
+			.registerEntryConsumer(entryData -> {
+				String usedEncoding = JoddCore.encoding;
+				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+					usedEncoding = StringPool.ISO_8859_1;
+				}
+
+				final String encoding = usedEncoding;
+				UncheckedException.runAndWrapException(() -> load(entryData.openInputStream(), encoding));
+			})
+			.includeResources(true)
+			.ignoreException(true)
+			.excludeCommonJars()
+			.excludeAllEntries(true)
+			.includeEntries(patterns)
+			.scanDefaultClasspath()
+			.start();
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- props
 
@@ -326,42 +380,113 @@ public class Props implements Cloneable {
 	 */
 	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
 	public String getBaseValue(final String key) {
-		return getValue(key, null);
+		return getValue(key, StringPool.EMPTY_ARRAY);
 	}
 
 	/**
-	 * Returns value of property, using active profiles.
+	 * Returns value of property, using active profiles, or {@code null} if property not found.
 	 */
 	public String getValue(final String key) {
 		initialize();
 		return data.lookupValue(key, activeProfiles);
 	}
 
+	/**
+	 * Returns value of property, using active profiles or default value if not found.
+	 */
+	public String getValueOrDefault(final String key, final String defaultValue) {
+		initialize();
+		final String value = data.lookupValue(key, activeProfiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value;
+	}
+
+	/**
+	 * Returns integer value of given property or {@code null} if property not found.
+	 */
 	public Integer getIntegerValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Integer.valueOf(value);
 	}
+
+	/**
+	 * Returns integer value or default one if property not defined.
+	 */
+	public Integer getIntegerValue(final String key, final Integer defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Integer.valueOf(value);
+	}
+
+	/**
+	 * Returns long value of given property or {@code null} if property not found.
+	 */
 	public Long getLongValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Long.valueOf(value);
 	}
+
+	/**
+	 * Returns long value or default one if property not defined.
+	 */
+	public Long getLongValue(final String key, final Long defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Long.valueOf(value);
+	}
+
+	/**
+	 * Returns double value of given property or {@code null} if property not found.
+	 */
 	public Double getDoubleValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Double.valueOf(value);
 	}
+
+	/**
+	 * Returns double value or default one if property not defined.
+	 */
+	public Double getDoubleValue(final String key, final Double defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Double.valueOf(value);
+	}
+
+	/**
+	 * Returns boolean value of given property or {@code null} if property not found.
+	 */
 	public Boolean getBooleanValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
+	/**
+	 * Returns boolean value or default one if property not defined.
+	 */
+	public Boolean getBooleanValue(final String key, final Boolean defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
 		}
 		return Boolean.valueOf(value);
 	}
@@ -377,30 +502,58 @@ public class Props implements Cloneable {
 	}
 
 	public Integer getIntegerValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Integer.valueOf(value);
 	}
+	public Integer getIntegerValue(final String key, final Integer defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Integer.valueOf(value);
+	}
 	public Long getLongValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Long.valueOf(value);
 	}
+	public Long getLongValue(final String key, final Long defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Long.valueOf(value);
+	}
 	public Double getDoubleValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Double.valueOf(value);
 	}
+	public Double getDoubleValue(final String key, final Double defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Double.valueOf(value);
+	}
 	public Boolean getBooleanValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key, final Boolean defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
 		}
 		return Boolean.valueOf(value);
 	}
@@ -466,7 +619,7 @@ public class Props implements Cloneable {
 	 * will not have the prefix.
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> innerMap(String prefix) {
+	public Map<String, Object> innerMap(final String prefix) {
 		initialize();
 		return data.extract(null, activeProfiles, null, prefix);
 	}
@@ -474,14 +627,14 @@ public class Props implements Cloneable {
 	/**
 	 * Adds child map to the props on given prefix.
 	 */
-	public void addInnerMap(String prefix, Map<?, ?> map) {
+	public void addInnerMap(final String prefix, final Map<?, ?> map) {
 		addInnerMap(prefix, map, null);
 	}
 
 	/**
 	 * Adds child map to the props on given prefix.
 	 */
-	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
+	public void addInnerMap(String prefix, final Map<?, ?> map, final String profile) {
 		if (!StringUtil.endsWithChar(prefix, '.')) {
 			prefix += StringPool.DOT;
 		}
@@ -561,7 +714,7 @@ public class Props implements Cloneable {
 	 * Returns all the profiles that define certain prop's key name.
 	 * Key name is given as a wildcard, or it can be matched fully.
 	 */
-	public String[] getProfilesFor(String propKeyNameWildcard) {
+	public String[] getProfilesFor(final String propKeyNameWildcard) {
 		HashSet<String> profiles = new HashSet<>();
 
 		profile:
@@ -578,7 +731,7 @@ public class Props implements Cloneable {
 			}
 		}
 
-		return profiles.toArray(new String[profiles.size()]);
+		return profiles.toArray(new String[0]);
 	}
 
 	/**

@@ -25,80 +25,67 @@
 
 package jodd.mail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import javax.mail.internet.AddressException;
 
-public class EmailAddressTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class EmailAddressTest {
+
+	private static final String ADMIN_JODD_COM = "admin@jodd.com";
+	private static final String JENNY_DOE = "Jenny Doe";
+	private static final String JENNY_DOE_SPACE = JENNY_DOE + " ";
+	private static final String JENNY_DOE_ADMIN_JODD_COM = "Jenny Doe <admin@jodd.com>";
 
 	@Test
-	public void testEmailAddress() {
-		EmailAddress emailAddress = new EmailAddress("igor@jodd.org");
+	void testMailFromString() {
+		EmailAddress mailAddress = EmailAddress.of(ADMIN_JODD_COM);
+		assertNull(mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals(ADMIN_JODD_COM, mailAddress.toString());
 
-		assertEquals(null, emailAddress.getPersonalName());
-		assertEquals("igor", emailAddress.getLocalPart());
-		assertEquals("jodd.org", emailAddress.getDomain());
-		assertTrue(emailAddress.isValid());
+		mailAddress = EmailAddress.of(JENNY_DOE_ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals(JENNY_DOE_ADMIN_JODD_COM, mailAddress.toString());
 
-		emailAddress = new EmailAddress("Vladimir <djs@gmail.com>");
-
-		assertEquals("Vladimir", emailAddress.getPersonalName());
-		assertEquals("djs", emailAddress.getLocalPart());
-		assertEquals("gmail.com", emailAddress.getDomain());
-
-		assertTrue(emailAddress.isValid());
+		mailAddress = EmailAddress.of(JENNY_DOE_SPACE, ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE_SPACE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals("Jenny Doe  <admin@jodd.com>", mailAddress.toString());
 	}
 
 	@Test
-	public void testValidEmails() {
-		assertTrue(new EmailAddress("bob @example.com").isValid());
-		assertTrue(new EmailAddress("\"bob\"  @  example.com").isValid());
-		assertTrue(new EmailAddress("\"bob\" (hi) @  example.com").isValid());
-		assertTrue(new EmailAddress("name.surname@example.com").isValid());
+	void testMailFromEmailAddress() {
+		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(ADMIN_JODD_COM);
+		assertNull(mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
 
-		assertTrue(new EmailAddress("devnull@onyxbits.de").isValid());
-		assertTrue(new EmailAddress("< devnull @ onyxbits.de >").isValid());
-		assertTrue(new EmailAddress("<devnull@onyxbits.de>").isValid());
-		assertFalse(new EmailAddress("Patrick devnull@onyxbits.de").isValid());
-		assertTrue(new EmailAddress("Patrick <devnull@onyxbits.de>").isValid());
-		assertTrue(new EmailAddress("Patrickdevnull@onyxbits.de").isValid());
-		assertFalse(new EmailAddress("\"Patrick Ahlbrecht\" devnull@onyxbits.de").isValid());
-		assertTrue(new EmailAddress("\"Patrick Ahlbrecht\" <devnull@onyxbits.de>").isValid());
-		assertTrue(new EmailAddress("Patrick Ahlbrecht <devnull@onyxbits.de>").isValid());
+		mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
 
-		assertFalse(new EmailAddress("Kayaks.org <kayaks@kayaks.org>").isValid());
-		assertTrue(new EmailAddress("\"Kayaks.org\" <kayaks@kayaks.org>").isValid());
-
-		assertFalse(new EmailAddress("[Kayaks] <kayaks@kayaks.org>").isValid());
-		assertTrue(new EmailAddress("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
+		final EmailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
+		assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
 	}
 
 	@Test
-	public void testReturnPath() {
-		assertTrue(new EmailAddress("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
-		assertFalse(new EmailAddress("\"[Kayaks]\" <kayaks@kayaks.org>").isValidReturnPath());
+	void testMailFromInternetAddress() throws AddressException {
+		final EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
+		final EmailAddress mailAddress2 = EmailAddress.of(mailAddress.toInternetAddress());
 
-		assertTrue(new EmailAddress("<kayaks@kayaks.org>").isValid());
-		assertTrue(new EmailAddress("<kayaks@kayaks.org>").isValidReturnPath());
+		assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
 	}
 
 	@Test
-	public void testCommentAsName() {
-		EmailAddress emailAddress = new EmailAddress("<bob@example.com> (Bob Smith)");
-		assertEquals("Bob Smith", emailAddress.getPersonalName());
+	void testIssue211() {
+		final String testAddress = "Some One<someone@yahoo.com>";
+		final EmailAddress addr = EmailAddress.of(testAddress);
 
-		emailAddress = new EmailAddress("\"bob smith\" <bob@example.com> (Bobby)");
-		assertEquals("bob smith", emailAddress.getPersonalName());
-
-		emailAddress = new EmailAddress("<bob@example.com> (Bobby)");
-		assertEquals("Bobby", emailAddress.getPersonalName());
-
-		emailAddress = new EmailAddress("bob@example.com (Bobby)");
-		assertEquals("Bobby", emailAddress.getPersonalName());
-
-		emailAddress = new EmailAddress("bob@example.com (Bob) (Smith)");
-		assertEquals("Bob", emailAddress.getPersonalName());
+		assertEquals("Some One <someone@yahoo.com>", addr.toString());
 	}
 }

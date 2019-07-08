@@ -29,18 +29,18 @@ import jodd.exception.UncheckedException;
 
 public class ProxettaException extends UncheckedException {
 
-	public ProxettaException(Throwable throwable) {
+	public ProxettaException(final Throwable throwable) {
 		super(throwable);
 	}
 
 	public ProxettaException() {
 	}
 
-	public ProxettaException(String string) {
+	public ProxettaException(final String string) {
 		super(string);
 	}
 
-	public ProxettaException(String string, Throwable throwable) {
+	public ProxettaException(final String string, final Throwable throwable) {
 		super(string, throwable);
 	}
 }

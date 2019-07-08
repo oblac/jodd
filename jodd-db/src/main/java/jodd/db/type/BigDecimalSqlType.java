@@ -35,7 +35,7 @@ public class BigDecimalSqlType extends SqlType<BigDecimal> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BigDecimal get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public BigDecimal get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getBigDecimal(index);
 	}
 
@@ -43,7 +43,7 @@ public class BigDecimalSqlType extends SqlType<BigDecimal> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, BigDecimal value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final BigDecimal value, final int dbSqlType) throws SQLException {
 		st.setBigDecimal(index, value);
 	}
 

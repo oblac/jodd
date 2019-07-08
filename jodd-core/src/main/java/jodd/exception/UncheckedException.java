@@ -25,8 +25,11 @@
 
 package jodd.exception;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.util.concurrent.Callable;
 
 /**
  * Unchecked exception and also a wrapper for checked exceptions.
@@ -48,13 +51,13 @@ public class UncheckedException extends RuntimeException {
 
 	// ---------------------------------------------------------------- constructors
 
-	public UncheckedException(Throwable t) {
+	public UncheckedException(final Throwable t) {
 		super(t.getMessage());
 		cause = t;
 		this.showCauseDetails = true;
 	}
 
-	public UncheckedException(Throwable t, boolean showCauseDetails) {
+	public UncheckedException(final Throwable t, final boolean showCauseDetails) {
 		super(t.getMessage());
 		cause = t;
 		this.showCauseDetails = showCauseDetails;
@@ -66,19 +69,19 @@ public class UncheckedException extends RuntimeException {
 		this.showCauseDetails = false;
 	}
 
-	public UncheckedException(String message) {
+	public UncheckedException(final String message) {
 		super(message);
 		cause = null;
 		this.showCauseDetails = false;
 	}
 
-	public UncheckedException(String message, Throwable t) {
+	public UncheckedException(final String message, final Throwable t) {
 		super(message, t);
 		cause = t;
 		this.showCauseDetails = true;
 	}
 
-	public UncheckedException(String message, Throwable t, boolean showCauseDetails) {
+	public UncheckedException(final String message, final Throwable t, final boolean showCauseDetails) {
 		super(message, t);
 		cause = t;
 		this.showCauseDetails = showCauseDetails;
@@ -92,7 +95,7 @@ public class UncheckedException extends RuntimeException {
 	}
 
 	@Override
-	public void printStackTrace(PrintStream ps) {
+	public void printStackTrace(final PrintStream ps) {
 		synchronized (ps) {
 			super.printStackTrace(ps);
 			if ((cause != null) && showCauseDetails) {
@@ -104,7 +107,7 @@ public class UncheckedException extends RuntimeException {
 	}
 
 	@Override
-	public void printStackTrace(PrintWriter pw) {
+	public void printStackTrace(final PrintWriter pw) {
 		synchronized (pw) {
 			super.printStackTrace(pw);
 			if ((cause != null) && showCauseDetails) {
@@ -131,24 +134,56 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static RuntimeException wrapChecked(Throwable t) {
-		if (t instanceof RuntimeException) {
-			return (RuntimeException) t;
+	public static <V> V callAndWrapException(final Callable<V> callable) {
+		try {
+			return callable.call();
 		}
+		catch (IOException ioex) {
+			throw new UncheckedIOException(ioex);
+		}
+		catch (RuntimeException rtex) {
+			throw rtex;
+		}
+		catch (Exception t) {
+			throw new UncheckedException(t);
+		}
+	}
+
+	@FunctionalInterface
+	public interface CallableVoid {
+		public void call() throws Exception;
+	}
+
+	/**
+	 * Wraps checked exceptions in a <code>UncheckedException</code>.
+	 * Unchecked exceptions are not wrapped.
+	 */
+	public static void runAndWrapException(final CallableVoid callable) {
+		try {
+			callable.call();
+		}
+		catch (IOException ioex) {
+			throw new UncheckedIOException(ioex);
+		}
+		catch (RuntimeException rtex) {
+			throw rtex;
+		}
+		catch (Exception t) {
+			throw new UncheckedException(t);
+		}
+	}
+
+	/**
+	 * Wraps all exceptions in a <code>UncheckedException</code>
+	 */
+	public static RuntimeException wrap(final Throwable t) {
 		return new UncheckedException(t);
 	}
 
 	/**
 	 * Wraps all exceptions in a <code>UncheckedException</code>
 	 */
-	public static RuntimeException wrap(Throwable t) {
-		return new UncheckedException(t);
-	}
-
-	/**
-	 * Wraps all exceptions in a <code>UncheckedException</code>
-	 */
-	public static RuntimeException wrap(Throwable t, String message) {
+	public static RuntimeException wrap(final Throwable t, final String message) {
 		return new UncheckedException(message, t);
 	}
 
@@ -172,5 +207,6 @@ public class UncheckedException extends RuntimeException {
 	public Throwable getCause() {
 		return cause;
 	}
+
 
 }

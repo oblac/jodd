@@ -33,6 +33,7 @@ import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.db.type.SqlType;
 import jodd.introspector.PropertyDescriptor;
+import jodd.util.StringUtil;
 
 /**
  * Meta-data resolving utils.
@@ -45,9 +46,9 @@ public class DbMetaUtil {
 	 * type is not annotated, table name will be set to wildcard pattern '*'
 	 * (to match all tables).
 	 */
-	public static String resolveTableName(Class<?> type, TableNamingStrategy tableNamingStrategy) {
+	public static String resolveTableName(final Class<?> type, final TableNamingStrategy tableNamingStrategy) {
 		String tableName = null;
-		DbTable dbTable = type.getAnnotation(DbTable.class);
+		final DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
 			tableName = dbTable.value().trim();
 		}
@@ -58,15 +59,16 @@ public class DbMetaUtil {
 				tableName = tableNamingStrategy.applyToTableName(tableName);
 			}
 		}
-		return tableName;
+
+		return quoteIfRequired(tableName, tableNamingStrategy.isAlwaysQuoteNames(), tableNamingStrategy.getQuoteChar());
 	}
 
 	/**
 	 * Resolves schema name from a type. Uses default schema name if not specified.
 	 */
-	public static String resolveSchemaName(Class<?> type, String defaultSchemaName) {
+	public static String resolveSchemaName(final Class<?> type, final String defaultSchemaName) {
 		String schemaName = null;
-		DbTable dbTable = type.getAnnotation(DbTable.class);
+		final DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
 			schemaName = dbTable.schema().trim();
 		}
@@ -79,7 +81,7 @@ public class DbMetaUtil {
 	/**
 	 * Returns <code>true</code> if class is annotated with <code>DbTable</code> annotation.
 	 */
-	public static boolean resolveIsAnnotated(Class<?> type) {
+	public static boolean resolveIsAnnotated(final Class<?> type) {
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		return dbTable != null;
 	}
@@ -90,10 +92,10 @@ public class DbMetaUtil {
 	 * if entity is annotated. Otherwise, column name is generated from the property name.
 	 */
 	public static DbEntityColumnDescriptor resolveColumnDescriptors(
-			DbEntityDescriptor dbEntityDescriptor,
-			PropertyDescriptor property,
-			boolean isAnnotated,
-			ColumnNamingStrategy columnNamingStrategy) {
+		final DbEntityDescriptor dbEntityDescriptor,
+		final PropertyDescriptor property,
+		final boolean isAnnotated,
+		final ColumnNamingStrategy columnNamingStrategy) {
 
 		String columnName = null;
 		boolean isId = false;
@@ -140,7 +142,8 @@ public class DbMetaUtil {
 			}
 		}
 
-		if ((columnName == null) || (columnName.length() == 0)) {
+		if (StringUtil.isEmpty(columnName)) {
+			// default annotation value
 			columnName = columnNamingStrategy.convertPropertyNameToColumnName(property.getName());
 		} else {
 			if (!columnNamingStrategy.isStrictAnnotationNames()) {
@@ -152,17 +155,35 @@ public class DbMetaUtil {
 		}
 
 		return new DbEntityColumnDescriptor(
-				dbEntityDescriptor, columnName, property.getName(), property.getType(), isId, sqlTypeClass);
+			dbEntityDescriptor,
+			quoteIfRequired(columnName, columnNamingStrategy.isAlwaysQuoteNames(), columnNamingStrategy.getQuoteChar()),
+			property.getName(),
+			property.getType(),
+			isId,
+			sqlTypeClass);
 	}
 
 	/**
 	 * Resolves mapped types from {@link jodd.db.oom.meta.DbMapTo} annotation.
 	 */
-	public static Class[] resolveMappedTypes(Class type) {
+	public static Class[] resolveMappedTypes(final Class type) {
 		DbMapTo dbMapTo = (DbMapTo) type.getAnnotation(DbMapTo.class);
 		if (dbMapTo == null) {
 			return null;
 		}
 		return dbMapTo.value();
 	}
+
+	// ---------------------------------------------------------------- privates
+
+	private static String quoteIfRequired(final String name, final boolean alwaysQuoteNames, final char quoteChar) {
+		if (StringUtil.detectQuoteChar(name) != 0) {
+			return name;   // already quoted
+		}
+		if (alwaysQuoteNames && quoteChar != 0) {
+			return quoteChar + name + quoteChar;
+		}
+		return name;
+	}
+
 }

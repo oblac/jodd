@@ -25,8 +25,11 @@
 
 package jodd.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
- * Various math utilities.
+ * Various math utilities. <br/>
+ * <b>note:</b> Any random values from this class are not cryptographically secure!
  */
 public class MathUtil {
 
@@ -34,7 +37,7 @@ public class MathUtil {
 	 * Converts char digit into integer value.
 	 * Accepts numeric chars (0 - 9) as well as letter (A-z).
 	 */
-	public static int parseDigit(char digit) {
+	public static int parseDigit(final char digit) {
 		if ((digit >= '0') && (digit <= '9')) {
 			return digit - '0';
 		}
@@ -47,7 +50,6 @@ public class MathUtil {
 	/**
 	 * Generates pseudo-random long from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}.
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
@@ -55,36 +57,35 @@ public class MathUtil {
 	 * @return pseudo-random value
 	 */
 
-	public static long randomLong(long min, long max) {
-		return min + (long)(Math.random() * (max - min));
+	public static long randomLong(final long min, final long max) {
+		return min + (long)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 
 	/**
 	 * Generates pseudo-random integer from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}. 
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
 	 *
 	 * @return pseudo-random value
 	 */
-	public static int randomInt(int min, int max) {
-		return min + (int)(Math.random() * (max - min));
+	public static int randomInt(final int min, final int max) {
+		return min + (int)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is even.
 	 */
-	public static boolean isEven(int x) {
+	public static boolean isEven(final int x) {
 		return (x % 2) == 0;
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is odd.
 	 */
-	public static boolean isOdd(int x) {
+	public static boolean isOdd(final int x) {
 		return (x % 2) != 0;
 	}
 

@@ -28,46 +28,44 @@ package jodd.vtor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.vtor.constraint.Max;
 import jodd.vtor.constraint.Min;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class ValidationContextTest {
+class ValidationContextTest {
 
     @Test
-    public void testResolveFor() throws Exception {
+    void testResolveFor() throws Exception {
         //when
         //Class ForCheck1 contains two fields. field1 has two constraints. Second field2 has a non constraint annotation
         ValidationContext context = ValidationContext.resolveFor(ClassForCheck1.class);
 
         //then
-        assertEquals("context must return a map with one element when resolve an object which has one field with constraint annotations", context.map.size(), 1);
-        assertNotNull("context must return a map with key field1 when resolve an object which has field with name field1 and constraint annotations", context.map.get("field1"));
-        assertNull("context must not return a map with key field2 when resolve an object which has a field with name field2 without constraint annotations", context.map.get("field2"));
-        assertEquals("context must return a map with two checks when resolve an object which has a field with two constraint annotations", context.map.get("field1").size(), 2);
+        assertEquals(context.map.size(), 1, "context must return a map with one element when resolve an object which has one field with constraint annotations");
+        assertNotNull(context.map.get("field1"), "context must return a map with key field1 when resolve an object which has field with name field1 and constraint annotations");
+        assertNull(context.map.get("field2"), "context must not return a map with key field2 when resolve an object which has a field with name field2 without constraint annotations");
+        assertEquals(context.map.get("field1").size(), 2, "context must return a map with two checks when resolve an object which has a field with two constraint annotations");
     }
 
-    @Test(expected = VtorException.class)
-    public void testAddClassThrowVtorException() throws Exception {
+    @Test
+    void testAddClassThrowVtorException() throws Exception {
         ValidationContext context = new ValidationContext() {
             @Override
             protected <V extends ValidationConstraint> V newConstraint(Class<V> constraint, Class targetType) throws Exception {
                 throw new RuntimeException("terrible error");
             }
         };
-        context.addClassChecks(ClassForCheck1.class);
-        fail("when newConstraint throws some Exception then method should throws VtorException");
+        assertThrows(VtorException.class, () -> context.addClassChecks(ClassForCheck1.class));
     }
 
     @Test
-    public void testCollectPropertyAnnotationChecks(){
+    void testCollectPropertyAnnotationChecks(){
         ValidationContext context = spy(new ValidationContext());
         PropertyDescriptor propertyDescriptor = mock(PropertyDescriptor.class);
         List<Check> list = new ArrayList<>();
@@ -76,7 +74,7 @@ public class ValidationContextTest {
     }
 
     @Test
-    public void testAddClassChecksWithCache() throws Exception {
+    void testAddClassChecksWithCache() throws Exception {
         ValidationContext context = spy(new ValidationContext());
         try {
             context.addClassChecks(ClassForCheck1.class);

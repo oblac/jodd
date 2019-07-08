@@ -25,11 +25,10 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.MadvocController;
-import jodd.servlet.DispatcherUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.component.MadvocController;
+import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -43,9 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * <code>Madvoc</code> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
- * of the Madvoc framework. If {@link Madvoc} @{link WebApplication} is not already created,
- * this filter will initialize and configure the Madvoc using filter init parameters.
+ * <b>Madvoc</b> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
+ * of the Madvoc framework.
  */
 public class MadvocServletFilter implements Filter {
 
@@ -57,49 +55,49 @@ public class MadvocServletFilter implements Filter {
 	/**
 	 * Filter initialization.
 	 */
-	public void init(FilterConfig filterConfig) throws ServletException {
-		ServletContext servletContext = filterConfig.getServletContext();
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
+		final ServletContext servletContext = filterConfig.getServletContext();
 
 		madvoc = Madvoc.get(servletContext);
-		if (madvoc == null) {
-			madvoc = createMadvoc(filterConfig);
 
-			try {
-				madvoc.startNewWebApplication(servletContext);
-			} catch (Exception ex) {
-				throw new ServletException("Madvoc web application error", ex);
-			}
+		if (madvoc != null) {
+			log = LoggerFactory.getLogger(this.getClass());
+
+			madvocController =
+				madvoc.webapp().madvocContainer().requestComponent(MadvocController.class);
+
+			return;
 		}
 
-		log = LoggerFactory.getLogger(MadvocServletFilter.class);
+		final WebApp webApp = WebApp.get(servletContext);
 
-		madvocController = madvoc.getMadvocController();
-	}
+		if (webApp != null) {
+			log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * Creates {@link Madvoc Madvoc web application} if not already created.
-	 * Override it to set custom {@link MadvocConfig Madvoc configurator} or other core settings.
-	 */
-	protected Madvoc createMadvoc(FilterConfig filterConfig) {
-		Madvoc madvoc = new Madvoc();
-		madvoc.configure(filterConfig);
-		return madvoc;
+			madvocController =
+				webApp.madvocContainer().requestComponent(MadvocController.class);
+
+			return;
+		}
+
+		throw new ServletException("Neither Madvoc or WebApp found! Use MadvocContextListener to create Madvoc or " +
+			"WebApp#withServletContext() to make it available.");
 	}
 
 	/**
 	 * Filter destruction.
 	 */
-	public void destroy() {
-		madvoc.stopWebApplication();
-	}
+	@Override
+	public void destroy() {}
 
 	// ---------------------------------------------------------------- do filter
-
 
 	/**
 	 * Builds {@link ActionRequest} and invokes it. If action result is a chain, it repeats the process.
 	 */
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+	@Override
+	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
@@ -116,22 +114,21 @@ public class MadvocServletFilter implements Filter {
 		}
 		if (actionPath != null) {	// action path is not consumed
 
-			actionPath = processUnhandledPath(actionPath, req, res);
+			boolean pathProcessed = processUnhandledPath(actionPath, req, res);
 
-			if (actionPath != null) {
+			if (!pathProcessed) {
 				chain.doFilter(request, response);
 			}
 		}
 	}
 
 	/**
-	 * Process unconsumed action paths. Returns <code>null</code> if action path is consumed,
-	 * otherwise returns action path to be consumed by filter chain.
-	 * By default it just returns action path.
+	 * Process unconsumed action paths. Returns {@code true} if action path is consumed,
+	 * otherwise returns {@code false} so to be consumed by filter chain.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected String processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response) throws IOException, ServletException {
-		return actionPath;
+	protected boolean processUnhandledPath(final String actionPath, final ServletRequest request, final ServletResponse response) {
+		return false;
 	}
 
 }

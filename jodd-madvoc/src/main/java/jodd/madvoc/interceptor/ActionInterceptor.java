@@ -33,6 +33,11 @@ import jodd.madvoc.ActionWrapper;
  */
 public interface ActionInterceptor extends ActionWrapper {
 
+	@Override
+	default Object apply(final ActionRequest actionRequest) throws Exception {
+		return intercept(actionRequest);
+	}
+
 	/**
 	 * Intercepts action requests.
 	 */

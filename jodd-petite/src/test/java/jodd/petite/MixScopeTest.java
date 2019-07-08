@@ -25,29 +25,34 @@
 
 package jodd.petite;
 
-import jodd.petite.mix.Big;
-import jodd.petite.mix.Big2;
-import jodd.petite.mix.Small;
+import jodd.petite.fixtures.mix.Big;
+import jodd.petite.fixtures.mix.Big2;
+import jodd.petite.fixtures.mix.Small;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-public class MixScopeTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class MixScopeTest {
 
 	@Test
-	public void testPrototypeInSingleton() {
+	void testPrototypeInSingleton() {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
-		Big big = (Big) pc.getBean("big");
+		Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -56,29 +61,33 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		assertEquals("small 2", small1.name());	// calling any method of small will create a new (target) instance of 'small'
+		assertTrue(small1.toString().equals(small2.toString()));
 
-		assertEquals("small 3", small2.name());
+		assertEquals("small 1", small1.name());
+		assertEquals("small 1", small2.name());
 
-		assertEquals(3, Small.instanceCounter);
+		assertEquals(1, Small.instanceCounter);
 
-		assertFalse(small1.toString().equals(small2.toString()));
+		Big big2 = pc.getBean("big2");
+		Small small3 = big2.getSmall();
 
-		assertEquals(5, Small.instanceCounter);
+		assertEquals("small 2", small3.name());
+
+		assertEquals(2, Small.instanceCounter);
 	}
 
 	@Test
-	public void testPrototypeInSingleton2() {
+	void testPrototypeInSingleton2() {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
-		Big2 big = (Big2) pc.getBean("big");
+		Big2 big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -87,31 +96,30 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		assertEquals("small 2", small1.name());	// calling any method of small will create a new (target) instance of 'small'
+		assertEquals("small 1", small1.name());
+		assertEquals("small 1", small2.name());
 
-		assertEquals("small 3", small2.name());
+		assertEquals(1, Small.instanceCounter);
 
-		assertEquals(3, Small.instanceCounter);
+		assertTrue(small1.toString().equals(small2.toString()));
 
-		assertFalse(small1.toString().equals(small2.toString()));
-
-		assertEquals(5, Small.instanceCounter);
+		assertEquals(1, Small.instanceCounter);
 	}
 
 	@Test
-	public void testSingleFactoryInstance() {
+	void testSingleFactoryInstance() {
 
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
-		Big big = (Big) pc.getBean("big");
+		Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -120,29 +128,29 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		Big big2 = (Big) pc.getBean("big2");
+		Big big2 = pc.getBean("big2");
 
 		Small small3 = big2.getSmall();
 		Small small4 = big2.getSmall();
 
 		assertSame(small3, small4);				// factory !!!
 
-		assertSame(small1, small4);
+		assertNotSame(small1, small4);
 	}
 
 	@Test
-	public void testThreadLocalScopeInSingleton() {
+	void testThreadLocalScopeInSingleton() {
 
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false, null);
 
-		final Big big = (Big) pc.getBean("big");
+		final Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();

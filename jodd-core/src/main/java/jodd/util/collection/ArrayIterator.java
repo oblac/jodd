@@ -38,13 +38,13 @@ public class ArrayIterator<E> implements Iterator<E>, Serializable {
 	private int ndx;
 	private final int endNdx;
 
-	public ArrayIterator(E[] array) {
+	public ArrayIterator(final E[] array) {
 		this.array = array;
 		ndx = 0;
 		endNdx = array.length;
 	}
 
-	public ArrayIterator(E[] array, int offset, int len) {
+	public ArrayIterator(final E[] array, final int offset, final int len) {
 		this.array = array;
 		ndx = offset;
 		endNdx = offset + len;

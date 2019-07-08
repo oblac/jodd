@@ -41,7 +41,7 @@ import jodd.util.StringUtil;
  */
 public class IntegerConverter implements TypeConverter<Integer> {
 
-	public Integer convert(Object value) {
+	public Integer convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

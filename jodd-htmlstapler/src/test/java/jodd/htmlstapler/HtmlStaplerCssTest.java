@@ -25,14 +25,14 @@
 
 package jodd.htmlstapler;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HtmlStaplerCssTest {
+class HtmlStaplerCssTest {
 
 	@Test
-	public void testRelativeCssUrls() {
+	void testRelativeCssUrls() {
 
 
 		HtmlStaplerBundlesManager htmlStapler = new HtmlStaplerBundlesManager("/", "", HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY);

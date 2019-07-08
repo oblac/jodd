@@ -109,7 +109,7 @@ task distroZip(type: Zip) {
 	from '../README.md'
 	from '../LICENSE'
 
-	def addonModules = [':jodd-swingspy', ':jodd-joy']
+	def addonModules = [':jodd-joy']
 
 	addonModules.each{ addon->
 		rootProject.project(addon).tasks.withType(Jar).each { jar ->

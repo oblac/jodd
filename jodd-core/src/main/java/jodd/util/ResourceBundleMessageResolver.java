@@ -26,26 +26,26 @@
 package jodd.util;
 
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.MissingResourceException;
 
 /**
  * Resolves messages from resource bundles.
  */
 public class ResourceBundleMessageResolver {
 
-	protected Locale fallbackLocale = LocaleUtil.getLocale("en");
+	protected Locale fallbackLocale = Locale.forLanguageTag("en");
 	protected String fallbackBundlename = "messages";
 	protected List<String> defaultBundles = new ArrayList<>();
 	protected boolean cacheResourceBundles = true;
 
-	public void addDefaultBundle(String bundleName) {
+	public void addDefaultBundle(final String bundleName) {
 		defaultBundles.add(bundleName);
 	}
 
@@ -58,7 +58,7 @@ public class ResourceBundleMessageResolver {
 	/**
 	 * Calculates indexedTextName (collection[*]) if applicable.
 	 */
-	private String calcIndexKey(String key) {
+	private String calcIndexKey(final String key) {
 		String indexedKey = null;
 		if (key.indexOf('[') != -1) {
 			int i = -1;
@@ -75,7 +75,7 @@ public class ResourceBundleMessageResolver {
 
 
 
-	private String getMessage(String bundleName, Locale locale, String key, String indexedKey) {
+	private String getMessage(final String bundleName, final Locale locale, final String key, final String indexedKey) {
 		String msg = getMessage(bundleName, locale, key);
 		if (msg != null) {
 			return msg;
@@ -94,7 +94,7 @@ public class ResourceBundleMessageResolver {
 	 * examined until the root bundle. At the end, if still no success, all default
 	 * bundles will be examined. Returns <code>null</code> if key is not found.
 	 */
-	public String findMessage(String bundleName, Locale locale, String key) {
+	public String findMessage(String bundleName, final Locale locale, final String key) {
 
 		String indexedKey = calcIndexKey(key);
 
@@ -133,7 +133,7 @@ public class ResourceBundleMessageResolver {
 	/**
 	 * Finds message in default bundles only, starting from fallback bundlename.
 	 */
-	public String findDefaultMessage(Locale locale, String key) {
+	public String findDefaultMessage(final Locale locale, final String key) {
 		String indexedKey = calcIndexKey(key);
 
 		String msg = getMessage(fallbackBundlename, locale, key, indexedKey);
@@ -156,7 +156,7 @@ public class ResourceBundleMessageResolver {
 	 * Gets the message from the named resource bundle. Performs the failback only when
 	 * bundle name or locale are not specified (i.e. are <code>null</code>).
 	 */
-	public String getMessage(String bundleName, Locale locale, String key) {
+	public String getMessage(final String bundleName, final Locale locale, final String key) {
 		ResourceBundle bundle = findResourceBundle(bundleName, locale);
 		if (bundle == null) {
 			return null;
@@ -197,7 +197,7 @@ public class ResourceBundleMessageResolver {
 				return null;
 			}
 		}
-		String key = bundleName + '_' + LocaleUtil.resolveLocaleCode(locale);
+		String key = bundleName + '_' + locale.toLanguageTag();
 		try {
 			if (!misses.contains(key)) {
 				ResourceBundle bundle = notmisses.get(key);
@@ -217,7 +217,7 @@ public class ResourceBundleMessageResolver {
 	 * Returns specified bundle. Invoked every time if cache is disabled.
 	 * Input arguments are always valid.
 	 */
-	protected ResourceBundle getBundle(String bundleName, Locale locale, ClassLoader classLoader) {
+	protected ResourceBundle getBundle(final String bundleName, final Locale locale, final ClassLoader classLoader) {
 		return ResourceBundle.getBundle(bundleName, locale, classLoader);
 	}
 
@@ -228,7 +228,7 @@ public class ResourceBundleMessageResolver {
 		return fallbackBundlename;
 	}
 
-	public void setFallbackBundlename(String fallbackBundlename) {
+	public void setFallbackBundlename(final String fallbackBundlename) {
 		this.fallbackBundlename = fallbackBundlename;
 	}
 
@@ -236,19 +236,19 @@ public class ResourceBundleMessageResolver {
 		return fallbackLocale;
 	}
 
-	public void setFallbackLocale(Locale fallbackLocale) {
+	public void setFallbackLocale(final Locale fallbackLocale) {
 		this.fallbackLocale = fallbackLocale;
 	}
 
-	public void setFallbackLocale(String localeCode) {
-		this.fallbackLocale = LocaleUtil.getLocale(localeCode);
+	public void setFallbackLocale(final String localeCode) {
+		this.fallbackLocale = Locale.forLanguageTag(localeCode);
 	}
 
 	public boolean isCacheResourceBundles() {
 		return cacheResourceBundles;
 	}
 
-	public void setCacheResourceBundles(boolean cacheResourceBundles) {
+	public void setCacheResourceBundles(final boolean cacheResourceBundles) {
 		this.cacheResourceBundles = cacheResourceBundles;
 	}
 }

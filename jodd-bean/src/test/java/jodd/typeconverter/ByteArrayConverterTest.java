@@ -26,18 +26,23 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ByteArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arrd;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ByteArrayConverterTest {
+class ByteArrayConverterTest {
 
-	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.lookup(byte[].class);
+	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.get().lookup(byte[].class);
 
 	@Test
-	public void testArrayConversion() {
+	void testArrayConversion() {
 		assertNull(byteArrayConverter.convert(null));
 
 		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(arrb(1, 7, 3)));
@@ -53,7 +58,7 @@ public class ByteArrayConverterTest {
 	}
 
 	@Test
-	public void testNonArrayConversion() {
+	void testNonArrayConversion() {
 		assertEq(arrb(7), byteArrayConverter.convert(Byte.valueOf((byte) 7)));
 		assertEq(arrb(7), byteArrayConverter.convert(Integer.valueOf(7)));
 		assertEq(arrb(7), byteArrayConverter.convert("7"));

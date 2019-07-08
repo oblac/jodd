@@ -25,10 +25,10 @@
 
 package jodd.cache;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Objects;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  * Default implementation of timed and size cache map.
@@ -44,7 +44,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	class CacheObject<K2,V2> {
-		CacheObject(K2 key, V2 object, long ttl) {
+		CacheObject(final K2 key, final V2 object, final long ttl) {
 			this.key = key;
 			this.cachedObject = object;
 			this.ttl = ttl;
@@ -71,11 +71,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
     }
 
 	protected Map<K,CacheObject<K,V>> cacheMap;
-
-	private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
-	private final Lock readLock = cacheLock.readLock();
-	private final Lock writeLock = cacheLock.writeLock();
-
+	private final StampedLock lock = new StampedLock();
 
 	// ---------------------------------------------------------------- properties
 
@@ -84,7 +80,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getCacheSize() {
+	@Override
+	public int limit() {
 		return cacheSize;
 	}
 
@@ -94,7 +91,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * Returns default cache timeout or <code>0</code> if it is not set.
 	 * Timeout can be set individually for each object.
 	 */
-	public long getCacheTimeout() {
+	@Override
+	public long timeout() {
 		return timeout;
 	}
 
@@ -119,7 +117,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void put(K key, V object) {
+	@Override
+	public void put(final K key, final V object) {
 		put(key, object, timeout);
 	}
 
@@ -127,8 +126,11 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void put(K key, V object, long timeout) {
-		writeLock.lock();
+	@Override
+	public void put(final K key, final V object, final long timeout) {
+		Objects.requireNonNull(object);
+
+		final long stamp = lock.writeLock();
 
 		try {
 			CacheObject<K,V> co = new CacheObject<>(key, object, timeout);
@@ -141,7 +143,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			cacheMap.put(key, co);
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -168,8 +170,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public V get(K key) {
-		readLock.lock();
+	@Override
+	public V get(final K key) {
+		long stamp = lock.readLock();
 
 		try {
 			CacheObject<K,V> co = cacheMap.get(key);
@@ -178,8 +181,22 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				return null;
 			}
 			if (co.isExpired()) {
-				// remove(key);		// can't upgrade the lock
-				cacheMap.remove(key);
+				final long newStamp = lock.tryConvertToWriteLock(stamp);
+
+				if (newStamp != 0L) {
+					stamp = newStamp;
+					// lock is upgraded to write lock
+				}
+				else {
+					// manually upgrade lock to write lock
+					lock.unlockRead(stamp);
+					stamp = lock.writeLock();
+				}
+
+				CacheObject<K,V> removedCo = cacheMap.remove(key);
+				if (removedCo != null) {
+					onRemove(removedCo.key, removedCo.cachedObject);
+				}
 
 				missCount++;
 				return null;
@@ -189,15 +206,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			return co.getObject();
 		}
 		finally {
-			readLock.unlock();
+			lock.unlock(stamp);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<V> iterator() {
-		return new CacheValuesIterator<>(this);
 	}
 
 	// ---------------------------------------------------------------- prune
@@ -210,13 +220,14 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final int prune() {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			return pruneCache();
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -225,6 +236,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isFull() {
 		if (cacheSize == 0) {
 			return false;
@@ -232,7 +244,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		return cacheMap.size() >= cacheSize;
 	}
 
-	protected boolean isReallyFull(K key) {
+	protected boolean isReallyFull(final K key) {
 		if (cacheSize == 0) {
 			return false;
 		}
@@ -247,33 +259,42 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void remove(K key) {
-		writeLock.lock();
+	@Override
+	public V remove(final K key) {
+		V removedValue = null;
+		final long stamp = lock.writeLock();
 		try {
-			cacheMap.remove(key);
+			CacheObject<K,V> co = cacheMap.remove(key);
+
+			if (co != null) {
+				onRemove(co.key, co.cachedObject);
+				removedValue = co.cachedObject;
+			}
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
+		return removedValue;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void clear() {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			cacheMap.clear();
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int size() {
 		return cacheMap.size();
 	}
@@ -281,7 +302,33 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isEmpty() {
 		return size() == 0;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<K, V> snapshot() {
+		final long stamp = lock.writeLock();
+		try {
+			Map<K, V> map = new HashMap<>(cacheMap.size());
+			cacheMap.forEach((key, cacheValue) -> map.put(key, cacheValue.getObject()));
+			return map;
+		}
+		finally {
+			lock.unlockWrite(stamp);
+		}
+	}
+
+	// ---------------------------------------------------------------- protected
+
+	/**
+	 * Callback called on item removal. The cache is still locked.
+	 */
+	protected void onRemove(final K key, final V cachedObject) {
+	}
+
 }

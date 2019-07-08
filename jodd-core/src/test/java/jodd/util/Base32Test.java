@@ -25,21 +25,21 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Base32Test {
+class Base32Test {
 
 	@Test
-	public void testEncode32() {
+	void testEncode32() {
 		assertEquals("", Base32.encode("".getBytes()));
 		assertEquals("MY", Base32.encode("f".getBytes()));
 		assertEquals("MZXW6YTBOI", Base32.encode("foobar".getBytes()));
 	}
 
 	@Test
-	public void testDecode32() {
+	void testDecode32() {
 		assertEquals("foobar", new String(Base32.decode("MZXW6YTBOI")));
 		assertEquals("f", new String(Base32.decode("MY")));
 	}
@@ -66,7 +66,7 @@ public class Base32Test {
 			"WMIBWGQQHG6LNMJXWY4ZO";
 
 	@Test
-	public void testText() {
+	void testText() {
 		assertEquals(base32, Base32.encode(text.getBytes()));
 		assertEquals(text, new String(Base32.decode(base32)));
 	}

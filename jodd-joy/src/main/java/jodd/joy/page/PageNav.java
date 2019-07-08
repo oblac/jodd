@@ -35,15 +35,15 @@ public class PageNav {
 	protected int from;
 	protected int to;
 
-	public PageNav(PageData pageData) {
+	public PageNav(final PageData pageData) {
 		this(pageData.getTotalPages(), pageData.getCurrentPage(), DEFAULT_SHOWN);
 	}
 
-	public PageNav(PageData pageData, int shown) {
+	public PageNav(final PageData pageData, final int shown) {
 		this(pageData.getTotalPages(), pageData.getCurrentPage(), shown);
 	}
 
-	public PageNav(int total, int current, int shown) {
+	public PageNav(final int total, final int current, final int shown) {
 		if (total == 0) {
 			return;
 		}

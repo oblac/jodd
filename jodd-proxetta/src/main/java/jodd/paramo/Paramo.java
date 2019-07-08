@@ -25,14 +25,16 @@
 
 package jodd.paramo;
 
+import jodd.asm7.ClassReader;
+import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.asm5.ClassReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 /**
  * Extracts method or constructor parameter names from bytecode debug information in runtime.
@@ -47,30 +49,34 @@ public class Paramo {
 	 * No caching is involved in this process, i.e. class bytecode
 	 * is examined every time this method is called.
 	 */
-	public static MethodParameter[] resolveParameters(AccessibleObject methodOrCtor) {
-		Class[] paramTypes;
-		Class declaringClass;
-		String name;
+	public static MethodParameter[] resolveParameters(final AccessibleObject methodOrCtor) {
+		final Class[] paramTypes;
+		final Parameter[] parameters;
+		final Class declaringClass;
+		final String name;
+
 		if (methodOrCtor instanceof Method) {
-			Method method = (Method) methodOrCtor;
+			final Method method = (Method) methodOrCtor;
 			paramTypes = method.getParameterTypes();
 			name = method.getName();
 			declaringClass = method.getDeclaringClass();
+			parameters = method.getParameters();
 		} else {
-			Constructor constructor = (Constructor) methodOrCtor;
+			final Constructor constructor = (Constructor) methodOrCtor;
 			paramTypes = constructor.getParameterTypes();
 			declaringClass = constructor.getDeclaringClass();
 			name = CTOR_METHOD;
+			parameters = constructor.getParameters();
 		}
 
 		if (paramTypes.length == 0) {
 			return MethodParameter.EMPTY_ARRAY;
 		}
 
-		InputStream stream;
+		final InputStream stream;
 		try {
 			stream = ClassLoaderUtil.getClassAsStream(declaringClass);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new ParamoException("Failed to read class bytes: " + declaringClass.getName(), ioex);
 		}
 
@@ -79,12 +85,16 @@ public class Paramo {
 		}
 
 		try {
-			ClassReader reader = new ClassReader(stream);
-			MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes);
+			final ClassReader reader = new ClassReader(stream);
+			final MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes, parameters);
 			reader.accept(visitor, 0);
 			return visitor.getResolvedParameters();
-		} catch (IOException ioex) {
+		}
+		catch (final IOException ioex) {
 			throw new ParamoException(ioex);
+		}
+		finally {
+			StreamUtil.close(stream);
 		}
 	}
 

@@ -32,24 +32,16 @@ import jodd.util.StringUtil;
  * Simple interceptor that measures time and prints out information about invoked actions.
  * User may inherit it and change the way message is printed.
  */
-public class EchoInterceptor extends BaseActionInterceptor {
+public class EchoInterceptor implements ActionInterceptor {
 
 	protected String prefixIn = "-----> ";
 	protected String prefixOut = "<----- ";
 
-	public String getPrefixIn() {
-		return prefixIn;
-	}
-
-	public void setPrefixIn(String prefixIn) {
+	public void setPrefixIn(final String prefixIn) {
 		this.prefixIn = prefixIn;
 	}
 
-	public String getPrefixOut() {
-		return prefixOut;
-	}
-
-	public void setPrefixOut(String prefixOut) {
+	public void setPrefixOut(final String prefixOut) {
 		this.prefixOut = prefixOut;
 	}
 
@@ -58,7 +50,8 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	/**
 	 * Measure action invocation time.
 	 */
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	@Override
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		printBefore(actionRequest);
 		long startTime = System.currentTimeMillis();
 		Object result = null;
@@ -81,10 +74,10 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * Prints out the message. User can override this method and modify the way
 	 * the message is printed.
 	 */
-	protected void printBefore(ActionRequest request) {
+	protected void printBefore(final ActionRequest request) {
 		StringBuilder message = new StringBuilder(prefixIn);
 
-		message.append(request.getActionPath()).append("   [").append(request.getActionConfig().getActionString()).append(']');
+		message.append(request.getActionPath()).append("   [").append(request.getActionRuntime().createActionString()).append(']');
 		out(message.toString());
 	}
 
@@ -92,7 +85,7 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * Prints out the message. User can override this method and modify the way
 	 * the message is printed.
 	 */
-	protected void printAfter(ActionRequest request, long executionTime, Object result) {
+	protected void printAfter(final ActionRequest request, final long executionTime, final Object result) {
 		StringBuilder message = new StringBuilder(prefixOut);
 
 		String resultString = StringUtil.toSafeString(result);
@@ -109,7 +102,7 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	/**
 	 * Outputs info message. By default, it outputs it to console.
 	 */
-	protected void out(String message) {
+	protected void out(final String message) {
 		System.out.println(message);
 	}
 

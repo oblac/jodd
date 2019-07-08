@@ -25,52 +25,63 @@
 
 package jodd.proxetta;
 
+import jodd.bridge.DefineClass;
 import jodd.io.FastByteArrayOutputStream;
+import jodd.proxetta.fixtures.inv.Inter;
+import jodd.proxetta.fixtures.inv.MySystem;
+import jodd.proxetta.fixtures.inv.One;
+import jodd.proxetta.fixtures.inv.OneWithSuper;
+import jodd.proxetta.fixtures.inv.Replacer;
+import jodd.proxetta.fixtures.inv.TimeClass;
+import jodd.proxetta.fixtures.inv.Two;
+import jodd.proxetta.fixtures.inv.Wimp;
 import jodd.proxetta.impl.InvokeProxetta;
-import jodd.proxetta.inv.*;
-import jodd.util.ClassLoaderUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class InvReplTest {
+class InvReplTest {
 
 	@Test
-	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
+	void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte[] klazz = proxetta.builder(One.class).create();
+		byte[] klazz = proxetta.proxy().setTarget(One.class).create();
 		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(JoddProxetta.invokeProxyClassNameSuffix).toString(), klazz).newInstance();
+		One one = (One) DefineClass.of((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz, null).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 
 		one.example1();
-		assertEquals("REPLACED VIRTUAL! jodd.proxetta.inv.Two * one!173>overriden sub", fbaos.toString());
+		assertEquals("REPLACED VIRTUAL! jodd.proxetta.fixtures.inv.Two * one!173>overriden sub", fbaos.toString());
 		fbaos.reset();
 
 		one.example2();
-		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$$Clonetou!15013static: 4", fbaos.toString());
+		assertEquals(
+			"REPLACED STATIC! one * jodd/proxetta/fixtures/inv/Two * " +
+				"example2 * void example2() * jodd.proxetta.fixtures.inv.One * " +
+				"jodd.proxetta.fixtures.inv.One" + ProxettaNames.invokeProxyClassNameSuffix + "!15013static: 4", fbaos.toString());
 		fbaos.reset();
 
 		one.example3();
 		assertEquals("state = REPLACED ctor!", fbaos.toString());
 		fbaos.reset();
 
-		assertEquals("jodd.proxetta.inv.One$$Clonetou", one.getClass().getName());
+		assertEquals("jodd.proxetta.fixtures.inv.One" +  ProxettaNames.invokeProxyClassNameSuffix, one.getClass().getName());
 		assertTrue(one instanceof Serializable);
 
 		Annotation[] anns = one.getClass().getAnnotations();
@@ -83,29 +94,29 @@ public class InvReplTest {
 	}
 
 	@Test
-	public void testSuper() {
+	void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder(OneWithSuper.class).define();
-			fail();
+			proxetta.proxy().setTarget(OneWithSuper.class).define();
+			fail("error");
 		} catch (ProxettaException ignore) {
 
 		}
 	}
 
 	@Test
-	public void testInterface() {
+	void testInterface() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder(Inter.class).newInstance();
-			fail();
+			proxetta.proxy().setTarget(Inter.class).newInstance();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}
 
 	@Test
-	public void testCurrentTimeMillis() {
-		TimeClass timeClass = (TimeClass) InvokeProxetta.withAspects(new InvokeAspect() {
+	void testCurrentTimeMillis() {
+		TimeClass timeClass = (TimeClass) Proxetta.invokeProxetta().withAspects(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
@@ -121,7 +132,7 @@ public class InvReplTest {
 				}
 				return null;
 			}
-		}).builder(TimeClass.class).newInstance();
+		}).proxy().setTarget(TimeClass.class).newInstance();
 
 		long time = timeClass.time();
 
@@ -129,8 +140,8 @@ public class InvReplTest {
 	}
 
 	@Test
-	public void testWimp() {
-		Wimp wimp = (Wimp) InvokeProxetta.withAspects(new InvokeAspect() {
+	void testWimp() {
+		Wimp wimp = (Wimp) Proxetta.invokeProxetta().withAspect(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
@@ -140,7 +151,7 @@ public class InvReplTest {
 			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
 				return InvokeReplacer.NONE;
 			}
-		}).builder(Wimp.class).newInstance();
+		}).proxy().setTarget(Wimp.class).newInstance();
 
 		int i = wimp.foo();
 		assertEquals(0, i);
@@ -154,53 +165,42 @@ public class InvReplTest {
 
 
 	protected InvokeProxetta initProxetta() {
-		return InvokeProxetta.withAspects(
-				new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invvirtual")) {
-							return InvokeReplacer.with(Replacer.class, "rInvVirtual")
-									.passOwnerName(false);
-						} else {
-							return null;
-						}
-					}
+		return Proxetta.invokeProxetta().withAspects(
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invvirtual")) {
+					return InvokeReplacer.with(Replacer.class, "rInvVirtual")
+							.passOwnerName(false);
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invstatic")) {
-							return InvokeReplacer.with(Replacer.class, "rInvStatic")
-									.passOwnerName(true)
-									.passMethodName(true)
-									.passMethodSignature(true)
-									.passThis(true)
-									.passTargetClass(true);
-						} else {
-							return null;
-						}
-					}
+			},
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invstatic")) {
+					return InvokeReplacer.with(Replacer.class, "rInvStatic")
+							.passOwnerName(true)
+							.passMethodName(true)
+							.passMethodSignature(true)
+							.passThis(true)
+							.passTargetClass(true);
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invinterface")) {
-							return InvokeReplacer.with(Replacer.class, "rInvInterface");
-						} else {
-							return null;
-						}
-					}
+			},
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invinterface")) {
+					return InvokeReplacer.with(Replacer.class, "rInvInterface");
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("<init>") && invokeInfo.getClassName().equals(Two.class.getCanonicalName())) {
-							return InvokeReplacer.with(Replacer.class, "rInvNew");
-						} else {
-							return null;
-						}
-					}
+			}
+			,
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("<init>") && invokeInfo.getClassName().equals(Two.class.getCanonicalName())) {
+					return InvokeReplacer.with(Replacer.class, "rInvNew");
+				} else {
+					return null;
 				}
+			}
 		);
 	}
 }

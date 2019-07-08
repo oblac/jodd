@@ -25,27 +25,30 @@
 
 package jodd.petite;
 
-import jodd.petite.data.PojoAnnBean;
-import jodd.petite.data.PojoBean;
-import jodd.petite.data.SomeService;
-import org.junit.Test;
+import jodd.petite.fixtures.data.PojoAnnBean;
+import jodd.petite.fixtures.data.PojoBean;
+import jodd.petite.fixtures.data.SomeService;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static jodd.petite.PetiteRegistry.petite;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ManualTest {
+class ManualTest {
 
 	@Test
-	public void testManualRegistration() {
+	void testManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
-		assertEquals(2, pc.getTotalBeans());
+		pc.registerPetiteBean(SomeService.class, null, null, null, false, null);
+		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false, null);
+		assertEquals(2, pc.beansCount());
 
-		Set<String> names = pc.getBeanNames();
+		Set<String> names = pc.beanNames();
 		assertEquals(2, names.size());
 
 		assertTrue(names.contains("pojo"));
@@ -56,8 +59,8 @@ public class ManualTest {
 		pc.registerPetiteMethodInjectionPoint("pojo", "injectService", null, new String[]{"someService"});
 		pc.registerPetiteInitMethods("pojo", POST_INITIALIZE, "init");
 
-		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -68,21 +71,21 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistration2() {
+	void testManualRegistration2() {
 		PetiteContainer pc = new PetiteContainer();
 
-		petite(pc).bean(SomeService.class).register();
-		petite(pc).bean(PojoBean.class).name("pojo").register();
+		PetiteRegistry.of(pc).bean(SomeService.class).register();
+		PetiteRegistry.of(pc).bean(PojoBean.class).name("pojo").register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
-		petite(pc).wire("pojo").ctor().bind();
-		petite(pc).wire("pojo").property("service").ref("someService").bind();
-		petite(pc).wire("pojo").method("injectService").ref("someService").bind();
-		petite(pc).init("pojo").invoke(POST_INITIALIZE).methods("init").register();
+		PetiteRegistry.of(pc).wire("pojo").ctor().bind();
+		PetiteRegistry.of(pc).wire("pojo").property("service").ref("someService").bind();
+		PetiteRegistry.of(pc).wire("pojo").method("injectService").ref("someService").bind();
+		PetiteRegistry.of(pc).init("pojo").invoke(POST_INITIALIZE).methods("init").register();
 
-		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -93,14 +96,14 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistrationUsingAnnotations() {
+	void testManualRegistrationUsingAnnotations() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, false);
-		assertEquals(2, pc.getTotalBeans());
+		pc.registerPetiteBean(SomeService.class, null, null, null, false, null);
+		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, false, null);
+		assertEquals(2, pc.beansCount());
 
-		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoAnnBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -111,16 +114,16 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistrationUsingAnnotations2() {
+	void testManualRegistrationUsingAnnotations2() {
 		PetiteContainer pc = new PetiteContainer();
 
-		petite(pc).bean(SomeService.class).register();
-		petite(pc).bean(PojoAnnBean.class).name("pojo").register();
+		PetiteRegistry.of(pc).bean(SomeService.class).register();
+		PetiteRegistry.of(pc).bean(PojoAnnBean.class).name("pojo").register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
-		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoAnnBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -131,15 +134,15 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinitionUsingAnnotations() {
+	void testManualDefinitionUsingAnnotations() {
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, true);
-		assertEquals(2, pc.getTotalBeans());
+		pc.registerPetiteBean(SomeService.class, null, null, null, false, null);
+		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, true, null);
+		assertEquals(2, pc.beansCount());
 
-		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoAnnBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -150,17 +153,17 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinitionUsingAnnotations2() {
+	void testManualDefinitionUsingAnnotations2() {
 
 		PetiteContainer pc = new PetiteContainer();
 
-		petite(pc).bean(SomeService.class).register();
-		petite(pc).bean(PojoAnnBean.class).name("pojo").define().register();
+		PetiteRegistry.of(pc).bean(SomeService.class).register();
+		PetiteRegistry.of(pc).bean(PojoAnnBean.class).name("pojo").define().register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
-		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoAnnBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -171,20 +174,20 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinition() {
+	void testManualDefinition() {
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, true);
-		assertEquals(2, pc.getTotalBeans());
+		pc.registerPetiteBean(SomeService.class, null, null, null, false, null);
+		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, true, null);
+		assertEquals(2, pc.beansCount());
 
 		pc.registerPetiteCtorInjectionPoint("pojo", null, null);
 		pc.registerPetitePropertyInjectionPoint("pojo", "service", "someService");
 		pc.registerPetiteMethodInjectionPoint("pojo", "injectService", null, new String[] {"someService"});
 		pc.registerPetiteInitMethods("pojo", POST_INITIALIZE, "init");
 
-		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoBean pojoBean = pc.getBean("pojo");
+		SomeService ss = pc.getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);
@@ -195,23 +198,22 @@ public class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinition2() {
+	void testManualDefinition2() {
+		PetiteRegistry petiteRegistry = PetiteRegistry.of(new PetiteContainer());
 
-		PetiteContainer pc = new PetiteContainer();
+		petiteRegistry.bean(SomeService.class).register();
+		petiteRegistry.bean(PojoBean.class).name("pojo").define().register();
 
-		petite(pc).bean(SomeService.class).register();
-		petite(pc).bean(PojoBean.class).name("pojo").define().register();
-
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, petiteRegistry.petiteContainer().beansCount());
 
 
-		petite(pc).wire("pojo").ctor().bind();
-		petite(pc).wire("pojo").property("service").ref("someService").bind();
-		petite(pc).wire("pojo").method("injectService").ref("someService").bind();
-		petite(pc).init("pojo").invoke(POST_INITIALIZE).methods("init").register();
+		petiteRegistry.wire("pojo").ctor().bind();
+		petiteRegistry.wire("pojo").property("service").ref("someService").bind();
+		petiteRegistry.wire("pojo").method("injectService").ref("someService").bind();
+		petiteRegistry.init("pojo").invoke(POST_INITIALIZE).methods("init").register();
 
-		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
-		SomeService ss = (SomeService) pc.getBean("someService");
+		PojoBean pojoBean = petiteRegistry.petiteContainer().getBean("pojo");
+		SomeService ss = petiteRegistry.petiteContainer().getBean("someService");
 
 		assertNotNull(pojoBean);
 		assertNotNull(ss);

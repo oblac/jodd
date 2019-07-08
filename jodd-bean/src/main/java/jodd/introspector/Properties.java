@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -34,8 +34,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
-import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
+import static jodd.util.ClassUtil.METHOD_GET_PREFIX;
+import static jodd.util.ClassUtil.METHOD_IS_PREFIX;
 
 /**
  * Bean properties collection. Property in Java is defined as a pair of
@@ -51,7 +51,7 @@ public class Properties {
 	// cache
 	private PropertyDescriptor[] allProperties;
 
-	public Properties(ClassDescriptor classDescriptor) {
+	public Properties(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.propertyDescriptors = inspectProperties();
 	}
@@ -65,7 +65,7 @@ public class Properties {
 
 		HashMap<String, PropertyDescriptor> map = new HashMap<>();
 
-		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
 
 		for (int iteration = 0; iteration < 2; iteration++) {
 			// first find the getters, and then the setters!
@@ -80,13 +80,13 @@ public class Properties {
 				String propertyName;
 
 				if (iteration == 0) {
-					propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+					propertyName = ClassUtil.getBeanPropertyGetterName(method);
 					if (propertyName != null) {
 						add = true;
 						issetter = false;
 					}
 				} else {
-					propertyName = ReflectUtil.getBeanPropertySetterName(method);
+					propertyName = ClassUtil.getBeanPropertySetterName(method);
 					if (propertyName != null) {
 						add = true;
 						issetter = true;
@@ -139,7 +139,7 @@ public class Properties {
 	 * Adds a setter and/or getter method to the property.
 	 * If property is already defined, the new, updated, definition will be created.
 	 */
-	protected void addProperty(HashMap<String, PropertyDescriptor> map, String name, MethodDescriptor methodDescriptor, boolean isSetter) {
+	protected void addProperty(final HashMap<String, PropertyDescriptor> map, final String name, final MethodDescriptor methodDescriptor, final boolean isSetter) {
 		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
 		MethodDescriptor getterMethod = isSetter ? null : methodDescriptor;
 
@@ -206,14 +206,14 @@ public class Properties {
 	 * up to three times (depends on use case) for the same property. Each time when
 	 * a property is updated, a new definition is created with updated information.
 	 */
-	protected PropertyDescriptor createPropertyDescriptor(String name, MethodDescriptor getterMethod, MethodDescriptor setterMethod) {
+	protected PropertyDescriptor createPropertyDescriptor(final String name, final MethodDescriptor getterMethod, final MethodDescriptor setterMethod) {
 		return new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
 	}
 
 	/**
 	 * Creates new field-only {@link PropertyDescriptor}. It will be invoked only once.
 	 */
-	protected PropertyDescriptor createPropertyDescriptor(String name, FieldDescriptor fieldDescriptor) {
+	protected PropertyDescriptor createPropertyDescriptor(final String name, final FieldDescriptor fieldDescriptor) {
 			return new PropertyDescriptor(classDescriptor, name, fieldDescriptor);
 	}
 
@@ -222,7 +222,7 @@ public class Properties {
 	/**
 	 * Returns {@link PropertyDescriptor property descriptor}.
 	 */
-	public PropertyDescriptor getPropertyDescriptor(String name) {
+	public PropertyDescriptor getPropertyDescriptor(final String name) {
 		return propertyDescriptors.get(name);
 	}
 
@@ -241,7 +241,8 @@ public class Properties {
 			}
 
 			Arrays.sort(allProperties, new Comparator<PropertyDescriptor>() {
-				public int compare(PropertyDescriptor pd1, PropertyDescriptor pd2) {
+				@Override
+				public int compare(final PropertyDescriptor pd1, final PropertyDescriptor pd2) {
 					return pd1.getName().compareTo(pd2.getName());
 				}
 			});

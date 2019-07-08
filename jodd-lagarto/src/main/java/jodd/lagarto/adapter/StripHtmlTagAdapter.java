@@ -29,6 +29,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
+import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
 
 import java.nio.CharBuffer;
@@ -40,7 +41,7 @@ import java.nio.CharBuffer;
  */
 public class StripHtmlTagAdapter extends TagAdapter {
 
-	public StripHtmlTagAdapter(TagVisitor target) {
+	public StripHtmlTagAdapter(final TagVisitor target) {
 		super(target);
 	}
 
@@ -58,14 +59,14 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	 * Skips HTML comments.
 	 */
 	@Override
-	public void comment(CharSequence comment) {
+	public void comment(final CharSequence comment) {
 		strippedCharsCount += comment.length() + 7;
 	}
 
-	private static char[] PRE = new char[] {'p', 'r', 'e'};
+	private static CharSequence PRE = CharArraySequence.of('p', 'r', 'e');
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (tag.getType() == TagType.START && tag.nameEquals(PRE)) {
 			strip = false;
 		}
@@ -81,7 +82,7 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	 * Cleans unnecessary whitespaces.
 	 */
 	@Override
-	public void text(CharSequence text) {
+	public void text(final CharSequence text) {
 		if (!strip) {
 			super.text(text);
 			return;

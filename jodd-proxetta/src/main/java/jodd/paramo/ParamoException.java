@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class ParamoException extends UncheckedException {
 
-	public ParamoException(Throwable t) {
+	public ParamoException(final Throwable t) {
 		super(t);
 	}
 
-	public ParamoException(String message) {
+	public ParamoException(final String message) {
 		super(message);
 	}
 
-	public ParamoException(String message, Throwable t) {
+	public ParamoException(final String message, final Throwable t) {
 		super(message, t);
 	}
 

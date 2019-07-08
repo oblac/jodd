@@ -25,29 +25,31 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbH2TestCase;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.fixtures.DbH2TestCase;
+import jodd.db.oom.fixtures.Girl;
+import jodd.db.oom.fixtures.Girl2;
+import jodd.db.oom.fixtures.IdName;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.Girl;
-import jodd.db.oom.tst.Girl2;
-import jodd.db.oom.tst.IdName;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class DbOom2Test extends DbH2TestCase {
+class DbOom2Test extends DbH2TestCase {
 
 	@Test
-	public void testOrm2() {
-		DbOomManager.resetAll();
-
+	void testOrm2() {
 		DbSession session = new DbThreadSession(cp);
 
 		executeUpdate(session, "drop table BOY if exists");
@@ -61,7 +63,7 @@ public class DbOom2Test extends DbH2TestCase {
 				"primary key (ID)" +
 				')';
 
-		DbQuery query = new DbQuery(sql);
+		DbQuery query = DbQuery.query(sql);
 		query.autoClose().executeUpdate();
 		assertTrue(query.isClosed());
 
@@ -79,7 +81,7 @@ public class DbOom2Test extends DbH2TestCase {
 
 		// ---------------------------------------------------------------- girls
 
-		DbOomQuery q = new DbOomQuery("select * from GIRL where ID=1");
+		DbOomQuery q = DbOomQuery.query("select * from GIRL where ID=1");
 
 		Girl girl = q.find(Girl.class);
 		checkGirl1(girl);
@@ -92,48 +94,50 @@ public class DbOom2Test extends DbH2TestCase {
 
 		try {
 			q.find();        // this will fail since no entity is registered!
-			fail();
+			fail("error");
 		} catch (DbOomException doex) {
 			// ignore
 		}
 
-		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
-		assertEquals(0, DbOomManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOomManager.getInstance().getTotalNames());
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		DbOomManager.getInstance().registerEntity(Girl.class, true);
+		assertEquals(2, dbEntityManager.getTotalTypes());
+		assertEquals(0, dbEntityManager.getTotalTableNames());
+		assertEquals(2, dbEntityManager.getTotalNames());
+
+		dbEntityManager.registerEntity(Girl.class, true);
 		girl = q.find();
 		checkGirl1(girl);
 
-		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
-		assertEquals(1, DbOomManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOomManager.getInstance().getTotalNames());
+		assertEquals(2, dbEntityManager.getTotalTypes());
+		assertEquals(1, dbEntityManager.getTotalTableNames());
+		assertEquals(2, dbEntityManager.getTotalNames());
 
 		q.close();
 
 		session.closeSession();
 
 
-		/**
+		/*
 		 * Test fails on HSQLDB 1.8 since generated columns are not supported.
 		 */
 		session = new DbThreadSession(cp);
 
-		q = new DbOomQuery("insert into GIRL (NAME) values('Janna')");
+		q = DbOomQuery.query("insert into GIRL (NAME) values('Janna')");
 		q.setGeneratedColumns();
 		q.executeUpdate();
 		long key = q.getGeneratedKey();
 		assertEquals(4, key);
 		q.close();
 
-		q = new DbOomQuery("insert into GIRL (NAME) values('Janna2')");
+		q = DbOomQuery.query("insert into GIRL (NAME) values('Janna2')");
 		q.setGeneratedColumns("ID", "TIME");
 		q.executeUpdate();
 		Long Key = q.findGeneratedKey(Long.class);
 		assertEquals(5, Key.longValue());
 		q.close();
 
-		q = new DbOomQuery("insert into GIRL (NAME) values('Sasha')");
+		q = DbOomQuery.query("insert into GIRL (NAME) values('Sasha')");
 		q.setGeneratedColumns("ID, TIME");
 		q.executeUpdate();
 		ResultSet rs = q.getGeneratedColumns();
@@ -144,7 +148,7 @@ public class DbOom2Test extends DbH2TestCase {
 				assertEquals(6, id);
 				try {
 					rs.getInt(2);
-					fail();
+					fail("error");
 				} catch (SQLException sex) {
 					// ignore
 				}
@@ -160,18 +164,18 @@ public class DbOom2Test extends DbH2TestCase {
 
 
 		session = new DbThreadSession(cp);
-		DbOomManager.getInstance().registerEntity(Girl2.class, true);
+		dbEntityManager.registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
-		q = DbEntitySql.insert(g2).query();
+		q = dbOom.entities().insert(g2).query();
 		assertEquals("insert into GIRL (NAME) values (:girl2.name)", q.getQueryString());
 		q.setGeneratedColumns("ID");
 		q.executeUpdate();
-		DbOomUtil.populateGeneratedKeys(g2, q);
+		q.populateGeneratedKeys(g2);
 		//g2.id = Integer.valueOf((int) q.getGeneratedKey());
 		q.close();
 		assertEquals(7, g2.id.intValue());
 
-		g2 = DbEntitySql.findByColumn(Girl2.class, "name", "Gwen").query().find(Girl2.class);
+		g2 = dbOom.entities().findByColumn(Girl2.class, "name", "Gwen").query().find(Girl2.class);
 		assertEquals("Gwen", g2.name);
 		assertNull(g2.speciality);
 		assertNotNull(g2.time);

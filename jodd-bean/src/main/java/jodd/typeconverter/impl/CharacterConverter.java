@@ -42,7 +42,7 @@ import jodd.util.StringUtil;
  */
 public class CharacterConverter implements TypeConverter<Character> {
 
-	public Character convert(Object value) {
+	public Character convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -26,17 +26,18 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.injector.Target;
-import jodd.exception.ExceptionUtil;
-import jodd.madvoc.meta.Out;
-import jodd.madvoc.result.Result;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.Targets;
+import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+
+import static jodd.exception.ExceptionUtil.unwrapThrowable;
+import static jodd.exception.ExceptionUtil.wrapToException;
 
 
 /**
@@ -47,13 +48,13 @@ import java.lang.reflect.Modifier;
 public class ActionRequest {
 
 	protected final MadvocController madvocController;
-	protected final ActionConfig actionConfig;
+	protected final ActionRuntime actionRuntime;
 	protected final String actionPath;
+	protected final String[] actionPathChunks;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
-	protected Result result;
 
-	protected final Target[] targets;
+	protected final Targets targets;
 	protected final ActionWrapper[] executionArray;
 	protected int executionIndex;
 
@@ -61,7 +62,6 @@ public class ActionRequest {
 	protected Object actionResult;
 
 	protected String nextActionPath;
-	protected ActionRequest previousActionRequest;
 
 	// ---------------------------------------------------------------- accessors
 
@@ -75,7 +75,7 @@ public class ActionRequest {
 	/**
 	 * Specifies new servlet request, in case of wrapping it.
 	 */
-	public void setHttpServletRequest(HttpServletRequest request) {
+	public void bind(final HttpServletRequest request) {
 		this.servletRequest = request;
 	}
 
@@ -89,15 +89,15 @@ public class ActionRequest {
 	/**
 	 * Specifies new servlet response, in case of wrapping it.
 	 */
-	public void setHttpServletResponse(HttpServletResponse response) {
+	public void bind(final HttpServletResponse response) {
 		this.servletResponse = response;
 	}
 
 	/**
-	 * Returns {@link ActionConfig action configuration}.
+	 * Returns {@link ActionRuntime action runtime} configuration.
 	 */
-	public ActionConfig getActionConfig() {
-		return actionConfig;
+	public ActionRuntime getActionRuntime() {
+		return actionRuntime;
 	}
 
 	/**
@@ -124,35 +124,14 @@ public class ActionRequest {
 	/**
 	 * Specifies the next action path, that will be chained to current action request.
 	 */
-	public void setNextActionPath(String nextActionPath) {
+	public void setNextActionPath(final String nextActionPath) {
 		this.nextActionPath = nextActionPath;
-	}
-
-	/**
-	 * Returns previous action request in chain, if there was one.
-	 */
-	public ActionRequest getPreviousActionRequest() {
-		return previousActionRequest;
-	}
-
-	/**
-	 * Sets previous action request in chain.
-	 */
-	public void setPreviousActionRequest(ActionRequest previousActionRequest) {
-		this.previousActionRequest = previousActionRequest;
-	}
-
-	/**
-	 * Returns result object if exist in action, otherwise returns <code>null</code>.
-	 */
-	public Result getResult() {
-		return result;
 	}
 
 	/**
 	 * Returns all injection targets.
 	 */
-	public Target[] getTargets() {
+	public Targets getTargets() {
 		return targets;
 	}
 
@@ -166,8 +145,16 @@ public class ActionRequest {
 	/**
 	 * Sets action result object.
 	 */
-	public void setActionResult(Object actionResult) {
+	public void bindActionResult(final Object actionResult) {
 		this.actionResult = actionResult;
+	}
+
+	/**
+	 * Returns chunks of action path. Action path is split on {@code /}. For example,
+	 * the path {@code "/hello/world"} would return 2 chunks: {@code hello} and {@code world}.
+	 */
+	public String[] getActionPathChunks() {
+		return actionPathChunks;
 	}
 
 	// ---------------------------------------------------------------- ctor
@@ -176,21 +163,22 @@ public class ActionRequest {
 	 * Creates new action request and initializes it.
 	 */
 	public ActionRequest(
-		MadvocController madvocController,
-			String actionPath,
-			ActionConfig actionConfig,
-			Object action,
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) {
+		final MadvocController madvocController,
+		final String actionPath,
+		final String[] actionPathChunks,
+		final ActionRuntime actionRuntime,
+		final Object action,
+		final HttpServletRequest servletRequest,
+		final HttpServletResponse servletResponse) {
 
 		this.madvocController = madvocController;
 		this.actionPath = actionPath;
-		this.actionConfig = actionConfig;
+		this.actionPathChunks = actionPathChunks;
+		this.actionRuntime = actionRuntime;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		this.action = action;
-		this.result = findResult();
-		this.targets = makeTargets();
+		this.targets = new Targets(this);
 
 		this.executionIndex = 0;
 		this.executionArray = createExecutionArray();
@@ -201,8 +189,8 @@ public class ActionRequest {
 	 * in correct order.
 	 */
 	protected ActionWrapper[] createExecutionArray() {
-		int totalInterceptors = (this.actionConfig.interceptors != null ? this.actionConfig.interceptors.length : 0);
-		int totalFilters = (this.actionConfig.filters != null ? this.actionConfig.filters.length : 0);
+		int totalInterceptors = (this.actionRuntime.getInterceptors() != null ? this.actionRuntime.getInterceptors().length : 0);
+		int totalFilters = (this.actionRuntime.getFilters() != null ? this.actionRuntime.getFilters().length : 0);
 
 		ActionWrapper[] executionArray = new ActionWrapper[totalFilters + 1 + totalInterceptors + 1];
 
@@ -211,128 +199,35 @@ public class ActionRequest {
 		int index = 0;
 
 		if (totalFilters > 0) {
-			System.arraycopy(actionConfig.filters, 0, executionArray, index, totalFilters);
+			System.arraycopy(actionRuntime.getFilters(), 0, executionArray, index, totalFilters);
 			index += totalFilters;
 		}
 
 		// result is executed AFTER the action AND interceptors
 
-		executionArray[index++] = new BaseActionWrapper() {
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				Object actionResult = actionRequest.invoke();
+		executionArray[index++] = actionRequest -> {
+			Object actionResult = actionRequest.invoke();
 
-				ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
+			ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
 
-				return actionResult;
-			}
+			return actionResult;
 		};
 
 		// interceptors
 
 		if (totalInterceptors > 0) {
-			System.arraycopy(actionConfig.interceptors, 0, executionArray, index, totalInterceptors);
+			System.arraycopy(actionRuntime.getInterceptors(), 0, executionArray, index, totalInterceptors);
 			index += totalInterceptors;
 		}
 
 		// action
 
-		executionArray[index] = new BaseActionWrapper() {
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				actionResult = invokeActionMethod();
-				return actionResult;
-			}
+		executionArray[index] = actionRequest -> {
+			actionResult = invokeActionMethod();
+			return actionResult;
 		};
 
 		return executionArray;
-	}
-
-	/**
-	 * Returns result field value if such exist. If field exists
-	 * and it's value is <code>null</code> it will be created.
-	 */
-	protected Result findResult() {
-		Field resultField = actionConfig.resultField;
-		if (resultField != null) {
-			try {
-				Result result = (Result) resultField.get(action);
-
-				if (result == null) {
-					result = (Result) resultField.getType().newInstance();
-					resultField.set(action, result);
-				}
-
-				return result;
-			} catch (Exception ignore) {
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Joins action and parameters into one array of Targets.
-	 */
-	protected Target[] makeTargets() {
-		if (!actionConfig.hasArguments) {
-			return new Target[] {new Target(action)};
-		}
-
-		ActionConfig.MethodParam[] methodParams = actionConfig.getMethodParams();
-		Target[] target = new Target[methodParams.length + 1];
-
-		target[0] = new Target(action);
-
-		for (int i = 0; i < methodParams.length; i++) {
-			ActionConfig.MethodParam mp = methodParams[i];
-
-			Class type = mp.getType();
-
-			Target t;
-
-			if (mp.getAnnotationType() == null) {
-				// parameter is NOT annotated
-				t = new Target(createActionMethodArgument(type));
-			}
-			else if (mp.getAnnotationType() == Out.class) {
-				// parameter is annotated with *only* OUT annotation
-				// we need to create the output AND to save the type
-				t = new Target(createActionMethodArgument(type), type);
-			}
-			else {
-				// parameter is annotated with any IN annotation
-				t = new Target(type) {
-					@Override
-					protected void createValueInstance() {
-						value = createActionMethodArgument(type);
-					}
-				};
-			}
-
-			target[i + 1] = t;
-		}
-		return target;
-	}
-
-	/**
-	 * Creates action method arguments.
-	 */
-	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
-	protected Object createActionMethodArgument(Class type) {
-		try {
-			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
-				// regular or static class
-				Constructor ctor = type.getDeclaredConstructor(null);
-				ctor.setAccessible(true);
-				return ctor.newInstance();
-			} else {
-				// member class
-				Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
-				ctor.setAccessible(true);
-				return ctor.newInstance(action);
-			}
-		} catch (Exception ex) {
-			throw new MadvocException(ex);
-		}
 	}
 
 	// ---------------------------------------------------------------- invoke
@@ -342,7 +237,7 @@ public class ActionRequest {
 	 * Invokes all interceptors before and after action invocation.
 	 */
 	public Object invoke() throws Exception {
-		return executionArray[executionIndex++].invoke(this);
+		return executionArray[executionIndex++].apply(this);
 	}
 
 	/**
@@ -350,29 +245,36 @@ public class ActionRequest {
 	 * After method invocation, all interceptors will finish, in opposite order. 
 	 */
 	protected Object invokeActionMethod() throws Exception {
-		Object[] params = extractParametersFromTargets();
-		try {
-			return actionConfig.actionClassMethod.invoke(action, params);
-		} catch(InvocationTargetException itex) {
-			throw ExceptionUtil.extractTargetException(itex);
-		}
-	}
-
-	/**
-	 * Collects all parameters from target into an array.
-	 */
-	protected Object[] extractParametersFromTargets() {
-		if (targets == null) {
+		if (actionRuntime.isActionHandlerDefined()) {
+			actionRuntime.getActionHandler().handle(this);
 			return null;
 		}
 
-		Object[] values = new Object[targets.length - 1];
+		final Object[] params = targets.extractParametersValues();
 
-		for (int i = 1; i < targets.length; i++) {
-			values[i - 1] = targets[i].getValue();
+		try {
+			return actionRuntime.getActionClassMethod().invoke(action, params);
+		} catch(InvocationTargetException itex) {
+			throw wrapToException(unwrapThrowable(itex));
 		}
+	}
 
-		return values;
+	// ---------------------------------------------------------------- special
+
+	private String requestBody;
+
+	/**
+	 * Reads request body only once and returns it to user.
+	 */
+	public String readRequestBody() {
+		if (requestBody == null) {
+			try {
+				requestBody = ServletUtil.readRequestBodyFromStream(getHttpServletRequest());
+			} catch (IOException ioex) {
+				requestBody = StringPool.EMPTY;
+			}
+		}
+		return requestBody;
 	}
 
 }

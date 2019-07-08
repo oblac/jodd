@@ -43,7 +43,7 @@ public class Util {
 	 *
 	 * @return <code>true</code> if arguments are equal, otherwise <code>false</code>
 	 */
-	public static boolean equals(Object obj1, Object obj2) {
+	public static boolean equals(final Object obj1, final Object obj2) {
 		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
 	}
 
@@ -51,7 +51,7 @@ public class Util {
 	/**
 	 * Returns string representation of an object, while checking for <code>null</code>.
 	 */
-	public static String toString(Object value) {
+	public static String toString(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,7 +64,7 @@ public class Util {
 	 * Returns length of the object. Returns <code>0</code> for <code>null</code>.
 	 * Returns <code>-1</code> for objects without a length.
 	 */
-	public static int length(Object obj) {
+	public static int length(final Object obj) {
 		if (obj == null) {
 			return 0;
 		}
@@ -107,7 +107,7 @@ public class Util {
 	 * Returns <code>true</code> if first argument contains provided element.
 	 * It works for strings, collections, maps and arrays.
 s	 */
-	public static boolean containsElement(Object obj, Object element) {
+	public static boolean containsElement(final Object obj, final Object element) {
 		if (obj == null) {
 			return false;
 		}

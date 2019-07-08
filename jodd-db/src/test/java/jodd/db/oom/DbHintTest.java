@@ -25,31 +25,31 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.DbOom;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Boy2;
+import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.sqlgen.ParsedSql;
-import jodd.db.oom.tst.Boy2;
-import jodd.db.oom.tst.Girl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DbHintTest extends DbHsqldbTestCase {
+class DbHintTest extends DbHsqldbTestCase {
 
-	@Before
+	@Override
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Boy2.class);
-		dbOom.registerEntity(Girl.class);
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
+		dbEntityManager.registerEntity(Boy2.class);
+		dbEntityManager.registerEntity(Girl.class);
 
 		q1 = sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
 
@@ -73,18 +73,18 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 
 	@Test
-	public void testHint() {
+	void testHint() {
 		DbSession dbSession = new DbThreadSession(cp);
 
 		// prepare data
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "piano")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Boy2(1, "John", 1)).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(2, "Sandra", "piano")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy2(1, "John", 1)).query().executeUpdate());
 
 		// select without hint
 
-		DbOomQuery dbOomQuery = new DbOomQuery(q1);
+		DbOomQuery dbOomQuery = dbOom.query(q1);
 
 		Object[] result = dbOomQuery.find(Boy2.class, Girl.class);
 
@@ -99,7 +99,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// select with t-sql hint
 
-		dbOomQuery = new DbOomQuery(q2);
+		dbOomQuery = dbOom.query(q2);
 
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
@@ -112,7 +112,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// select with external hints
 
-		dbOomQuery = new DbOomQuery(q3);
+		dbOomQuery = dbOom.query(q3);
 		dbOomQuery.withHints("boy", "boy.girlAlt", "boy.totalGirls");
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
@@ -125,7 +125,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(q4);
+		dbOomQuery = dbOom.query(q4);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
@@ -137,7 +137,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(q5);
+		dbOomQuery = dbOom.query(q5);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
@@ -150,7 +150,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(q6);
+		dbOomQuery = dbOom.query(q6);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);

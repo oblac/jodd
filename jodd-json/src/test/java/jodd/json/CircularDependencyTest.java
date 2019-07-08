@@ -25,17 +25,18 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("Duplicates")
-public class CircularDependencyTest {
+class CircularDependencyTest {
 
 	public static class A {
 		private String name = null;
@@ -61,78 +62,84 @@ public class CircularDependencyTest {
 	}
 
 	@Test
-	public void testCircularDependency_none() {
-		A a1 = new A();
-		a1.setName("a1");
+	void testCircularDependency_none() {
+		JsonParsers.forEachParser(jsonParser -> {
+			A a1 = new A();
+			a1.setName("a1");
 
-		A a2 = new A();
-		a2.setName("a2");
+			A a2 = new A();
+			a2.setName("a2");
 
-		B b = new B();
-		b.setProp("value");
-		b.setA(a2);		// b -> a2, no circ.dep.
+			B b = new B();
+			b.setProp("value");
+			b.setA(a2);        // b -> a2, no circ.dep.
 
-		// circular reference
-		a1.setPi(b);
+			// circular reference
+			a1.setPi(b);
 
-		JsonSerializer serializer = new JsonSerializer().deep(true);
+			JsonSerializer serializer = new JsonSerializer().deep(true);
 
-		String json = serializer.serialize(a1);
-		JsonParser.create().parse(json);
+			String json = serializer.serialize(a1);
+			jsonParser.parse(json);
 
-		assertTrue(json.contains("a1"));
-		assertTrue(json.contains("a2"));
+			assertTrue(json.contains("a1"));
+			assertTrue(json.contains("a2"));
+		});
 	}
 
 	@Test
-	public void testCircularDependency_property() {
-		A a1 = new A();
-		a1.setName("a1");
+	void testCircularDependency_property() {
+		JsonParsers.forEachParser(jsonParser -> {
+			A a1 = new A();
+			a1.setName("a1");
 
-		A a2 = new A();
-		a2.setName("a2");
+			A a2 = new A();
+			a2.setName("a2");
 
-		B b = new B();
-		b.setProp("value");
-		b.setA(a1);		// b -> a1, has circ.dep.
+			B b = new B();
+			b.setProp("value");
+			b.setA(a1);        // b -> a1, has circ.dep.
 
-		// circular reference
-		a1.setPi(b);
+			// circular reference
+			a1.setPi(b);
 
-		JsonSerializer serializer = new JsonSerializer().deep(true);
+			JsonSerializer serializer = new JsonSerializer().deep(true);
 
-		String json = serializer.serialize(a1);
-		JsonParser.create().parse(json);
+			String json = serializer.serialize(a1);
+			jsonParser.parse(json);
 
-		assertEquals(1, StringUtil.count(json, "a1"));
-		assertEquals(0, StringUtil.count(json, "a2"));
-		assertEquals(1, StringUtil.count(json, "pi"));
+			assertEquals(1, StringUtil.count(json, "a1"));
+			assertEquals(0, StringUtil.count(json, "a2"));
+			assertEquals(1, StringUtil.count(json, "pi"));
+		});
 	}
 
 	@Test
-	public void testCircularDependency_propertyArray() {
-		A a1 = new A();
-		a1.setName("a1");
+	void testCircularDependency_propertyArray() {
+		JsonParsers.forEachParser(jsonParser -> {
+			A a1 = new A();
+			a1.setName("a1");
 
-		A a2 = new A();
-		a2.setName("a2");
+			A a2 = new A();
+			a2.setName("a2");
 
-		B b = new B();
-		b.setProp("value");
-		b.setA(a1);		// b -> a1, has circ.dep.
+			B b = new B();
+			b.setProp("value");
+			b.setA(a1);        // b -> a1, has circ.dep.
 
-		b.addP(a1);
-		b.addP(a2);
+			b.addP(a1);
+			b.addP(a2);
 
-		// circular reference
-		a1.setPi(b);
+			// circular reference
+			a1.setPi(b);
 
-		JsonSerializer serializer = new JsonSerializer().deep(true);
+			JsonSerializer serializer = new JsonSerializer().deep(true);
 
-		String json = serializer.serialize(a1);
-		JsonParser.create().parse(json);
+			String json = serializer.serialize(a1);
+			jsonParser.parse(json);
 
-		assertEquals(1, StringUtil.count(json, "a1"));
-		assertEquals(1, StringUtil.count(json, "a2"));
+			assertEquals(1, StringUtil.count(json, "a1"));
+			assertEquals(1, StringUtil.count(json, "a2"));
+		});
 	}
 }

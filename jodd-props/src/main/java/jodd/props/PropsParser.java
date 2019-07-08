@@ -143,15 +143,26 @@ public class PropsParser implements Cloneable {
 
 			if (state == ParseState.COMMENT) {
 				// comment, skip to the end of the line
-				if (c == '\n') {
+				if (c == '\r') {
+					if ((ndx < len) && (in.charAt(ndx) == '\n')) {
+						ndx++;
+					}
+					state = ParseState.TEXT;
+				}
+				else if (c == '\n') {
 					state = ParseState.TEXT;
 				}
 			} else if (state == ParseState.ESCAPE) {
-				state = stateOnEscape;//ParseState.VALUE;
+				state = stateOnEscape;  //ParseState.VALUE;
 				switch (c) {
 					case '\r':
+						if ((ndx < len) && (in.charAt(ndx) == '\n')) {
+							ndx++;
+						}
 					case '\n':
-						// if the EOL is \n or \r\n, escapes both chars
+						// need to go 1 step back in order to escape
+						// the current line ending in the follow-up state
+						ndx--;
 						state = ParseState.ESCAPE_NEWLINE;
 						break;
 					// encode UTF character
@@ -197,6 +208,13 @@ public class PropsParser implements Cloneable {
 
 					// start section
 					case '[':
+						if (sb.length() > 0) {
+							if (StringUtil.isNotBlank(sb)) {
+								sb.append(c);
+								// previous string is not blank, hence it's not the section
+								break;
+							}
+						}
 						sb.setLength(0);
 						insideSection = true;
 						break;
@@ -274,8 +292,11 @@ public class PropsParser implements Cloneable {
 						break;
 
 					case '\r':
+						if ((ndx < len) && (in.charAt(ndx) == '\n')) {
+							ndx++;
+						}
 					case '\n':
-						if ((state == ParseState.ESCAPE_NEWLINE) && (c == '\n')) {
+						if (state == ParseState.ESCAPE_NEWLINE) {
 							sb.append(escapeNewLineValue);
 							if (!ignorePrefixWhitespacesOnNewLine) {
 								state = ParseState.VALUE;
@@ -293,7 +314,7 @@ public class PropsParser implements Cloneable {
 
 					case ' ':
 					case '\t':
-						if ((state == ParseState.ESCAPE_NEWLINE)) {
+						if (state == ParseState.ESCAPE_NEWLINE) {
 							break;
 						}
 					default:
@@ -429,7 +450,7 @@ public class PropsParser implements Cloneable {
 
 			String[] profiles = null;
 			if (keyProfiles != null) {
-				profiles = keyProfiles.toArray(new String[keyProfiles.size()]);
+				profiles = keyProfiles.toArray(new String[0]);
 			}
 
 			String[] sources = StringUtil.splitc(value, ',');

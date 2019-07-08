@@ -33,7 +33,7 @@ import jodd.util.Wildcard;
 public class WildcardPathMacros extends BasePathMacros {
 
 	@Override
-	protected boolean matchValue(int macroIndex, String value) {
+	protected boolean matchValue(final int macroIndex, final String value) {
 		return Wildcard.matchPath(value, patterns[macroIndex]);
 	}
 }

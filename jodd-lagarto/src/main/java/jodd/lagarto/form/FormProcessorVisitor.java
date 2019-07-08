@@ -29,6 +29,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagWriter;
 import jodd.mutable.MutableInteger;
+import jodd.util.CharSequenceUtil;
 import jodd.util.StringUtil;
 
 import java.util.HashMap;
@@ -39,12 +40,12 @@ import java.util.Map;
  */
 public class FormProcessorVisitor extends TagWriter {
 
-	private static final char[] INPUT = new char[] {'i', 'n', 'p', 'u', 't'};
-	private static final char[] TYPE = new char[] {'t', 'y', 'p', 'e'};
-	private static final char[] SELECT = new char[] {'s', 'e', 'l', 'e', 'c', 't'};
-	private static final char[] OPTION = new char[] {'o', 'p', 't', 'i', 'o', 'n'};
-	private static final char[] TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
+	private static final String INPUT = "input";
+	private static final String SELECT = "select";
+	private static final String OPTION = "option";
+	private static final String TEXTAREA = "textarea";
 
+	private static final String TYPE = "type";
 	private static final String VALUE = "value";
 	private static final String NAME = "name";
 	private static final String TEXT = "text";
@@ -59,20 +60,20 @@ public class FormProcessorVisitor extends TagWriter {
 
 	private final FormFieldResolver resolver;
 
-	public FormProcessorVisitor(Appendable appendable, FormFieldResolver resolver) {
+	public FormProcessorVisitor(final Appendable appendable, final FormFieldResolver resolver) {
 		super(appendable);
 		this.resolver = resolver;
 	}
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (tag.getType().isStartingTag()) {
-			if (tag.matchTagName(INPUT)) {
+			if (CharSequenceUtil.equalsToLowercase(tag.getName(), INPUT)) {
 				processInputStartTag(tag);
 				super.tag(tag);
 				return;
 			}
-			if (inSelect && tag.matchTagName(OPTION)) {
+			if (inSelect && CharSequenceUtil.equalsToLowercase(tag.getName(), OPTION)) {
 				processOptionOpenTag(tag);
 				super.tag(tag);
 				return;
@@ -80,18 +81,18 @@ public class FormProcessorVisitor extends TagWriter {
 		}
 
 		if (tag.getType() == TagType.START) {
-			if (tag.matchTagName(TEXTAREA)) {
+			if (CharSequenceUtil.equalsToLowercase(tag.getName(), TEXTAREA)) {
 				processTextareaStartTag(tag);
 			}
-			else if (tag.matchTagName(SELECT)) {
+			else if (CharSequenceUtil.equalsToLowercase(tag.getName(), SELECT)) {
 				processSelectOpenTag(tag);
 			}
 		}
 		else if (tag.getType() == TagType.END) {
-			if (inTextArea && tag.matchTagName(TEXTAREA)) {
+			if (inTextArea && CharSequenceUtil.equalsToLowercase(tag.getName(), TEXTAREA)) {
 				processTextareaEndTag();
 			}
-			else if (inSelect && tag.matchTagName(SELECT)) {
+			else if (inSelect && CharSequenceUtil.equalsToLowercase(tag.getName(), SELECT)) {
 				processSelectEndTag();
 			}
 		}
@@ -100,7 +101,7 @@ public class FormProcessorVisitor extends TagWriter {
 	}
 
 	@Override
-	public void text(CharSequence text) {
+	public void text(final CharSequence text) {
 		if (inTextArea) {
 			return;
 		}
@@ -109,7 +110,7 @@ public class FormProcessorVisitor extends TagWriter {
 
 	// ---------------------------------------------------------------- input
 
-	private void processInputStartTag(Tag tag) {
+	private void processInputStartTag(final Tag tag) {
 		// INPUT
 		CharSequence tagType = tag.getAttributeValue(TYPE);
 		if (tagType == null) {
@@ -154,7 +155,7 @@ public class FormProcessorVisitor extends TagWriter {
 				// checkbox group
 				String[] vs = StringUtil.toStringArray(valueObject);
 				for (String vsk : vs) {
-					if ((vsk != null) && (vsk.equals(tagValue))) {
+					if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 						tag.setAttribute(CHECKED, null);
 					}
 				}
@@ -180,7 +181,7 @@ public class FormProcessorVisitor extends TagWriter {
 	/**
 	 * Converts value to a string.
 	 */
-	protected String valueToString(String name, Object valueObject) {
+	protected String valueToString(final String name, final Object valueObject) {
 		if (!valueObject.getClass().isArray()) {
 			return valueObject.toString();
 		}
@@ -214,7 +215,7 @@ public class FormProcessorVisitor extends TagWriter {
 	private boolean inSelect;
 	private String currentSelectName;
 
-	private void processSelectOpenTag(Tag tag) {
+	private void processSelectOpenTag(final Tag tag) {
 		CharSequence name = tag.getAttributeValue(NAME);
 
 		if (name == null) {
@@ -230,7 +231,7 @@ public class FormProcessorVisitor extends TagWriter {
 		currentSelectName = null;
 	}
 
-	private void processOptionOpenTag(Tag tag) {
+	private void processOptionOpenTag(final Tag tag) {
 		CharSequence tagValue = tag.getAttributeValue(VALUE);
 		if (tagValue == null) {
 			return;
@@ -245,13 +246,13 @@ public class FormProcessorVisitor extends TagWriter {
 		if (vals.getClass().isArray()) {
 			String[] vs = StringUtil.toStringArray(vals);
 			for (String vsk : vs) {
-				if ((vsk != null) && (vsk.equals(tagValue))) {
+				if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 					tag.setAttribute(SELECTED, null);
 				}
 			}
 		} else {
 			String value = StringUtil.toString(vals);
-			if (value.equals(tagValue)) {
+			if (value.contentEquals(tagValue)) {
 				tag.setAttribute(SELECTED, null);
 			}
 		}
@@ -262,7 +263,7 @@ public class FormProcessorVisitor extends TagWriter {
 	private String textAreaValue;
 	private boolean inTextArea;
 
-	private void processTextareaStartTag(Tag tag) {
+	private void processTextareaStartTag(final Tag tag) {
 		inTextArea = true;
 
 		CharSequence name = tag.getAttributeValue(NAME);

@@ -47,7 +47,8 @@ import java.sql.SQLException;
  */
 public class StringConverter implements TypeConverter<String> {
 
-	public String convert(Object value) {
+	@Override
+	public String convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

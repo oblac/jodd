@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -59,7 +60,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Sets response status code.
 	 */
-	public HttpResponse statusCode(int statusCode) {
+	public HttpResponse statusCode(final int statusCode) {
 		this.statusCode = statusCode;
 		return this;
 	}
@@ -74,16 +75,37 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Sets response status phrase.
 	 */
-	public HttpResponse statusPhrase(String statusPhrase) {
+	public HttpResponse statusPhrase(final String statusPhrase) {
 		this.statusPhrase = statusPhrase;
 		return this;
+	}
+
+	/**
+	 * Parses 'location' header to return the next location or returns {@code null} if location not specified.
+	 * Specification (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">rfc2616</a>)
+	 * says that only absolute path must be provided, however, this does not
+	 * happens in the real world. There a <a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">proposal</a>
+	 * that allows server name etc to be omitted.
+	 */
+	public String location() {
+		String location = header("location");
+
+		if (location == null) {
+			return null;
+		}
+
+		if (location.startsWith(StringPool.SLASH)) {
+			location = getHttpRequest().hostUrl() + location;
+		}
+
+		return location;
 	}
 
 	// ---------------------------------------------------------------- cookie
 
 	/**
-	 * Returns list of cookies sent from server.
-	 * If no cookie found, returns an empty array.
+	 * Returns list of valid cookies sent from server.
+	 * If no cookie found, returns an empty array. Invalid cookies are ignored.
 	 */
 	public Cookie[] cookies() {
 		List<String> newCookies = headers("set-cookie");
@@ -92,17 +114,20 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			return new Cookie[0];
 		}
 
-		Cookie[] cookies = new Cookie[newCookies.size()];
+		List<Cookie> cookieList = new ArrayList<>(newCookies.size());
 
-		for (int i = 0; i < newCookies.size(); i++) {
-			String cookieValue = newCookies.get(i);
+		for (String cookieValue : newCookies) {
+			try {
+				Cookie cookie = new Cookie(cookieValue);
 
-			Cookie cookie = new Cookie(cookieValue);
-
-			cookies[i] = cookie;
+				cookieList.add(cookie);
+			}
+			catch (Exception ex) {
+				// ignore
+			}
 		}
 
-		return cookies;
+		return cookieList.toArray(new Cookie[0]);
 	}
 
 	// ---------------------------------------------------------------- body
@@ -116,7 +141,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 
 		if (contentEncoding != null && contentEncoding().equals("gzip")) {
 			if (body != null) {
-				removeHeader(HEADER_CONTENT_ENCODING);
+				headerRemove(HEADER_CONTENT_ENCODING);
 				try {
 					ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StringPool.ISO_8859_1));
 					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
@@ -141,7 +166,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Creates response {@link jodd.http.Buffer buffer}.
 	 */
 	@Override
-	protected Buffer buffer(boolean fullResponse) {
+	protected Buffer buffer(final boolean fullResponse) {
 		// form
 
 		Buffer formBuffer = formBuffer();
@@ -168,12 +193,12 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Reads response input stream and returns {@link HttpResponse response}.
 	 * Supports both streamed and chunked response.
 	 */
-	public static HttpResponse readFrom(InputStream in) {
+	public static HttpResponse readFrom(final InputStream in) {
 		InputStreamReader inputStreamReader;
 		try {
 			inputStreamReader = new InputStreamReader(in, StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
+		} catch (UnsupportedEncodingException unee) {
+			throw new HttpException(unee);
 		}
 		BufferedReader reader = new BufferedReader(inputStreamReader);
 
@@ -232,7 +257,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Binds {@link jodd.http.HttpRequest} to this response.
 	 */
-	void assignHttpRequest(HttpRequest httpRequest) {
+	void assignHttpRequest(final HttpRequest httpRequest) {
 		this.httpRequest = httpRequest;
 	}
 

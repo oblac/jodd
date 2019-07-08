@@ -6,5 +6,5 @@ dependencies {
 	compile project(':jodd-bean')
 	compile project(':jodd-core')
 
-	testCompile lib.junit
+	testCompile lib.junit5
 }

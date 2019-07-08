@@ -25,20 +25,42 @@
 
 package jodd.mail;
 
-import org.junit.Test;
+import jdk.nashorn.internal.runtime.events.RecompilationEvent;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import javax.mail.MessagingException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
 
-public class EMLComposerTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class EMLComposerTest {
+
+	private static final String HELLO = "Hello";
 
 	@Test
-	public void testWriteSimpleEmail() {
-		Email email = Email.create().from("Joe").to("Pig").addText("Hello");
+	void testWriteSimpleEmail() {
+		final Email email = Email.create().from("Joe@example.com").to("Pig@example.com").textMessage(HELLO);
 
-		String eml = EMLComposer.create().compose(email);
+		final String eml = EMLComposer.create().compose(email);
 
-		assertTrue(eml.contains("From: Joe\r\n"));
-		assertTrue(eml.contains("To: Pig\r\n"));
-		assertTrue(eml.contains("Hello"));
+		assertTrue(eml.contains("From: Joe@example.com\r\n"));
+		assertTrue(eml.contains("To: Pig@example.com\r\n"));
+		assertTrue(eml.contains(HELLO));
+	}
+
+	@Test
+	void testWriteSimpleReceivedEmail() throws FileNotFoundException, MessagingException {
+		final URL data = EMLComposerTest.class.getResource("test");
+		final File emlFile = new File(data.getFile(), "simple.eml");
+
+		ReceivedEmail email = EMLParser.create().parse(emlFile);
+
+		final String eml = EMLComposer.create().compose(email);
+
+		assertTrue(eml.contains("From: sender@emailhost.com\r\n"));
+		assertTrue(eml.contains("To: recipient@emailhost.com\r\n"));
 	}
 }

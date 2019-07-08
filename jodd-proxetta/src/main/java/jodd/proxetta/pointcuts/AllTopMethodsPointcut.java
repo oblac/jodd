@@ -26,15 +26,23 @@
 package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.ProxyPointcut;
 
 /**
  * Filter for top-level public methods
  */
-public class AllTopMethodsPointcut extends ProxyPointcutSupport {
+public class AllTopMethodsPointcut implements ProxyPointcut {
 
-	public boolean apply(MethodInfo methodInfo) {
+	private static final AllTopMethodsPointcut INSTANCE = new AllTopMethodsPointcut();
+
+	public static AllTopMethodsPointcut get() {
+		return INSTANCE;
+	}
+
+	@Override
+	public boolean apply(final MethodInfo methodInfo) {
 		return
-				isTopLevelMethod(methodInfo) &&
-				isPublic(methodInfo);
+				methodInfo.isTopLevelMethod() &&
+					methodInfo.isPublicMethod();
 	}
 }

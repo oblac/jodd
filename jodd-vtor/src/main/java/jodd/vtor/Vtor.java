@@ -57,7 +57,7 @@ public class Vtor {
 	 * Adds new {@link Violation violation}. Violations are added during {@link #validate(ValidationContext, Object, String) validation}.
 	 * They can be added after the validation as well, with <code>null</code> check (and constraint).
 	 */
-	public void addViolation(Violation v) {
+	public void addViolation(final Violation v) {
 		if (v == null) {
 			return;
 		}
@@ -79,21 +79,21 @@ public class Vtor {
 	/**
 	 * Validate object using context from the annotations.
 	 */
-	public List<Violation> validate(Object target) {
+	public List<Violation> validate(final Object target) {
 		return validate(ValidationContext.resolveFor(target.getClass()), target);
 	}
 
 	/**
 	 * @see #validate(ValidationContext, Object, String)
 	 */
-	public List<Violation> validate(ValidationContext vctx, Object target) {
+	public List<Violation> validate(final ValidationContext vctx, final Object target) {
 		return validate(vctx, target, null);
 	}
 
 	/**
 	 * Performs validation of provided validation context and appends violations.
 	 */
-	public List<Violation> validate(ValidationContext ctx, Object target, String targetName) {
+	public List<Violation> validate(final ValidationContext ctx, final Object target, final String targetName) {
 		for (Map.Entry<String, List<Check>> entry : ctx.map.entrySet()) {
 			String name = entry.getKey();
 			Object value = BeanUtil.declaredSilent.getProperty(target, name);
@@ -126,7 +126,7 @@ public class Vtor {
 	 * Set validation severity. Only checks with equal and higher severity
 	 * will be checked.
 	 */
-	public void setSeverity(int severity) {
+	public void setSeverity(final int severity) {
 		this.severity = severity;
 	}
 
@@ -145,14 +145,14 @@ public class Vtor {
 	 * If set to <code>true</code>, then <b>all</b> profiles will be validated;
 	 * otherwise, only <b>default</b> profiles will be validated.
 	 */
-	public void setValidateAllProfilesByDefault(boolean validateAllProfilesByDefault) {
+	public void setValidateAllProfilesByDefault(final boolean validateAllProfilesByDefault) {
 		this.validateAllProfilesByDefault = validateAllProfilesByDefault;
 	}
 
 	/**
 	 * Enables single profile.
 	 */
-	public void useProfile(String profile) {
+	public void useProfile(final String profile) {
 		if (profile == null) {
 			return;
 		}
@@ -165,7 +165,7 @@ public class Vtor {
 	/**
 	 * Enables list of profiles.
 	 */
-	public void useProfiles(String... enabledProfiles) {
+	public void useProfiles(final String... enabledProfiles) {
 		if (enabledProfiles == null) {
 			return;
 		}
@@ -188,7 +188,7 @@ public class Vtor {
 	/**
 	 * Determine if any of checks profiles is among enabled profiles.
 	 */
-	protected boolean matchProfiles(String[] checkProfiles) {
+	protected boolean matchProfiles(final String[] checkProfiles) {
 		// test for all profiles
 		if ((checkProfiles != null) && (checkProfiles.length == 1) && checkProfiles[0].equals(ALL_PROFILES)) {
 			return true;

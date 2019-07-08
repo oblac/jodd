@@ -25,16 +25,16 @@
 
 package jodd.typeconverter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jodd.util.ArraysUtil.ints;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MatrixTest {
+class MatrixTest {
 
 	private List<Integer> intsList(int... array) {
 		ArrayList<Integer> list = new ArrayList<>();
@@ -45,13 +45,13 @@ public class MatrixTest {
 	}
 
 	@Test
-	public void testIntMatrix2() {
+	void testIntMatrix2() {
 		ArrayList<List<Integer>> matrix = new ArrayList<>();
 
 		matrix.add(intsList(1, 2, 3));
 		matrix.add(intsList(9, 8, 7));
 
-		int[][] arr = TypeConverterManager.convertType(matrix, int[][].class);
+		int[][] arr = TypeConverterManager.get().convertType(matrix, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -60,13 +60,13 @@ public class MatrixTest {
 	}
 
 	@Test
-	public void testStringToIntMatrix() {
+	void testStringToIntMatrix() {
 		String[][] strings = new String[][] {
 				{"123", "865"},
 				{"432", "345", "9832"}
 		};
 
-		int[][] arr = TypeConverterManager.convertType(strings, int[][].class);
+		int[][] arr = TypeConverterManager.get().convertType(strings, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -75,13 +75,13 @@ public class MatrixTest {
 	}
 
 	@Test
-	public void testIntToStringMatrix() {
+	void testIntToStringMatrix() {
 		int[][] values = new int[][] {
 				{123, 865},
 				{432, 345, 9832}
 		};
 
-		String[][] arr = TypeConverterManager.convertType(values, String[][].class);
+		String[][] arr = TypeConverterManager.get().convertType(values, String[][].class);
 
 		assertEquals(2, arr.length);
 

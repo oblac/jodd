@@ -25,16 +25,16 @@
 
 package jodd.json;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonWriterTest {
+class JsonWriterTest {
 
 	@Test
-	public void testJsonWriter() {
+	void testJsonWriter() {
 		StringBuilder sb = new StringBuilder();
-		JsonWriter jsonWriter = new JsonWriter(sb);
+		JsonWriter jsonWriter = new JsonWriter(sb, false);
 
 		jsonWriter.writeOpenObject();
 		jsonWriter.writeName("one");

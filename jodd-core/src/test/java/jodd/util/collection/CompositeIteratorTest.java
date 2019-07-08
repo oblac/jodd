@@ -25,25 +25,25 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CompositeIteratorTest {
+class CompositeIteratorTest {
 
 	@Test
-	public void testNextWithOne() {
+	void testNextWithOne() {
 		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		
 		try {
 			compositeIterator.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException e) {
 			// ignore
 		}
@@ -54,7 +54,7 @@ public class CompositeIteratorTest {
 		
 		try {
 			compositeIterator.add(iterator);
-			fail();
+			fail("error");
 		} catch (IllegalArgumentException iaex) {
 			// ignore
 		}
@@ -70,9 +70,9 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithOne() {
-		CompositeIterator compositeIterator = new CompositeIterator();
-		List list = createList(4);
+	void testRemoveWithOne() {
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
+		List<Integer> list = createList(4);
 		compositeIterator.add(list.iterator());
 		int count = list.size();
 		while (compositeIterator.hasNext()) {
@@ -86,9 +86,9 @@ public class CompositeIteratorTest {
 
 
 	@Test
-	public void testNextWithTwo() {
-		CompositeIterator compositeIterator = new CompositeIterator();
-		List list = createList(4);
+	void testNextWithTwo() {
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
+		List<Integer> list = createList(4);
 		int count = list.size();
 		compositeIterator.add(list.iterator());
 		list = createList(4);
@@ -105,12 +105,12 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithTwo() {
+	void testRemoveWithTwo() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 		int count = list1.size() + list2.size();
 
-		CompositeIterator compositeIterator = new CompositeIterator();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 
@@ -126,7 +126,7 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testNextWithThree() {
+	void testNextWithThree() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 		List<Integer> list3 = createList(4);
@@ -145,7 +145,7 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithThree() {
+	void testRemoveWithThree() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = new ArrayList<>();
 		List<Integer> list3 = createList(4);
@@ -168,7 +168,7 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveFail() {
+	void testRemoveFail() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 
@@ -177,14 +177,14 @@ public class CompositeIteratorTest {
 		compositeIterator.add(list2.iterator());
 		try {
 			compositeIterator.remove();
-			fail();
+			fail("error");
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
 	@Test
-	public void testPartialIterationWithThree1() {
+	void testPartialIterationWithThree1() {
 		List<Integer> list1 = createList(4);
 		Iterator<Integer> it1 = list1.iterator();
 		List<Integer> list2 = createList(3);
@@ -211,7 +211,7 @@ public class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testPartialIterationWithThree2() {
+	void testPartialIterationWithThree2() {
 		List<Integer> list1 = createList(4);
 		Iterator<Integer> it1 = list1.iterator();
 		List<Integer> list2 = createList(3);

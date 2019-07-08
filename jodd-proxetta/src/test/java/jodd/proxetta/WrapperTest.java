@@ -25,47 +25,50 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.*;
+import jodd.proxetta.fixtures.data.Calc;
+import jodd.proxetta.fixtures.data.CalcImpl;
+import jodd.proxetta.fixtures.data.CalcSuper;
+import jodd.proxetta.fixtures.data.CalcSuperImpl;
+import jodd.proxetta.fixtures.data.StatCounter;
+import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
-import jodd.proxetta.pointcuts.ProxyPointcutSupport;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.proxetta.impl.WrapperProxettaFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class WrapperTest {
+class WrapperTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		StatCounter.counter = 0;
 	}
 
 	@Test
-	public void testClassWrapper() throws Exception {
+	void testClassWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				return !isRootMethod(methodInfo) && isPublic(methodInfo);
-			}
-		}));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
 
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over CLASS
 		// resulting object has ALL interfaces
 		// resulting object wraps ALL target class methods
-		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass());
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(calc.getClass());
 
 		Class calc2Class = builder.define();
 
 		Object object = calc2Class.newInstance();
 
 		assertTrue(object instanceof Calc);
-		assertEquals(CalcImpl.class, ProxettaUtil.getTargetClass(object.getClass()));
+		assertEquals(CalcImpl.class, ProxettaUtil.resolveTargetClass(object.getClass()));
 		assertEquals(1, calc2Class.getInterfaces().length);
 
 		builder.injectTargetIntoWrapper(calc, object);
@@ -89,21 +92,17 @@ public class WrapperTest {
 	}
 
 	@Test
-	public void testClassWrapperCastToInterface() throws Exception {
+	void testClassWrapperCastToInterface() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				return !isRootMethod(methodInfo) && isPublic(methodInfo);
-			}
-		}));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
 
-//		proxetta.setDebugFolder("d:\\");
+		//proxetta.setDebugFolder("/Users/igor");
 
 		// wrapper over CLASS casted to interface,
 		// resulting object has ONE interface
 		// ALL target methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass(), Calc.class, ".CalcImpl2");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(calc.getClass()).setTargetInterface(Calc.class).setTargetProxyClassName(".CalcImpl2");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -125,21 +124,17 @@ public class WrapperTest {
 	}
 
 	@Test
-	public void testInterfaceWrapper() throws Exception {
+	void testInterfaceWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				return isTopLevelMethod(methodInfo) && isPublic(methodInfo);
-			}
-		}));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isTopLevelMethod() && methodInfo.isPublicMethod()));
 
 		//proxetta.setDebugFolder("/Users/igor");
 
 		// wrapper over INTERFACE
 		// resulting object has ONE interface
 		// only interface methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder(Calc.class, ".CalcImpl3");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(Calc.class).setTargetProxyClassName(".CalcImpl3");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -159,28 +154,23 @@ public class WrapperTest {
 
 		try {
 			calc2Class.getMethod("customMethod");
-			fail();
+			fail("error");
 		} catch (Exception ex) {
 		}
 	}
 
 
 	@Test
-	public void testPartialMethodsWrapped() throws Exception {
+	void testPartialMethodsWrapped() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				return
-						isPublic(methodInfo) &&
-								(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"));
-			}
-		}));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isPublicMethod() &&
+				(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"))));
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class);
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(CalcSuper.class);
 
 		Class<CalcSuper> calc2Class = builder.define();
 
@@ -210,19 +200,15 @@ public class WrapperTest {
 	}
 
 	@Test
-	public void testNoPointcutMatched() throws Exception {
+	void testNoPointcutMatched() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				return false;
-			}
-		}));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> false));
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class, ".CalcSuper22");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(CalcSuper.class).setTargetProxyClassName(".CalcSuper22");
 
 		Class<CalcSuper> calc2Class = builder.define();
 

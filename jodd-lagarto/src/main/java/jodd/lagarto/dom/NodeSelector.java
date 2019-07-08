@@ -28,10 +28,10 @@ package jodd.lagarto.dom;
 import jodd.csselly.CSSelly;
 import jodd.csselly.Combinator;
 import jodd.csselly.CssSelector;
-import jodd.util.collection.JoddArrayList;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public class NodeSelector {
 
 	protected final Node rootNode;
 
-	public NodeSelector(Node rootNode) {
+	public NodeSelector(final Node rootNode) {
 		this.rootNode = rootNode;
 	}
 
@@ -51,7 +51,7 @@ public class NodeSelector {
 	/**
 	 * Selects nodes using CSS3 selector query.
 	 */
-	public List<Node> select(String query) {
+	public List<Node> select(final String query) {
 		Collection<List<CssSelector>> selectorsCollection = CSSelly.parse(query);
 		return select(selectorsCollection);
 	}
@@ -60,7 +60,7 @@ public class NodeSelector {
 	 * Selected nodes using pre-parsed CSS selectors. Take in consideration
 	 * collection type for results grouping order.
 	 */
-	public List<Node> select(Collection<List<CssSelector>> selectorsCollection) {
+	public List<Node> select(final Collection<List<CssSelector>> selectorsCollection) {
 		List<Node> results = new ArrayList<>();
 		for (List<CssSelector> selectors : selectorsCollection) {
 			processSelectors(results, selectors);
@@ -71,7 +71,7 @@ public class NodeSelector {
 	/**
 	 * Process selectors and keep adding results.
 	 */
-	protected void processSelectors(List<Node> results, List<CssSelector> selectors) {
+	protected void processSelectors(final List<Node> results, final List<CssSelector> selectors) {
 		List<Node> selectedNodes = select(rootNode, selectors);
 
 		for (Node selectedNode : selectedNodes) {
@@ -84,7 +84,7 @@ public class NodeSelector {
 	/**
 	 * Selects nodes using CSS3 selector query and returns the very first one.
 	 */
-	public Node selectFirst(String query) {
+	public Node selectFirst(final String query) {
 		List<Node> selectedNodes = select(query);
 		if (selectedNodes.isEmpty()) {
 			return null;
@@ -95,7 +95,7 @@ public class NodeSelector {
 	/**
 	 * Selects nodes using {@link NodeFilter node filter}.
 	 */
-	public List<Node> select(NodeFilter nodeFilter) {
+	public List<Node> select(final NodeFilter nodeFilter) {
 		List<Node> nodes = new ArrayList<>();
 		walk(rootNode, nodeFilter, nodes);
 		return nodes;
@@ -104,7 +104,7 @@ public class NodeSelector {
 	/**
 	 * Selects nodes using {@link NodeFilter node filter} and return the very first one.
 	 */
-	public Node selectFirst(NodeFilter nodeFilter) {
+	public Node selectFirst(final NodeFilter nodeFilter) {
 		List<Node> selectedNodes = select(nodeFilter);
 		if (selectedNodes.isEmpty()) {
 			return null;
@@ -114,7 +114,7 @@ public class NodeSelector {
 
 	// ---------------------------------------------------------------- internal
 
-	protected void walk(Node rootNode, NodeFilter nodeFilter, List<Node> result) {
+	protected void walk(final Node rootNode, final NodeFilter nodeFilter, final List<Node> result) {
 		int childCount = rootNode.getChildNodesCount();
 		for (int i = 0; i < childCount; i++) {
 			Node node = rootNode.getChild(i);
@@ -125,7 +125,7 @@ public class NodeSelector {
 		}
 	}
 
-	protected List<Node> select(Node rootNode, List<CssSelector> selectors) {
+	protected List<Node> select(final Node rootNode, final List<CssSelector> selectors) {
 
 		// start with the root node
 		List<Node> nodes = new ArrayList<>();
@@ -161,7 +161,7 @@ public class NodeSelector {
 	/**
 	 * Walks over the child notes, maintaining the tree order and not using recursion.
 	 */
-	protected void walkDescendantsIteratively(JoddArrayList<Node> nodes, CssSelector cssSelector, List<Node> result) {
+	protected void walkDescendantsIteratively(final LinkedList<Node> nodes, final CssSelector cssSelector, final List<Node> result) {
 		while (!nodes.isEmpty()) {
 			Node node = nodes.removeFirst();
 			selectAndAdd(node, cssSelector, result);
@@ -177,7 +177,7 @@ public class NodeSelector {
 	/**
 	 * Finds nodes in the tree that matches single selector.
 	 */
-	protected void walk(Node rootNode, CssSelector cssSelector, List<Node> result) {
+	protected void walk(final Node rootNode, final CssSelector cssSelector, final List<Node> result) {
 
 		// previous combinator determines the behavior
 		CssSelector previousCssSelector = cssSelector.getPrevCssSelector();
@@ -188,7 +188,7 @@ public class NodeSelector {
 
 		switch (combinator) {
 			case DESCENDANT:
-				JoddArrayList<Node> nodes = new JoddArrayList<>();
+				LinkedList<Node> nodes = new LinkedList<>();
 				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					nodes.add(rootNode.getChild(i));
@@ -226,7 +226,7 @@ public class NodeSelector {
 	/**
 	 * Selects single node for single selector and appends it to the results.
 	 */
-	protected void selectAndAdd(Node node, CssSelector cssSelector, List<Node> result) {
+	protected void selectAndAdd(final Node node, final CssSelector cssSelector, final List<Node> result) {
 		// ignore all nodes that are not elements
 		if (node.getNodeType() != Node.NodeType.ELEMENT) {
 			return;
@@ -245,7 +245,7 @@ public class NodeSelector {
 	/**
 	 * Filter nodes.
 	 */
-	protected boolean filter(List<Node> currentResults, Node node, CssSelector cssSelector, int index) {
+	protected boolean filter(final List<Node> currentResults, final Node node, final CssSelector cssSelector, final int index) {
 		return cssSelector.accept(currentResults, node, index);
 	}
 

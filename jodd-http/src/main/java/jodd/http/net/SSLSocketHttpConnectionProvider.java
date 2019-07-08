@@ -25,6 +25,8 @@
 
 package jodd.http.net;
 
+import jodd.http.ProxyInfo;
+
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -36,16 +38,20 @@ public class SSLSocketHttpConnectionProvider extends SocketHttpConnectionProvide
 
 	private final SSLSocketFactory socketFactory;
 
-	public SSLSocketHttpConnectionProvider(SSLSocketFactory sslSocketFactory) {
+	public SSLSocketHttpConnectionProvider(final SSLSocketFactory sslSocketFactory) {
 		this.socketFactory = sslSocketFactory;
 	}
 
-	public SSLSocketHttpConnectionProvider(SSLContext sslContext) {
+	public SSLSocketHttpConnectionProvider(final SSLContext sslContext) {
 		this.socketFactory = sslContext.getSocketFactory();
 	}
 
 	@Override
-	protected SocketFactory getSSLSocketFactory() throws Exception {
+	protected SocketFactory resolveSocketFactory(
+			final ProxyInfo proxy,
+			final boolean ssl,
+			final boolean trustAllCertificates,
+			final int connectionTimeout) {
 		return socketFactory;
 	}
 }

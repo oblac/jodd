@@ -25,20 +25,20 @@
 
 package jodd.cache;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.Semaphore;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ConcurrencyTest {
+class ConcurrencyTest {
 
 	/**
 	 * http://code.google.com/p/jodd/issues/detail?id=4
 	 */
 	@Test
-	public void testPutGetAndPrune() throws InterruptedException {
+	void testPutGetAndPrune() throws InterruptedException {
 		LFUCache<String, String> lfuCache = new LFUCache<>(2, 0);
 
 		lfuCache.put("1", "value");

@@ -33,16 +33,16 @@ public class NotBlankConstraint implements ValidationConstraint<NotBlank> {
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(NotBlank annotation) {
+	public void configure(final NotBlank annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value);
 	}
 
-	public static boolean validate(Object value) {
+	public static boolean validate(final Object value) {
 		if (value == null) {
 			return true;
 		}

@@ -25,16 +25,16 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.Girl;
-import org.junit.Test;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.Girl;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JointHintResolverTest {
+class JointHintResolverTest {
 
 	@Test
-	public void testHints() {
+	void testHints() {
 		Girl girl = new Girl();
 		BadBoy badBoy = new BadBoy();
 		Object[] data = new Object[]{girl, badBoy};

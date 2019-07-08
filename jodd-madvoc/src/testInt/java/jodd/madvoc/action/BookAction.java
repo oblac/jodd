@@ -27,11 +27,13 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.RestAction;
 
 @MadvocAction
 public class BookAction {
 
-	@jodd.madvoc.meta.RestAction("${iban}")
+	@RestAction("{iban}")
 	public Book get(@In long iban) {
 		// use BookResult to render a book (@RenderWith)
 		Book book = new BookResult();
@@ -42,7 +44,7 @@ public class BookAction {
 		return book;
 	}
 
-	@jodd.madvoc.meta.RestAction("${iban}")
+	@RestAction("{iban}")
 	public Book post(@In long iban) {
 		Book book = new Book();
 
@@ -53,7 +55,8 @@ public class BookAction {
 		return book;
 	}
 
-	@jodd.madvoc.meta.RestAction(value = "${iban}", result = Book2ActionResult.class)
+	@RestAction("{iban}")
+	@RenderWith(Book2ActionResult.class)
 	public Book put(@In long iban) {
 		Book book = new Book();
 

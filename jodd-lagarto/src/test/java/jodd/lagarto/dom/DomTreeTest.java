@@ -27,21 +27,24 @@ package jodd.lagarto.dom;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DomTreeTest {
+class DomTreeTest {
 
 	protected String testDataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -50,7 +53,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testSpecialCases() {
+	void testSpecialCases() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -77,7 +80,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testDetach() {
+	void testDetach() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -96,7 +99,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testInsertRemoveDeepLevel() {
+	void testInsertRemoveDeepLevel() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -164,7 +167,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testAttributes() {
+	void testAttributes() {
 		Document document = new Document();
 
 		Element node = new Element(document, "div");
@@ -192,7 +195,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testChildren() {
+	void testChildren() {
 		Document document = new Document();
 
 		Element node = new Element(document, "div");
@@ -236,7 +239,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testCssPath() {
+	void testCssPath() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -254,7 +257,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testToWrite() throws IOException {
+	void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input><input><img></form></body></html>", innerHtml);
@@ -316,7 +319,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testBr() throws IOException {
+	void testBr() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
 		String innerHtml = document.getHtml();
 		assertEquals("<div><br>some content <br>Some more</div>", innerHtml);
@@ -329,7 +332,7 @@ public class DomTreeTest {
 	}
 
 	@Test
-	public void testReindexOne() {
+	void testReindexOne() {
 		Document document = new Document();
 
 		Element one = new Element(document, "one");
@@ -355,5 +358,21 @@ public class DomTreeTest {
 		assertEquals(0, one.siblingElementIndex);
 		assertEquals(1, two.siblingElementIndex);
 		assertEquals(2, four.siblingElementIndex);
+	}
+
+	@Test
+	void testHasVsGet333() {
+		Document document = new Document();
+
+		Element one = new Element(document, "one");
+		document.addChild(one);
+		one.setAttribute("a1", "v1");
+
+		assertEquals("v1", one.getAttribute("a1"));
+		assertEquals("v1", one.getAttribute("A1"));
+
+		assertTrue(one.hasAttribute("a1"));
+		assertTrue(one.hasAttribute("A1"));
+
 	}
 }

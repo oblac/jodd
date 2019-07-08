@@ -25,22 +25,25 @@
 
 package jodd.log;
 
-import jodd.log.impl.NOPLoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
-import org.junit.Test;
+import jodd.log.impl.JCLLogger;
+import jodd.log.impl.Log4j2Logger;
+import jodd.log.impl.NOPLogger;
+import jodd.log.impl.SimpleLogger;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LoggerFactoryTest {
+class LoggerFactoryTest {
 
 	@Test
-	public void testNopLogger() {
-		LoggerFactory.setLoggerFactory(new NOPLoggerFactory());
+	void testNopLogger() {
+		LoggerFactory.setLoggerProvider(NOPLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
 
 		assertEquals("*", log.getName());
@@ -58,9 +61,10 @@ public class LoggerFactoryTest {
 	}
 
 	@Test
-	public void testSimpleFactory() {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.TRACE));
+	void testSimpleFactory() {
+		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
+		log.setLevel(Logger.Level.TRACE);
 
 		assertEquals("foo", log.getName());
 

@@ -25,30 +25,24 @@
 
 package jodd.lagarto;
 
+import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
-import jodd.util.StringPool;
-
-import java.nio.CharBuffer;
 
 /**
  * Utility scanner over a char buffer.
  */
 class Scanner {
 
-	protected final boolean emitStrings;
-
 	protected char[] input;
 	protected int ndx = 0;
 	protected int total;
 
-	Scanner(boolean emitStrings) {
-		this.emitStrings = emitStrings;
-	}
+	Scanner() { }
 
 	/**
 	 * Initializes scanner.
 	 */
-	protected void initialize(char[] input) {
+	protected void initialize(final char[] input) {
 		this.input = input;
 		this.ndx = -1;
 		this.total = input.length;
@@ -60,7 +54,7 @@ class Scanner {
 	 * Finds a character in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(char target, int from, int end) {
+	protected final int find(final char target, int from, final int end) {
 		while (from < end) {
 			if (input[from] == target) {
 				break;
@@ -75,7 +69,7 @@ class Scanner {
 	 * Finds character buffer in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(char[] target, int from, int end) {
+	protected final int find(final char[] target, int from, final int end) {
 		while (from < end) {
 			if (match(target, from)) {
 				break;
@@ -91,7 +85,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(char[] target, int ndx) {
+	protected final boolean match(final char[] target, final int ndx) {
 		if (ndx + target.length >= total) {
 			return false;
 		}
@@ -110,7 +104,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content at current location case-sensitive.
 	 */
-	public final boolean match(char[] target) {
+	public final boolean match(final char[] target) {
 		return match(target, ndx);
 	}
 
@@ -118,7 +112,7 @@ class Scanner {
 	 * Matches char buffer given in uppercase with content at current location, that will
 	 * be converted to upper case to make case-insensitive matching.
 	 */
-	public final boolean matchUpperCase(char[] uppercaseTarget) {
+	public final boolean matchUpperCase(final char[] uppercaseTarget) {
 		if (ndx + uppercaseTarget.length > total) {
 			return false;
 		}
@@ -126,7 +120,7 @@ class Scanner {
 		int j = ndx;
 
 		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
-			char c = CharUtil.toUpperAscii(input[j]);
+			final char c = CharUtil.toUpperAscii(input[j]);
 
 			if (c != uppercaseTarget[i]) {
 				return false;
@@ -139,19 +133,14 @@ class Scanner {
 	// ---------------------------------------------------------------- char sequences
 
 	/**
-	 * Creates char sub-sequence from the input. It may return a <code>String</code>
-	 * of <code>CharBuffer</code>. Use <code>String</code> for DOM builder,
-	 * but for visitor use <code>CharBuffer</code> for better performances.
+	 * Creates char sub-sequence from the input.
 	 */
-	protected final CharSequence charSequence(int from, int to) {
-		int len = to - from;
-		if (len == 0) {
-			return emitStrings ? StringPool.EMPTY : EMPTY_CHAR_BUFFER;
+	protected final CharSequence charSequence(final int from, final int to) {
+		if (from == to) {
+			return CharArraySequence.EMPTY;
 		}
-		return emitStrings ? new String(input, from, len) : CharBuffer.wrap(input, from, len);
+		return CharArraySequence.of(input, from, to - from);
 	}
-
-	protected static CharBuffer EMPTY_CHAR_BUFFER = CharBuffer.wrap(new char[0]);
 
 	// ---------------------------------------------------------------- position
 
@@ -169,7 +158,7 @@ class Scanner {
 	/**
 	 * Calculates {@link Position current position}: offset, line and column.
 	 */
-	protected Position position(int position) {
+	protected Position position(final int position) {
 		int line;
 		int offset;
 		int lastNewLineOffset;
@@ -185,7 +174,7 @@ class Scanner {
 		}
 
 		while (offset < position) {
-			char c = input[offset];
+			final char c = input[offset];
 
 			if (c == '\n') {
 				line++;
@@ -211,18 +200,19 @@ class Scanner {
 		private final int line;
 		private final int column;
 
-		public Position(int offset, int line, int column) {
+		public Position(final int offset, final int line, final int column) {
 			this.offset = offset;
 			this.line = line;
 			this.column = column;
 		}
 
-		public Position(int offset) {
+		public Position(final int offset) {
 			this.offset = offset;
 			this.line = -1;
 			this.column = -1;
 		}
 
+		@Override
 		public String toString() {
 			if (offset == -1) {
 				return "[" + line + ':' + column + ']';

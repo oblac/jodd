@@ -37,7 +37,7 @@ public class HtmlCCommentExpressionMatcher {
 	 * Returns <code>true</code> it conditional comment expression is positive,
 	 * otherwise returns <code>false</code>.
 	 */
-	public boolean match(float ieVersion, String expression) {
+	public boolean match(final float ieVersion, String expression) {
 		expression = StringUtil.removeChars(expression, "()");
 		expression = expression.substring(3);
 
@@ -123,7 +123,7 @@ public class HtmlCCommentExpressionMatcher {
 
 	// If in expression IE version is represented as a natural number
 	// we should compare only major number
-	private float versionToCompare(float ieVersion, float number) {
+	private float versionToCompare(final float ieVersion, final float number) {
 		return (int) number == number ? (int) ieVersion : ieVersion;
 	}
 }

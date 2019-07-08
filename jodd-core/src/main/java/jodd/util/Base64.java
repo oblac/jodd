@@ -25,10 +25,7 @@
 
 package jodd.util;
 
-import jodd.core.JoddCore;
-
 import java.util.Arrays;
-import java.io.UnsupportedEncodingException;
 
 /**
  * The <b>fastest</b> Base64 encoder/decoder implementations.
@@ -61,7 +58,7 @@ public class Base64 {
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
 	 * @param lineSeparator optional CRLF after 76 chars, unless EOF.
 	 */
-	public static char[] encodeToChar(byte[] arr, boolean lineSeparator) {
+	public static char[] encodeToChar(final byte[] arr, final boolean lineSeparator) {
 		int len = arr != null ? arr.length : 0;
 		if (len == 0) {
 			return new char[0];
@@ -102,7 +99,7 @@ public class Base64 {
 	/**
 	 * Decodes a BASE64 encoded char array.
 	 */
-	public byte[] decode(char[] arr) {
+	public static byte[] decode(final char[] arr) {
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];
@@ -144,23 +141,15 @@ public class Base64 {
 
 	// ---------------------------------------------------------------- byte
 
-	public static byte[] encodeToByte(String s) {
-		try {
-			return encodeToByte(s.getBytes(JoddCore.encoding), false);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static byte[] encodeToByte(final String s) {
+		return encodeToByte(StringUtil.getBytes(s), false);
 	}
 
-	public static byte[] encodeToByte(String s, boolean lineSep) {
-		try {
-			return encodeToByte(s.getBytes(JoddCore.encoding), lineSep);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static byte[] encodeToByte(final String s, final boolean lineSep) {
+		return encodeToByte(StringUtil.getBytes(s), lineSep);
 	}
 
-	public static byte[] encodeToByte(byte[] arr) {
+	public static byte[] encodeToByte(final byte[] arr) {
 		return encodeToByte(arr, false);
 	}
 
@@ -168,7 +157,7 @@ public class Base64 {
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
 	 * @param lineSep optional CRLF after 76 chars, unless EOF.
 	 */
-	public static byte[] encodeToByte(byte[] arr, boolean lineSep) {
+	public static byte[] encodeToByte(final byte[] arr, final boolean lineSep) {
 		int len = arr != null ? arr.length : 0;
 		if (len == 0) {
 			return new byte[0];
@@ -206,18 +195,14 @@ public class Base64 {
 		return dest;
 	}
 
-	public static String decodeToString(byte[] arr) {
-		try {
-			return new String(decode(arr), JoddCore.encoding);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static String decodeToString(final byte[] arr) {
+		return StringUtil.newString(decode(arr));
 	}
 
 	/**
 	 * Decodes BASE64 encoded byte array.
 	 */
-	public static byte[] decode(byte[] arr) {
+	public static byte[] decode(final byte[] arr) {
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];
@@ -259,45 +244,33 @@ public class Base64 {
 
 	// ---------------------------------------------------------------- string
 
-	public static String encodeToString(String s) {
-		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.encoding), false));
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static String encodeToString(final String s) {
+		return new String(encodeToChar(StringUtil.getBytes(s), false));
 	}
 
-	public static String encodeToString(String s, boolean lineSep) {
-		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.encoding), lineSep));
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static String encodeToString(final String s, final boolean lineSep) {
+		return new String(encodeToChar(StringUtil.getBytes(s), lineSep));
 	}
 
-	public static String encodeToString(byte[] arr) {
+	public static String encodeToString(final byte[] arr) {
 		return new String(encodeToChar(arr, false));
 	}
 
 	/**
 	 * Encodes a raw byte array into a BASE64 <code>String</code>.
 	 */
-	public static String encodeToString(byte[] arr, boolean lineSep) {
+	public static String encodeToString(final byte[] arr, final boolean lineSep) {
 		return new String(encodeToChar(arr, lineSep));
 	}
 
-	public static String decodeToString(String s) {
-		try {
-			return new String(decode(s), JoddCore.encoding);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+	public static String decodeToString(final String s) {
+		return StringUtil.newString(decode(s));
 	}
 
 	/**
 	 * Decodes a BASE64 encoded string.
 	 */
-	public static byte[] decode(String s) {
+	public static byte[] decode(final String s) {
 		int length = s.length();
 		if (length == 0) {
 			return new byte[0];

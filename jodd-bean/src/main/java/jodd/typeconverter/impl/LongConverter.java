@@ -41,7 +41,7 @@ import jodd.util.StringUtil;
  */
 public class LongConverter implements TypeConverter<Long> {
 
-	public Long convert(Object value) {
+	public Long convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

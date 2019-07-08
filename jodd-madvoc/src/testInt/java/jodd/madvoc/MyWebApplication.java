@@ -25,38 +25,43 @@
 
 package jodd.madvoc;
 
-import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
+import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.action.HelloAction;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.config.MadvocConfigurator;
-import jodd.madvoc.petite.PetiteWebApplication;
+import jodd.madvoc.component.RootPackages;
+import jodd.madvoc.petite.PetiteWebApp;
+import jodd.petite.AutomagicPetiteConfigurator;
+import jodd.petite.PetiteContainer;
 
-import javax.servlet.ServletContext;
-
-public class MyWebApplication extends PetiteWebApplication {
+public class MyWebApplication extends PetiteWebApp {
 
 	public MyWebApplication() {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
+		super(new PetiteContainer());
+		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
+		new AutomagicPetiteConfigurator(petiteContainer).configure();
 	}
 
 	@Override
-	public void registerMadvocComponents() {
+	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
-		registerComponent(MyRewriter.class);
+		madvocContainer.registerComponent(MyAsync.class);
+		madvocContainer.registerComponent(MyRewriter.class);
 	}
 
 	@Override
-	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
-		super.init(madvocConfig, servletContext);
+	protected void initialized() {
+		withRegisteredComponent(RootPackages.class, rp -> rp.addRootPackageOf(HelloAction.class));
 
-		madvocConfig.getRootPackages().addRootPackageOf(HelloAction.class);
-	}
+		router(madvoc -> {
+			madvoc
+				.get("/batman")
+				.mapTo(actionRequest -> {
+					System.out.println("Hello");
+				})
+				.bind();
 
-	@Override
-	public void configure(MadvocConfigurator configurator) {
-		super.configure(configurator);
+
+		});
 	}
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+    <div class="prev">
+        <p>Fourth</p>
+    </div>
+    <div class="next">
+        <p>First</p>
+    </div>
+    <script>$(".prev :last-child").prevAll().remove();$(".next :first-child").nextAll().remove();</script>
+</body>
+</html>

@@ -27,180 +27,183 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.tst.BooAction;
-import org.junit.Test;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ResultPath;
+import jodd.madvoc.fixtures.tst.BooAction;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ActionResultTest extends MadvocTestCase {
+class ActionResultTest extends MadvocTestCase {
 
 	@Test
-	public void testResolveResultPath() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+	void testResolveResultPath() {
+		WebApp webapp = new WebApp();
+		webapp.start();
+		
+		ResultMapper resultMapper = webapp.madvocContainer.lookupComponent(ResultMapper.class);
 
 		String path = "/boo.foo.html";
 		ResultPath resultPath = resultMapper.resolveResultPath(path, "ok");
-		assertEquals("/boo.foo.html.ok", resultPath.getPathValue());
-		assertEquals("/boo.foo.html", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/boo.foo.html.ok", resultPath.pathValue());
+		assertEquals("/boo.foo.html", resultPath.path());
+		assertEquals("ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "doo.ok");
-		assertEquals("/boo.foo.html.doo.ok", resultPath.getPathValue());
-		assertEquals("/boo.foo.html", resultPath.getPath());
-		assertEquals("doo.ok", resultPath.getValue());
+		assertEquals("/boo.foo.html.doo.ok", resultPath.pathValue());
+		assertEquals("/boo.foo.html", resultPath.path());
+		assertEquals("doo.ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "#ok");
-		assertEquals("/boo.foo.ok", resultPath.getPathValue());
-		assertEquals("/boo.foo.ok", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/boo.foo.ok", resultPath.pathValue());
+		assertEquals("/boo.foo.ok", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "#.ok");
-		assertEquals("/boo.foo.ok", resultPath.getPathValue());
-		assertEquals("/boo.foo", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/boo.foo.ok", resultPath.pathValue());
+		assertEquals("/boo.foo", resultPath.path());
+		assertEquals("ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "#.ok.do");
-		assertEquals("/boo.foo.ok.do", resultPath.getPathValue());
-		assertEquals("/boo.foo", resultPath.getPath());
-		assertEquals("ok.do", resultPath.getValue());
+		assertEquals("/boo.foo.ok.do", resultPath.pathValue());
+		assertEquals("/boo.foo", resultPath.path());
+		assertEquals("ok.do", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##ok");
-		assertEquals("/boo.ok", resultPath.getPathValue());
-		assertEquals("/boo.ok", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/boo.ok", resultPath.pathValue());
+		assertEquals("/boo.ok", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##.ok");
-		assertEquals("/boo.ok", resultPath.getPathValue());
-		assertEquals("/boo", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/boo.ok", resultPath.pathValue());
+		assertEquals("/boo", resultPath.path());
+		assertEquals("ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##ok.do");
-		assertEquals("/boo.ok.do", resultPath.getPathValue());
-		assertEquals("/boo.ok.do", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/boo.ok.do", resultPath.pathValue());
+		assertEquals("/boo.ok.do", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##ok..do");
-		assertEquals("/boo.ok.do", resultPath.getPathValue());
-		assertEquals("/boo.ok", resultPath.getPath());
-		assertEquals("do", resultPath.getValue());
+		assertEquals("/boo.ok.do", resultPath.pathValue());
+		assertEquals("/boo.ok", resultPath.path());
+		assertEquals("do", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "#");
-		assertEquals("/boo.foo", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/boo.foo", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, null);
-		assertEquals("/boo.foo.html", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/boo.foo.html", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx");
-		assertEquals("/xxx", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/xxx", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx.ext");
-		assertEquals("/xxx.ext", resultPath.getPath());
-		assertNull(resultPath.getValue());
+		assertEquals("/xxx.ext", resultPath.path());
+		assertNull(resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx..ext");
-		assertEquals("/xxx", resultPath.getPath());
-		assertEquals("ext", resultPath.getValue());
+		assertEquals("/xxx", resultPath.path());
+		assertEquals("ext", resultPath.value());
 
 		path = "/boo.html";
 		resultPath = resultMapper.resolveResultPath(path, "ok");
-		assertEquals("/boo.html", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/boo.html", resultPath.path());
+		assertEquals("ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "#.ok");
-		assertEquals("/boo", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/boo", resultPath.path());
+		assertEquals("ok", resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##ok");
-		assertEquals("/ok", resultPath.getPath());
-		assertEquals(null, resultPath.getValue());
+		assertEquals("/ok", resultPath.path());
+		assertEquals(null, resultPath.value());
 
 		resultPath = resultMapper.resolveResultPath(path, "##.ok");
-		assertEquals("/", resultPath.getPath());
-		assertEquals("ok", resultPath.getValue());
+		assertEquals("/", resultPath.path());
+		assertEquals("ok", resultPath.value());
 	}
 
 	@Test
-	public void testMethodWithPrefix() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setResultPathPrefix("/WEB-INF");
+	void testMethodWithPrefix() {
+		final WebApp webapp = new WebApp();
+		webapp.start();
+
+		final ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
+		resultMapper.setResultPathPrefix("/WEB-INF");
 
 		String path = "/boo.foo";
 
 		ResultPath resultPath = resultMapper.resolveResultPath(path, "ok");
-		assertEquals("/WEB-INF/boo.foo.ok", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo.foo.ok", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "doo.ok");
-		assertEquals("/WEB-INF/boo.foo.doo.ok", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo.foo.doo.ok", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "#ok");
-		assertEquals("/WEB-INF/boo.ok", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo.ok", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "#");
-		assertEquals("/WEB-INF/boo", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "#doo.ok");
-		assertEquals("/WEB-INF/boo.doo.ok", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo.doo.ok", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, null);
-		assertEquals("/WEB-INF/boo.foo", resultPath.getPathValue());
+		assertEquals("/WEB-INF/boo.foo", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx");
-		assertEquals("/xxx", resultPath.getPathValue());
+		assertEquals("/xxx", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx.ext");
-		assertEquals("/xxx.ext", resultPath.getPathValue());
+		assertEquals("/xxx.ext", resultPath.pathValue());
 	}
 
 	@Test
-	public void testAlias() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
+	void testAlias() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo5");
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		actionsManager.registerAction(BooAction.class, "foo5", null);
 		actionsManager.registerPathAlias("ok", "xxx.jsp");
 		actionsManager.registerPathAlias("sok", "zzz");
 
-		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 
 		String path = "/boo.foo.html";
 
 		ResultPath resultPath = resultMapper.resolveResultPath(path, "/<ok>?foo=1");
-		assertEquals("/xxx.jsp?foo=1", resultPath.getPathValue());
+		assertEquals("/xxx.jsp?foo=1", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "<sok>");
-		assertEquals("/boo.foo.html.zzz", resultPath.getPathValue());
+		assertEquals("/boo.foo.html.zzz", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "#<sok>");
-		assertEquals("/boo.foo.zzz", resultPath.getPathValue());
+		assertEquals("/boo.foo.zzz", resultPath.pathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "<dude>?foo=1");
-		assertEquals("/xxx.html?foo=1", resultPath.getPathValue());
+		assertEquals("/xxx.html?foo=1", resultPath.pathValue());
 	}
 
 	@Test
-	public void testAlias2() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
+	void testAlias2() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo2");
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		actionsManager.registerAction(BooAction.class, "foo2", null);
 		actionsManager.registerPathAlias("/boo.foo2.xxx", "/aliased");
 
-		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo2");
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
 		String path = cfg.getActionPath();
 
 		String resultPath = resultMapper.resolveResultPathString(path, null);
@@ -208,14 +211,14 @@ public class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testAlias3() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
+	void testAlias3() {
+		WebApp webapp = new WebApp();
+		webapp.start();
 
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo2");
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		actionsManager.registerAction(BooAction.class, "foo2", null);
 
-		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").actionPath);
+		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").getActionPath());
 	}
 
 }

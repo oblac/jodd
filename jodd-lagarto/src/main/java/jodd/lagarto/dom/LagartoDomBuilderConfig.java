@@ -54,7 +54,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return unclosedTagAsOrphanCheck;
 	}
 
-	public LagartoDomBuilderConfig setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
+	public LagartoDomBuilderConfig setUnclosedTagAsOrphanCheck(final boolean unclosedTagAsOrphanCheck) {
 		this.unclosedTagAsOrphanCheck = unclosedTagAsOrphanCheck;
 		return this;
 	}
@@ -67,7 +67,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return useFosterRules;
 	}
 
-	public LagartoDomBuilderConfig setUseFosterRules(boolean useFosterRules) {
+	public LagartoDomBuilderConfig setUseFosterRules(final boolean useFosterRules) {
 		this.useFosterRules = useFosterRules;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	/**
 	 * Specifies if whitespaces between open/closed tags should be ignored.
 	 */
-	public LagartoDomBuilderConfig setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
+	public LagartoDomBuilderConfig setIgnoreWhitespacesBetweenTags(final boolean ignoreWhitespacesBetweenTags) {
 		this.ignoreWhitespacesBetweenTags = ignoreWhitespacesBetweenTags;
 		return this;
 	}
@@ -91,7 +91,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	/**
 	 * Specifies if comments should be ignored in DOM tree.
 	 */
-	public LagartoDomBuilderConfig setIgnoreComments(boolean ignoreComments) {
+	public LagartoDomBuilderConfig setIgnoreComments(final boolean ignoreComments) {
 		this.ignoreComments = ignoreComments;
 		return this;
 	}
@@ -103,7 +103,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	/**
 	 * Enables usage of void tags.
 	 */
-	public LagartoDomBuilderConfig setEnabledVoidTags(boolean enabledVoidTags) {
+	public LagartoDomBuilderConfig setEnabledVoidTags(final boolean enabledVoidTags) {
 		this.enabledVoidTags = enabledVoidTags;
 		return this;
 	}
@@ -115,7 +115,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	/**
 	 * Specifies if void tags should be self closed.
 	 */
-	public LagartoDomBuilderConfig setSelfCloseVoidTags(boolean selfCloseVoidTags) {
+	public LagartoDomBuilderConfig setSelfCloseVoidTags(final boolean selfCloseVoidTags) {
 		this.selfCloseVoidTags = selfCloseVoidTags;
 		return this;
 	}
@@ -127,7 +127,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	/**
 	 * Enables error collection during parsing.
 	 */
-	public LagartoDomBuilderConfig setCollectErrors(boolean collectErrors) {
+	public LagartoDomBuilderConfig setCollectErrors(final boolean collectErrors) {
 		this.collectErrors = collectErrors;
 		return this;
 	}
@@ -136,7 +136,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return condCommentIEVersion;
 	}
 
-	public LagartoDomBuilderConfig setCondCommentIEVersion(float condCommentIEVersion) {
+	public LagartoDomBuilderConfig setCondCommentIEVersion(final float condCommentIEVersion) {
 		this.condCommentIEVersion = condCommentIEVersion;
 		return this;
 	}
@@ -151,7 +151,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	 * are dealing with 'straight' html that uses closes
 	 * tags, consider switching this flag off.
 	 */
-	public LagartoDomBuilderConfig setImpliedEndTags(boolean impliedEndTags) {
+	public LagartoDomBuilderConfig setImpliedEndTags(final boolean impliedEndTags) {
 		this.impliedEndTags = impliedEndTags;
 		return this;
 	}
@@ -178,7 +178,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return lagartoHtmlRenderer;
 	}
 
-	public void setLagartoHtmlRenderer(LagartoHtmlRenderer lagartoHtmlRenderer) {
+	public void setLagartoHtmlRenderer(final LagartoHtmlRenderer lagartoHtmlRenderer) {
 		this.lagartoHtmlRenderer = lagartoHtmlRenderer;
 	}
 }

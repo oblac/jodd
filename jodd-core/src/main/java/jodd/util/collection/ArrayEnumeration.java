@@ -38,20 +38,22 @@ public class ArrayEnumeration<E> implements Enumeration<E>, Serializable {
 	private int ndx;
 	private int endNdx;
 
-	public ArrayEnumeration(E[] arr) {
+	public ArrayEnumeration(final E[] arr) {
 		this(arr, 0, arr.length);
 	}
 
-	public ArrayEnumeration(E[] arr, int offset, int length) {
+	public ArrayEnumeration(final E[] arr, final int offset, final int length) {
 		array = arr;
 		ndx = offset;
 		this.endNdx = offset + length;
 	}
 
+	@Override
 	public boolean hasMoreElements() {
 		return ndx < endNdx;
 	}
 
+	@Override
 	public E nextElement()	throws NoSuchElementException {
 		if (ndx < endNdx) {
 			return array[ndx++];

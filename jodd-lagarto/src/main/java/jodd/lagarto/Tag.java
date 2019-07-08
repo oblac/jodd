@@ -25,8 +25,6 @@
 
 package jodd.lagarto;
 
-import java.io.IOException;
-
 /**
  * Tag information.
  */
@@ -89,14 +87,10 @@ public interface Tag {
 	 */
 	CharSequence getAttributeValue(CharSequence name);
 
-	CharSequence getAttributeValue(char[] name);
-
 	/**
 	 * Returns attribute index or <code>-1</code> if not found.
 	 */
 	int getAttributeIndex(CharSequence name);
-
-	int getAttributeIndex(char[] name);
 
 	/**
 	 * Detects if an attribute is present.
@@ -186,36 +180,21 @@ public interface Tag {
 	// ---------------------------------------------------------------- match
 
 	/**
-	 * Returns <code>true</code> if name equals to given chars.
-	 */
-	boolean nameEquals(char[] chars);
-	/**
 	 * Returns <code>true</code> if name equals to given char sequence.
 	 */
 	boolean nameEquals(CharSequence charSequence);
-
-	/**
-	 * Matches tag name to given <b>lowercase</b> tag name.
-	 * Should be somewhat faster then {@link #nameEquals(char[])}
-	 * since only one name is getting converted to lower ascii.
-	 */
-	boolean matchTagName(char[] tagNameLowercase);
-
-	/**
-	 * Matches tag name to given <b>lowercase</b> prefix.
-	 */
-	boolean matchTagNamePrefix(char[] tagPrefix);
 
 	// ---------------------------------------------------------------- output
 
 	/**
 	 * Writes the tag to the output.
 	 */
-	void writeTo(Appendable out) throws IOException;
+	void writeTo(Appendable out);
 
 	/**
 	 * Get the complete tag as a string.
 	 */
+	@Override
 	String toString();
 
 }

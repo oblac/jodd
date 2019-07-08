@@ -25,42 +25,45 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.BadGirl;
+import jodd.db.oom.fixtures.Boy;
+import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.sqlgen.ParameterValue;
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.BadGirl;
-import jodd.db.oom.tst.Boy;
-import jodd.db.oom.tst.Girl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static jodd.db.oom.ColumnAliasType.*;
+import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
+import static jodd.db.oom.ColumnAliasType.TABLE_NAME;
+import static jodd.db.oom.ColumnAliasType.TABLE_REFERENCE;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DbSqlTemplateTest {
+class DbSqlTemplateTest {
 
-	@Before
-	public void setUp() throws Exception {
-
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerType(Boy.class);
-		dbOom.registerType(BadBoy.class);
-		dbOom.registerType(BadGirl.class);
-		dbOom.registerType(Girl.class);
+	@BeforeEach
+	void setUp() {
+		DbOom.create().get();
+		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
+		dbEntityManager.registerType(Boy.class);
+		dbEntityManager.registerType(BadBoy.class);
+		dbEntityManager.registerType(BadGirl.class);
+		dbEntityManager.registerType(Girl.class);
 	}
 
-	protected void assertContains(String string, String... chunks) {
-		for (String chunk : chunks) {
-			assertTrue(string.contains(chunk));
-		}
+	@AfterEach
+	void tearDown() {
+		DbOom.get().shutdown();
 	}
 
 	@Test
-	public void testAliasNoAlias() {
+	void testAliasNoAlias() {
 		DbSqlBuilder st;
 
 		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
@@ -72,7 +75,7 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testTables() {
+	void testTables() {
 		DbSqlBuilder st;
 
 		// 1
@@ -107,13 +110,13 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testManyTables() {
+	void testManyTables() {
 		DbSqlBuilder st = sql("$T{Boy, Girl girl}");
 		assertEquals("BOY, GIRL girl", st.generateQuery());
 	}
 
 	@Test
-	public void testColumns1() {
+	void testColumns1() {
 		DbSqlBuilder st;
 
 		// 1
@@ -150,7 +153,7 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testColumns2() {
+	void testColumns2() {
 		DbSqlBuilder st;
 
 		// 1
@@ -174,7 +177,7 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testColumns3() {
+	void testColumns3() {
 		DbSqlBuilder st;
 
 		st = sql("$C{b.id,b.name} from $T{b b}").use("b", Boy.class);
@@ -208,7 +211,7 @@ public class DbSqlTemplateTest {
 	}
 
 	@Test
-	public void testColumns4() {
+	void testColumns4() {
 		DbSqlBuilder st;
 		
 		st = sql("$T{b b} | $C{b.[name]} | $C{b.[id,name]} | $C{b.[id,name,girlId]}").use("b", Boy.class);
@@ -226,7 +229,7 @@ public class DbSqlTemplateTest {
 	}
 
 	@Test
-	public void testReferencesAndEscapes() {
+	void testReferencesAndEscapes() {
 		DbSqlBuilder st;
 
 		assertEquals("...$foo...", new DbSqlBuilder("...\\$foo...").generateQuery());
@@ -266,7 +269,7 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testMatch() {
+	void testMatch() {
 		DbSqlBuilder st;
 
 		Boy boy = new Boy();
@@ -320,7 +323,7 @@ public class DbSqlTemplateTest {
 
 
 	@Test
-	public void testJoin() {
+	void testJoin() {
 		DbSqlBuilder st = sql("select $C{bb.*}, $C{bg.+} from $T{BadGirl bg} join $T{Boy bb} on $bg.+=bb.GIRL_ID");
 		assertEquals("select bb.GIRL_ID, bb.ID, bb.NAME, bg.ID from GIRL bg join BOY bb on bg.ID=bb.GIRL_ID", st.generateQuery());
 	}

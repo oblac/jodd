@@ -25,28 +25,39 @@
 
 package jodd.petite;
 
+import jodd.petite.def.CtorInjectionPoint;
+import jodd.petite.def.DestroyMethodPoint;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.SetInjectionPoint;
+import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.scope.Scope;
 import jodd.util.ArraysUtil;
+
+import java.util.function.Consumer;
 
 /**
  * Petite bean definition and cache. Consist of bean data that defines a bean
  * and cache, that might not be initialized (if <code>null</code>).
  * To initialize cache, get the bean instance from container.
  */
-public class BeanDefinition {
+public class BeanDefinition<T> {
 
-	public BeanDefinition(String name, Class type, Scope scope, WiringMode wiringMode) {
+	public BeanDefinition(final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> beanInitConsumer) {
 		this.name = name;
 		this.type = type;
 		this.scope = scope;
 		this.wiringMode = wiringMode;
+		this.consumer = beanInitConsumer;
 	}
 
 	// finals
-	protected final String name;		// bean name
-	protected final Class type;			// bean type
-	protected final Scope scope;  		// bean scope, may be null for beans that are not stored in scope but just wired
+	protected final String name;		    // bean name
+	protected final Class<T> type;			// bean type
+	protected final Scope scope;  		    // bean scope, may be null for beans that are not stored in scope but just wired
 	protected final WiringMode wiringMode;	// wiring mode
+	protected final Consumer<T> consumer;   // bean consumer, may be null
 
 	// cache
 	protected CtorInjectionPoint ctor;
@@ -56,27 +67,28 @@ public class BeanDefinition {
 	protected InitMethodPoint[] initMethods;
 	protected DestroyMethodPoint[] destroyMethods;
 	protected String[] params;
+	protected ValueInjectionPoint[] values;
 
 	// ---------------------------------------------------------------- definition getters
 
 	/**
 	 * Returns bean name.
 	 */
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
 	/**
 	 * Returns bean type.
 	 */
-	public Class getType() {
+	public Class<T> type() {
 		return type;
 	}
 
 	/**
 	 * Returns beans scope type.
 	 */
-	public Class<? extends Scope> getScope() {
+	public Class<? extends Scope> scope() {
 		if (scope == null) {
 			return null;
 		}
@@ -86,8 +98,15 @@ public class BeanDefinition {
 	/**
 	 * Returns wiring mode.
 	 */
-	public WiringMode getWiringMode() {
+	public WiringMode wiringMode() {
 		return wiringMode;
+	}
+
+	/**
+	 * Returns an optional consumer.
+	 */
+	public Consumer<T> consumer() {
+		return consumer;
 	}
 
 	// ---------------------------------------------------------------- cache getters
@@ -95,49 +114,49 @@ public class BeanDefinition {
 	/**
 	 * Returns constructor injection point.
 	 */
-	public CtorInjectionPoint getCtorInjectionPoint() {
+	public CtorInjectionPoint ctorInjectionPoint() {
 		return ctor;
 	}
 
 	/**
 	 * Returns property injection points.
 	 */
-	public PropertyInjectionPoint[] getPropertyInjectionPoints() {
+	public PropertyInjectionPoint[] propertyInjectionPoints() {
 		return properties;
 	}
 
 	/**
 	 * Returns set injection points.
 	 */
-	public SetInjectionPoint[] getSetInjectionPoints() {
+	public SetInjectionPoint[] setterInjectionPoints() {
 		return sets;
 	}
 
 	/**
 	 * Returns method injection points.
 	 */
-	public MethodInjectionPoint[] getMethodInjectionPoints() {
+	public MethodInjectionPoint[] methodInjectionPoints() {
 		return methods;
 	}
 
 	/**
 	 * Returns init method points.
 	 */
-	public InitMethodPoint[] getInitMethodPoints() {
+	public InitMethodPoint[] initMethodPoints() {
 		return initMethods;
 	}
 
 	/**
 	 * Returns destroy method points.
 	 */
-	public DestroyMethodPoint[] getDestroyMethodPoints() {
+	public DestroyMethodPoint[] destroyMethodPoints() {
 		return destroyMethods;
 	}
 
 	/**
 	 * Returns parameters.
 	 */
-	public String[] getParams() {
+	public String[] params() {
 		return params;
 	}
 
@@ -154,9 +173,10 @@ public class BeanDefinition {
 	}
 
 	/**
-	 * Delegates to {@link jodd.petite.scope.Scope#register(jodd.petite.BeanDefinition, Object)}.
+	 * Delegates to {@link jodd.petite.scope.Scope#register(jodd.petite.BeanDefinition, Object)}
+	 * if scope is defined.
 	 */
-	protected void scopeRegister(Object object) {
+	protected void scopeRegister(final Object object) {
 		if (scope != null) {
 			scope.register(this, object);
 		}
@@ -174,7 +194,7 @@ public class BeanDefinition {
 	/**
 	 * Adds property injection point.
 	 */
-	protected void addPropertyInjectionPoint(PropertyInjectionPoint pip) {
+	protected void addPropertyInjectionPoint(final PropertyInjectionPoint pip) {
 		if (properties == null) {
 			properties = new PropertyInjectionPoint[1];
 			properties[0] = pip;
@@ -186,7 +206,7 @@ public class BeanDefinition {
 	/**
 	 * Adds set injection point.
 	 */
-	protected void addSetInjectionPoint(SetInjectionPoint sip) {
+	protected void addSetInjectionPoint(final SetInjectionPoint sip) {
 		if (sets == null) {
 			sets = new SetInjectionPoint[1];
 			sets[0] = sip;
@@ -198,7 +218,7 @@ public class BeanDefinition {
 	/**
 	 * Adds method injection point.
 	 */
-	protected void addMethodInjectionPoint(MethodInjectionPoint mip) {
+	protected void addMethodInjectionPoint(final MethodInjectionPoint mip) {
 		if (methods == null) {
 			methods = new MethodInjectionPoint[1];
 			methods[0] = mip;
@@ -210,7 +230,7 @@ public class BeanDefinition {
 	/**
 	 * Adds init methods.
 	 */
-	protected void addInitMethodPoints(InitMethodPoint[] methods) {
+	protected void addInitMethodPoints(final InitMethodPoint[] methods) {
 		if (initMethods == null) {
 			initMethods = methods;
 		} else {
@@ -221,7 +241,7 @@ public class BeanDefinition {
 	/**
 	 * Adds destroy methods.
 	 */
-	protected void addDestroyMethodPoints(DestroyMethodPoint[] methods) {
+	protected void addDestroyMethodPoints(final DestroyMethodPoint[] methods) {
 		if (destroyMethods == null) {
 			destroyMethods = methods;
 		} else {
@@ -234,10 +254,10 @@ public class BeanDefinition {
 	@Override
 	public String toString() {
 		return "BeanDefinition{" +
-				"name='" + name + '\'' +
+				"name=" + name +
 				", type=" + type +
-				", scope=" + scope +
-				", wiring= " + wiringMode +
+				", scope=" + (scope != null ? scope.getClass().getSimpleName() : "N/A") +
+				", wiring=" + wiringMode +
 				'}';
 	}
 }

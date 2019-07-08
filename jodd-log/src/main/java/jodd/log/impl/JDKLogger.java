@@ -26,22 +26,26 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * JDK logger.
  */
 public class JDKLogger implements Logger {
 
-	private final java.util.logging.Logger logger;
+	public static final LoggerProvider<JDKLogger> PROVIDER =
+		name -> new JDKLogger(java.util.logging.Logger.getLogger(name));
 
-	public JDKLogger(java.util.logging.Logger logger) {
+	final java.util.logging.Logger logger;
+
+	public JDKLogger(final java.util.logging.Logger logger) {
 		this.logger = logger;
 	}
 
 	/**
 	 * Converts Jodd logging level to JDK.
 	 */
-	private java.util.logging.Level jodd2jdk(Level level) {
+	private java.util.logging.Level jodd2jdk(final Level level) {
 		switch (level) {
 			case TRACE: return java.util.logging.Level.FINER;
 			case DEBUG: return java.util.logging.Level.FINE;
@@ -53,63 +57,88 @@ public class JDKLogger implements Logger {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return logger.getName();
 	}
 
-	public boolean isEnabled(Level level) {
+	@Override
+	public boolean isEnabled(final Level level) {
 		return logger.isLoggable(jodd2jdk(level));
 	}
 
-	public void log(Level level, String message) {
+	@Override
+	public void log(final Level level, final String message) {
 		logger.log(jodd2jdk(level), message);
 	}
 
+	@Override
+	public void log(final Level level, final String message, final Throwable throwable) {
+		logger.log(jodd2jdk(level), message, throwable);
+	}
+
+	@Override
+	public void setLevel(final Level level) {
+		logger.setLevel(jodd2jdk(level));
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return logger.isLoggable(java.util.logging.Level.FINER);
 	}
 
-	public void trace(String message) {
+	@Override
+	public void trace(final String message) {
 		logger.log(java.util.logging.Level.FINER, message);
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return logger.isLoggable(java.util.logging.Level.FINE);
 	}
 
-	public void debug(String message) {
+	@Override
+	public void debug(final String message) {
 		logger.log(java.util.logging.Level.FINE, message);
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return logger.isLoggable(java.util.logging.Level.INFO);
 	}
 
-	public void info(String message) {
+	@Override
+	public void info(final String message) {
 		logger.log(java.util.logging.Level.INFO, message);
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return logger.isLoggable(java.util.logging.Level.WARNING);
 	}
 
-	public void warn(String message) {
+	@Override
+	public void warn(final String message) {
 		logger.log(java.util.logging.Level.WARNING, message);
 	}
 
-	public void warn(String message, Throwable throwable) {
+	@Override
+	public void warn(final String message, final Throwable throwable) {
 		logger.log(java.util.logging.Level.WARNING, message, throwable);
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return logger.isLoggable(java.util.logging.Level.SEVERE);
 	}
 
-	public void error(String message) {
+	@Override
+	public void error(final String message) {
 		logger.log(java.util.logging.Level.SEVERE, message);
 	}
 
-	public void error(String message, Throwable throwable) {
+	@Override
+	public void error(final String message, final Throwable throwable) {
 		logger.log(java.util.logging.Level.SEVERE, message, throwable);
 	}
 

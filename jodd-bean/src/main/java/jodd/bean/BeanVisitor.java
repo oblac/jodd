@@ -25,13 +25,14 @@
 
 package jodd.bean;
 
+import jodd.inex.InExRuleMatcher;
+import jodd.inex.InExRules;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.InExRuleMatcher;
-import jodd.util.InExRules;
+import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -55,7 +56,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Include/exclude rules.
 	 */
-	protected InExRules<String, String> rules = new InExRules<>(this);
+	protected InExRules<String, String, String> rules = new InExRules<>(this);
 	/**
 	 * Flag for enabling declared properties, or just public ones.
 	 */
@@ -64,6 +65,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Defines if null values should be ignored.
 	 */
 	protected boolean ignoreNullValues;
+	/**
+	 * Defines if empty string should be ignored.
+	 */
+	protected boolean ignoreEmptyString;
 	/**
 	 * Defines if fields should be included.
 	 */
@@ -82,8 +87,8 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Returns all bean property names.
 	 */
-	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+	protected String[] getAllBeanPropertyNames(final Class type, final boolean declared) {
+		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
@@ -106,14 +111,14 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 		}
 
-		return names.toArray(new String[names.size()]);
+		return names.toArray(new String[0]);
 	}
 
 	/**
 	 * Returns an array of bean properties. If bean is a <code>Map</code>,
 	 * all its keys will be returned.
 	 */
-	protected String[] resolveProperties(Object bean, boolean declared) {
+	protected String[] resolveProperties(final Object bean, final boolean declared) {
 		String[] properties;
 
 		if (bean instanceof Map) {
@@ -165,6 +170,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 				continue;
 			}
 
+			if (value instanceof String && StringUtil.isEmpty((String) value)) {
+				continue;
+			}
+
 			visitProperty(name, value);
 		}
 	}
@@ -178,7 +187,8 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Compares property name to the rules.
 	 */
-	public boolean accept(String propertyName, String rule, boolean include) {
+	@Override
+	public boolean accept(final String propertyName, final String rule, final boolean include) {
 		return propertyName.equals(rule);
 	}
 }

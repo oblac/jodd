@@ -34,11 +34,12 @@ import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Just a base class of {@link jodd.json.JsonParser} that contains
@@ -46,10 +47,26 @@ import java.util.Set;
  */
 public abstract class JsonParserBase {
 
+	protected static final Supplier<Map> HASHMAP_SUPPLIER = LinkedHashMap::new;
+	protected static final Supplier<Map> LAZYMAP_SUPPLIER = LazyMap::new;
+
+	protected static final Supplier<List> ARRAYLIST_SUPPLIER = ArrayList::new;
+	protected static final Supplier<List> LAZYLIST_SUPPLIER = LazyList::new;
+
+	protected Supplier<Map> mapSupplier = HASHMAP_SUPPLIER;
+	protected Supplier<List> listSupplier = ARRAYLIST_SUPPLIER;
+	protected List<String> classnameWhitelist;
+	protected boolean strictTypes;
+
+	public JsonParserBase(final boolean strictTypes) {
+		this.strictTypes = strictTypes;
+	}
+
+
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.
 	 */
-	protected MapToBean createMapToBean(String classMetadataName) {
+	protected MapToBean createMapToBean(final String classMetadataName) {
 		return new MapToBean(this, classMetadataName);
 	}
 
@@ -60,13 +77,14 @@ public abstract class JsonParserBase {
 	 * It returns a collection.
 	 * Later, the collection will be converted into the target type.
 	 */
-	protected Collection<Object> newArrayInstance(Class targetType) {
+	@SuppressWarnings("unchecked")
+	protected Collection<Object> newArrayInstance(final Class targetType) {
 		if (targetType == null ||
 			targetType == List.class ||
 			targetType == Collection.class ||
 			targetType.isArray()) {
 
-			return new ArrayList<>();
+			return listSupplier.get();
 		}
 
 		if (targetType == Set.class) {
@@ -74,7 +92,7 @@ public abstract class JsonParserBase {
 		}
 
 		try {
-			return (Collection<Object>) targetType.newInstance();
+			return (Collection<Object>) targetType.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
@@ -83,21 +101,22 @@ public abstract class JsonParserBase {
 	/**
 	 * Creates new object or a <code>HashMap</code> if type is not specified.
 	 */
-	protected Object newObjectInstance(Class targetType) {
+	protected Object newObjectInstance(final Class targetType) {
 		if (targetType == null ||
 			targetType == Map.class) {
 
-			return new HashMap();
+			return mapSupplier.get();
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(targetType);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
 
-		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
+		final CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 		if (ctorDescriptor == null) {
 			throw new JsonException("Default ctor not found for: " + targetType.getName());
 		}
 
 		try {
+//			return ClassUtil.newInstance(targetType);
 			return ctorDescriptor.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
@@ -107,7 +126,7 @@ public abstract class JsonParserBase {
 	/**
 	 * Injects value into the targets property.
 	 */
-	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, Object value) {
+	protected void injectValueIntoObject(final Object target, final PropertyDescriptor pd, final Object value) {
 		Object convertedValue = value;
 
 		if (value != null) {
@@ -129,17 +148,26 @@ public abstract class JsonParserBase {
 	/**
 	 * Converts type of the given value.
 	 */
-	protected Object convertType(Object value, Class targetType) {
-		Class valueClass = value.getClass();
+	protected Object convertType(final Object value, final Class targetType) {
+		final Class valueClass = value.getClass();
 
 		if (valueClass == targetType) {
 			return value;
 		}
 
+		final TypeJsonParser typeJsonParser = TypeJsonParserMap.get().lookup(targetType);
+
+		if (typeJsonParser != null) {
+			return typeJsonParser.parse(value);
+		}
+
 		try {
-			return TypeConverterManager.convertType(value, targetType);
+			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
+			if (!strictTypes) {
+				return null;
+			}
 			throw new JsonException("Type conversion failed", ex);
 		}
 	}

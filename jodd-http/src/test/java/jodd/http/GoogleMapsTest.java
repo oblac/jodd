@@ -26,19 +26,19 @@
 package jodd.http;
 
 import jodd.io.FileUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class GoogleMapsTest {
+class GoogleMapsTest {
 
 	@Test
-	public void testNoBody() throws IOException {
+	void testNoBody() throws IOException {
 		/*HttpResponse httpResponse = HttpRequest.get("http://maps.googleapis.com/maps/api/geocode/json")
 		                .query("address", "14621")
 		                .query("sensor", "false")
@@ -59,7 +59,7 @@ public class GoogleMapsTest {
 	}
 
 	@Test
-	public void testNoContentLength() throws IOException {
+	void testNoContentLength() throws IOException {
 		URL data = RawTest.class.getResource("3-response.txt");
 		byte[] fileContent = FileUtil.readBytes(data.getFile());
 

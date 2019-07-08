@@ -25,27 +25,28 @@
 
 package jodd.io;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ZipUtilTest {
+class ZipUtilTest {
 
 	protected String dataRoot;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -54,7 +55,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testGzip() throws IOException {
+	void testGzip() throws IOException {
 		ZipUtil.gzip(new File(dataRoot, "sb.data"));
 		File gzipFile = new File(dataRoot, "sb.data.gz");
 		assertTrue(gzipFile.exists());
@@ -75,7 +76,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZlib() throws IOException {
+	void testZlib() throws IOException {
 		ZipUtil.zlib(new File(dataRoot, "sb.data"));
 		File zlibFile = new File(dataRoot, "sb.data.zlib");
 		assertTrue(zlibFile.exists());
@@ -85,7 +86,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZip() throws IOException {
+	void testZip() throws IOException {
 		ZipUtil.zip(new File(dataRoot, "sb.data"));
 		File zipFile = new File(dataRoot, "sb.data.zip");
 		assertTrue(zipFile.exists());
@@ -102,15 +103,14 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipDir() throws IOException {
+	void testZipDir() throws IOException {
 		ZipUtil.zip(new File(dataRoot));
 		File zipFile = new File(dataRoot + ".zip");
 		assertTrue(zipFile.exists());
 
 		int directoryCount = 0;
 
-		ZipFile zipfile = new ZipFile(zipFile);
-		try {
+		try (ZipFile zipfile = new ZipFile(zipFile)) {
 			for (Enumeration<? extends ZipEntry> entries = zipfile.entries(); entries.hasMoreElements(); ) {
 				ZipEntry zipEntry = entries.nextElement();
 				if (zipEntry.isDirectory()) {
@@ -119,8 +119,6 @@ public class ZipUtilTest {
 					assertTrue(zipEntry.getName().equals("data/") || zipEntry.getName().equals("data/file/"));
 				}
 			}
-		} finally {
-			zipfile.close();
 		}
 
 		assertEquals(2, directoryCount);
@@ -130,7 +128,27 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipBuilderFile() throws IOException {
+	void testZipEmptyFolder() throws IOException {
+		byte[] bytes = ZipBuilder
+			.createZipInMemory()
+			.addFolder("myEmptyFolder")
+			.toBytes();
+
+		File tempDir = FileUtil.createTempDirectory();
+		tempDir.deleteOnExit();
+
+		File zipFile = new File(tempDir, "test.zip");
+		FileUtil.writeBytes(zipFile, bytes);
+
+		// read zip
+		List<String> entries = ZipUtil.listZip(zipFile);
+
+		assertEquals(1, entries.size());
+		assertEquals("myEmptyFolder/", entries.get(0));
+	}
+
+	@Test
+	void testZipBuilderFile() throws IOException {
 		File zipFile = new File(dataRoot, "test.zip");
 
 		ZipBuilder.createZipFile(zipFile)
@@ -160,7 +178,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipBuilderFileMemory() throws IOException {
+	void testZipBuilderFileMemory() throws IOException {
 		byte[] bytes = ZipBuilder.createZipInMemory()
 			.add(new File(dataRoot, "sb.data"))
 				.path("sbdata").comment("This is sb data file").save()

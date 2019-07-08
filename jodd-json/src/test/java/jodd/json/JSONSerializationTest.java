@@ -25,38 +25,43 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.mock.Address;
+import jodd.json.fixtures.mock.Employee;
+import jodd.json.fixtures.mock.Friend;
+import jodd.json.fixtures.mock.Hill;
+import jodd.json.fixtures.mock.Mountain;
+import jodd.json.fixtures.mock.Network;
+import jodd.json.fixtures.mock.Person;
+import jodd.json.fixtures.mock.Phone;
+import jodd.json.fixtures.mock.Spiderman;
+import jodd.json.fixtures.mock.Surfer;
+import jodd.json.fixtures.mock.TestClass2;
+import jodd.json.fixtures.mock.TestClass3;
+import jodd.json.fixtures.mock.Zipcode;
+import jodd.json.fixtures.model.ListContainer;
 import jodd.json.impl.ObjectJsonSerializer;
-import jodd.json.mock.Address;
-import jodd.json.mock.Employee;
-import jodd.json.mock.Friend;
-import jodd.json.mock.Hill;
-import jodd.json.mock.Mountain;
-import jodd.json.mock.Network;
-import jodd.json.mock.Person;
-import jodd.json.mock.Phone;
-import jodd.json.mock.Spiderman;
-import jodd.json.mock.Surfer;
-import jodd.json.mock.TestClass2;
-import jodd.json.mock.TestClass3;
-import jodd.json.mock.Zipcode;
-import jodd.json.model.ListContainer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.json.meta.JsonAnnotationManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JSONSerializationTest {
+class JSONSerializationTest {
 
 	private Person jodder;
 	private Person modesty;
@@ -66,9 +71,9 @@ public class JSONSerializationTest {
 	private Zipcode pedroZip;
 	private Employee dilbert;
 
-	@Before
+	@BeforeEach
 	@SuppressWarnings({"unchecked"})
-	public void setUp() {
+	void setUp() {
 		DataCreator dataCreator = new DataCreator();
 		pedroZip = new Zipcode("848485");
 		Person pedro = dataCreator.createPedro();
@@ -86,14 +91,14 @@ public class JSONSerializationTest {
 		network = dataCreator.createNetwork("My Network", jodder, modesty);
 	}
 
-	@After
-	public void tearDown() {
-		JoddJson.classMetadataName = null;
+	@AfterEach
+	void tearDown() {
+		JsonSerializer.Defaults.classMetadataName = null;
 	}
 
 	@Test
-	public void testObject() {
-		JoddJson.classMetadataName = "class";
+	void testObject() {
+		JsonSerializer.Defaults.classMetadataName = "class";
 		JsonSerializer serializer = new JsonSerializer();
 
 		String jodderJson = serializer.serialize(jodder);
@@ -180,7 +185,7 @@ public class JSONSerializationTest {
 
 
 	@Test
-	public void testMap() {
+	void testMap() {
 		JsonSerializer serializer = new JsonSerializer();
 		String colorsJson = serializer.serialize(colors);
 		for (Object o : colors.entrySet()) {
@@ -204,7 +209,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testArray() {
+	void testArray() {
 		int[] array = new int[30];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = i;
@@ -221,7 +226,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testCollection() {
+	void testCollection() {
 		JsonSerializer serializer = new JsonSerializer();
 		String colorsJson = serializer.serialize(colors.values());
 		for (Object o : colors.entrySet()) {
@@ -234,18 +239,18 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testString() {
+	void testString() {
 		assertSerializedTo("Hello", "\"Hello\"");
 		assertSerializedTo("Hello\nWorld", "\"Hello\\nWorld\"");
 		assertSerializedTo("Hello 'Big Boy'", "\"Hello 'Big Boy'\"");
 		assertSerializedTo("Fly \"you fools\"", "\"Fly \\\"you fools\\\"\"");
-		assertSerializedTo("</script>", "\"<\\/script>\"");
+		assertSerializedTo("</script>", "\"</script>\"");
 	}
 
 
 	@Test
-	public void testListOfObjects() {
-		JoddJson.classMetadataName = "class";
+	void testListOfObjects() {
+		JsonSerializer.Defaults.classMetadataName = "class";
 
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.serialize(people);
@@ -274,7 +279,7 @@ public class JSONSerializationTest {
 
 
 	@Test
-	public void testDeepIncludes() {
+	void testDeepIncludes() {
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.include("people.hobbies").serialize(network);
 
@@ -290,7 +295,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testDates() {
+	void testDates() {
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.exclude("home", "work").serialize(jodder);
 		assertAttribute("firstname", peopleJson);
@@ -300,7 +305,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSimpleShallowWithListInMap() {
+	void testSimpleShallowWithListInMap() {
 		JsonSerializer serializer = new JsonSerializer();
 		Map wrapper = new HashMap();
 		wrapper.put("name", "Joe Blow");
@@ -314,7 +319,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSimpleShallowWithListInObject() {
+	void testSimpleShallowWithListInObject() {
 		JsonSerializer serializer = new JsonSerializer();
 		ListContainer wrapper = new ListContainer();
 		wrapper.setName("Joe Blow");
@@ -324,7 +329,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSetIncludes() {
+	void testSetIncludes() {
 		JsonSerializer serializer = new JsonSerializer();
 		serializer.include("people.hobbies", "phones", "home", "people.resume");
 
@@ -336,7 +341,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testDeepSerialization() {
+	void testDeepSerialization() {
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.deep(true).serialize(network);
 
@@ -352,7 +357,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testDeepSerializationWithIncludeOverrides() {
+	void testDeepSerializationWithIncludeOverrides() {
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.include("people.hobbies").deep(true).serialize(network);
 
@@ -365,7 +370,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testDeepSerializationWithExcludes() {
+	void testDeepSerializationWithExcludes() {
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.exclude("people.work").deep(true).serialize(network);
 
@@ -378,7 +383,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testDeepSerializationCycles() {
+	void testDeepSerializationCycles() {
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.deep(true).serialize(people);
 
@@ -388,7 +393,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSerializeSuperClass() {
+	void testSerializeSuperClass() {
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.serialize(dilbert);
 
@@ -399,7 +404,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSerializePublicFields() {
+	void testSerializePublicFields() {
 		Spiderman spiderman = new Spiderman();
 
 		JsonSerializer serializer = new JsonSerializer();
@@ -411,7 +416,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testExcludingPublicFields() {
+	void testExcludingPublicFields() {
 		Spiderman spiderman = new Spiderman();
 
 		String json = new JsonSerializer().exclude("superpower").serialize(spiderman);
@@ -422,8 +427,8 @@ public class JSONSerializationTest {
 
 
 	@Test
-	public void testWildcards() {
-		JoddJson.classMetadataName = "class";
+	void testWildcards() {
+		JsonSerializer.Defaults.classMetadataName = "class";
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.include("phones").exclude("*.class").serialize(jodder);
 
@@ -433,7 +438,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testExclude() {
+	void testExclude() {
 		String json = new JsonSerializer().serialize(jodder);
 
 		assertAttribute("firstname", json);
@@ -457,7 +462,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testExcludeAll() {
+	void testExcludeAll() {
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.exclude("*").serialize(jodder);
 
@@ -465,7 +470,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testMixedWildcards() {
+	void testMixedWildcards() {
 		JsonSerializer serializer = new JsonSerializer();
 		serializer.include("firstname", "lastname").exclude("*");
 		String json = serializer.serialize(jodder);
@@ -492,7 +497,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testCopyOnWriteList() {
+	void testCopyOnWriteList() {
 		CopyOnWriteArrayList<Person> people = new CopyOnWriteArrayList<>();
 		people.add(jodder);
 		people.add(modesty);
@@ -504,7 +509,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testAnnotations() {
+	void testAnnotations() {
 		HashMap<String, TestClass3> map = new HashMap<>();
 		map.put("String1", new TestClass3());
 
@@ -525,7 +530,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testTransient() {
+	void testTransient() {
 		TestClass2 testElement = new TestClass2();
 
 		String json = new JsonSerializer().serialize(testElement);
@@ -536,7 +541,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSettersWithoutGettersAreMissing() {
+	void testSettersWithoutGettersAreMissing() {
 		Friend friend = new Friend("Nugget", "Donkey Rider", "Slim");
 		String json = new JsonSerializer().include("*").serialize(friend);
 		assertAttribute("nicknames", json);
@@ -544,7 +549,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testIncludesExcludes() throws FileNotFoundException {
+	void testIncludesExcludes() throws FileNotFoundException {
 		Surfer surfer = Surfer.createSurfer();
 
 		String json = new JsonSerializer().serialize(surfer);
@@ -599,7 +604,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSuperclass() {
+	void testSuperclass() {
 		Hill hill = new Hill();
 		hill.setHeight("qwe");
 		hill.setName("aaa");
@@ -614,18 +619,18 @@ public class JSONSerializationTest {
 		mountain.setHeight("123");
 		mountain.setWild(true);
 
-		JoddJson.serializationSubclassAware = false;
+		JsonAnnotationManager.get().reset();
+		JsonAnnotationManager.get().setSerializationSubclassAware(false);
 
-		JoddJson.annotationManager.reset();
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);
 		assertAttribute("name", json);
 		assertAttribute("wild", json);
 
-		JoddJson.serializationSubclassAware = true;
+		JsonAnnotationManager.get().reset();
+		JsonAnnotationManager.get().setSerializationSubclassAware(true);
 
-		JoddJson.annotationManager.reset();
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);
@@ -652,7 +657,7 @@ public class JSONSerializationTest {
 	}
 
 	@Test
-	public void testSerializeWithCustomBeanSerializer() {
+	void testSerializeWithCustomBeanSerializer() {
 		JsonSerializer jsonSerializer = new JsonSerializer();
 
 		Lucy lucy = new Lucy();
@@ -662,6 +667,7 @@ public class JSONSerializationTest {
 		assertAttribute("name", json);
 
 		jsonSerializer.withSerializer(Object.class, new ObjectJsonSerializer() {
+			@Override
 			public void serializeValue(final JsonContext jsonContext, Object value) {
 				jsonContext.writeOpenObject();
 
@@ -685,6 +691,59 @@ public class JSONSerializationTest {
 		assertEquals("{\"name\":\"Lucy\"}", json);
 	}
 
+	@Test
+	void testSerializeCalendar() throws Exception {
+		final Calendar input = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"), Locale.GERMANY);
+		input.clear();
+		input.setTimeInMillis(1512166354000L);
+
+		final String expected_json = "1512166354000";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeDoubleArray() throws Exception {
+		final double[] input = new double[] {0,-0,1.23,-1.23, Double.NaN, -Double.NaN, 5784374.34, -3453321.99};
+
+		final String expected_json = "[0.0,0.0,1.23,-1.23,NaN,NaN,5784374.34,-3453321.99]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeFloatArray() throws Exception {
+		final float[] input = new float[]{0, -0, 1.23f, -1.23f, Float.NaN, -Float.NaN, 5784374.34F, -3453321.99f};
+
+		final String expected_json = "[0.0,0.0,1.23,-1.23,NaN,NaN,5784374.5,-3453322.0]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeLongArray() throws Exception {
+		final long[] input = new long[]{0L, -0L, 1L, -1L, 578437435345345L, -345357348234782L};
+
+		final String expected_json = "[0,0,1,-1,578437435345345,-345357348234782]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
 
 	// ---------------------------------------------------------------- custom asserts
 

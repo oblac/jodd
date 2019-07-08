@@ -32,11 +32,11 @@ import jodd.exception.UncheckedException;
  */
 public class DirWatcherException extends UncheckedException {
 
-	public DirWatcherException(String message) {
+	public DirWatcherException(final String message) {
 		super(message);
 	}
 
-	public DirWatcherException(String message, Throwable t) {
+	public DirWatcherException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

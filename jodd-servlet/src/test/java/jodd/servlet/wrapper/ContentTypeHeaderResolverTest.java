@@ -25,15 +25,15 @@
 
 package jodd.servlet.wrapper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ContentTypeHeaderResolverTest {
+class ContentTypeHeaderResolverTest {
 
 	@Test
-	public void testResolver() {
+	void testResolver() {
 		ContentTypeHeaderResolver cthr = new ContentTypeHeaderResolver("text/html; charset=utf-8");
 		assertEquals("text/html", cthr.getMimeType());
 		assertEquals("utf-8", cthr.getEncoding());

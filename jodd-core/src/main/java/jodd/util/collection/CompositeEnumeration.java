@@ -47,7 +47,7 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
 	/**
 	 * Creates new composite enumeration with provided enumerations.
 	 */
-	public CompositeEnumeration(Enumeration<T>... enumerations) {
+	public CompositeEnumeration(final Enumeration<T>... enumerations) {
 		for (Enumeration<T> enumeration : enumerations) {
 			add(enumeration);
 		}
@@ -56,7 +56,7 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
 	/**
 	 * Adds an enumeration to this composite.
 	 */
-	public void add(Enumeration<T> enumeration) {
+	public void add(final Enumeration<T> enumeration) {
 		if (allEnumerations.contains(enumeration)) {
 			throw new IllegalArgumentException("Duplicate enumeration");
 		}

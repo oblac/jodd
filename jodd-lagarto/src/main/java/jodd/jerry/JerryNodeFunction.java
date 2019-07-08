@@ -30,6 +30,7 @@ import jodd.lagarto.dom.Node;
 /**
  * Callback function for iterating nodes.
  */
+@FunctionalInterface
 public interface JerryNodeFunction {
 
 	/**

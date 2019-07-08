@@ -25,21 +25,21 @@
 
 package jodd.json;
 
-import jodd.json.mock.Address;
-import jodd.json.mock.Hill;
-import jodd.json.mock.Person;
-import org.junit.Test;
+import jodd.json.fixtures.mock.Address;
+import jodd.json.fixtures.mock.Hill;
+import jodd.json.fixtures.mock.Person;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class ObjectToMapTest {
+class ObjectToMapTest {
 
 	@Test
-	public void testConvertObjectToMapSimple() {
+	void testConvertObjectToMapSimple() {
 		Hill hill = new Hill();
 		hill.setHeight("173");
 		hill.setName("JoddHillWood");
@@ -61,7 +61,7 @@ public class ObjectToMapTest {
 	}
 
 	@Test
-	public void testConvertPersonToMap() {
+	void testConvertPersonToMap() {
 		Person jodder = new DataCreator().createJodder();
 
 		final Map<String, Object> target = new HashMap<>();
@@ -86,7 +86,7 @@ public class ObjectToMapTest {
 	}
 
 	@Test
-	public void testConvertPersonToMap2() {
+	void testConvertPersonToMap2() {
 		Person jodder = new DataCreator().createJodder();
 
 		final Map<String, Object> target = new HashMap<>();

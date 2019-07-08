@@ -27,21 +27,21 @@ package jodd.http;
 
 import jodd.http.up.ByteArrayUploadable;
 import jodd.io.FileUtil;
-import jodd.util.MimeTypes;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import jodd.net.MimeTypes;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class HttpConnectionTest {
+class HttpConnectionTest {
 
 	@Test
-	public void testEcho() throws IOException {
+	void testEcho() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		HttpResponse response = HttpRequest.get("http://localhost:8081/hello?id=12").send();
@@ -60,7 +60,7 @@ public class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUpload() throws IOException {
+	void testUpload() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		File file = FileUtil.createTempFile();
@@ -91,7 +91,7 @@ public class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUploadWithUploadable() throws IOException {
+	void testUploadWithUploadable() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		HttpResponse response = HttpRequest
@@ -117,7 +117,7 @@ public class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUploadWithMonitor() throws IOException {
+	void testUploadWithMonitor() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		File file = FileUtil.createTempFile();

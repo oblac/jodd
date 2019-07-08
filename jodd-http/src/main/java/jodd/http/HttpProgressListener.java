@@ -41,7 +41,7 @@ public abstract class HttpProgressListener {
 	 * is less then 512, it will be rounded to 512.
 	 * This is also the size of the chunk that is sent over network.
 	 */
-	public int callbackSize(int size) {
+	public int callbackSize(final int size) {
 		this.size = size;
 
 		int callbackSize = (size + 50) / 100;
