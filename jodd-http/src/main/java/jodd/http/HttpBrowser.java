@@ -277,7 +277,7 @@ public class HttpBrowser {
 		Cookie[] newCookies = httpResponse.cookies();
 
 		for (Cookie cookie : newCookies) {
-			cookies.add(cookie.getName(), cookie);
+			cookies.set(cookie.getName(), cookie);
 		}
 	}
 
