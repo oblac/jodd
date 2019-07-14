@@ -24,9 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.mail;
 
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetupTest;
-import org.junit.BeforeClass;
+import jodd.mail.fixture.GreenMailServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,14 +39,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EmailGreenTest {
 
 	private static final String JODD_USE_ME = "Jodd <jodd@use.me>";
-	private static final String GREEN_MAIL_COM = "green@mail.com";
+
 	private static final String ZERO = "zero";
 	private static final String ONE = "one";
 	private static final String TWO = "two";
 	private static final String THREE = "three";
-	private static final String LOCALHOST = "localhost";
-	private static final String GREEN = "green";
-	private static final String PWD = "pwd";
+
 	private static final String CID_1 = "CID1";
 	private static final byte[] BYTES_0_1_0 = {0, 1, 0};
 	private static final byte[] BYTES_1_2_3 = {1, 2, 3};
@@ -57,20 +53,16 @@ class EmailGreenTest {
 	private static final byte[] BYTES_10_11_12 = {10, 11, 12};
 	private static final String NO_NAME_STREAM = "<no-name>.octet-stream";
 
-	GreenMail greenMail;
+	private GreenMailServer greenMail;
 
 	@BeforeEach
 	void startGreenMailInstance() {
-		greenMail = new GreenMail(ServerSetupTest.ALL);;
-		greenMail.setUser(GREEN_MAIL_COM, GREEN, PWD);
-		greenMail.start();
+		greenMail = new GreenMailServer().start();
 	}
 
 	@AfterEach
 	void stopGreenMailInstance() {
-		if (greenMail != null) {
-			greenMail.stop();
-		}
+		greenMail.stop();
 	}
 
 	@Test
@@ -78,7 +70,7 @@ class EmailGreenTest {
 		// create Email
 		final Email sentEmail = Email.create()
 			.from("Jodd", "jodd@use.me")
-			.to(GREEN_MAIL_COM)
+			.to(GreenMailServer.GREEN_MAIL_COM)
 			.textMessage("Hello")
 			.htmlMessage("Hi!")
 
@@ -109,8 +101,8 @@ class EmailGreenTest {
 		// send
 		{
 			final SmtpServer smtpServer = MailServer.create()
-					.host(LOCALHOST)
-					.port(3025)
+					.host(GreenMailServer.HOST)
+					.port(GreenMailServer.SMTP_PORT)
 					.buildSmtpMailServer();
 
 			final SendMailSession session = smtpServer.createSession();
@@ -126,9 +118,9 @@ class EmailGreenTest {
 
 		{
 			final Pop3Server popServer = MailServer.create()
-				.host(LOCALHOST)
-				.port(3110)
-				.auth(GREEN, PWD)
+				.host(GreenMailServer.HOST)
+				.port(GreenMailServer.POP3_PORT)
+				.auth(GreenMailServer.USER, GreenMailServer.PASSWORD)
 				.buildPop3MailServer();
 			final ReceiveMailSession session = popServer.createSession();
 			session.open();
@@ -153,7 +145,7 @@ class EmailGreenTest {
 	}
 
 	private void checkTo(final CommonEmail email) {
-		assertEquals(GREEN_MAIL_COM, email.to()[0].toString());
+		assertEquals(GreenMailServer.GREEN_MAIL_COM, email.to()[0].toString());
 	}
 
 	private void checkAttachments(final List<EmailAttachment<? extends DataSource>> sentAttachments, final List<EmailAttachment<? extends DataSource>> receivedAttachments) {
