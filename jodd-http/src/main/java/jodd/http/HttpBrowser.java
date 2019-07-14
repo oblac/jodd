@@ -26,7 +26,6 @@
 package jodd.http;
 
 import jodd.exception.ExceptionUtil;
-import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,12 +138,12 @@ public class HttpBrowser {
 
 		// default setting
 
-		boolean verifyHttpsHost = httpRequest.verifyHttpsHost();
-		boolean trustAllCerts = httpRequest.trustAllCertificates();
+		final boolean verifyHttpsHost = httpRequest.verifyHttpsHost();
+		final boolean trustAllCerts = httpRequest.trustAllCertificates();
 
 		while (true) {
 			this.httpRequest = httpRequest;
-			HttpResponse previousResponse = this.httpResponse;
+			final HttpResponse previousResponse = this.httpResponse;
 			this.httpResponse = null;
 
 			addDefaultHeaders(httpRequest);
@@ -158,7 +157,7 @@ public class HttpBrowser {
 				try {
 					this.httpResponse = _sendRequest(httpRequest, previousResponse);
 				}
-				catch (HttpException httpException) {
+				catch (final HttpException httpException) {
 					httpResponse = new HttpResponse();
 					httpResponse.assignHttpRequest(httpRequest);
 					httpResponse.statusCode(503);
@@ -171,11 +170,11 @@ public class HttpBrowser {
 
 			readCookies(httpResponse);
 
-			int statusCode = httpResponse.statusCode();
+			final int statusCode = httpResponse.statusCode();
 
 			// 301: moved permanently
 			if (statusCode == 301) {
-				String newPath = httpResponse.location();
+				final String newPath = httpResponse.location();
 
 				if (newPath == null) {
 					break;
@@ -187,7 +186,7 @@ public class HttpBrowser {
 
 			// 302: redirect, 303: see other
 			if (statusCode == 302 || statusCode == 303) {
-				String newPath = httpResponse.location();
+				final String newPath = httpResponse.location();
 
 				if (newPath == null) {
 					break;
@@ -199,13 +198,13 @@ public class HttpBrowser {
 
 			// 307: temporary redirect, 308: permanent redirect
 			if (statusCode == 307 || statusCode == 308) {
-				String newPath = httpResponse.location();
+				final String newPath = httpResponse.location();
 
 				if (newPath == null) {
 					break;
 				}
 
-				String originalMethod = httpRequest.method();
+				final String originalMethod = httpRequest.method();
 				httpRequest = new HttpRequest()
 						.method(originalMethod)
 						.set(newPath);
@@ -243,8 +242,8 @@ public class HttpBrowser {
 	 * default header will be ignored.
 	 */
 	protected void addDefaultHeaders(final HttpRequest httpRequest) {
-		for (Map.Entry<String, String> entry : defaultHeaders.entries()) {
-			String name = entry.getKey();
+		for (final Map.Entry<String, String> entry : defaultHeaders.entries()) {
+			final String name = entry.getKey();
 
 			if (!httpRequest.headers.contains(name)) {
 				httpRequest.headers.add(name, entry.getValue());
@@ -283,9 +282,9 @@ public class HttpBrowser {
 	 * Reads cookies from response and adds to cookies list.
 	 */
 	protected void readCookies(final HttpResponse httpResponse) {
-		Cookie[] newCookies = httpResponse.cookies();
+		final Cookie[] newCookies = httpResponse.cookies();
 
-		for (Cookie cookie : newCookies) {
+		for (final Cookie cookie : newCookies) {
 			cookies.set(cookie.getName(), cookie);
 		}
 	}
@@ -295,17 +294,14 @@ public class HttpBrowser {
 	 */
 	protected void addCookies(final HttpRequest httpRequest) {
 		// prepare all cookies
-		List<Cookie> cookiesList = new ArrayList<>();
+		final List<Cookie> cookiesList = new ArrayList<>();
 
-		if (StringUtil.isNotBlank(httpRequest.header("cookie"))) {
-			for (String cv: httpRequest.header("cookie").split(";")) {
-				Cookie cookie = new Cookie(cv);
-				cookies.set(cookie.getName(),cookie);
-			}
+		for (final Cookie cookie : httpRequest.cookies()) {
+			cookies.set(cookie.getName(),cookie);
 		}
 
 		if (!cookies.isEmpty()) {
-			for (Map.Entry<String, Cookie> cookieEntry : cookies) {
+			for (final Map.Entry<String, Cookie> cookieEntry : cookies) {
 				cookiesList.add(cookieEntry.getValue());
 			}
 

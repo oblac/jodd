@@ -106,4 +106,20 @@ class CookieTest {
 		assertEquals(null, cookie.getName());
 		assertEquals(null, cookie.getValue());
 	}
+
+	@Test
+	void testSetGetCookieFromRequest() {
+		final HttpRequest request = new HttpRequest();
+		request.cookies(new Cookie("one", "two"), new Cookie("one2", "two2"));
+
+		final Cookie[] cookies = request.cookies();
+		assertEquals(2, cookies.length);
+
+		assertEquals("one", cookies[0].getName());
+		assertEquals("two", cookies[0].getValue());
+
+		assertEquals("one2", cookies[1].getName());
+		assertEquals("two2", cookies[1].getValue());
+
+	}
 }

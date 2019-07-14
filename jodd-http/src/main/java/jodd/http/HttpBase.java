@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -196,7 +197,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(final Map<String, String> headerMap) {
-		for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+		for (final Map.Entry<String, String> entry : headerMap.entrySet()) {
 			header(entry.getKey(), entry.getValue());
 		}
 		return _this();
@@ -206,7 +207,7 @@ public abstract class HttpBase<T> {
 	 * Sets the header by overwriting it.
 	 * @see #header(String, String)
 	 */
-	public T headerOverwrite(final String name, String value) {
+	public T headerOverwrite(final String name, final String value) {
 		return _header(name, value, true);
 	}
 
@@ -215,7 +216,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	protected T _header(final String name, String value, final boolean overwrite) {
-		String key = name.trim();
+		final String key = name.trim();
 
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
 			value = value.trim();
@@ -403,7 +404,7 @@ public abstract class HttpBase<T> {
 	 * Under HTTP 1.0, there is no official specification for how keepalive operates.
 	 */
 	public boolean isConnectionPersistent() {
-		String connection = header(HEADER_CONNECTION);
+		final String connection = header(HEADER_CONNECTION);
 		if (connection == null) {
 			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
 		}
@@ -555,7 +556,7 @@ public abstract class HttpBase<T> {
 	public T form(final Map<String, Object> formMap) {
 		initForm();
 
-		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
+		for (final Map.Entry<String, Object> entry : formMap.entrySet()) {
 			form(entry.getKey(), entry.getValue());
 		}
 		return _this();
@@ -583,6 +584,23 @@ public abstract class HttpBase<T> {
 		return _this();
 	}
 
+	// ---------------------------------------------------------------- cookies
+
+	/**
+	 * Parses cookie information from the header.
+	 */
+	public Cookie[] cookies() {
+		final String cookieHeader = header("cookie");
+		if (!StringUtil.isNotBlank(cookieHeader)) {
+			return new Cookie[0];
+		}
+
+		return Arrays
+			.stream(StringUtil.splitc(cookieHeader, ';'))
+			.map(Cookie::new)
+			.toArray(Cookie[]::new);
+	}
+
 	// ---------------------------------------------------------------- body
 
 	/**
@@ -603,7 +621,7 @@ public abstract class HttpBase<T> {
 		}
 		try {
 			return body.getBytes(StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
+		} catch (final UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
@@ -676,7 +694,7 @@ public abstract class HttpBase<T> {
 		String body = null;
 		try {
 			body = new String(content, StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
+		} catch (final UnsupportedEncodingException ignore) {
 		}
 		contentType(contentType);
 		return body(body);
@@ -694,8 +712,8 @@ public abstract class HttpBase<T> {
 			return true;
 		}
 
-		for (Map.Entry<String, ?> entry : form) {
-			Object value = entry.getValue();
+		for (final Map.Entry<String, ?> entry : form) {
+			final Object value = entry.getValue();
 			if (value instanceof Uploadable) {
 				return true;
 			}
@@ -708,16 +726,16 @@ public abstract class HttpBase<T> {
 	 * Creates form {@link jodd.http.Buffer buffer} and sets few headers.
 	 */
 	protected Buffer formBuffer() {
-		Buffer buffer = new Buffer();
+		final Buffer buffer = new Buffer();
 		if (form == null || form.isEmpty()) {
 			return buffer;
 		}
 
 		if (!isFormMultipart()) {
-			String formEncoding = resolveFormEncoding();
+			final String formEncoding = resolveFormEncoding();
 
 			// encode
-			String formQueryString = HttpUtil.buildQuery(form, formEncoding);
+			final String formQueryString = HttpUtil.buildQuery(form, formEncoding);
 
 			contentType("application/x-www-form-urlencoded", null);
 			contentLength(formQueryString.length());
@@ -726,37 +744,37 @@ public abstract class HttpBase<T> {
 			return buffer;
 		}
 
-		String boundary = StringUtil.repeat('-', 10) + RandomString.get().randomAlphaNumeric(10);
+		final String boundary = StringUtil.repeat('-', 10) + RandomString.get().randomAlphaNumeric(10);
 
-		for (Map.Entry<String, ?> entry : form) {
+		for (final Map.Entry<String, ?> entry : form) {
 
 			buffer.append("--");
 			buffer.append(boundary);
 			buffer.append(CRLF);
 
-			String name = entry.getKey();
-			Object value = entry.getValue();
+			final String name = entry.getKey();
+			final Object value = entry.getValue();
 
 			if (value instanceof String) {
-				String string = (String) value;
+				final String string = (String) value;
 				buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
 				buffer.append(CRLF);
 
-				String formEncoding = resolveFormEncoding();
+				final String formEncoding = resolveFormEncoding();
 
-				String utf8String = StringUtil.convertCharset(
+				final String utf8String = StringUtil.convertCharset(
 					string, formEncoding, StringPool.ISO_8859_1);
 
 				buffer.append(utf8String);
 			}
 			else if (value instanceof Uploadable) {
-				Uploadable uploadable = (Uploadable) value;
+				final Uploadable uploadable = (Uploadable) value;
 
 				String fileName = uploadable.getFileName();
 				if (fileName == null) {
 					fileName = name;
 				} else {
-					String formEncoding = resolveFormEncoding();
+					final String formEncoding = resolveFormEncoding();
 
 					fileName = StringUtil.convertCharset(
 						fileName, formEncoding, StringPool.ISO_8859_1);
@@ -832,7 +850,7 @@ public abstract class HttpBase<T> {
 		try {
 			buffer.writeTo(stringWriter);
 		}
-		catch (IOException ioex) {
+		catch (final IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
@@ -845,12 +863,12 @@ public abstract class HttpBase<T> {
 	public byte[] toByteArray() {
 		final Buffer buffer = buffer(true);
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
 
 		try {
 			buffer.writeTo(baos);
 		}
-		catch (IOException ioex) {
+		catch (final IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
@@ -864,16 +882,16 @@ public abstract class HttpBase<T> {
 	protected abstract Buffer buffer(boolean full);
 
 	protected void populateHeaderAndBody(final Buffer target, final Buffer formBuffer, final boolean fullRequest) {
-		for (String name : headers.names()) {
-			List<String> values = headers.getAll(name);
+		for (final String name : headers.names()) {
+			final List<String> values = headers.getAll(name);
 
-			String key = capitalizeHeaderKeys ? HttpUtil.prepareHeaderParameterName(name) : name;
+			final String key = capitalizeHeaderKeys ? HttpUtil.prepareHeaderParameterName(name) : name;
 
 			target.append(key);
 			target.append(": ");
 			int count = 0;
 
-			for (String value : values) {
+			for (final String value : values) {
 				if (count++ > 0) {
 					target.append(", ");
 				}
@@ -925,7 +943,7 @@ public abstract class HttpBase<T> {
 			final String line;
 			try {
 				line = reader.readLine();
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new HttpException(ioex);
 			}
 
@@ -933,7 +951,7 @@ public abstract class HttpBase<T> {
 				break;
 			}
 
-			int ndx = line.indexOf(':');
+			final int ndx = line.indexOf(':');
 			if (ndx != -1) {
 				header(line.substring(0, ndx), line.substring(ndx + 1));
 			} else {
@@ -951,25 +969,25 @@ public abstract class HttpBase<T> {
 		// first determine if chunked encoding is specified
 		boolean isChunked = false;
 
-		String transferEncoding = header("Transfer-Encoding");
+		final String transferEncoding = header("Transfer-Encoding");
 		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
 			isChunked = true;
 		}
 
 
 		// content length
-		String contentLen = contentLength();
+		final String contentLen = contentLength();
 		int contentLenValue = -1;
 
 		if (contentLen != null && !isChunked) {
 			contentLenValue = Integer.parseInt(contentLen);
 
 			if (contentLenValue > 0) {
-				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(contentLenValue);
+				final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(contentLenValue);
 
 				try {
 					StreamUtil.copy(reader, fastCharArrayWriter, contentLenValue);
-				} catch (IOException ioex) {
+				} catch (final IOException ioex) {
 					throw new HttpException(ioex);
 				}
 
@@ -989,7 +1007,7 @@ public abstract class HttpBase<T> {
 					final int len;
 					try {
 						len = Integer.parseInt(line, 16);
-					} catch (NumberFormatException nfex) {
+					} catch (final NumberFormatException nfex) {
 						throw new HttpException("Invalid chunk length: " + line);
 					}
 
@@ -1002,7 +1020,7 @@ public abstract class HttpBase<T> {
 						break;
 					}
 				}
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new HttpException(ioex);
 			}
 
@@ -1012,10 +1030,10 @@ public abstract class HttpBase<T> {
 		// no body yet - special case
 		if (bodyString == null && contentLenValue != 0) {
 			// body ends when stream closes
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+			final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 			try {
 				StreamUtil.copy(reader, fastCharArrayWriter);
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new HttpException(ioex);
 			}
 			bodyString = fastCharArrayWriter.toString();
@@ -1044,30 +1062,30 @@ public abstract class HttpBase<T> {
 		if (mediaType.equals("multipart/form-data")) {
 			form = HttpMultiMap.newCaseInsensitiveMap();
 
-			MultipartStreamParser multipartParser = new MultipartStreamParser();
+			final MultipartStreamParser multipartParser = new MultipartStreamParser();
 
 			try {
-				byte[] bodyBytes = bodyString.getBytes(StringPool.ISO_8859_1);
-				ByteArrayInputStream bin = new ByteArrayInputStream(bodyBytes);
+				final byte[] bodyBytes = bodyString.getBytes(StringPool.ISO_8859_1);
+				final ByteArrayInputStream bin = new ByteArrayInputStream(bodyBytes);
 				multipartParser.parseRequestStream(bin, charset);
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new HttpException(ioex);
 			}
 
 			// string parameters
-			for (String paramName : multipartParser.getParameterNames()) {
-				String[] values = multipartParser.getParameterValues(paramName);
+			for (final String paramName : multipartParser.getParameterNames()) {
+				final String[] values = multipartParser.getParameterValues(paramName);
 
-				for (String value : values) {
+				for (final String value : values) {
 					((HttpMultiMap<Object>)form).add(paramName, value);
 				}
 			}
 
 			// file parameters
-			for (String paramName : multipartParser.getFileParameterNames()) {
-				FileUpload[] uploads = multipartParser.getFiles(paramName);
+			for (final String paramName : multipartParser.getFileParameterNames()) {
+				final FileUpload[] uploads = multipartParser.getFiles(paramName);
 
-				for (FileUpload upload : uploads) {
+				for (final FileUpload upload : uploads) {
 					((HttpMultiMap<Object>)form).add(paramName, upload);
 				}
 			}
