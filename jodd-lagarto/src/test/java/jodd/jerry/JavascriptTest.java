@@ -40,15 +40,15 @@ class JavascriptTest {
 
 	@BeforeEach
 	void setUp() throws ScriptException {
-		ScriptEngineManager factory = new ScriptEngineManager();
+		final ScriptEngineManager factory = new ScriptEngineManager();
 
 		scriptEngine = factory.getEngineByName("javascript");
 
-		scriptEngine.eval("$ = function(f) { return doc.$(f); }");
+		scriptEngine.eval("$ = function(f) { return doc.s(f); }");
 	}
 
-	protected String run(String html, String query) throws ScriptException {
-		Jerry doc = Jerry.jerry(html);
+	protected String run(final String html, final String query) throws ScriptException {
+		final Jerry doc = Jerry.jerry(html);
 
 		scriptEngine.put("doc", doc);
 
@@ -60,7 +60,7 @@ class JavascriptTest {
 	@Test
 	void testEmbedded() throws ScriptException {
 
-		String result = run(
+		final String result = run(
 			"<div id='pizza'></div>",
 			"$('#pizza').text('PIZZA!')");
 
@@ -70,7 +70,7 @@ class JavascriptTest {
 	@Test
 	void testEmbedded_each() throws ScriptException {
 
-		String result = run(
+		final String result = run(
 			"<div id='pizza'><span class='p'></span><span class='p'></span><span class='p'></span></div>",
 			"$('#pizza .p').each(function($this, i) { $this.text(i); })");
 
