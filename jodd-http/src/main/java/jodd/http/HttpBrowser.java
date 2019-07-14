@@ -26,6 +26,7 @@
 package jodd.http;
 
 import jodd.exception.ExceptionUtil;
+import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +137,11 @@ public class HttpBrowser {
 
 		httpRequest.followRedirects(false);
 
+		// default setting
+
+		boolean verifyHttpsHost = httpRequest.verifyHttpsHost();
+		boolean trustAllCerts = httpRequest.trustAllCertificates();
+
 		while (true) {
 			this.httpRequest = httpRequest;
 			HttpResponse previousResponse = this.httpResponse;
@@ -143,6 +149,9 @@ public class HttpBrowser {
 
 			addDefaultHeaders(httpRequest);
 			addCookies(httpRequest);
+
+			httpRequest.verifyHttpsHost(verifyHttpsHost);
+			httpRequest.trustAllCerts(trustAllCerts);
 
 			// send request
 			if (catchTransportExceptions) {
@@ -287,6 +296,13 @@ public class HttpBrowser {
 	protected void addCookies(final HttpRequest httpRequest) {
 		// prepare all cookies
 		List<Cookie> cookiesList = new ArrayList<>();
+
+		if (StringUtil.isNotBlank(httpRequest.header("cookie"))) {
+			for (String cv: httpRequest.header("cookie").split(";")) {
+				Cookie cookie = new Cookie(cv);
+				cookies.set(cookie.getName(),cookie);
+			}
+		}
 
 		if (!cookies.isEmpty()) {
 			for (Map.Entry<String, Cookie> cookieEntry : cookies) {
