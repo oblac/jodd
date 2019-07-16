@@ -391,7 +391,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * Closes folder if opened and expunge deleted messages.
 	 */
 	protected void closeFolderIfOpened(final Folder folder) {
-		if (folder != null) {
+		if (folder != null && folder.isOpen()) {
 			try {
 				folder.close(true);
 			} catch (final MessagingException ignore) {
