@@ -92,7 +92,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Static ctor.
 	 */
-	public static JsonParser create() {
+	public static JsonParser createJsonParser() {
 		return new JsonParser();
 	}
 

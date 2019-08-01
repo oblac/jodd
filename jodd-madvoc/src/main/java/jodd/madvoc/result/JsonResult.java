@@ -55,7 +55,7 @@ public class JsonResult {
 	 * Creates JSON result from given object. The object will be serialized to JSON.
 	 */
 	public static JsonResult of(final Object object) {
-		final String json = JsonSerializer.create().deep(true).serialize(object);
+		final String json = JsonSerializer.createJsonParser().deep(true).serialize(object);
 		return new JsonResult(json);
 	}
 
@@ -86,7 +86,7 @@ public class JsonResult {
 
 		errorMap.put("details", details);
 
-		final String json = JsonSerializer.create().deep(true).serialize(errorMap);
+		final String json = JsonSerializer.createJsonParser().deep(true).serialize(errorMap);
 		return new JsonResult(json).status(HttpStatus.error500().internalError());
 	}
 

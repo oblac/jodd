@@ -44,11 +44,11 @@ class JsonParserTypeTest {
 			return PAGER;
 		});
 
-		Phone phone = JsonParser.create().parse("{\"number\": 123, \"type\": 0}", Phone.class);
+		Phone phone = JsonParser.createJsonParser().parse("{\"number\": 123, \"type\": 0}", Phone.class);
 
 		assertEquals(HOME, phone.getType());
 
-		phone = JsonParser.create().parse("{\"number\": 123, \"type\": \"0\"}", Phone.class);
+		phone = JsonParser.createJsonParser().parse("{\"number\": 123, \"type\": \"0\"}", Phone.class);
 
 		assertEquals(PAGER, phone.getType());
 	}

@@ -34,7 +34,7 @@ class SimTokTest {
 
 	@Test
 	void testSimTok() {
-		SimTok simTok = SimTok.create().setName("jodd").setUid("173").setDuration(1000);
+		SimTok simTok = SimTok.createJsonParser().setName("jodd").setUid("173").setDuration(1000);
 
 		String json = new SimTokCoder().encode(simTok);
 

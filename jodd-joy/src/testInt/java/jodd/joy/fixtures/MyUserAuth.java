@@ -43,7 +43,7 @@ public class MyUserAuth implements UserAuth<SimTok> {
 		if (!credentials.equals(principal + "!")) {
 			return null;
 		}
-		return SimTok.create().setName(principal).setUid("1");
+		return SimTok.createJsonParser().setName(principal).setUid("1");
 	}
 
 	@Override

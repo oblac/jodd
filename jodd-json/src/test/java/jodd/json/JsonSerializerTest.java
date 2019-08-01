@@ -621,7 +621,7 @@ class JsonSerializerTest {
 		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
 
-		String json = JsonSerializer.create().serialize(fileMan);
+		String json = JsonSerializer.createJsonParser().serialize(fileMan);
 
 		assertTrue(json.contains(SystemUtil.info().getHomeDir()));
 	}
@@ -633,7 +633,7 @@ class JsonSerializerTest {
 		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
 
-		final String json = JsonSerializer.create().serialize(fileMan);
+		final String json = JsonSerializer.createJsonParser().serialize(fileMan);
 		// C:\Users\xxxx will be user home on windows hsost;  char '\' is escpaed in json therefore the execution of "String#replace"
 		final String userhome_escpaed = SystemUtil.info().getHomeDir().replace("\\", "\\\\");
 		assertTrue(json.contains(userhome_escpaed));
@@ -652,7 +652,7 @@ class JsonSerializerTest {
 		hitList.getNumbers().add(22);
 
 		String json = JsonSerializer
-			.create()
+			.createJsonParser()
 			.deep(true)
 			.serialize(hitList);
 
@@ -670,7 +670,7 @@ class JsonSerializerTest {
 			String path = "/foo/bar";
 
 			String json = JsonSerializer
-				.create()
+				.createJsonParser()
 				.strictStringEncoding(true)
 				.serialize(path);
 
@@ -685,16 +685,16 @@ class JsonSerializerTest {
 	@Test
 	void testClassMetaData() {
 		String json = JsonSerializer
-			.create()
+			.createJsonParser()
 			.withClassMetadata(true)
 			.serialize(new Foo());
 
 		assertTrue(json.contains("\"__class\":\"" + Foo.class.getName() + "\""));
 
-		json = JsonSerializer.create().withClassMetadata(false).serialize(123);
+		json = JsonSerializer.createJsonParser().withClassMetadata(false).serialize(123);
 		assertEquals("123", json);
 
-		json = JsonSerializer.create().withClassMetadata(true).serialize(123);
+		json = JsonSerializer.createJsonParser().withClassMetadata(true).serialize(123);
 		assertEquals("123", json);
 	}
 
@@ -703,11 +703,11 @@ class JsonSerializerTest {
 		UUID uuid = UUID.randomUUID();
 
 		String json = JsonSerializer
-			.create()
+			.createJsonParser()
 			.serialize(uuid);
 
 		UUID uuid2 = JsonParser
-			.create()
+			.createJsonParser()
 			.parse(json, UUID.class);
 
 		assertEquals(uuid, uuid2);

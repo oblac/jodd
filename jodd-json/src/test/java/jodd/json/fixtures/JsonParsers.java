@@ -36,8 +36,8 @@ public class JsonParsers {
 			final JsonParser jsonParser;
 
 			switch (i) {
-				case 0: jsonParser = JsonParser.create(); break;
-				case 1: jsonParser = JsonParser.create().lazy(true); break;
+				case 0: jsonParser = JsonParser.createJsonParser(); break;
+				case 1: jsonParser = JsonParser.createJsonParser().lazy(true); break;
 				default:
 					throw new IllegalArgumentException("Not good.");
 			}

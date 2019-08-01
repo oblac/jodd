@@ -1025,8 +1025,8 @@ class JsonObjectTest {
 	@Test
 	void testMergeInDepth0() {
 		{
-			JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
-			JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+			JsonObject obj1 = JsonParser.createJsonParser().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
+			JsonObject obj2 = JsonParser.createJsonParser().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
 			obj1.mergeIn(obj2, 0);
 			assertEquals(1, obj1.size());
 			assertEquals(1, obj1.getJsonObject("foo").size());
@@ -1057,8 +1057,8 @@ class JsonObjectTest {
 	@Test
 	void testMergeInDepth1() {
 		{
-			JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
-			JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
+			JsonObject obj1 = JsonParser.createJsonParser().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
+			JsonObject obj2 = JsonParser.createJsonParser().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
 			obj1.mergeIn(obj2, 1);
 			assertEquals(2, obj1.size());
 			assertEquals(1, obj1.getJsonObject("flurb").size());
@@ -1077,8 +1077,8 @@ class JsonObjectTest {
 	@Test
 	void testMergeInDepth2() {
 		{
-			JsonObject obj1 = new JsonObject(JsonParser.create().parse("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}"));
-			JsonObject obj2 = new JsonObject(JsonParser.create().parse("{ \"flurb\": { \"bar\": \"flurb1\" }}"));
+			JsonObject obj1 = new JsonObject(JsonParser.createJsonParser().parse("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}"));
+			JsonObject obj2 = new JsonObject(JsonParser.createJsonParser().parse("{ \"flurb\": { \"bar\": \"flurb1\" }}"));
 			obj1.mergeIn(obj2, 2);
 			assertEquals(2, obj1.size());
 			assertEquals(2, obj1.getJsonObject("flurb").size());
@@ -1114,7 +1114,7 @@ class JsonObjectTest {
 			jsonObject.put("myobj", new JsonObject().put("foo", "bar"));
 			jsonObject.put("myarr", new JsonArray().add("foo").add(123));
 
-			String json = JsonSerializer.create().serialize(jsonObject);
+			String json = JsonSerializer.createJsonParser().serialize(jsonObject);
 
 			JsonObject expectedParsedJsonObject = jsonParser.parseAsJsonObject(json);
 
@@ -1153,7 +1153,7 @@ class JsonObjectTest {
 		JsonObject jsonObject = new JsonObject();
 
 		jsonObject.put("foo", "bar");
-		assertEquals(JsonSerializer.create().serialize(jsonObject), jsonObject.toString());
+		assertEquals(JsonSerializer.createJsonParser().serialize(jsonObject), jsonObject.toString());
 	}
 
 	@Test

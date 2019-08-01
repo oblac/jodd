@@ -36,7 +36,7 @@ public class NansInfTest {
 	@Test
 	public void testDouble_NaN() {
 		JsonParsers.forEachParser(jsonParser -> {
-			String json = JsonSerializer.create().serialize(Double.NaN);
+			String json = JsonSerializer.createJsonParser().serialize(Double.NaN);
 
 			assertEquals("\"NaN\"", json);
 
@@ -49,7 +49,7 @@ public class NansInfTest {
 	@Test
 	public void testFloat_NaN() {
 		JsonParsers.forEachParser(jsonParser -> {
-			String json = JsonSerializer.create().serialize(Float.NaN);
+			String json = JsonSerializer.createJsonParser().serialize(Float.NaN);
 
 			assertEquals("\"NaN\"", json);
 
@@ -62,7 +62,7 @@ public class NansInfTest {
 	@Test
 	public void testDouble_Infinity() {
 		JsonParsers.forEachParser(jsonParser -> {
-			String json = JsonSerializer.create().serialize(Double.POSITIVE_INFINITY);
+			String json = JsonSerializer.createJsonParser().serialize(Double.POSITIVE_INFINITY);
 
 			assertEquals("\"+Infinity\"", json);
 
@@ -70,7 +70,7 @@ public class NansInfTest {
 
 			assertEquals(Double.POSITIVE_INFINITY, d.doubleValue());
 
-			json = JsonSerializer.create().serialize(Double.NEGATIVE_INFINITY);
+			json = JsonSerializer.createJsonParser().serialize(Double.NEGATIVE_INFINITY);
 
 			assertEquals("\"-Infinity\"", json);
 
@@ -83,7 +83,7 @@ public class NansInfTest {
 	@Test
 	public void testFloat_Infinity() {
 		JsonParsers.forEachParser(jsonParser -> {
-			String json = JsonSerializer.create().serialize(Float.POSITIVE_INFINITY);
+			String json = JsonSerializer.createJsonParser().serialize(Float.POSITIVE_INFINITY);
 
 			assertEquals("\"+Infinity\"", json);
 
@@ -91,7 +91,7 @@ public class NansInfTest {
 
 			assertEquals(Float.POSITIVE_INFINITY, d.floatValue());
 
-			json = JsonSerializer.create().serialize(Float.NEGATIVE_INFINITY);
+			json = JsonSerializer.createJsonParser().serialize(Float.NEGATIVE_INFINITY);
 
 			assertEquals("\"-Infinity\"", json);
 

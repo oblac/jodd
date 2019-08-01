@@ -77,7 +77,7 @@ public class JsonBodyScope implements MadvocScope {
 	 * Parses request body into the target type.
 	 */
 	protected Object parseRequestBody(final String body, final Class targetType) {
-		return JsonParser.create().parse(body, targetType);
+		return JsonParser.createJsonParser().parse(body, targetType);
 	}
 
 }

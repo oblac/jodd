@@ -80,7 +80,7 @@ public abstract class TagActionTestBase {
 
 		assertEquals(500, response.statusCode());
 		String body = response.bodyText();
-		Map map = JsonParser.create().parse(body);
+		Map map = JsonParser.createJsonParser().parse(body);
 
 		assertEquals("/ by zero", map.get("message"));
 		assertEquals("java.lang.ArithmeticException", map.get("error"));

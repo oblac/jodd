@@ -69,7 +69,7 @@ public class JsonActionResult implements ActionResult {
 			statusMessage = jsonResult.message();
 		}
 		else {
-			json = JsonSerializer.create().deep(true).serialize(resultValue);
+			json = JsonSerializer.createJsonParser().deep(true).serialize(resultValue);
 			status = 200;
 			statusMessage = "OK";
 		}

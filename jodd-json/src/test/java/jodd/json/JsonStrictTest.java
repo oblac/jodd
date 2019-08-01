@@ -48,16 +48,16 @@ public class JsonStrictTest {
 	@Test
 	void testStrictParsing() {
 		Assertions.assertThrows(JsonException.class, () -> {
-			JsonParser.create().parse("{\"id\":\"\"}", Ider.class);
+			JsonParser.createJsonParser().parse("{\"id\":\"\"}", Ider.class);
 		});
 	}
 
 	@Test
 	void testNonStrictParsing() {
-		Ider ider = JsonParser.create().parse("{\"id\":\"1\"}", Ider.class);
+		Ider ider = JsonParser.createJsonParser().parse("{\"id\":\"1\"}", Ider.class);
 		assertEquals(1, ider.getId().intValue());
 
-		ider = JsonParser.create().strictTypes(false).parse("{\"id\":\"\"}", Ider.class);
+		ider = JsonParser.createJsonParser().strictTypes(false).parse("{\"id\":\"\"}", Ider.class);
 		assertNull(ider.getId());
 	}
 }

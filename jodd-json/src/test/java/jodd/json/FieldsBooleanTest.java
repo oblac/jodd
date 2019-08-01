@@ -36,7 +36,7 @@ class FieldsBooleanTest {
 	void testBooleanField() {
 		Active active = new Active();
 
-		String json = JsonSerializer.create().serialize(active);
+		String json = JsonSerializer.createJsonParser().serialize(active);
 
 		System.out.println(json);
 

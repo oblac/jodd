@@ -71,6 +71,6 @@ public class SimTokCoder {
 		}
 
 		final String p2Decoded = Base64.decodeToString(p2);
-		return JsonParser.create().parse(p2Decoded, SimTok.class);
+		return JsonParser.createJsonParser().parse(p2Decoded, SimTok.class);
 	}
 }

@@ -690,7 +690,7 @@ class JsonArrayTest {
 		jsonArray.add(new JsonArray().add("foo").add(123));
 		String strBytes = Base64.getEncoder().encodeToString(bytes);
 		String expected = "[\"foo\",123,1234,1.23,2.34,true,\"" + strBytes + "\",null,{\"foo\":\"bar\"},[\"foo\",123]]";
-		String json = JsonSerializer.create().serialize(jsonArray);
+		String json = JsonSerializer.createJsonParser().serialize(jsonArray);
 		assertEquals(expected, json);
 	}
 
@@ -720,7 +720,7 @@ class JsonArrayTest {
 	@Test
 	void testToString() {
 		jsonArray.add("foo").add(123);
-		assertEquals(JsonSerializer.create().serialize(jsonArray), jsonArray.toString());
+		assertEquals(JsonSerializer.createJsonParser().serialize(jsonArray), jsonArray.toString());
 	}
 
 	@Test
