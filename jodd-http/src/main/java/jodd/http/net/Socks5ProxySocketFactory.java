@@ -102,7 +102,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 
 			// 2) RESPONSE
 			// in.read(buf, 0, 2);
-			fill(in, buf, 2);
+			readBytes(in, buf, 2);
 
 			boolean check = false;
 			switch ((buf[1]) & 0xff) {
@@ -130,7 +130,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 
 					// 4) RESPONSE, VERIFIED
 					// in.read(buf, 0, 2);
-					fill(in, buf, 2);
+					readBytes(in, buf, 2);
 					if (buf[1] == 0) {
 						check = true;
 					}
@@ -168,7 +168,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 			// 6) RESPONSE
 
 			// in.read(buf, 0, 4);
-			fill(in, buf, 4);
+			readBytes(in, buf, 4);
 
 			if (buf[1] != 0) {
 				try {
@@ -181,17 +181,17 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 			switch (buf[3] & 0xff) {
 				case 1:
 					// in.read(buf, 0, 6);
-					fill(in, buf, 6);
+					readBytes(in, buf, 6);
 					break;
 				case 3:
 					// in.read(buf, 0, 1);
-					fill(in, buf, 1);
+					readBytes(in, buf, 1);
 					// in.read(buf, 0, buf[0]+2);
-					fill(in, buf, (buf[0] & 0xff) + 2);
+					readBytes(in, buf, (buf[0] & 0xff) + 2);
 					break;
 				case 4:
 					// in.read(buf, 0, 18);
-					fill(in, buf, 18);
+					readBytes(in, buf, 18);
 					break;
 				default:
 			}
@@ -205,7 +205,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 		}
 	}
 
-	private void fill(final InputStream in, final byte[] buf, final int len) throws IOException {
+	private void readBytes(final InputStream in, final byte[] buf, final int len) throws IOException {
 		int s = 0;
 		while (s < len) {
 			int i = in.read(buf, s, len - s);
