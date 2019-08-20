@@ -37,6 +37,7 @@ import org.junit.jupiter.api.condition.OS;
 import java.io.File;
 import java.util.List;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -51,7 +52,7 @@ class AttachmentStorageTest {
 
 	@BeforeEach
 	void startGreenMailInstance() {
-		greenMail = new GreenMail(ServerSetupTest.ALL);;
+		greenMail = new GreenMail(ServerSetupTest.ALL);
 		greenMail.setUser(GREEN_MAIL_COM, GREEN, PWD);
 		greenMail.start();
 	}
@@ -89,15 +90,22 @@ class AttachmentStorageTest {
 					.from("Jodd", "jodd@use.me")
 					.to(GREEN_MAIL_COM)
 					.textMessage("Hello Hello " + count)
-					.attachment(EmailAttachment
-						.with()
-						.name("a.jpg")
-						.setContentIdFromNameIfMissing()
-						.content(new byte[]{'X', 'Z', 'X'}));
-
+					.attachment(
+						EmailAttachment
+							.with()
+							.name("a.jpg")
+							.setContentIdFromNameIfMissing()
+							.content(new byte[]{'X', 'Z', 'X'})
+					).attachment(
+						EmailAttachment
+							.with()
+							.name("")
+							.content("ГИМНАСТИКА".getBytes())
+					);
 				session.sendMail(sentEmail);
 
 				assertEquals(3, sentEmail.attachments().get(0).toByteArray().length);
+				assertEquals(10*2, sentEmail.attachments().get(1).toByteArray().length);
 			}
 
 			session.close();
@@ -122,12 +130,16 @@ class AttachmentStorageTest {
 			session.close();
 		}
 
-		for (ReceivedEmail receivedEmail : receivedEmails) {
-			List<EmailAttachment<?>> attachmentList = receivedEmail.attachments();
-			assertEquals(1, attachmentList.size());
-			EmailAttachment att = attachmentList.get(0);
+		for (final ReceivedEmail receivedEmail : receivedEmails) {
+			final List<EmailAttachment<?>> attachmentList = receivedEmail.attachments();
+			assertEquals(2, attachmentList.size());
 
+			EmailAttachment att = attachmentList.get(0);
 			assertEquals(3, att.toByteArray().length);
+
+			att = attachmentList.get(1);
+			assertEquals(20, att.toByteArray().length);
+			assertEquals("ГИМНАСТИКА", new String(att.toByteArray()));
 		}
 
 
@@ -152,20 +164,36 @@ class AttachmentStorageTest {
 		}
 
 		assertEquals(100, receivedEmails.length);
-		File[] allFiles = attFolder.listFiles();
-		for (File f : allFiles) {
-			byte[] bytes = FileUtil.readBytes(f);
-			assertArrayEquals(new byte[] {'X', 'Z', 'X'}, bytes);
+		final File[] allFiles = attFolder.listFiles();
+		for (final File f : allFiles) {
+			final byte[] bytes = FileUtil.readBytes(f);
+			if (bytes.length == 3) {
+				assertArrayEquals(new byte[]{'X', 'Z', 'X'}, bytes);
+			}
+			else if (bytes.length == 20) {
+				assertArrayEquals("ГИМНАСТИКА".getBytes(), bytes);
+			}
+			else {
+				fail();
+			}
 		}
-		assertEquals(100, allFiles.length);
+		assertEquals(200, allFiles.length);
 
-		for (ReceivedEmail receivedEmail : receivedEmails) {
-			List<EmailAttachment<?>> attachmentList = receivedEmail.attachments();
-			assertEquals(1, attachmentList.size());
-			EmailAttachment att = attachmentList.get(0);
+		for (final ReceivedEmail receivedEmail : receivedEmails) {
+			final List<EmailAttachment<?>> attachmentList = receivedEmail.attachments();
+			assertEquals(2, attachmentList.size());
+			final EmailAttachment att = attachmentList.get(0);
 
-			byte[] bytes = att.toByteArray();
-			assertArrayEquals(new byte[] {'X', 'Z', 'X'}, bytes);
+			final byte[] bytes = att.toByteArray();
+			if (bytes.length == 3) {
+				assertArrayEquals(new byte[]{'X', 'Z', 'X'}, bytes);
+			}
+			else if (bytes.length == 20) {
+				assertArrayEquals("ГИМНАСТИКА".getBytes(), bytes);
+			}
+			else {
+				fail();
+			}
 		}
 
 		FileUtil.deleteDir(attFolder);
