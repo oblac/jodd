@@ -51,7 +51,7 @@ public class SystemUtil {
 			} else {
 				value = AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(name));
 			}
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 		}
 
 		if (value == null) {
@@ -101,7 +101,7 @@ public class SystemUtil {
 		try {
 			return Integer.parseInt(value);
 		}
-		catch (NumberFormatException nfex) {
+		catch (final NumberFormatException nfex) {
 			return defaultValue;
 		}
 	}
@@ -119,7 +119,7 @@ public class SystemUtil {
 		try {
 			return Long.parseLong(value);
 		}
-		catch (NumberFormatException nfex) {
+		catch (final NumberFormatException nfex) {
 			return defaultValue;
 		}
 	}
@@ -135,14 +135,4 @@ public class SystemUtil {
 		return systemInfo;
 	}
 
-	/**
-	 * Dump all information to the console.
-	 */
-	public static void printoutInfo() {
-		System.out.println(systemInfo.toString());
-	}
-
-	public static void main(String[] args) {
-		printoutInfo();
-	}
 }
