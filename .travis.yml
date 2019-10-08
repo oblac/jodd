@@ -5,16 +5,8 @@ services:
   - docker
 
 jdk:
-  - oraclejdk8
-  - oraclejdk9
-#  - oraclejdk10
   - openjdk8
-  - openjdk9
-
-matrix:
-  allow_failures:
-    - jdk: oraclejdk9
-    - jdk: openjdk9
+  - openjdk11
 
 before_install:
   # Disable services enabled by default
