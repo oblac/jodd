@@ -8,6 +8,10 @@ jdk:
   - openjdk8
   - openjdk11
 
+matrix:
+  allow_failures:
+    - jdk: openjdk11
+
 before_install:
   # Disable services enabled by default
   - sudo service mysql stop
