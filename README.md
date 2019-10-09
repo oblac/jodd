@@ -1,7 +1,7 @@
 ![](jodd-github-logo.png)
 <br>
 
-[![Financial Contributors on Open Collective](https://opencollective.com/jodd/all/badge.svg?label=financial+contributors)](https://opencollective.com/jodd) [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
+[![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
 [![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
 [![codecov](https://codecov.io/gh/oblac/jodd/branch/master/graph/badge.svg)](https://codecov.io/gh/oblac/jodd)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd)
@@ -10,6 +10,7 @@
 [![BSD License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](https://jodd.org/license.html)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Hey,@joddorg%20is%20cool!&url=%5Bobject%20Object%5D)
 [![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd)
+[![Open Collective](https://opencollective.com/jodd/all/badge.svg?label=financial+contributors)](https://opencollective.com/jodd) 
 
 
 > We want to inspire the world to create. To use tech skills and build something truly... Awesome. Beautiful. Helpful. Impactful. Now you can produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
