@@ -138,7 +138,7 @@ class DbOom2Test extends DbH2TestCase {
 		q.close();
 
 		q = DbOomQuery.query("insert into GIRL (NAME) values('Sasha')");
-		q.setGeneratedColumns("ID, TIME");
+		q.setGeneratedColumns("ID", "TIME");
 		q.executeUpdate();
 		ResultSet rs = q.getGeneratedColumns();
 		assertEquals(1, q.getOpenResultSetCount());
