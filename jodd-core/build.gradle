@@ -6,7 +6,7 @@ dependencies {
 	testCompile lib.junit5
 	testCompile lib.junit5_params
 	testCompile 'org.webjars:jquery:2.2.4'
-	testCompile 'commons-codec:commons-codec:1.11'
+	testCompile 'commons-codec:commons-codec:1.13'
 	testCompile project(':jodd-bean')
 
 	jmhCompile 'net.openhft:smoothie-map:1.3'
