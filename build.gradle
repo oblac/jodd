@@ -64,7 +64,7 @@ ext {
 							'jakarta.mail:jakarta.mail-api:1.6.4',
 							'com.sun.mail:jakarta.mail:1.6.4'
 						],
-		activation:		'javax.activation:activation:1.1.1',
+		activation:		'javax.activation:javax.activation-api:1.2.0',
 		servlet:		'javax.servlet:javax.servlet-api:3.1.0',
 		jsp:			'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3',
 
