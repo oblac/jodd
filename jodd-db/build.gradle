@@ -20,5 +20,5 @@ dependencies {
 	testCompile lib.mssql
 	testCompile lib.mockito
 	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	testCompile 'org.apache.commons:commons-lang3:3.8.1'
+	testCompile 'org.apache.commons:commons-lang3:3.9'
 }
