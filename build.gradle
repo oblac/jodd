@@ -82,7 +82,7 @@ ext {
 		junit5_console: 'org.junit.platform:junit-platform-console:1.5.1',
 		mockito:		'org.mockito:mockito-core:3.1.0',
 		hsqldb:			'org.hsqldb:hsqldb:2.5.0',
-		h2db:			'com.h2database:h2:1.4.199',
+		h2db:			'com.h2database:h2:1.4.200',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
 		mysql:			'mysql:mysql-connector-java:8.0.12',
 		mssql:			'com.microsoft.sqlserver:mssql-jdbc:6.2.2.jre8',
