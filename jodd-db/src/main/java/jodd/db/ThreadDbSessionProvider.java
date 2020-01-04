@@ -48,7 +48,7 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 
 		if (session == null) {
 			throw new DbSqlException(
-					"No DbSession associated with current thread." +
+					"No DbSession associated with current thread. " +
 					"It seems that ThreadDbSessionHolder is not used.");
 		}
 		return session;
