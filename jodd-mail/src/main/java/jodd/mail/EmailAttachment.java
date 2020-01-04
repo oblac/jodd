@@ -272,7 +272,7 @@ public class EmailAttachment<T extends DataSource> {
 	 */
 	public void writeToFile(final File destination) {
 		InputStream input = null;
-		final OutputStream output;
+		OutputStream output = null;
 		try {
 			input = getDataSource().getInputStream();
 			output = new FileOutputStream(destination);
@@ -284,6 +284,7 @@ public class EmailAttachment<T extends DataSource> {
 		}
 		finally {
 			StreamUtil.close(input);
+			StreamUtil.close(output);
 		}
 	}
 
