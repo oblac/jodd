@@ -51,36 +51,36 @@ class ParsingProblemsTest {
 		if (testDataRoot != null) {
 			return;
 		}
-		URL data = LagartoParserTest.class.getResource("data");
+		final URL data = LagartoParserTest.class.getResource("data");
 		testDataRoot = data.getFile();
 	}
 
 	@Test
 	void testInvalidTag() {
-		String html = "<html>text1<=>text2</html>";
+		final String html = "<html>text1<=>text2</html>";
 
-		LagartoParser lagartoParser = new LagartoParser(html);
+		final LagartoParser lagartoParser = new LagartoParser(html);
 
 		final StringBuilder sb = new StringBuilder();
 
 		try {
 			lagartoParser.parse(new EmptyTagVisitor() {
 				@Override
-				public void tag(Tag tag) {
+				public void tag(final Tag tag) {
 					sb.append(tag.getName()).append(' ');
 				}
 
 				@Override
-				public void text(CharSequence text) {
+				public void text(final CharSequence text) {
 					sb.append(text).append(' ');
 				}
 
 				@Override
-				public void error(String message) {
+				public void error(final String message) {
 					System.out.println(message);
 				}
 			});
-		} catch (LagartoException lex) {
+		} catch (final LagartoException lex) {
 			lex.printStackTrace();
 			fail("error");
 		}
@@ -111,12 +111,12 @@ class ParsingProblemsTest {
 
 	@Test
 	void testIssue23_0() throws IOException {
-		File file = new File(testDataRoot, "index-4-v0.html");
+		final File file = new File(testDataRoot, "index-4-v0.html");
 
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		final LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		lagartoDOMBuilder.getConfig().setCollectErrors(true);
-		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		final Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
 		assertEquals(1, doc.getErrors().size());
@@ -124,12 +124,12 @@ class ParsingProblemsTest {
 
 	@Test
 	void testIssue23_1() throws IOException {
-		File file = new File(testDataRoot, "index-4-v1.html");
+		final File file = new File(testDataRoot, "index-4-v1.html");
 
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		final LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		lagartoDOMBuilder.getConfig().setCollectErrors(true);
-		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		final Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
 		assertEquals(1, doc.getErrors().size());
@@ -139,10 +139,10 @@ class ParsingProblemsTest {
 	void testIssue23() throws IOException {
 		File file = new File(testDataRoot, "index-4.html");
 
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		final LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		lagartoDOMBuilder.getConfig().setCollectErrors(true);
-		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		final Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(document.check());
 
 		// (1564 open DTs + 1564 open DDs) 1 open P
@@ -228,30 +228,30 @@ class ParsingProblemsTest {
 
 	@Test
 	void testNamespaces() throws IOException {
-		File file = new File(testDataRoot, "namespace.xml");
+		final File file = new File(testDataRoot, "namespace.xml");
 
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		final LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
 		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 
-		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		final Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
-		Element cfgTestElement = (Element) doc.getChild(1);
+		final Element cfgTestElement = (Element) doc.getChild(1);
 
 		assertEquals("cfg:test", cfgTestElement.getNodeName());
 
-		Element cfgNode = (Element) cfgTestElement.getChild(0);
+		final Element cfgNode = (Element) cfgTestElement.getChild(0);
 
 		assertEquals("cfg:node", cfgNode.getNodeName());
 
 
 
-		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
+		final Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
-		Jerry jerry = jerryParser.parse(FileUtil.readString(file));
+		final Jerry jerry = jerryParser.parse(FileUtil.readString(file));
 
 		final StringBuilder result = new StringBuilder();
 
@@ -265,32 +265,32 @@ class ParsingProblemsTest {
 
 	@Test
 	void testPreserveCC() throws IOException {
-		File file = new File(testDataRoot, "preserve-cc.html");
+		final File file = new File(testDataRoot, "preserve-cc.html");
 
-		String expectedResult = FileUtil.readString(file);
+		final String expectedResult = FileUtil.readString(file);
 
-		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
+		final Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).getConfig().setEnableConditionalComments(false);
 
-		Jerry jerry = jerryParser.parse(expectedResult);
-		String result = jerry.html();
+		final Jerry jerry = jerryParser.parse(expectedResult);
+		final String result = jerry.html();
 
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	void testKelkoo() throws Exception {
-		File file = new File(testDataRoot, "kelkoo.html");
-		Jerry jerry;
+		final File file = new File(testDataRoot, "kelkoo.html");
+		final Jerry jerry;
 		try {
 			jerry = Jerry.jerry().parse(FileUtil.readString(file));
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			fail(ex.toString());
 			throw ex;
 		}
 
-		Element script = (Element) jerry.s("script").get(0);
+		final Element script = (Element) jerry.s("script").get(0);
 
 		assertEquals("script", script.getNodeName());
 		assertEquals(6, script.getAttributesCount());
@@ -304,13 +304,26 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	void testEntity() throws Exception {
+	void testEntity() {
 		assertEquals(
 			"<head><title>Peanut Butter &amp; Jelly</title>" +
 				"it's yummy &amp; delicious</head>",
 			Jerry.jerry().parse(
 				"<head><title>Peanut Butter & Jelly</title>" +
 					"it's yummy & delicious").html());
+	}
+
+	@Test
+	void testCoCo() {
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		new LagartoParser("Jean-Pierre Vitrac, CO&CO").parse(new EmptyTagVisitor() {
+			@Override
+			public void text(final CharSequence text) {
+				stringBuilder.append(text);
+			}
+		});
+		assertEquals("Jean-Pierre Vitrac, CO&CO", stringBuilder.toString());
 	}
 
 }

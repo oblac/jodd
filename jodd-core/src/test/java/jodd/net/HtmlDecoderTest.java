@@ -28,6 +28,7 @@ package jodd.net;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HtmlDecoderTest {
 
@@ -95,18 +96,18 @@ class HtmlDecoderTest {
 
 	@Test
 	void testDecodeNotFound() {
-		String s = "switchTab(&quot;Senthil1&quot;);showWorkFlow(&quot;/xyz/abc.jsp?strWorkId=1691&archived=0&quot;);";
+		final String s = "switchTab(&quot;Senthil1&quot;);showWorkFlow(&quot;/xyz/abc.jsp?strWorkId=1691&archived=0&quot;);";
 
-		String out = HtmlDecoder.decode(s);
+		final String out = HtmlDecoder.decode(s);
 
 		assertEquals("switchTab(\"Senthil1\");showWorkFlow(\"/xyz/abc.jsp?strWorkId=1691&archived=0\");", out);
 	}
 
 	@Test
 	void testEmitTwoChars() {
-		String s = "Hey&acE;!";
+		final String s = "Hey&acE;!";
 
-		String out = HtmlDecoder.decode(s);
+		final String out = HtmlDecoder.decode(s);
 
 		assertEquals("Hey\u223E\u0333!", out);
 	}
@@ -120,12 +121,17 @@ class HtmlDecoderTest {
 		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
 
 		str = "&nb".toCharArray();
-		assertEquals(null, HtmlDecoder.detectName(str, 1));
+		assertNull(HtmlDecoder.detectName(str, 1));
 
 		str = "&acE".toCharArray();
 		assertEquals("acE", HtmlDecoder.detectName(str, 1));
 
 		str = "&notit".toCharArray();
 		assertEquals("not", HtmlDecoder.detectName(str, 1));
+	}
+
+	@Test
+	void testHtmlDecoderIssue() {
+		assertNull(HtmlDecoder.detectName("CO".toCharArray(), 0));
 	}
 }

@@ -47,16 +47,16 @@ public class HtmlDecoder {
 	private static final char[][] ENTITY_NAMES;
 
 	static {
-		Properties entityReferences = new Properties();
+		final Properties entityReferences = new Properties();
 
-		String propertiesName = HtmlDecoder.class.getSimpleName() + ".properties";
+		final String propertiesName = HtmlDecoder.class.getSimpleName() + ".properties";
 
-		InputStream is = HtmlDecoder.class.getResourceAsStream(propertiesName);
+		final InputStream is = HtmlDecoder.class.getResourceAsStream(propertiesName);
 
 		try {
 			entityReferences.load(is);
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			throw new IllegalStateException("Can't load properties", ex);
 		} finally {
 			StreamUtil.close(is);
@@ -64,20 +64,20 @@ public class HtmlDecoder {
 
 		ENTITY_MAP = new HashMap<>(entityReferences.size());
 
-		Enumeration keys = entityReferences.propertyNames();
+		final Enumeration<String> keys = (Enumeration<String>) entityReferences.propertyNames();
 		while (keys.hasMoreElements()) {
-			String name = (String) keys.nextElement();
-			String values = entityReferences.getProperty(name);
-			String[] array = StringUtil.splitc(values, ',');
+			final String name = keys.nextElement();
+			final String values = entityReferences.getProperty(name);
+			final String[] array = StringUtil.splitc(values, ',');
 
-			char[] chars;
+			final char[] chars;
 
-			String hex = array[0];
-			char value = (char) Integer.parseInt(hex, 16);
+			final String hex = array[0];
+			final char value = (char) Integer.parseInt(hex, 16);
 
 			if (array.length == 2) {
-				String hex2 = array[1];
-				char value2 = (char) Integer.parseInt(hex2, 16);
+				final String hex2 = array[1];
+				final char value2 = (char) Integer.parseInt(hex2, 16);
 
 				chars = new char[]{value, value2};
 			} else {
@@ -92,7 +92,7 @@ public class HtmlDecoder {
 		ENTITY_NAMES = new char[ENTITY_MAP.size()][];
 
 		int i = 0;
-		for (String name : ENTITY_MAP.keySet()) {
+		for (final String name : ENTITY_MAP.keySet()) {
 			ENTITY_NAMES[i++] = name.toCharArray();
 		}
 
@@ -109,10 +109,10 @@ public class HtmlDecoder {
 			return html;
 		}
 
-		StringBuilder result = new StringBuilder(html.length());
+		final StringBuilder result = new StringBuilder(html.length());
 
 		int lastIndex = 0;
-		int len = html.length();
+		final int len = html.length();
 mainloop:
 		while (ndx != -1) {
 			result.append(html.substring(lastIndex, ndx));
@@ -128,8 +128,8 @@ mainloop:
 
 			if (html.charAt(ndx + 1) == '#') {
 				// decimal/hex
-				char c = html.charAt(ndx + 2);
-				int radix;
+				final char c = html.charAt(ndx + 2);
+				final int radix;
 				if ((c == 'x') || (c == 'X')) {
 					radix = 16;
 					ndx += 3;
@@ -138,15 +138,15 @@ mainloop:
 					ndx += 2;
 				}
 
-				String number = html.substring(ndx, lastIndex);
-				int i = Integer.parseInt(number, radix);
+				final String number = html.substring(ndx, lastIndex);
+				final int i = Integer.parseInt(number, radix);
 				result.append((char) i);
 				lastIndex++;
 			} else {
 				// token
-				String encodeToken = html.substring(ndx + 1, lastIndex);
+				final String encodeToken = html.substring(ndx + 1, lastIndex);
 
-				char[] replacement = ENTITY_MAP.get(encodeToken);
+				final char[] replacement = ENTITY_MAP.get(encodeToken);
 				if (replacement == null) {
 					result.append('&');
 					lastIndex = ndx + 1;
@@ -168,19 +168,20 @@ mainloop:
 
 	/**
 	 * Detects the longest character reference name on given position in char array.
+	 * Returns {@code null} if name not found.
 	 */
 	public static String detectName(final char[] input, int ndx) {
 		final Ptr ptr = new Ptr();
 
 		int firstIndex = 0;
 		int lastIndex = ENTITY_NAMES.length - 1;
-		int len = input.length;
+		final int len = input.length;
 		char[] lastName = null;
 
 		final BinarySearchBase binarySearch = new BinarySearchBase() {
 			@Override
 			protected int compare(final int index) {
-				char[] name = ENTITY_NAMES[index];
+				final char[] name = ENTITY_NAMES[index];
 
 				if (ptr.offset >= name.length) {
 					return -1;
@@ -202,7 +203,7 @@ mainloop:
 				return lastName != null ? new String(lastName) : null;
 			}
 
-			char[] element = ENTITY_NAMES[firstIndex];
+			final char[] element = ENTITY_NAMES[firstIndex];
 
 			if (element.length == ptr.offset + 1) {
 				// total match, remember position, continue for finding the longer name
@@ -214,7 +215,7 @@ mainloop:
 			if (firstIndex == lastIndex) {
 				// only one element found, check the rest
 				for (int i = ptr.offset; i < element.length; i++) {
-					if (element[i] != input[ndx]) {
+					if (ndx == input.length || element[i] != input[ndx]) {
 						return lastName != null ? new String(lastName) : null;
 					}
 					ndx++;
