@@ -88,21 +88,21 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Returns all bean property names.
 	 */
 	protected String[] getAllBeanPropertyNames(final Class type, final boolean declared) {
-		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
+		final ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
-		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
+		final PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
-		ArrayList<String> names = new ArrayList<>(propertyDescriptors.length);
+		final ArrayList<String> names = new ArrayList<>(propertyDescriptors.length);
 
-		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			final MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
 			if (getter != null) {
 				if (getter.matchDeclared(declared)) {
 					names.add(propertyDescriptor.getName());
 				}
 			}
 			else if (includeFields) {
-				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
+				final FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
 				if (field != null) {
 					if (field.matchDeclared(declared)) {
 						names.add(field.getName());
@@ -119,14 +119,14 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * all its keys will be returned.
 	 */
 	protected String[] resolveProperties(final Object bean, final boolean declared) {
-		String[] properties;
+		final String[] properties;
 
 		if (bean instanceof Map) {
-			Set keys = ((Map) bean).keySet();
+			final Set keys = ((Map) bean).keySet();
 
 			properties = new String[keys.size()];
 			int ndx = 0;
-			for (Object key : keys) {
+			for (final Object key : keys) {
 				properties[ndx] = key.toString();
 				ndx++;
 			}
@@ -141,9 +141,9 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Starts visiting properties.
 	 */
 	public void visit() {
-		String[] properties = resolveProperties(source, declared);
+		final String[] properties = resolveProperties(source, declared);
 
-		for (String name : properties) {
+		for (final String name : properties) {
 			if (name == null) {
 				continue;
 			}
@@ -152,7 +152,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 				continue;
 			}
 
-			Object value;
+			final Object value;
 
 			String propertyName = name;
 
@@ -170,7 +170,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 				continue;
 			}
 
-			if (value instanceof String && StringUtil.isEmpty((String) value)) {
+			if (ignoreEmptyString && value instanceof String && StringUtil.isEmpty((String) value)) {
 				continue;
 			}
 
