@@ -96,7 +96,7 @@ you need [Docker](https://www.docker.com/) v1.12+.
 Integration tests requires some infrastructure (like databases), hence Docker is
 used.
 
-### Install Jodd into your local Maven
+### Install Jodd into local Maven repo
 
     gradlew install
 
@@ -126,5 +126,3 @@ We will pickup up from there :)
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/oblac/jodd/graphs/contributors"><img src="https://opencollective.com/jodd/contributors.svg?width=890&button=false" /></a>
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/jodd/contribute)]
