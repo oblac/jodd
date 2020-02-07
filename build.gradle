@@ -266,6 +266,9 @@ configure(javaModules()) {
 	def jacocoExcludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
 	test {
 		useJUnitPlatform()
+		testLogging {
+			events "passed", "skipped", "failed"
+		}
 		jacoco {
 			excludes += jacocoExcludes
 		}
