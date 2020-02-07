@@ -19,6 +19,7 @@
 + Talk to Jodd via [slack](https://jodd.slack.com).
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
+<div style="background-color: #FCF8E3">Keep in mind that Jodd is mostly developed and maintained by a single person. The vision is to have a lightweight set of Java tools; low-ceremony and developer-friendly. I wish to have time to complete the vision.</div>
 
 # :zap: Jodd
 
