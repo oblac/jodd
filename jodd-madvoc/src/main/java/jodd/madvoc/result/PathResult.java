@@ -35,39 +35,21 @@ import java.util.function.Consumer;
 public abstract class PathResult {
 
 	private final String path;
-	private final Class target;
-	private final Methref methref;
 
 	public PathResult(final String path) {
 		this.path = path;
-		this.methref = null;
-		this.target = null;
+
 	}
 
 	public <T> PathResult(final Class<T> target, final Consumer<T> consumer) {
-		this.path = null;
-		final Methref<T> methref = wrapTargetToMethref(target);
-		consumer.accept(methref.get());
-		this.methref = methref;
-		this.target = target;
-	}
-
-	/**
-	 * Wraps action class and returns <code>MethRef</code> object
-	 * (proxified target) so user can choose the method.
-	 */
-	protected <T> Methref<T> wrapTargetToMethref(final Class<T> target) {
-		return Methref.of(target);
+		final String methodName = Methref.of(target).name(consumer);
+		this.path = target.getName() + '#' + methodName;
 	}
 
 	/**
 	 * Returns path value.
 	 */
 	public String path() {
-		if (methref != null) {
-			final String methodName = methref.ref();
-			return target.getName() + '#' + methodName;
-		}
 		return path;
 	}
 }

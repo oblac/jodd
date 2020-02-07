@@ -36,18 +36,19 @@ import static jodd.proxetta.ProxyTarget.targetMethodName;
  */
 public class PathrefAdvice implements ProxyAdvice {
 
-	Pathref pathref;
+	PathrefContinue pathref;
 
 	/**
 	 * Reads method name and appends it. Creates object for next call and
 	 * returns that value. If next object is unsupported, it will return null;
 	 */
+	@Override
 	public Object execute() {
-		String methodName = targetMethodName();
+		final String methodName = targetMethodName();
 
-		Class returnType = returnType();
+		final Class returnType = returnType();
 
-		Object next = pathref.continueWith(this, methodName, returnType);
+		final Object next = pathref.continueWith(this, methodName, returnType);
 
 		return ProxyTarget.returnValue(next);
 	}

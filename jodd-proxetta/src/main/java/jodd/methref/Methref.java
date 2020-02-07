@@ -76,77 +76,14 @@ public class Methref<C> {
 	}
 
 	/**
-	 * Static factory that immediately returns {@link #get() method picker}.
-	 */
-	public static <T> T get(final Class<T> target) {
-		return new Methref<>(target).get();
-	}
-
-	/**
-	 * Returns proxy instance of target class, so methods can be called
-	 * immediately after (fluent interface).
-	 */
-	public C get() {
-		return instance;
-	}
-
-	// ---------------------------------------------------------------- name
-
-	/**
-	 * Convenient shortcut to get the name.
+	 * Returns name of called method.
 	 */
 	public String name(final Consumer<C> consumer) {
-		consumer.accept(this.get());
+		consumer.accept(instance);
 		return ref();
 	}
 
-	// ---------------------------------------------------------------- ref
-
-	public String ref(final int dummy) {
-		return ref(null);
-	}
-	public String ref(final short dummy) {
-		return ref(null);
-	}
-	public String ref(final byte dummy) {
-		return ref(null);
-	}
-	public String ref(final char dummy) {
-		return ref(null);
-	}
-	public String ref(final long dummy) {
-		return ref(null);
-	}
-	public String ref(final float dummy) {
-		return ref(null);
-	}
-	public String ref(final double dummy) {
-		return ref(null);
-	}
-	public String ref(final boolean dummy) {
-		return ref(null);
-	}
-
-	/**
-	 * Resolves method name of method reference. Argument is used so {@link #get()}
-	 * can be called in convenient way. For methods that returns string,
-	 * value will be returned immediately.
-	 */
-	public String ref(final Object dummy) {
-		if (dummy != null) {
-			if (dummy instanceof String) {
-				return (String) dummy;
-			}
-			throw new MethrefException("Target method not collected");
-		}
-		return ref();
-	}
-
-	/**
-	 * Returns name of method reference. Target {@link #of(Class) method} has
-	 * to be {@link #get() called} before it can return its reference.
-	 */
-	public String ref() {
+	private String ref() {
 		if (instance == null) {
 			return null;
 		}
@@ -158,29 +95,6 @@ public class Methref<C> {
 				throw new MethrefException("Target method not collected");
 			}
 			return name.toString();
-		} catch (final Exception ex) {
-			if (ex instanceof MethrefException) {
-				throw ((MethrefException) ex);
-			}
-			throw new MethrefException("Methref field not found", ex);
-		}
-	}
-
-	/**
-	 * Returns current count.
-	 */
-	public Integer count() {
-		if (instance == null) {
-			return null;
-		}
-		try {
-			final Field f = instance.getClass().getDeclaredField("$__methodCount$0");
-			f.setAccessible(true);
-			final Integer count = (Integer) f.get(instance);
-			if (count == null) {
-				throw new MethrefException("Target method not collected");
-			}
-			return count;
 		} catch (final Exception ex) {
 			if (ex instanceof MethrefException) {
 				throw ((MethrefException) ex);

@@ -32,9 +32,7 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Super tool for getting calling path reference in compile-time.
@@ -66,7 +64,7 @@ public class Pathref<C> {
 		this.path = StringPool.EMPTY;
 	}
 
-	private Pathref(final Class<C> target, final Pathref root) {
+	Pathref(final Class<C> target, final Pathref root) {
 		final C proxy = createProxyObject(target);
 
         this.instance = proxy;
@@ -120,113 +118,25 @@ public class Pathref<C> {
 	}
 
 	/**
-	 * Static factory of next target. It handles special cases of maps, sets
-	 * and lists. In case target can not be proxified (like for Java classes)
-	 * it returns <code>null</code>.
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T continueWith(final Object currentInstance, final String methodName, final Class<T> target) {
-		final Class currentClass = currentInstance.getClass();
-
-		final Method method;
-
-		try {
-			method = currentClass.getDeclaredMethod(methodName);
-		}
-		catch (final NoSuchMethodException e) {
-			throw new PathrefException("Not a getter: " + methodName, e);
-		}
-
-		if (!ClassUtil.isBeanPropertyGetter(method)) {
-			throw new PathrefException("Not a getter: " + methodName);
-		}
-
-		final String getterName = ClassUtil.getBeanPropertyGetterName(method);
-
-		append(getterName);
-
-		if (ClassUtil.isTypeOf(target, List.class)) {
-			final Class componentType =
-				ClassUtil.getComponentType(method.getGenericReturnType(), currentClass, 0);
-
-			if (componentType == null) {
-				throw new PathrefException("Unknown component name for: " + methodName);
-			}
-
-			return (T) new ArrayList() {
-				@Override
-				public Object get(final int index) {
-					if (index >= 0) {
-						append("[" + index + "]");
-					}
-					return new Pathref<>(componentType, Pathref.this).get();
-				}
-			};
-		}
-
-		try {
-			return new Pathref<>(target, this).get();
-		}
-		catch (final Exception ex) {
-			return null;
-		}
-	}
-
-	/**
 	 * Returns proxy instance of target class, so methods can be called
 	 * immediately after (fluent interface).
 	 */
-	public C get() {
+	C get() {
 		path = StringPool.EMPTY;
 		return instance;
 	}
 
-	// ---------------------------------------------------------------- ref
-
-	public String path(final int dummy) {
-		return path(null);
-	}
-	public String path(final short dummy) {
-		return path(null);
-	}
-	public String path(final byte dummy) {
-		return path(null);
-	}
-	public String path(final char dummy) {
-		return path(null);
-	}
-	public String path(final long dummy) {
-		return path(null);
-	}
-	public String path(final float dummy) {
-		return path(null);
-	}
-	public String path(final double dummy) {
-		return path(null);
-	}
-	public String path(final boolean dummy) {
-		return path(null);
-	}
-
-	/**
-	 * Returns the path.
-	 */
-	public String path(final Object object) {
+	public String path(final Consumer<C> consumer) {
+		path = StringPool.EMPTY;
+		consumer.accept(instance);
 		return path;
 	}
 
-	/**
-	 * Returns the path.
-	 */
-	public String path() {
-		return path;
-	}
-
-	protected void injectPathRef(final Pathref pathref, final Object instance) {
+	protected static void injectPathRef(final Pathref pathref, final Object target) {
 		try {
-			final Field f = instance.getClass().getDeclaredField("$__pathref$0");
+			final Field f = target.getClass().getDeclaredField("$__pathref$0");
 			f.setAccessible(true);
-			f.set(instance, pathref);
+			f.set(target, new PathrefContinue(pathref));
 		} catch (final Exception ex) {
 			throw new PathrefException("Pathref field not found", ex);
 		}

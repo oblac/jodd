@@ -39,45 +39,41 @@ class MethrefTest {
 
 	@Test
 	void testString() {
-		assertEquals("foo", Methref.get(Str.class).foo());
-		assertEquals("foo2", Methref.get(Str.class).foo2(null, null));
+		assertEquals("foo", Methref.of(Str.class).name(Str::foo));
+		assertEquals("foo2", Methref.of(Str.class).name(s -> s.foo2(null, null)));
 	}
 
 	@Test
 	void testNonString() {
 		final Methref<Str> mref = Methref.of(Str.class);
-		assertEquals("redirect:boo", "redirect:" + mref.ref(mref.get().boo()));
-		assertEquals("foo", mref.ref(mref.get().foo()));
-
-
-		assertEquals("foo", Methref.of(Str.class).name(Str::foo));
+		assertEquals("redirect:boo", "redirect:" + mref.name(Str::boo));
+		assertEquals("foo", mref.name(Str::foo));
 	}
 
 	@Test
 	void testPrimitives() {
 		final Methref<Str> mref = Methref.of(Str.class);
-		assertEquals("izoo", mref.ref(mref.get().izoo()));
-		assertEquals("fzoo", mref.ref(mref.get().fzoo()));
-		assertEquals("dzoo", mref.ref(mref.get().dzoo()));
-		assertEquals("lzoo", mref.ref(mref.get().lzoo()));
-		assertEquals("bzoo", mref.ref(mref.get().bzoo()));
-		assertEquals("szoo", mref.ref(mref.get().szoo()));
-		assertEquals("czoo", mref.ref(mref.get().czoo()));
-		assertEquals("yzoo", mref.ref(mref.get().yzoo()));
+		assertEquals("izoo", mref.name(Str::izoo));
+		assertEquals("fzoo", mref.name(Str::fzoo));
+		assertEquals("dzoo", mref.name(Str::dzoo));
+		assertEquals("lzoo", mref.name(Str::lzoo));
+		assertEquals("bzoo", mref.name(Str::bzoo));
+		assertEquals("szoo", mref.name(Str::szoo));
+		assertEquals("czoo", mref.name(Str::czoo));
+		assertEquals("yzoo", mref.name(Str::yzoo));
 	}
 
 	@Test
 	void testVoidOrTwoSteps() {
 		final Methref<Str> m = Methref.of(Str.class);
-		m.get().voo();
-		assertEquals("voo", m.ref());
+		assertEquals("voo", m.name(Str::voo));
 	}
 
 	@Test
 	void testMethRefOnProxifiedClass() {
 		Methref<? extends Oink> m = Methref.of(Oink.class);
-		m.get().woink();
-		assertEquals("woink", m.ref());
+		String name = m.name(Oink::woink);
+		assertEquals("woink", name);
 
 		final ProxyAspect a1 = new ProxyAspect(DummyAdvice.class, new AllTopMethodsPointcut());
 		final ProxyProxetta pp = Proxetta.proxyProxetta().withAspect(a1);
@@ -86,61 +82,21 @@ class MethrefTest {
 		assertNotEquals(oink.getClass(), Oink.class);
 
 		m = Methref.of(oink.getClass());
-		m.get().woink();
-		assertEquals("woink", m.ref());
+		name = m.name(Oink::woink);
+		assertEquals("woink", name);
 	}
 
 	@Test
 	void testParallelAccess() {
 		final Methref<Str> methref1 = Methref.of(Str.class);
 
-		final String m1 = methref1.ref(methref1.get().boo());
+		final String m1 = methref1.name(Str::boo);
 
 		final Methref<Str> methref2 = Methref.of(Str.class);
 
-		final String m2 = methref2.ref(methref2.get().foo());
+		final String m2 = methref2.name(Str::foo);
 
-		assertEquals(m1, methref1.ref());
-		assertEquals(m2, methref2.ref());
-	}
-
-	@Test
-	void testCount() {
-		final Methref<Str> methref = Methref.of(Str.class);
-
-		final Str str = methref.get();
-		assertEquals(0, methref.count());
-
-		str.boo();
-
-		assertEquals("boo", methref.ref());
-		assertEquals(1, methref.count());
-
-		str.boo();
-
-		assertEquals("boo", methref.ref());
-		assertEquals(2, methref.count());
-	}
-
-	@Test
-	void testTwoCount2() {
-		final Methref<Str> methref = Methref.of(Str.class);
-		final Methref<Str> methref2 = Methref.of(Str.class);
-
-		final Str str = methref.get();
-		assertEquals(0, methref.count());
-		assertEquals(0, methref2.count());
-
-		str.boo();
-
-		assertEquals("boo", methref.ref());
-		assertEquals(1, methref.count());
-		assertEquals(0, methref2.count());
-
-		str.boo();
-
-		assertEquals("boo", methref.ref());
-		assertEquals(2, methref.count());
-		assertEquals(0, methref2.count());
+		assertEquals("boo", m1);
+		assertEquals("foo", m2);
 	}
 }

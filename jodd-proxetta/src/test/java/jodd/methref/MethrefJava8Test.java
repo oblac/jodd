@@ -63,11 +63,11 @@ class MethrefJava8Test {
 	void testMethrefOnInterfaceWithDefaultMethod() {
 		final Methref<Sara> methref = Methref.of(Sara.class);
 
-		methref.get().hello(123);
-		assertEquals("hello", methref.ref());
+		String name = methref.name(sara -> sara.hello(123));
+		assertEquals("hello", name);
 
-		methref.get().nerd();
-		assertEquals("nerd", methref.ref());
+		name = methref.name(Chuck::nerd);
+		assertEquals("nerd", name);
 
 //		methref.to().hey();
 //		assertEquals("hey", methref.ref());
