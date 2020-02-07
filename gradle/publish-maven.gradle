@@ -32,11 +32,6 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
-			afterEvaluate {
-				artifact sourcesJar
-				artifact javadocJar
-			}
-
 			customizePom(pom, project)
 		}
 	}
