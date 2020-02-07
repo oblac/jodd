@@ -25,6 +25,10 @@
 
 package jodd.props;
 
+import jodd.io.FastCharArrayWriter;
+import jodd.io.StreamUtil;
+import jodd.util.ResourcesUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,32 +36,28 @@ import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import jodd.io.FastCharArrayWriter;
-import jodd.io.StreamUtil;
-import jodd.util.ClassLoaderUtil;
-
 abstract class BasePropsTest {
 
-	protected InputStream readDataToInputstream(String fileName) throws IOException {
+	protected InputStream readDataToInputstream(final String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
-		return ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
+		return ResourcesUtil.getResourceAsStream(dataFolder + fileName);
 	}
 
-	protected File readDataToFile(String fileName) throws URISyntaxException {
+	protected File readDataToFile(final String fileName) throws URISyntaxException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
 
-		final URL url = ClassLoaderUtil.getResourceUrl("/" + dataFolder + fileName);
+		final URL url = ResourcesUtil.getResourceUrl("/" + dataFolder + fileName);
 		return new File(url.toURI());
 	}
 
-	protected String readDataFile(String fileName) throws IOException {
+	protected String readDataFile(final String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
 
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
-		Writer out = new FastCharArrayWriter();
+		final InputStream is = ResourcesUtil.getResourceAsStream(dataFolder + fileName);
+		final Writer out = new FastCharArrayWriter();
 		String encoding = "UTF-8";
 		if (fileName.endsWith(".properties")) {
 			encoding = "ISO-8859-1";
@@ -67,11 +67,11 @@ abstract class BasePropsTest {
 		return out.toString();
 	}
 
-	protected Props loadProps(Props p, String fileName) throws IOException {
+	protected Props loadProps(final Props p, final String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
 
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
+		final InputStream is = ResourcesUtil.getResourceAsStream(dataFolder + fileName);
 		String encoding = "UTF-8";
 		if (fileName.endsWith(".properties")) {
 			encoding = "ISO-8859-1";
@@ -80,8 +80,8 @@ abstract class BasePropsTest {
 		return p;
 	}
 
-	protected Props loadProps(String fileName) throws IOException {
-		Props p = new Props();
+	protected Props loadProps(final String fileName) throws IOException {
+		final Props p = new Props();
 		return loadProps(p, fileName);
 	}
 }

@@ -26,7 +26,7 @@
 package jodd.joy;
 
 import jodd.system.SystemUtil;
-import jodd.util.ClassLoaderUtil;
+import jodd.util.ResourcesUtil;
 import jodd.util.StringUtil;
 
 import java.net.MalformedURLException;
@@ -55,7 +55,7 @@ public class JoyPaths extends JoyBase {
 
 		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
 
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
+		URL url = ResourcesUtil.getResourceUrl(resourceName);
 
 		if (url == null) {
 			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
@@ -65,7 +65,7 @@ public class JoyPaths extends JoyBase {
 		if (!protocol.equals("file")) {
 			try {
 				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
+			} catch (final MalformedURLException ignore) {
 			}
 		}
 

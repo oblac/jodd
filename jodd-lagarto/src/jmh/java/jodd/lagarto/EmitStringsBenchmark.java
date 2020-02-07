@@ -25,9 +25,8 @@
 
 package jodd.lagarto;
 
-import jodd.io.StreamUtil;
 import jodd.lagarto.dom.LagartoDOMBuilder;
-import jodd.util.ClassLoaderUtil;
+import jodd.util.ResourcesUtil;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
@@ -62,31 +61,30 @@ public class EmitStringsBenchmark {
 
 	@Benchmark
 	public LagartoParser lagarto_noStrings() {
-		LagartoParser lagartoParser = new LagartoParser(HTML1);
+		final LagartoParser lagartoParser = new LagartoParser(HTML1);
 		lagartoParser.parse(new EmptyTagVisitor());
 		return lagartoParser;
 	}
 
 	@Benchmark
 	public LagartoParser lagarto_emitStrings() {
-		LagartoParser lagartoParser = new LagartoParser(HTML1);
+		final LagartoParser lagartoParser = new LagartoParser(HTML1);
 		lagartoParser.parse(new EmptyTagVisitor());
 		return lagartoParser;
 	}
 
 	@Benchmark
 	public LagartoDOMBuilder lagartoDomBuilder() {
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		final LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.parse(HTML1);
 		return lagartoDOMBuilder;
 	}
 
 	static {
 		try {
-			char[] data = StreamUtil.readChars(ClassLoaderUtil.getResourceAsStream("jodd/lagarto/file1.html"));
-			HTML1 = new String(data);
+			HTML1 = ResourcesUtil.getResourceAsString("jodd/lagarto/file1.html");
 		}
-		catch (IOException e) {
+		catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}

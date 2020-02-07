@@ -36,7 +36,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Set;
@@ -60,7 +59,7 @@ public class ClassLoaderUtil {
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = getContextClassLoader();
 		if (cl == null) {
-			Class callerClass = ClassUtil.getCallerClass(2);
+			final Class callerClass = ClassUtil.getCallerClass(2);
 			cl = callerClass.getClassLoader();
 		}
 		return cl;
@@ -106,19 +105,19 @@ public class ClassLoaderUtil {
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(classpathItem);
-				JarFile jar = new JarFile(classpathItem);
+				final JarFile jar = new JarFile(classpathItem);
 				manifest = jar.getManifest();
-			} catch (IOException ignore) {
+			} catch (final IOException ignore) {
 			}
 			finally {
 				StreamUtil.close(fis);
 			}
 		} else {
-			File metaDir = new File(classpathItem, "META-INF");
+			final File metaDir = new File(classpathItem, "META-INF");
 			File manifestFile = null;
 			if (metaDir.isDirectory()) {
-				for (String m : MANIFESTS) {
-					File mFile = new File(metaDir, m);
+				for (final String m : MANIFESTS) {
+					final File mFile = new File(metaDir, m);
 					if (mFile.isFile()) {
 						manifestFile = mFile;
 						break;
@@ -130,7 +129,7 @@ public class ClassLoaderUtil {
 				try {
 					fis = new FileInputStream(manifestFile);
 					manifest = new Manifest(fis);
-				} catch (IOException ignore) {
+				} catch (final IOException ignore) {
 				}
 				finally {
 					StreamUtil.close(fis);
@@ -146,7 +145,7 @@ public class ClassLoaderUtil {
 	 * its parent is returned. If item is a directory, its name is returned.
 	 */
 	public static String getClasspathItemBaseDir(final File classpathItem) {
-		String base;
+		final String base;
 		if (classpathItem.isFile()) {
 			base = classpathItem.getParent();
 		} else {
@@ -173,22 +172,22 @@ public class ClassLoaderUtil {
 	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
-		Set<File> classpaths = new TreeSet<>();
+		final Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			URL[] urls = ClassPathURLs.of(classLoader, null);
+			final URL[] urls = ClassPathURLs.of(classLoader, null);
 			if (urls != null) {
-				for (URL u : urls) {
+				for (final URL u : urls) {
 					File f = FileUtil.toContainerFile(u);
 					if ((f != null) && f.exists()) {
 						try {
 							f = f.getCanonicalFile();
 
-							boolean newElement = classpaths.add(f);
+							final boolean newElement = classpaths.add(f);
 							if (newElement) {
 								addInnerClasspathItems(classpaths, f);
 							}
-						} catch (IOException ignore) {
+						} catch (final IOException ignore) {
 						}
 					}
 				}
@@ -196,31 +195,31 @@ public class ClassLoaderUtil {
 			classLoader = classLoader.getParent();
 		}
 
-		File[] result = new File[classpaths.size()];
+		final File[] result = new File[classpaths.size()];
 		return classpaths.toArray(result);
 	}
 
 	private static void addInnerClasspathItems(final Set<File> classpaths, final File item) {
 
-		Manifest manifest = getClasspathItemManifest(item);
+		final Manifest manifest = getClasspathItemManifest(item);
 		if (manifest == null) {
 			return;
 		}
 
-		Attributes attributes = manifest.getMainAttributes();
+		final Attributes attributes = manifest.getMainAttributes();
 		if (attributes == null) {
 			return;
 		}
 
-		String s = attributes.getValue(Attributes.Name.CLASS_PATH);
+		final String s = attributes.getValue(Attributes.Name.CLASS_PATH);
 		if (s == null) {
 			return;
 		}
 
-		String base = getClasspathItemBaseDir(item);
+		final String base = getClasspathItemBaseDir(item);
 
-		String[] tokens = StringUtil.splitc(s, ' ');
-		for (String t : tokens) {
+		final String[] tokens = StringUtil.splitc(s, ' ');
+		for (final String t : tokens) {
 			File file;
 
 			// try file with the base path
@@ -230,7 +229,7 @@ public class ClassLoaderUtil {
 				if (!file.exists()) {
 					file = null;
 				}
-			} catch (Exception ignore) {
+			} catch (final Exception ignore) {
 				file = null;
 			}
 
@@ -242,7 +241,7 @@ public class ClassLoaderUtil {
 					if (!file.exists()) {
 						file = null;
 					}
-				} catch (Exception ignore) {
+				} catch (final Exception ignore) {
 					file = null;
 				}
 			}
@@ -250,14 +249,14 @@ public class ClassLoaderUtil {
 			if (file == null) {
 				// try the URL
 				try {
-					URL url = new URL(t);
+					final URL url = new URL(t);
 
 					file = new File(url.getFile());
 					file = file.getCanonicalFile();
 					if (!file.exists()) {
 						file = null;
 					}
-				} catch (Exception ignore) {
+				} catch (final Exception ignore) {
 					file = null;
 				}
 			}
@@ -268,125 +267,28 @@ public class ClassLoaderUtil {
 		}
 	}
 
-
-	// ---------------------------------------------------------------- get resource
-
-	/**
-	 * Retrieves given resource as URL.
-	 * @see #getResourceUrl(String, ClassLoader)
-	 */
-	public static URL getResourceUrl(final String resourceName) {
-		return getResourceUrl(resourceName, null);
-	}
-
-	/**
-	 * Retrieves given resource as URL. Resource is always absolute and may
-	 * starts with a slash character.
-	 * <p>
-	 * Resource will be loaded using class loaders in the following order:
-	 * <ul>
-	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}</li>
-	 * <li>{@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}</li>
-	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}</li>
-	 * </ul>
-	 */
-	public static URL getResourceUrl(String resourceName, final ClassLoader classLoader) {
-
-		if (resourceName.startsWith("/")) {
-			resourceName = resourceName.substring(1);
-		}
-		
-		URL resourceUrl;
-
-		// try #1 - using provided class loader
-		if (classLoader != null) {
-			resourceUrl = classLoader.getResource(resourceName);
-			if (resourceUrl != null) {
-				return resourceUrl;
-			}
-		}
-
-		// try #2 - using thread class loader
-		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
-			resourceUrl = currentThreadClassLoader.getResource(resourceName);
-			if (resourceUrl != null) {
-				return resourceUrl;
-			}
-		}
-
-		// try #3 - using caller classloader, similar as Class.forName()
-		Class callerClass = ClassUtil.getCallerClass(2);
-		ClassLoader callerClassLoader = callerClass.getClassLoader();
-
-		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
-			resourceUrl = callerClassLoader.getResource(resourceName);
-			if (resourceUrl != null) {
-				return resourceUrl;
-			}
-		}
-
-		return null;
-	}
-
-	// ---------------------------------------------------------------- get resource stream
-
-	/**
-	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceAsStream(String, ClassLoader)
-	 */
-	public static InputStream getResourceAsStream(final String resourceName) throws IOException {
-		return getResourceAsStream(resourceName, null);
-	}
-
-	/**
-	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceUrl(String, ClassLoader)
-	 */
-	public static InputStream getResourceAsStream(final String resourceName, final ClassLoader callingClass) throws IOException {
-		URL url = getResourceUrl(resourceName, callingClass);
-		if (url != null) {
-			return url.openStream();
-		}
-		return null;
-	}
-
-	/**
-	 * Opens a resource of the specified name for reading. Controls caching,
-	 * that is important when the same jar is reloaded using custom classloader.
-	 */
-	public static InputStream getResourceAsStream(final String resourceName, final ClassLoader callingClass, final boolean useCache) throws IOException {
-		URL url = getResourceUrl(resourceName, callingClass);
-		if (url != null) {
-			URLConnection urlConnection = url.openConnection();
-			urlConnection.setUseCaches(useCache);
-			return urlConnection.getInputStream();
-		}
-		return null;
-	}
+	// ---------------------------------------------------------------- class stream
 
 	/**
 	 * Opens a class of the specified name for reading using class classloader.
-	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(final Class clazz) throws IOException {
-		return getResourceAsStream(ClassUtil.convertClassNameToFileName(clazz), clazz.getClassLoader());
+		return ResourcesUtil.getResourceAsStream(ClassUtil.convertClassNameToFileName(clazz), clazz.getClassLoader());
 	}
 
 	/**
 	 * Opens a class of the specified name for reading. No specific classloader is used
 	 * for loading class.
-	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(final String className) throws IOException {
-		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className));
+		return ResourcesUtil.getResourceAsStream(ClassUtil.convertClassNameToFileName(className));
 	}
 
 	/**
 	 * Opens a class of the specified name for reading using provided class loader.
 	 */
 	public static InputStream getClassAsStream(final String className, final ClassLoader classLoader) throws IOException {
-		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className), classLoader);
+		return ResourcesUtil.getResourceAsStream(ClassUtil.convertClassNameToFileName(className), classLoader);
 	}
 
 	// ---------------------------------------------------------------- load class

@@ -58,13 +58,13 @@ class ClassLoaderUtilTest {
 		assertNotNull(is);
 		is.close();
 
-		URL url;
+		final URL url;
 		final String resourceName = "jodd/util/Bits.class";
 
-		url = ClassLoaderUtil.getResourceUrl(resourceName);
+		url = ResourcesUtil.getResourceUrl(resourceName);
 		assertNotNull(url);
 
-		is = ClassLoaderUtil.getResourceAsStream(resourceName);
+		is = ResourcesUtil.getResourceAsStream(resourceName);
 		assertNotNull(is);
 		is.close();
 	}
@@ -88,14 +88,14 @@ class ClassLoaderUtilTest {
 	void testLoadClass() throws Exception {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
-		} catch (ClassNotFoundException cnfex) {
+		} catch (final ClassNotFoundException cnfex) {
 			assertEquals("Class not found: not.existing.class", cnfex.getMessage());
 		}
 
 		try {
-			Class joddClass = ClassLoaderUtil.loadClass("jodd.util.ClassLoaderUtilTest");
+			final Class joddClass = ClassLoaderUtil.loadClass("jodd.util.ClassLoaderUtilTest");
 			assertNotNull(joddClass);
-		} catch (ClassNotFoundException ignore) {
+		} catch (final ClassNotFoundException ignore) {
 			fail("error");
 		}
 		assertEquals(Integer.class, ClassLoaderUtil.loadClass("java.lang.Integer"));
@@ -121,7 +121,7 @@ class ClassLoaderUtilTest {
 		assertEquals(Integer[][].class, ClassLoaderUtil.loadClass("java.lang.Integer[][]"));
 		assertEquals(int[][].class, ClassLoaderUtil.loadClass("int[][]"));
 
-		String dummyClassName = Dummy.class.getName();
+		final String dummyClassName = Dummy.class.getName();
 		assertEquals(Dummy.class, ClassLoaderUtil.loadClass(dummyClassName));
 
 		assertEquals(Dummy[].class, ClassLoaderUtil.loadClass(dummyClassName + "[]"));
@@ -129,21 +129,21 @@ class ClassLoaderUtilTest {
 
 		// special case
 
-		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) ClassLoaderStrategy.get();
+		final DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) ClassLoaderStrategy.get();
 
 		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(true);
 
-		URLClassLoader parentClassloader = (URLClassLoader)this.getClass().getClassLoader();
-		URL[] urls = parentClassloader.getURLs();
-		ExtendedURLClassLoader excl = new ExtendedURLClassLoader(urls, parentClassloader, false);
+		final URLClassLoader parentClassloader = (URLClassLoader)this.getClass().getClassLoader();
+		final URL[] urls = parentClassloader.getURLs();
+		final ExtendedURLClassLoader excl = new ExtendedURLClassLoader(urls, parentClassloader, false);
 
-		Class dummyClass = ClassLoaderUtil.loadClass(dummyClassName, excl);
+		final Class dummyClass = ClassLoaderUtil.loadClass(dummyClassName, excl);
 		assertFalse(Dummy.class == dummyClass); // classes are NOT the same as they are loaded by different class loaders
 		assertEquals(Dummy.class.getName(), dummyClass.getName());
 
 		// special case with array!
 
-		Class dummyClassArray = ClassLoaderUtil.loadClass(dummyClassName + "[]", excl);
+		final Class dummyClassArray = ClassLoaderUtil.loadClass(dummyClassName + "[]", excl);
 		assertFalse(Dummy[].class == dummyClassArray);
 		assertEquals(Dummy[].class.getName(), dummyClassArray.getName());
 
@@ -155,15 +155,15 @@ class ClassLoaderUtilTest {
 
 	@Test
 	void testWebJars() {
-		URL url = ClassLoaderUtil.getResourceUrl("/META-INF/resources/webjars/jquery");
+		final URL url = ResourcesUtil.getResourceUrl("/META-INF/resources/webjars/jquery");
 
-		File containerFile = FileUtil.toContainerFile(url);
+		final File containerFile = FileUtil.toContainerFile(url);
 
 		final Value<String> jqueryName = Value.of(null);
 
-		ClassScanner classScanner = new ClassScanner() {
+		final ClassScanner classScanner = new ClassScanner() {
 			@Override
-			protected void onEntry(ClassPathEntry entryData) {
+			protected void onEntry(final ClassPathEntry entryData) {
 				if (entryData.name().endsWith("jquery.js")) {
 					jqueryName.set(entryData.name());
 				}

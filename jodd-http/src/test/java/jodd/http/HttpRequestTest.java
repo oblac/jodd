@@ -30,7 +30,7 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.io.upload.FileUpload;
 import jodd.net.MimeTypes;
-import jodd.util.ClassLoaderUtil;
+import jodd.util.ResourcesUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -52,7 +52,7 @@ class HttpRequestTest {
 
 	@Test
 	void testQueryParameters() {
-		HttpRequest httpRequest = new HttpRequest();
+		final HttpRequest httpRequest = new HttpRequest();
 
 		httpRequest.path("");
 		assertEquals("/", httpRequest.path());
@@ -118,10 +118,10 @@ class HttpRequestTest {
 
 	@Test
 	void testFormParamsObjects() {
-		Map<String, Object> params = new HashMap<>();
+		final Map<String, Object> params = new HashMap<>();
 		params.put("state", 1);
 
-		HttpRequest httpRequest = new HttpRequest();
+		final HttpRequest httpRequest = new HttpRequest();
 		httpRequest.form(params);
 
 		assertEquals(1, httpRequest.form().size());
@@ -197,14 +197,14 @@ class HttpRequestTest {
 
 	@Test
 	void testInOutForm() {
-		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
+		final HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
 		request.header("User-Agent", "Scaly");
 		request.form("one", "funny");
 
-		byte[] bytes = request.toByteArray();
+		final byte[] bytes = request.toByteArray();
 
 		// read
-		HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+		final HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
 
 		assertEquals(request.method(), request2.method());
 		assertEquals(request.path(), request2.path());
@@ -214,8 +214,8 @@ class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		HttpMultiMap<?> params1 = request.form();
-		HttpMultiMap<?> params2 = request2.form();
+		final HttpMultiMap<?> params1 = request.form();
+		final HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 	}
@@ -227,9 +227,9 @@ class HttpRequestTest {
 
 		byte[] bytes = request.toByteArray();
 		try {
-			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+			final HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
 			assertEquals("", request2.body());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			fail(ex.toString());
 		}
 
@@ -239,30 +239,30 @@ class HttpRequestTest {
 
 		bytes = request.toByteArray();
 		try {
-			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+			final HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
 			assertEquals("", request2.body());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			fail(ex.toString());
 		}
 	}
 
 	@Test
 	void testFileUpload() throws IOException {
-		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
+		final HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
 
 		request.header("User-Agent", "Scaly").form("one", "funny");
 
-		File tempFile = FileUtil.createTempFile();
+		final File tempFile = FileUtil.createTempFile();
 		tempFile.deleteOnExit();
 		FileUtil.writeString(tempFile, "qwerty");
 		request.form("two", tempFile);
 
-		byte[] bytes = request.toByteArray();
+		final byte[] bytes = request.toByteArray();
 
 
 		// read
-		HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-		HttpMultiMap<?> httpParams2 = request2.form();
+		final HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+		final HttpMultiMap<?> httpParams2 = request2.form();
 
 		assertEquals(request.method(), request2.method());
 		assertEquals(request.path(), request2.path());
@@ -272,15 +272,15 @@ class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		HttpMultiMap<?> params1 = request.form();
-		HttpMultiMap<?> params2 = request2.form();
+		final HttpMultiMap<?> params1 = request.form();
+		final HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 
-		FileUpload fu = (FileUpload) httpParams2.get("two");
+		final FileUpload fu = (FileUpload) httpParams2.get("two");
 		assertEquals(6, fu.getSize());
 
-		String str = new String(fu.getFileContent());
+		final String str = new String(fu.getFileContent());
 		assertEquals("qwerty", str);
 
 		tempFile.delete();
@@ -301,8 +301,8 @@ class HttpRequestTest {
 
 	@Test
 	void testBasicAuthorizationCanBeSetToNullAndIsIgnoredSilently() {
-		HttpRequest httpRequest = new HttpRequest();
-		String[][] input = new String[][]{
+		final HttpRequest httpRequest = new HttpRequest();
+		final String[][] input = new String[][]{
 				{"non-null", null},
 				{null, "non-null"},
 				{null, null},
@@ -310,12 +310,12 @@ class HttpRequestTest {
 
 		try {
 
-			for(String[] pair :input) {
+			for(final String[] pair :input) {
 				httpRequest.basicAuthentication(pair[0], pair[1]);
 				assertNull(httpRequest.headers.get("Authorization"));
 			}
 
-		} catch (RuntimeException e) {
+		} catch (final RuntimeException e) {
 			fail("No exception should be thrown for null authorization basic header args!");
 		}
 	}
@@ -329,12 +329,12 @@ class HttpRequestTest {
 		request = HttpRequest.get("https://jodd.org/random link?q=1");
 		assertEquals("1", request.query().get("q"));
 
-		String badUrl = "httpsjodd.org/random link?q=1:// GET";
+		final String badUrl = "httpsjodd.org/random link?q=1:// GET";
 		try {				
 			HttpRequest.get(badUrl).send();
 			fail("error");
 		}
-		catch (HttpException he) {
+		catch (final HttpException he) {
 			assertTrue(he.getMessage().contains(badUrl));
 		}
 
@@ -384,19 +384,19 @@ class HttpRequestTest {
 
 	@Test
 	void testBigRequest() throws IOException {
-		InputStream inputStream = ClassLoaderUtil.getResourceAsStream("/jodd/http/answer.json");
+		final InputStream inputStream = ResourcesUtil.getResourceAsStream("/jodd/http/answer.json");
 
-		FastCharArrayWriter writter = StreamUtil.copy(inputStream);
-		String body = writter.toString();
+		final FastCharArrayWriter writter = StreamUtil.copy(inputStream);
+		final String body = writter.toString();
 
-		HttpRequest httpRequest = HttpRequest.get("").body(body);
+		final HttpRequest httpRequest = HttpRequest.get("").body(body);
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		httpRequest.sendTo(outputStream);
 
 		String receivedBody = outputStream.toString();
 
-		int ndx = receivedBody.indexOf("{");
+		final int ndx = receivedBody.indexOf("{");
 		receivedBody = receivedBody.substring(ndx);
 
 		assertEquals(body, receivedBody);
@@ -404,19 +404,19 @@ class HttpRequestTest {
 
 	@Test
 	void testHttpRequestSlash() {
-		HttpRequest request = HttpRequest.post("/");
+		final HttpRequest request = HttpRequest.post("/");
 		request.contentType("application/x-www-form-urlencoded");
-		HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
+		final HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
 
 		assertEquals(request.toString(), request1.toString());
 	}
 
 	@Test
 	void testHttpRequestReRead() {
-		HttpRequest request = HttpRequest.post("http://127.0.0.1:8086/test");
+		final HttpRequest request = HttpRequest.post("http://127.0.0.1:8086/test");
 		request.form("a", null);
 		request.form("b", "aaa");
-		HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
+		final HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
 		assertEquals(request.toString(), request1.toString());
 	}
 
