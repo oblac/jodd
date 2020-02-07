@@ -48,6 +48,9 @@ class MethrefTest {
 		final Methref<Str> mref = Methref.of(Str.class);
 		assertEquals("redirect:boo", "redirect:" + mref.ref(mref.get().boo()));
 		assertEquals("foo", mref.ref(mref.get().foo()));
+
+
+		assertEquals("foo", Methref.of(Str.class).on(Str::foo));
 	}
 
 	@Test

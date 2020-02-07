@@ -30,6 +30,7 @@ import jodd.proxetta.ProxettaUtil;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
+import java.util.function.Consumer;
 
 /**
  * Super tool for getting method references (names) in compile-time.
@@ -52,13 +53,7 @@ public class Methref<C> {
 	public Methref(Class<C> target) {
 		target = ProxettaUtil.resolveTargetClass(target);
 
-		Class proxyClass = cache.get(target);
-
-		if (proxyClass == null) {
-			proxyClass = proxetta.defineProxy(target);
-
-			cache.put(target, proxyClass);
-		}
+		final Class proxyClass = cache.get(target, proxetta::defineProxy);
 
 		final C proxy;
 
@@ -134,6 +129,11 @@ public class Methref<C> {
 			}
 			throw new MethrefException("Target method not collected");
 		}
+		return ref();
+	}
+
+	public String on(final Consumer<C> consumer) {
+		consumer.accept(this.get());
 		return ref();
 	}
 

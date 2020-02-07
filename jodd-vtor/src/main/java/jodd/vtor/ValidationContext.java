@@ -59,8 +59,8 @@ public class ValidationContext {
 	 * Adds validation checks.
 	 */
 	public void add(final Check check) {
-		String name = check.getName();
-		List<Check> list = map.computeIfAbsent(name, k -> new ArrayList<>());
+		final String name = check.getName();
+		final List<Check> list = map.computeIfAbsent(name, k -> new ArrayList<>());
 		list.add(check);
 	}
 
@@ -68,7 +68,7 @@ public class ValidationContext {
 	 * Adds all checks from provided list.
 	 */
 	public void addAll(final List<Check> checkList) {
-		for (Check check : checkList) {
+		for (final Check check : checkList) {
 			add(check);
 		}
 	}
@@ -83,7 +83,7 @@ public class ValidationContext {
 	 * @see #addClassChecks(Class)
 	 */
 	public static ValidationContext resolveFor(final Class<?> target) {
-		ValidationContext vc = new ValidationContext();
+		final ValidationContext vc = new ValidationContext();
 		vc.addClassChecks(target);
 		return vc;
 	}
@@ -93,11 +93,11 @@ public class ValidationContext {
 	 * @see #resolveFor(Class)
 	 */
 	public void addClassChecks(final Class target) {
-		final List<Check> list = cache.get(target, () -> {
+		final List<Check> list = cache.get(target, (t) -> {
 			final List<Check> newList = new ArrayList<>();
-			final ClassDescriptor cd = ClassIntrospector.get().lookup(target);
+			final ClassDescriptor cd = ClassIntrospector.get().lookup(t);
 			final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
-			for (PropertyDescriptor propertyDescriptor : allProperties) {
+			for (final PropertyDescriptor propertyDescriptor : allProperties) {
 				collectPropertyAnnotationChecks(newList, propertyDescriptor);
 			}
 			return newList;
@@ -109,22 +109,22 @@ public class ValidationContext {
 	 * Process all annotations of provided properties.
 	 */
 	protected void collectPropertyAnnotationChecks(final List<Check> annChecks, final PropertyDescriptor propertyDescriptor) {
-		FieldDescriptor fd = propertyDescriptor.getFieldDescriptor();
+		final FieldDescriptor fd = propertyDescriptor.getFieldDescriptor();
 
 		if (fd != null) {
-			Annotation[] annotations = fd.getField().getAnnotations();
+			final Annotation[] annotations = fd.getField().getAnnotations();
 			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
 		}
 
 		MethodDescriptor md = propertyDescriptor.getReadMethodDescriptor();
 		if (md != null) {
-			Annotation[] annotations = md.getMethod().getAnnotations();
+			final Annotation[] annotations = md.getMethod().getAnnotations();
 			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
 		}
 
 		md = propertyDescriptor.getWriteMethodDescriptor();
 		if (md != null) {
-			Annotation[] annotations = md.getMethod().getAnnotations();
+			final Annotation[] annotations = md.getMethod().getAnnotations();
 			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
 		}
 	}
@@ -134,18 +134,18 @@ public class ValidationContext {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected void collectAnnotationChecks(final List<Check> annChecks, final Class targetType, final String targetName, final Annotation[] annotations) {
-		for (Annotation annotation : annotations) {
-			Constraint c = annotation.annotationType().getAnnotation(Constraint.class);
-			Class<? extends ValidationConstraint> constraintClass;
+		for (final Annotation annotation : annotations) {
+			final Constraint c = annotation.annotationType().getAnnotation(Constraint.class);
+			final Class<? extends ValidationConstraint> constraintClass;
 
 			if (c == null) {
 				// if constraint is not available, try lookup
-				String constraintClassName = annotation.annotationType().getName() + "Constraint";
+				final String constraintClassName = annotation.annotationType().getName() + "Constraint";
 
 				try {
 					constraintClass = ClassLoaderUtil.loadClass(constraintClassName, this.getClass().getClassLoader());
 				}
-				catch (ClassNotFoundException ingore) {
+				catch (final ClassNotFoundException ingore) {
 					continue;
 				}
 			}
@@ -153,14 +153,14 @@ public class ValidationContext {
 				constraintClass = c.value();
 			}
 
-			ValidationConstraint vc;
+			final ValidationConstraint vc;
 			try {
 				vc = newConstraint(constraintClass, targetType);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				throw new VtorException("Invalid constraint: " + constraintClass.getClass().getName(), ex);
 			}
 			vc.configure(annotation);
-			Check check = new Check(targetName, vc);
+			final Check check = new Check(targetName, vc);
 			copyDefaultCheckProperties(check, annotation);
 			annChecks.add(check);
 		}
@@ -179,7 +179,7 @@ public class ValidationContext {
 		try {
 			ctor = constraint.getConstructor();
 			return ctor.newInstance();
-		} catch (NoSuchMethodException ignore) {
+		} catch (final NoSuchMethodException ignore) {
 			ctor = constraint.getConstructor(ValidationContext.class);
 			return ctor.newInstance(resolveFor(targetType));
 		}
@@ -190,13 +190,13 @@ public class ValidationContext {
 	 * Copies default properties from annotation to the check.
 	 */
 	protected void copyDefaultCheckProperties(final Check destCheck, final Annotation annotation) {
-		Integer severity = (Integer) ClassUtil.readAnnotationValue(annotation, ANN_SEVERITY);
+		final Integer severity = (Integer) ClassUtil.readAnnotationValue(annotation, ANN_SEVERITY);
 		destCheck.setSeverity(severity.intValue());
 
-		String[] profiles = (String[]) ClassUtil.readAnnotationValue(annotation, ANN_PROFILES);
+		final String[] profiles = (String[]) ClassUtil.readAnnotationValue(annotation, ANN_PROFILES);
 		destCheck.setProfiles(profiles);
 
-		String message = (String) ClassUtil.readAnnotationValue(annotation, ANN_MESSAGE);
+		final String message = (String) ClassUtil.readAnnotationValue(annotation, ANN_MESSAGE);
 		destCheck.setMessage(message);
 	}
 

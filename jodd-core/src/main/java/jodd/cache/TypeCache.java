@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -169,8 +170,8 @@ public class TypeCache<T> {
 	 * Use this method instead of {@code get-nullcheck-put} block when
 	 * thread-safety is of importance.
 	 */
-	public T get(final Class<?> key, final Supplier<T> valueSupplier) {
-		return map.computeIfAbsent(key, aClass -> valueSupplier.get());
+	public T get(final Class<?> key, final Function<Class<?>, T> mappingFunction) {
+		return map.computeIfAbsent(key, mappingFunction);
 	}
 
 	/**

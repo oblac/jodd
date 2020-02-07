@@ -189,7 +189,7 @@ public class ScopeDataInspector {
 	 * configuration is not known yet.
 	 */
 	public ScopeData inspectClassScopesWithCache(final Class actionClass) {
-		return scopeDataTypeCache.get(actionClass, () -> inspectClassScopes(actionClass));
+		return scopeDataTypeCache.get(actionClass, this::inspectClassScopes);
 	}
 
 	/**

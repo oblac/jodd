@@ -34,8 +34,8 @@ import jodd.mutable.MutableFloat;
 import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
-import jodd.util.ClassUtil;
 import jodd.time.JulianDate;
+import jodd.util.ClassUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -66,8 +66,8 @@ public class SqlTypeManager {
 		return SQL_TYPE_MANAGER;
 	}
 
-	private TypeCache<SqlType> types = TypeCache.createDefault();
-	private TypeCache<SqlType> sqlTypes = TypeCache.createDefault();
+	private final TypeCache<SqlType> types = TypeCache.createDefault();
+	private final TypeCache<SqlType> sqlTypes = TypeCache.createDefault();
 
 	public SqlTypeManager() {
 		registerDefaults();
@@ -165,8 +165,8 @@ public class SqlTypeManager {
 			if (sqlType != null) {
 				return sqlType;
 			}
-			Class[] interfaces = x.getInterfaces();
-			for (Class i : interfaces) {
+			final Class[] interfaces = x.getInterfaces();
+			for (final Class i : interfaces) {
 				sqlType = types.get(i);
 				if (sqlType != null) {
 					return sqlType;
@@ -180,16 +180,13 @@ public class SqlTypeManager {
 	 * Returns sql type instance. Instances are stored for better performances.
 	 */
 	public SqlType lookupSqlType(final Class<? extends SqlType> sqlTypeClass) {
-		SqlType sqlType = sqlTypes.get(sqlTypeClass);
-		if (sqlType == null) {
+		return sqlTypes.get(sqlTypeClass, t -> {
 			try {
-				sqlType = ClassUtil.newInstance(sqlTypeClass);
-			} catch (Exception ex) {
+				return ClassUtil.newInstance(sqlTypeClass);
+			} catch (final Exception ex) {
 				throw new DbSqlException("SQL type not found: " + sqlTypeClass.getSimpleName(), ex);
 			}
-			sqlTypes.put(sqlTypeClass, sqlType);
-		}
-		return sqlType;
+		});
 	}
 
 }

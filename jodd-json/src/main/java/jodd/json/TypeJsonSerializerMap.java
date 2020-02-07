@@ -170,11 +170,11 @@ public class TypeJsonSerializerMap {
 		map.put(Long.class, jsonSerializer);
 		map.put(long.class, jsonSerializer);
 
-		DoubleJsonSerializer doubleJsonSerializer = new DoubleJsonSerializer();
+		final DoubleJsonSerializer doubleJsonSerializer = new DoubleJsonSerializer();
 		map.put(Double.class, doubleJsonSerializer);
 		map.put(double.class, doubleJsonSerializer);
 
-		FloatJsonSerializer floatJsonSerializer = new FloatJsonSerializer();
+		final FloatJsonSerializer floatJsonSerializer = new FloatJsonSerializer();
 		map.put(Float.class, floatJsonSerializer);
 		map.put(float.class, floatJsonSerializer);
 
@@ -223,7 +223,7 @@ public class TypeJsonSerializerMap {
 	 * Finally, if no serializer is found, object's serializer is returned.
 	 */
 	public TypeJsonSerializer lookup(final Class type) {
-		return cache.get(type, () -> _lookup(type));
+		return cache.get(type, this::_lookup);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class TypeJsonSerializerMap {
 				return tjs;
 			}
 
-			ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+			final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 			// check array
 
@@ -260,9 +260,9 @@ public class TypeJsonSerializerMap {
 
 			// now iterate interfaces
 
-			Class[] interfaces = cd.getAllInterfaces();
+			final Class[] interfaces = cd.getAllInterfaces();
 
-			for (Class interfaze : interfaces) {
+			for (final Class interfaze : interfaces) {
 				tjs = lookupSerializer(interfaze);
 
 				if (tjs != null) {
@@ -272,9 +272,9 @@ public class TypeJsonSerializerMap {
 
 			// now iterate all superclases
 
-			Class[] superclasses = cd.getAllSuperclasses();
+			final Class[] superclasses = cd.getAllSuperclasses();
 
-			for (Class clazz : superclasses) {
+			for (final Class clazz : superclasses) {
 				tjs = lookupSerializer(clazz);
 
 				if (tjs != null) {

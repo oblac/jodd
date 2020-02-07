@@ -66,9 +66,9 @@ public class CachingIntrospector implements ClassIntrospector {
 	 */
 	@Override
 	public ClassDescriptor lookup(final Class type) {
-		return cache.get(type, () ->
+		return cache.get(type, (t) ->
 			new ClassDescriptor(
-				type,
+				t,
 				scanAccessible,
 				enhancedProperties,
 				includeFieldsAsProperties,

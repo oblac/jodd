@@ -104,7 +104,7 @@ public class PetiteContainer extends PetiteBeans {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T getBean(final Class<T> type) {
-		String name = resolveBeanName(type);
+		final String name = resolveBeanName(type);
 		return (T) getBean(name);
 	}
 
@@ -116,10 +116,10 @@ public class PetiteContainer extends PetiteBeans {
 		final int total = beanReferences.size();
 
 		for (int i = 0; i < total; i++) {
-			String name = beanReferences.name(i);
+			final String name = beanReferences.name(i);
 
 			if (name != null) {
-				Object bean = getBean(name);
+				final Object bean = getBean(name);
 				if (bean != null) {
 					return bean;
 				}
@@ -139,12 +139,12 @@ public class PetiteContainer extends PetiteBeans {
 	public <T> T getBean(final String name) {
 
 		// Lookup for registered bean definition.
-		BeanDefinition def = lookupBeanDefinition(name);
+		final BeanDefinition def = lookupBeanDefinition(name);
 
 		if (def == null) {
 
 			// try provider
-			ProviderDefinition providerDefinition = providers.get(name);
+			final ProviderDefinition providerDefinition = providers.get(name);
 
 			if (providerDefinition != null) {
 				return (T) invokeProvider(providerDefinition);
@@ -238,8 +238,8 @@ public class PetiteContainer extends PetiteBeans {
 		final WiringMode finalWiringMode = petiteConfig.resolveWiringMode(wiringMode);
 
 		final BeanDefinition def = externalsCache.get(
-			bean.getClass(), () -> {
-				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(bean.getClass(), finalWiringMode);
+			bean.getClass(), (c) -> {
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(c, finalWiringMode);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
@@ -255,22 +255,22 @@ public class PetiteContainer extends PetiteBeans {
 		final WiringMode wiringMode = petiteConfig.resolveWiringMode(null);
 
 		final BeanDefinition def = externalsCache.get(
-			bean.getClass(), () -> {
-				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(bean.getClass(), wiringMode);
+			bean.getClass(), (c) -> {
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(c, wiringMode);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
 
 		final BeanData beanData = new BeanData(this, def, bean);
 
-		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
+		for (final MethodInjectionPoint methodInjectionPoint : def.methods) {
 			if (methodInjectionPoint.method.equals(method)) {
 				return (T) beanData.invokeMethodInjectionPoint(methodInjectionPoint);
 			}
 		}
 		try {
 			return (T) method.invoke(bean);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new PetiteException(e);
 		}
 	}
@@ -294,8 +294,8 @@ public class PetiteContainer extends PetiteBeans {
 		final WiringMode finalWiringMode = petiteConfig.resolveWiringMode(wiringMode);
 
 		final BeanDefinition def = externalsCache.get(
-			type, () -> {
-				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(type, finalWiringMode);
+			type, (t) -> {
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(t, finalWiringMode);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
@@ -323,7 +323,7 @@ public class PetiteContainer extends PetiteBeans {
 			}
 			try {
 				return provider.method.invoke(bean);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				throw new PetiteException("Invalid provider method: " + provider.method.getName(), ex);
 			}
 		}
@@ -347,7 +347,7 @@ public class PetiteContainer extends PetiteBeans {
 	public void addBean(final String name, final Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false, null);
-		BeanDefinition def = lookupExistingBeanDefinition(name);
+		final BeanDefinition def = lookupExistingBeanDefinition(name);
 		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(new BeanData(this, def, bean));
 	}
 
@@ -382,7 +382,7 @@ public class PetiteContainer extends PetiteBeans {
 				break;
 			}
 
-			String beanName = name.substring(0, ndx);
+			final String beanName = name.substring(0, ndx);
 			bean = getBean(beanName);
 			if (bean != null) {
 				break;
@@ -396,7 +396,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		try {
 			BeanUtil.declared.setProperty(bean, name.substring(ndx + 1), value);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new PetiteException("Invalid bean property: " + name, ex);
 		}
 	}
@@ -405,18 +405,18 @@ public class PetiteContainer extends PetiteBeans {
 	 * Returns petite bean property value.
 	 */
 	public Object getBeanProperty(final String name) {
-		int ndx = name.indexOf('.');
+		final int ndx = name.indexOf('.');
 		if (ndx == -1) {
 			throw new PetiteException("Only bean name is specified, missing property name: " + name);
 		}
-		String beanName = name.substring(0, ndx);
-		Object bean = getBean(beanName);
+		final String beanName = name.substring(0, ndx);
+		final Object bean = getBean(beanName);
 		if (bean == null) {
 			throw new PetiteException("Bean doesn't exist: " + name);
 		}
 		try {
 			return BeanUtil.declared.getProperty(bean, name.substring(ndx + 1));
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new PetiteException("Invalid bean property: " + name, ex);
 		}
 	}
