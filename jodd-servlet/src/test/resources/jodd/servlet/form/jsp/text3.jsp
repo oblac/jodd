@@ -1,4 +1,4 @@
-<%@ taglib prefix="jl" uri="WEB-INF/jodd-lagarto-taglib.tld"%>
+<%@ taglib prefix="jl" uri="WEB-INF/jodd-taglib.tld"%>
 
 <jl:form>
 <input type="text" name="cc" id="cc1" />

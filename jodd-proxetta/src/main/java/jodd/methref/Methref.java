@@ -90,6 +90,16 @@ public class Methref<C> {
 		return instance;
 	}
 
+	// ---------------------------------------------------------------- name
+
+	/**
+	 * Convenient shortcut to get the name.
+	 */
+	public String name(final Consumer<C> consumer) {
+		consumer.accept(this.get());
+		return ref();
+	}
+
 	// ---------------------------------------------------------------- ref
 
 	public String ref(final int dummy) {
@@ -129,11 +139,6 @@ public class Methref<C> {
 			}
 			throw new MethrefException("Target method not collected");
 		}
-		return ref();
-	}
-
-	public String on(final Consumer<C> consumer) {
-		consumer.accept(this.get());
 		return ref();
 	}
 

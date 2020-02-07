@@ -79,7 +79,6 @@ def license(overwrite) {
     // gather sources
     def allSource = javaBundleModules().sourceSets.main.allSource +
             javaBundleModules().sourceSets.test.allJava +
-            javaBundleModules().sourceSets.testInt.allJava +
             javaBundleModules().sourceSets.perf.allJava
 
     allSource.files.each { fileList ->

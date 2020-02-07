@@ -176,58 +176,40 @@ configure(javaModules()) {
 
 	group = 'org.jodd'
 
-	// compile
-
-	compileJava {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
-	}
+	// *** COMPILE ***
 
 	if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
 		throw new GradleException("This build must be run with at least Java 8.")
 	}
 
-	tasks.withType(JavaCompile) {
+	java {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+		withJavadocJar()
+		withSourcesJar()
+	}
+
+	compileJava {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
 //		options.compilerArgs << "-Xlint:unchecked"
 		options.compilerArgs << "-Xlint:deprecation"
 		options.incremental = true
 		options.fork = true
+		options.debug = true
 	}
-	tasks.withType(Javadoc) {
+
+	javadoc {
 		options.addStringOption('Xdoclint:none', '-quiet')
 	}
-	compileJava.options.debug = true
-	compileJava.options.fork = true
 
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		archiveClassifier = 'sources'
-		from sourceSets.main.allSource
-	}
-	task javadocJar(type: Jar, dependsOn: javadoc) {
-		archiveClassifier = 'javadoc'
-		from javadoc.destinationDir
-	}
-
-	// integration tests + performances
+	// *** JMH ***
 
 	sourceSets {
 		jmh {
 			compileClasspath += sourceSets.test.runtimeClasspath
 			runtimeClasspath += sourceSets.test.runtimeClasspath
 		}
-		testInt {
-			java {
-				compileClasspath += main.output + test.output
-				runtimeClasspath += main.output + test.output
-			}
-		}
-	}
-
-	configurations {
-		testIntCompile.extendsFrom testCompile
-		testIntRuntime.extendsFrom testRuntime
 	}
 
 	dependencies {
@@ -236,17 +218,6 @@ configure(javaModules()) {
 		jmhAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
 	}
 
-	idea {
-		module {
-			// DONT: use separate output folders for idea, don't mess with gradle
-			inheritOutputDirs false
-
-			// see: https://youtrack.jetbrains.com/issue/IDEA-151925#comment=27-2356605
-			// since IDEA 2017.2.3
-			testSourceDirs += project.sourceSets.testInt.java.srcDirs
-			testResourceDirs += project.sourceSets.testInt.resources.srcDirs
-		}
-	}
 
 	task jmh(type:JavaExec, dependsOn: build) {
 		group 'Verification'
@@ -261,15 +232,6 @@ configure(javaModules()) {
 		def include = project.properties.get('include', '');
 
 		args include
-	}
-
-	task copyLicense(type: Copy) {
-		from file("$rootProject.projectDir/LICENSE")
-		into file("$projectDir/src/main/resources/META-INF/")
-	}
-
-	jar {
-		dependsOn copyLicense
 	}
 
 	// Hook jmhClasses task to run after classes to make sure benchmarks are compiled with the rest of the code
@@ -288,47 +250,27 @@ configure(javaModules()) {
 		}
 	}
 
-	task testUnit(type: JavaExec, dependsOn: compileTestJava) {
-		group 'Verification'
-		description 'Runs the unit tests.'
+	// *** LICENCE ***
 
-		dependencies {
-			testRuntimeOnly lib.junit5_console
-		}
-		classpath = sourceSets.test.runtimeClasspath
-
-		main 'org.junit.platform.console.ConsoleLauncher'
-		args = ['--scan-classpath', sourceSets.test.output.classesDirs.asPath,
-				'--reports-dir', "${buildDir}/test-results/test"
-		]
-	}
-	test.dependsOn testUnit
-
-	task testIntegration(type: JavaExec, dependsOn: jar) {
-		group 'Verification'
-		description 'Runs the integration tests.'
-
-		dependencies {
-			testRuntimeOnly lib.junit5_console
-		}
-
-		classpath = sourceSets.testInt.runtimeClasspath
-		systemProperties['jar.path'] = jar.archivePath
-
-		main 'org.junit.platform.console.ConsoleLauncher'
-		args = ['--scan-classpath', sourceSets.testInt.output.classesDirs.asPath,
-				'--reports-dir', "${buildDir}/test-results/testInt"
-		]
+	task copyLicense(type: Copy) {
+		from file("$rootProject.projectDir/LICENSE")
+		into file("$projectDir/src/main/resources/META-INF/")
 	}
 
-	afterEvaluate {
+	jar {
+		dependsOn copyLicense
+	}
+
+	// *** JACOCO ***
+
+	def jacocoExcludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
+	test {
+		useJUnitPlatform()
 		jacoco {
-			applyTo testUnit
-			applyTo testIntegration
+			excludes += jacocoExcludes
 		}
-		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
-		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
 	}
+
 	jacocoTestReport {
 		reports {
 			xml.enabled true
@@ -336,7 +278,7 @@ configure(javaModules()) {
 		}
 	}
 
-	task codeCoverage(type: JacocoReport) {
+	task codeCoverage(type: JacocoReport, dependsOn: test) {
 		group 'Verification'
 		description 'Generates code coverage reports for a single module'
 
@@ -351,13 +293,7 @@ configure(javaModules()) {
 		}
 	}
 
-	codeCoverage.dependsOn testUnit
-	codeCoverage.dependsOn testIntegration
-
-	//check.dependsOn testIntegration
-	//testIntegration.mustRunAfter test
-
-	// artifacts
+	// *** ARTIFACTS ***
 
 	artifacts {
 		archives jar
@@ -413,7 +349,6 @@ task testAll {
 	group 'Verification'
 	description 'Runs all the tests.'
 
-	dependsOn javaModules().testIntegration
 	dependsOn javaModules().test
 }
 
@@ -497,6 +432,7 @@ task release() {
 
 	dependsOn buildModules
 	dependsOn testAll
+	dependsOn codeCoverageReport
 	dependsOn javadocAll
 	dependsOn ':distribution:build'
 }

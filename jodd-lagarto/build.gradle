@@ -7,6 +7,4 @@ dependencies {
 	implementation project(':jodd-log')
 
 	testImplementation lib.junit5
-	testImplementation lib.tomcat_embed
-	testImplementation project(':jodd-http')
 }

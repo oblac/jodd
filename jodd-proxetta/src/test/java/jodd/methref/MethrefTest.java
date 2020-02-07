@@ -50,7 +50,7 @@ class MethrefTest {
 		assertEquals("foo", mref.ref(mref.get().foo()));
 
 
-		assertEquals("foo", Methref.of(Str.class).on(Str::foo));
+		assertEquals("foo", Methref.of(Str.class).name(Str::foo));
 	}
 
 	@Test

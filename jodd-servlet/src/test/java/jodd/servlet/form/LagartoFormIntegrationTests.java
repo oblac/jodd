@@ -23,16 +23,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.servlet.form;
 
 import jodd.exception.UncheckedException;
-import jodd.test.DisabledOnJava;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 
-@DisabledOnJava(value = 9, description = "The complete suite can not be tested on Java9 as Multi-Release JARS do not work in exploded mode.")
-class MadvocSuiteTest {
+class LagartoFormIntegrationTests {
 
 	/**
 	 * Starts Tomcat after the suite.
@@ -52,6 +50,9 @@ class MadvocSuiteTest {
 		stopTomcat();
 	}
 
+	public static void startTomcat() {
+		startTomcat("web-test-int.xml");
+	}
 
 	public static boolean isSuite;
 
@@ -94,58 +95,7 @@ class MadvocSuiteTest {
 		}
 	}
 
-	public static void startTomcat() {
-		startTomcat("web-test-int.xml");
-	}
+	@Nested
+	class FormTextTest extends FormTextTestBase {}
 
-	// ---------------------------------------------------------------- go
-
-	@Nested
-	class HelloActionTest extends HelloActionTestBase {}
-	@Nested
-	class BodyTest extends BodyTestBase {}
-	@Nested
-	class SimpleTest extends SimpleTestBase {}
-	@Nested
-	class RawActionTest extends RawActionTestBase {}
-	@Nested
-	class UrlActionTest extends UrlActionTestBase {}
-	@Nested
-	class OneTwoActionTest extends OneTwoActionTestBase {}
-	@Nested
-	class IntcptActionTest extends IntcptActionTestBase {}
-	@Nested
-	class RestActionTest extends RestActionTestBase {}
-	@Nested
-	class FilterTest extends FilterTestBase {}
-	@Nested
-	class SessionScopeTest extends SessionScopeTestBase {}
-	@Nested
-	class AlphaTest extends AlphaTestBase {}
-	@Nested
-	class ArgsTest extends ArgsTestBase {}
-	@Nested
-	class TypesTest extends TypesTestBase {}
-	@Nested
-	class ExcTest extends ExcTestBase {}
-	@Nested
-	class UserActionTest extends UserActionTestBase {}
-	@Nested
-	class AsyncTest extends AsyncTestBase {}
-	@Nested
-	class BookActionTest extends BookActionTestBase {}
-	@Nested
-	class ResultsTest extends ResultsTestBase {}
-	@Nested
-	class TagActionTest extends TagActionTestBase {}
-	@Nested
-	class MissingActionTest extends MissingActionTestBase {}
-	@Nested
-	class ComponentTest extends ComponentTestBase {}
-	@Nested
-	class CookieTest extends CookieTestBase {}
-	@Nested
-	class DefaultTest extends DefaultTestBase {}
-	@Nested
-	class DefaultViewActionTest extends DefaultViewActionTestBase {}
 }

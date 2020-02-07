@@ -76,7 +76,7 @@ public class TomcatTestServer {
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
 		// tld
-		final URL taglibUrl = TomcatTestServer.class.getResource("/META-INF/jodd-lagarto-taglib.tld");
+		final URL taglibUrl = TomcatTestServer.class.getResource("/META-INF/jodd-taglib.tld");
 		final File taglibFile = FileUtil.toFile(taglibUrl);
 		FileUtil.copyFileToDir(taglibFile, webInfFolder);
 
