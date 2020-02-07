@@ -6,7 +6,7 @@ services:
 
 jdk:
   - openjdk8
-  - openjdk11
+#  - openjdk11
 
 matrix:
   allow_failures:
