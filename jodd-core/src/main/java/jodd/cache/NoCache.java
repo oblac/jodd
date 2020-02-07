@@ -34,7 +34,6 @@ import java.util.Map;
  */
 public class NoCache<K, V> implements Cache<K, V> {
 
-
 	@Override
 	public int limit() {
 		return 0;
@@ -91,7 +90,7 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public Map<K, V> snapshot() {
+	public Map<K, V> snapshot(final boolean peek) {
 		return Collections.emptyMap();
 	}
 }

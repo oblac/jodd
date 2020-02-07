@@ -98,6 +98,11 @@ public interface Cache<K, V> {
 	 * Creates a snapshot from current cache values. Returned values may not
 	 * longer be valid or they might be already expired! Cache is locked during
 	 * the snapshot creation.
+	 * @param peek if set, snapshot will just peek the object and not get them (and modify last access)
 	 */
-	Map<K, V> snapshot();
+	Map<K, V> snapshot(boolean peek);
+
+	default Map<K, V> snapshot() {
+		return this.snapshot(false);
+	}
 }
