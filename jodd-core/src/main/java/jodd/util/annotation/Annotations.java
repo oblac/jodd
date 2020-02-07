@@ -25,8 +25,6 @@
 
 package jodd.util.annotation;
 
-import jodd.bridge.Packages;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class Annotations<A extends Annotation> {
 	}
 
 	public Annotations onMethod(final Method method) {
-		A a = method.getAnnotation(annotationClass);
+		final A a = method.getAnnotation(annotationClass);
 
 		if (a != null) {
 			annotations.add(a);
@@ -57,7 +55,7 @@ public class Annotations<A extends Annotation> {
 	}
 
 	public Annotations<A> onClass(final Class type) {
-		A a = (A) type.getAnnotation(annotationClass);
+		final A a = (A) type.getAnnotation(annotationClass);
 
 		if (a != null) {
 			annotations.add(a);
@@ -71,14 +69,14 @@ public class Annotations<A extends Annotation> {
 
 		while (true) {
 			if (pck != null) {
-				A a = pck.getAnnotation(annotationClass);
+				final A a = pck.getAnnotation(annotationClass);
 
 				if (a != null) {
 					annotations.add(a);
 				}
 			}
 
-			int ndx = packageName.lastIndexOf('.');
+			final int ndx = packageName.lastIndexOf('.');
 
 			if (ndx == -1) {
 				break;
@@ -86,7 +84,8 @@ public class Annotations<A extends Annotation> {
 
 			packageName = packageName.substring(0, ndx);
 
-			pck = Packages.of(type.getClassLoader(), packageName);
+			type.getClassLoader();
+			pck = Package.getPackage(packageName);
 		}
 
 		return this;

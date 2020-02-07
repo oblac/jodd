@@ -14,7 +14,7 @@
 
 ## 👋 Hello!
 
-Welcome to Jodd - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less. Keep in mind that Jodd is mostly developed and maintained by a single person.
+Welcome to Jodd - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less. Keep in mind that Jodd is mostly developed and maintained by a single person. Really wish to complete the vision I had... meh :)
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
 

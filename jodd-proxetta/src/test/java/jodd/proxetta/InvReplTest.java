@@ -25,7 +25,6 @@
 
 package jodd.proxetta;
 
-import jodd.bridge.DefineClass;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.proxetta.fixtures.inv.Inter;
 import jodd.proxetta.fixtures.inv.MySystem;
@@ -36,6 +35,7 @@ import jodd.proxetta.fixtures.inv.TimeClass;
 import jodd.proxetta.fixtures.inv.Two;
 import jodd.proxetta.fixtures.inv.Wimp;
 import jodd.proxetta.impl.InvokeProxetta;
+import jodd.util.DefineClass;
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintStream;
@@ -52,17 +52,17 @@ class InvReplTest {
 	@Test
 	void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-		InvokeProxetta proxetta = initProxetta();
+		final InvokeProxetta proxetta = initProxetta();
 
-		String className = One.class.getCanonicalName();
-		byte[] klazz = proxetta.proxy().setTarget(One.class).create();
+		final String className = One.class.getCanonicalName();
+		final byte[] klazz = proxetta.proxy().setTarget(One.class).create();
 		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
-		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
+		final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) DefineClass.of((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz, null).newInstance();
+		final One one = (One) DefineClass.of((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz, null).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 
@@ -87,7 +87,7 @@ class InvReplTest {
 		Annotation[] anns = one.getClass().getAnnotations();
 		assertEquals(3, anns.length);
 
-		Method ms = one.getClass().getMethod("example1");
+		final Method ms = one.getClass().getMethod("example1");
 		anns = ms.getAnnotations();
 		assertEquals(1, anns.length);
 
@@ -95,35 +95,35 @@ class InvReplTest {
 
 	@Test
 	void testSuper() {
-		InvokeProxetta proxetta = initProxetta();
+		final InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.proxy().setTarget(OneWithSuper.class).define();
 			fail("error");
-		} catch (ProxettaException ignore) {
+		} catch (final ProxettaException ignore) {
 
 		}
 	}
 
 	@Test
 	void testInterface() {
-		InvokeProxetta proxetta = initProxetta();
+		final InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.proxy().setTarget(Inter.class).newInstance();
 			fail("error");
-		} catch (ProxettaException ignore) {
+		} catch (final ProxettaException ignore) {
 		}
 	}
 
 	@Test
 	void testCurrentTimeMillis() {
-		TimeClass timeClass = (TimeClass) Proxetta.invokeProxetta().withAspects(new InvokeAspect() {
+		final TimeClass timeClass = (TimeClass) Proxetta.invokeProxetta().withAspects(new InvokeAspect() {
 			@Override
-			public boolean apply(MethodInfo methodInfo) {
+			public boolean apply(final MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
 			}
 
 			@Override
-			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+			public InvokeReplacer pointcut(final InvokeInfo invokeInfo) {
 				if (
 						invokeInfo.getClassName().equals("java.lang.System") &&
 						invokeInfo.getMethodName().equals("currentTimeMillis")
@@ -134,26 +134,26 @@ class InvReplTest {
 			}
 		}).proxy().setTarget(TimeClass.class).newInstance();
 
-		long time = timeClass.time();
+		final long time = timeClass.time();
 
 		assertEquals(10823, time);
 	}
 
 	@Test
 	void testWimp() {
-		Wimp wimp = (Wimp) Proxetta.invokeProxetta().withAspect(new InvokeAspect() {
+		final Wimp wimp = (Wimp) Proxetta.invokeProxetta().withAspect(new InvokeAspect() {
 			@Override
-			public boolean apply(MethodInfo methodInfo) {
+			public boolean apply(final MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
 			}
 
 			@Override
-			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+			public InvokeReplacer pointcut(final InvokeInfo invokeInfo) {
 				return InvokeReplacer.NONE;
 			}
 		}).proxy().setTarget(Wimp.class).newInstance();
 
-		int i = wimp.foo();
+		final int i = wimp.foo();
 		assertEquals(0, i);
 
 		String txt = wimp.aaa(3, null, null);

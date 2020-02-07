@@ -26,7 +26,6 @@
 package jodd.proxetta;
 
 import jodd.asm7.Type;
-import jodd.bridge.DefineClass;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;
@@ -39,6 +38,7 @@ import jodd.proxetta.fixtures.data.PetiteInject;
 import jodd.proxetta.fixtures.data.StatCounter;
 import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.fixtures.data.Transaction;
+import jodd.util.DefineClass;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -58,15 +58,15 @@ class BigClassTest {
 		StatCounter.counter = 0;
 		final MutableBoolean firstTime = new MutableBoolean(true);
 
-		ProxyAspect aspect = new ProxyAspect(StatCounterAdvice.class, mi -> {
+		final ProxyAspect aspect = new ProxyAspect(StatCounterAdvice.class, mi -> {
 			if (firstTime.value) {
 				firstTime.value = false;
-				ClassInfo ci = mi.getClassInfo();
+				final ClassInfo ci = mi.getClassInfo();
 				assertEquals("BigFatJoe", ci.getClassname());
 				assertEquals(BigFatJoe.class.getPackage().getName(), ci.getPackage());
 				assertEquals("jodd/proxetta/fixtures/data/BigFatJoe", ci.getReference());
 				assertEquals("jodd/proxetta/fixtures/data/SmallSkinnyZoe", ci.getSuperName());
-				AnnotationInfo[] anns = ci.getAnnotations();
+				final AnnotationInfo[] anns = ci.getAnnotations();
 				assertNotNull(anns);
 				assertEquals(3, anns.length);
 				AnnotationInfo ai = anns[0];
@@ -84,11 +84,11 @@ class BigClassTest {
 				assertEquals("L" + InterceptedBy.class.getName().replace('.', '/') + ";", ai.getAnnotationSignature());
 				assertTrue(ai.getElement("value") instanceof Object[]);
 				assertFalse(ai.getElement("value") instanceof String[]);
-				Object c1 = ((Object[]) ai.getElement("value"))[0];
+				final Object c1 = ((Object[]) ai.getElement("value"))[0];
 				assertEquals("Ljodd/proxetta/fixtures/data/Str;", ((Type) c1).getDescriptor());
 			}
 			if (mi.getMethodName().equals("publicMethod")) {
-				AnnotationInfo[] anns = mi.getAnnotations();
+				final AnnotationInfo[] anns = mi.getAnnotations();
 				assertNotNull(anns);
 				assertEquals(3, anns.length);
 
@@ -107,11 +107,11 @@ class BigClassTest {
 				assertSame(ai, mi.getAnnotation(Transaction.class));
 				assertEquals(Transaction.class.getName(), ai.getAnnotationClassname());
 				assertEquals(2, ai.getElementNames().size());
-				String s = (String) ai.getElement("propagation");
+				final String s = (String) ai.getElement("propagation");
 				assertEquals("PROPAGATION_REQUIRES_NEW", s);
 			}
 			if (mi.getMethodName().equals("superPublicMethod")) {
-				AnnotationInfo[] anns = mi.getAnnotations();
+				final AnnotationInfo[] anns = mi.getAnnotations();
 				assertNotNull(anns);
 				assertEquals(3, anns.length);
 
@@ -134,12 +134,12 @@ class BigClassTest {
 			return !mi.isRootMethod();
 		});
 
-		byte[] classBytes = Proxetta.proxyProxetta().withAspect(aspect).proxy().setTarget(BigFatJoe.class).create();
+		final byte[] classBytes = Proxetta.proxyProxetta().withAspect(aspect).proxy().setTarget(BigFatJoe.class).create();
 //		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
 //		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
 //		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);
-		Class clazz = DefineClass.of(null, classBytes, null);
-		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
+		final Class clazz = DefineClass.of(null, classBytes, null);
+		final BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
 		assertEquals(BigFatJoe.class.getName() + ProxettaNames.proxyClassNameSuffix, bigFatJoe.getClass().getName());
 		assertEquals(BigFatJoe.class, ProxettaUtil.resolveTargetClass(bigFatJoe.getClass()));
@@ -158,30 +158,30 @@ class BigClassTest {
 		assertEquals(9, StatCounter.counter);        // only public super methods are overridden
 
 		// test class annotation
-		MadvocAction ma = (MadvocAction) clazz.getAnnotation(MadvocAction.class);
+		final MadvocAction ma = (MadvocAction) clazz.getAnnotation(MadvocAction.class);
 		assertEquals("madvocAction", ma.value());
 
-		InterceptedBy ib = (InterceptedBy) clazz.getAnnotation(InterceptedBy.class);
+		final InterceptedBy ib = (InterceptedBy) clazz.getAnnotation(InterceptedBy.class);
 		assertNotNull(ib.value());
 		assertEquals(2, ib.value().length);
 
 
 		// test method annotation
-		ClassDescriptor cd = ClassIntrospector.get().lookup(clazz);
-		Method m = cd.getMethodDescriptor("publicMethod", false).getMethod();
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(clazz);
+		final Method m = cd.getMethodDescriptor("publicMethod", false).getMethod();
 		assertNotNull(m);
-		Annotation[] aa = m.getAnnotations();
+		final Annotation[] aa = m.getAnnotations();
 		assertEquals(3, aa.length);
-		Action a = (Action) aa[0];
+		final Action a = (Action) aa[0];
 		assertEquals("alias", a.alias());
 		assertEquals("extension", a.extension());
 		assertEquals("method", a.method());
 		assertEquals("value", a.value());
 
-		PetiteInject pi = (PetiteInject) aa[1];
+		final PetiteInject pi = (PetiteInject) aa[1];
 		assertEquals("", pi.value());
 
-		Transaction tx = (Transaction) aa[2];
+		final Transaction tx = (Transaction) aa[2];
 		assertTrue(tx.readOnly());
 		assertEquals(1000, tx.timeout());
 		assertEquals("PROPAGATION_REQUIRES_NEW", tx.propagation());

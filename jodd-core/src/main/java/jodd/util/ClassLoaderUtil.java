@@ -26,7 +26,6 @@
 package jodd.util;
 
 import jodd.Jodd;
-import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.cl.ClassLoaderStrategy;

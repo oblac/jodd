@@ -23,13 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.bridge;
-
-import jodd.util.ClassLoaderUtil;
+package jodd.util;
 
 import java.lang.reflect.Method;
 
-@JavaIncompatible
 public class DefineClass {
 
 	/**
@@ -47,7 +44,7 @@ public class DefineClass {
 			final Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 			defineClassMethod.setAccessible(true);
 			return (Class) defineClassMethod.invoke(classLoader, className, classData, 0, classData.length);
-		} catch (Throwable th) {
+		} catch (final Throwable th) {
 			throw new RuntimeException("Define class failed: " + className, th);
 		}
 	}

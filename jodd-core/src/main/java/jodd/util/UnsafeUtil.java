@@ -25,7 +25,6 @@
 
 package jodd.util;
 
-import jodd.bridge.JavaIncompatible;
 import jodd.core.JoddCore;
 import jodd.system.SystemUtil;
 
@@ -35,7 +34,6 @@ import jodd.system.SystemUtil;
  *
  * Thanx to Gatling (http://gatling-tool.org)!
  */
-@JavaIncompatible
 public class UnsafeUtil {
 
 	// IMPORTANT - the order of declaration here is important! we need to detect

@@ -25,13 +25,15 @@
 
 package jodd.bridge;
 
+import jodd.util.ClassPathURLs;
+
 import java.net.URL;
 
 public class JoddBridgeTest {
 
-	public static void main(String[] args) {
-		URL[] urls = ClassPathURLs.of(null, JoddBridgeTest.class);
-		for (URL url : urls) {
+	public static void main(final String[] args) {
+		final URL[] urls = ClassPathURLs.of(null, JoddBridgeTest.class);
+		for (final URL url : urls) {
 			System.out.println(url);
 		}
 	}

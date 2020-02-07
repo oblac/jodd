@@ -27,7 +27,6 @@ package jodd.proxetta;
 
 import jodd.asm7.ClassReader;
 import jodd.asm7.ClassWriter;
-import jodd.bridge.DefineClass;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.log.Logger;
@@ -36,6 +35,7 @@ import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
+import jodd.util.DefineClass;
 import jodd.util.StringUtil;
 
 import java.io.File;
@@ -125,7 +125,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			targetClassName = targetName;
 			targetClass = null;
 		}
-		catch (IOException ioex) {
+		catch (final IOException ioex) {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
@@ -146,7 +146,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			targetClass = target;
 			targetClassName = target.getName();
 		}
-		catch (IOException ioex) {
+		catch (final IOException ioex) {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
@@ -177,7 +177,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Returns new suffix or <code>null</code> if suffix is not in use.
 	 */
 	protected String resolveClassNameSuffix() {
-		String classNameSuffix = proxetta.getClassNameSuffix();
+		final String classNameSuffix = proxetta.getClassNameSuffix();
 
 		if (classNameSuffix == null) {
 			return null;
@@ -215,7 +215,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		final ClassReader classReader;
 		try {
 			classReader = new ClassReader(targetInputStream);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new ProxettaException("Error reading class input stream", ioex);
 		}
 
@@ -229,7 +229,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		if (log.isDebugEnabled()) {
 			log.debug("processing: " + classReader.getClassName());
 		}
-		WorkData wd = process(classReader, targetClassInfoReader);
+		final WorkData wd = process(classReader, targetClassInfoReader);
 
 		// store important data
 		proxyApplied = wd.proxyApplied;
@@ -242,7 +242,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	public byte[] create() {
 		process();
 
-		byte[] result = toByteArray();
+		final byte[] result = toByteArray();
 
 		dumpClassInDebugFolder(result);
 
@@ -278,7 +278,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			if (targetClassName != null) {
 				try {
 					return ClassLoaderUtil.loadClass(targetClassName);
-				} catch (ClassNotFoundException cnfex) {
+				} catch (final ClassNotFoundException cnfex) {
 					throw new ProxettaException(cnfex);
 				}
 			}
@@ -304,7 +304,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			dumpClassInDebugFolder(bytes);
 
 			return DefineClass.of(getProxyClassName(), bytes, classLoader);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new ProxettaException("Class definition failed", ex);
 		}
 	}
@@ -314,10 +314,10 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Assumes default no-arg constructor.
 	 */
 	public Object newInstance() {
-		Class type = define();
+		final Class type = define();
 		try {
 			return ClassUtil.newInstance(type);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new ProxettaException("Invalid Proxetta class", ex);
 		}
 	}
@@ -329,7 +329,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Writes created class content to output folder for debugging purposes.
 	 */
 	protected void dumpClassInDebugFolder(final byte[] bytes) {
-		File debugFolder = proxetta.getDebugFolder();
+		final File debugFolder = proxetta.getDebugFolder();
 		if (debugFolder == null) {
 			return;
 		}
@@ -345,10 +345,10 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 
 		fileName += ".class";
 
-		File file = new File(debugFolder, fileName);
+		final File file = new File(debugFolder, fileName);
 		try {
 			FileUtil.writeBytes(file, bytes);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			log.warn("Error writing class as " + file, ioex);
 		}
 	}

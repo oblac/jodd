@@ -25,7 +25,6 @@
 
 package jodd.util;
 
-import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
 import jodd.test.DisabledOnJava;
 import jodd.util.cl.ExtendedURLClassLoader;
@@ -51,18 +50,18 @@ class ExtendedURLClassLoaderTest {
 
 	@Test
 	void testLoadSystemClasses() throws ClassNotFoundException {
-		URL[] urls = new URL[0];
+		final URL[] urls = new URL[0];
 
 		// parent-first
-		ExtendedURLClassLoader cl1 = new ExtendedURLClassLoader(urls, thisClassLoader, true);
+		final ExtendedURLClassLoader cl1 = new ExtendedURLClassLoader(urls, thisClassLoader, true);
 
-		Class c1 = cl1.loadClass("java.lang.String");
+		final Class c1 = cl1.loadClass("java.lang.String");
 		assertEquals(String.class, c1);
 
 		// parent-last, still loaded by system loader
-		ExtendedURLClassLoader cl2 = new ExtendedURLClassLoader(urls, thisClassLoader, false);
+		final ExtendedURLClassLoader cl2 = new ExtendedURLClassLoader(urls, thisClassLoader, false);
 
-		Class c2 = cl2.loadClass("java.lang.String");
+		final Class c2 = cl2.loadClass("java.lang.String");
 		assertEquals(String.class, c2);
 
 		assertEquals(c1, c2);
@@ -71,9 +70,9 @@ class ExtendedURLClassLoaderTest {
 	@Test
 	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
 	void testParentFirst() throws ClassNotFoundException {
-		ClassLoader parentCL = A.class.getClassLoader();
+		final ClassLoader parentCL = A.class.getClassLoader();
 
-		URL[] urls = ClassPathURLs.of(parentCL, null);
+		final URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-first
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, true);
@@ -87,20 +86,20 @@ class ExtendedURLClassLoaderTest {
 		assertFalse(A.class.equals(c1));
 
 		// force parent, no loader
-		URLClassLoader ucl = new URLClassLoader(new URL[0], null);
+		final URLClassLoader ucl = new URLClassLoader(new URL[0], null);
 		ecl = new ExtendedURLClassLoader(urls, ucl, true);
 		ecl.addParentOnlyRules(A.class.getName());
 		try {
 			ecl.loadClass(A.class.getName());
 			fail("error");
-		} catch (ClassNotFoundException ignore) {}
+		} catch (final ClassNotFoundException ignore) {}
 	}
 
 	@Test
 	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
 	void testParentLast() throws ClassNotFoundException {
-		ClassLoader parentCL = A.class.getClassLoader();
-		URL[] urls = ClassPathURLs.of(parentCL, null);
+		final ClassLoader parentCL = A.class.getClassLoader();
+		final URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-last
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, false);
@@ -119,19 +118,19 @@ class ExtendedURLClassLoaderTest {
 		try {
 			ecl.loadClass(A.class.getName());
 			fail("error");
-		} catch (ClassNotFoundException ignore) {}
+		} catch (final ClassNotFoundException ignore) {}
 	}
 
 	@Test
 	void testGetResource() throws IOException {
-		File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
-		File temp = new File(tempRoot, "pckg");
+		final File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
+		final File temp = new File(tempRoot, "pckg");
 		FileUtil.mkdir(temp);
 
-		File resourceFile = new File(temp, "data");
+		final File resourceFile = new File(temp, "data");
 		FileUtil.writeString(resourceFile, "RESOURCE CONTENT");
 		resourceFile.deleteOnExit();
-		URL[] urls = new URL[] {FileUtil.toURL(tempRoot)};
+		final URL[] urls = new URL[] {FileUtil.toURL(tempRoot)};
 
 		// parent-first
 

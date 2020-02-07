@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.bridge;
+package jodd.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +31,6 @@ import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@JavaIncompatible
 public class ClassPathURLs {
 
 	/**
@@ -86,7 +85,7 @@ public class ClassPathURLs {
 
 		try {
 			return new URL(urlString);
-		} catch (MalformedURLException ignore) {
+		} catch (final MalformedURLException ignore) {
 			return null;
 		}
 	}

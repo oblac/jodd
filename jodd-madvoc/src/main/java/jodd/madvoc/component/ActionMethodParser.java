@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.bridge.Packages;
 import jodd.introspector.Mapper;
 import jodd.introspector.MapperFunction;
 import jodd.introspector.MapperFunctionInstances;
@@ -138,7 +137,7 @@ public class ActionMethodParser {
 			namingStrategy = ClassUtil.newInstance(actionConfig.getNamingStrategy());
 
 			contextInjectorComponent.injectContext(namingStrategy);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException(ex);
 		}
 
@@ -158,10 +157,10 @@ public class ActionMethodParser {
 		final ActionConfig actionConfig = resolveActionConfig(annotationValues);
 
 		// interceptors
-		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod, actionConfig);
+		final ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod, actionConfig);
 
 		// filters
-		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod, actionConfig);
+		final ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod, actionConfig);
 
 		// build action definition when not provided
 		if (actionDefinition == null) {
@@ -219,7 +218,7 @@ public class ActionMethodParser {
 		final String alias = parseMethodAlias(annotationValues);
 
 		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionDefinition.actionPath(), StringPool.HASH);
+			final String aliasPath = StringUtil.cutToIndexOf(actionDefinition.actionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 	}
@@ -265,7 +264,7 @@ public class ActionMethodParser {
 	 */
 	protected Class<? extends ActionInterceptor>[] readActionInterceptors(final AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionInterceptor>[] result = null;
-		InterceptedBy interceptedBy = actionClassOrMethod.getAnnotation(InterceptedBy.class);
+		final InterceptedBy interceptedBy = actionClassOrMethod.getAnnotation(InterceptedBy.class);
 		if (interceptedBy != null) {
 			result = interceptedBy.value();
 			if (result.length == 0) {
@@ -282,7 +281,7 @@ public class ActionMethodParser {
 	 */
 	protected Class<? extends ActionFilter>[] readActionFilters(final AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionFilter>[] result = null;
-		FilteredBy filteredBy = actionClassOrMethod.getAnnotation(FilteredBy.class);
+		final FilteredBy filteredBy = actionClassOrMethod.getAnnotation(FilteredBy.class);
 		if (filteredBy != null) {
 			result = filteredBy.value();
 			if (result.length == 0) {
@@ -310,7 +309,7 @@ public class ActionMethodParser {
 
 		mainloop:
 		while (true) {
-			MadvocAction madvocActionAnnotation = actionPackage.getAnnotation(MadvocAction.class);
+			final MadvocAction madvocActionAnnotation = actionPackage.getAnnotation(MadvocAction.class);
 
 			packageActionPathFromAnnotation = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
 
@@ -330,7 +329,8 @@ public class ActionMethodParser {
 						break mainloop;
 					}
 					newPackage = newPackage.substring(0, ndx);
-					actionPackage = Packages.of(actionClass.getClassLoader(), newPackage);
+					actionClass.getClassLoader();
+					actionPackage = Package.getPackage(newPackage);
 				}
 			}
 			else {
@@ -342,7 +342,7 @@ public class ActionMethodParser {
 
 		// 2 - read root package
 
-		String packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
+		final String packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
 
 		if (packagePath == null) {
 			return ArraysUtil.array(null, null);
@@ -362,7 +362,7 @@ public class ActionMethodParser {
 	 */
 	protected String[] readClassActionPath(final Class actionClass) {
 		// read class annotation
-		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
+		final MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
 
 		String classActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
 
@@ -397,7 +397,7 @@ public class ActionMethodParser {
 		}
 
 		// check for defaults
-		for (String path : actionConfig.getActionMethodNames()) {
+		for (final String path : actionConfig.getActionMethodNames()) {
 			if (methodActionPath.equals(path)) {
 				methodActionPath = null;
 				break;
@@ -422,7 +422,7 @@ public class ActionMethodParser {
 	 * Reads method's http method or {@code null} if not specified.
 	 */
 	private String readMethodHttpMethod(final Method actionMethod) {
-		for (Class<? extends Annotation> methodAnnotation : METHOD_ANNOTATIONS) {
+		for (final Class<? extends Annotation> methodAnnotation : METHOD_ANNOTATIONS) {
 			if (actionMethod.getAnnotation(methodAnnotation) != null) {
 				return methodAnnotation.getSimpleName();
 			}
@@ -501,7 +501,7 @@ public class ActionMethodParser {
 
 		// for all elements: action and method arguments...
 		for (int ndx = 0; ndx < paramTypes.length; ndx++) {
-			Class paramType = paramTypes[ndx];
+			final Class paramType = paramTypes[ndx];
 
 			// lazy init to postpone bytecode usage, when method has no arguments
 			if (methodParamNames == null) {

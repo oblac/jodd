@@ -25,9 +25,9 @@
 
 package jodd.joy;
 
-import jodd.bridge.ClassPathURLs;
 import jodd.io.findfile.ClassScanner;
 import jodd.typeconverter.Converter;
+import jodd.util.ClassPathURLs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,22 +45,22 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	 * Scanning entries that will be examined by various
 	 * Jodd auto-magic tools.
 	 */
-	private List<String> includedEntries = new ArrayList<>();
+	private final List<String> includedEntries = new ArrayList<>();
 
 	/**
 	 * Included jars.
 	 */
-	private List<String> includedJars = new ArrayList<>();
+	private final List<String> includedJars = new ArrayList<>();
 
 	/**
 	 * Excluded jars.
 	 */
-	private List<String> excludedJars = new ArrayList<>();
+	private final List<String> excludedJars = new ArrayList<>();
 
 	/**
 	 * List of APP classes.
 	 */
-	private List<Class> appClasses = new ArrayList<>();
+	private final List<Class> appClasses = new ArrayList<>();
 
 	/**
 	 * Should scanning ignore the exception.
