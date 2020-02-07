@@ -34,7 +34,6 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Types cache. Provides several implementations depending on what you need to be addressed.
@@ -48,13 +47,6 @@ import java.util.function.Supplier;
  * </ul>
  */
 public class TypeCache<T> {
-
-	public static class Defaults {
-		/**
-		 * Default {@link TypeCache} implementation.
-		 */
-		public static Supplier<TypeCache> implementation = () -> TypeCache.create().get();
-	}
 
 	// ---------------------------------------------------------------- builder
 
@@ -70,7 +62,7 @@ public class TypeCache<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <A> TypeCache<A> createDefault() {
-		return (TypeCache<A>)Defaults.implementation.get();
+		return TypeCache.<A>create().get();
 	}
 
 	public static class Builder<A> {
@@ -170,8 +162,9 @@ public class TypeCache<T> {
 	 * Use this method instead of {@code get-nullcheck-put} block when
 	 * thread-safety is of importance.
 	 */
-	public T get(final Class<?> key, final Function<Class<?>, T> mappingFunction) {
-		return map.computeIfAbsent(key, mappingFunction);
+	@SuppressWarnings("unchecked")
+	public <K> T get(final Class<K> key, final Function<Class<K>, ? extends T> mappingFunction) {
+		return map.computeIfAbsent(key, aClass -> mappingFunction.apply((Class<K>) aClass));
 	}
 
 	/**

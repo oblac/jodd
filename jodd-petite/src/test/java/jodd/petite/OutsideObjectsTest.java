@@ -44,10 +44,10 @@ class OutsideObjectsTest {
 
 	@Test
 	void testWire() {
-		PetiteContainer pc = new PetiteContainer();
+		final PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(InBean.class);
 
-		BeBean beBean = new BeBean();
+		final BeBean beBean = new BeBean();
 
 		assertNull(beBean.inBean);
 
@@ -62,7 +62,7 @@ class OutsideObjectsTest {
 
 	@Test
 	void testWire_withCache() {
-		PetiteContainer pc = new PetiteContainer();
+		final PetiteContainer pc = new PetiteContainer();
 		pc.setExternalsCache(TypeCache.createDefault());
 		pc.registerPetiteBean(InBean.class);
 

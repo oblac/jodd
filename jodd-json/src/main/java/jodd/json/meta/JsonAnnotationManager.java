@@ -107,22 +107,22 @@ public class JsonAnnotationManager {
 			return null;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		// lookup superclasses
 
-		Class[] superClasses = cd.getAllSuperclasses();
+		final Class[] superClasses = cd.getAllSuperclasses();
 
-		for (Class superClass : superClasses) {
+		for (final Class superClass : superClasses) {
 			if (superClass.getAnnotation(defaultAnnotation) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(superClass);
 			}
 		}
 
-		Class[] interfaces = cd.getAllInterfaces();
+		final Class[] interfaces = cd.getAllInterfaces();
 
-		for (Class interfaze : interfaces) {
+		for (final Class interfaze : interfaces) {
 			if (interfaze.getAnnotation(defaultAnnotation) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(interfaze);
@@ -136,7 +136,7 @@ public class JsonAnnotationManager {
 	 * Returns different name of a property if set by annotation.
 	 */
 	public String resolveJsonName(final Class type, final String name) {
-		TypeData typeData = lookupTypeData(type);
+		final TypeData typeData = lookupTypeData(type);
 
 		return typeData.resolveJsonName(name);
 	}
@@ -145,7 +145,7 @@ public class JsonAnnotationManager {
 	 * Returns real property name for given JSON property.
 	 */
 	public String resolveRealName(final Class type, final String jsonName) {
-		TypeData typeData = lookupTypeData(type);
+		final TypeData typeData = lookupTypeData(type);
 
 		return typeData.resolveRealName(jsonName);
 	}
@@ -154,42 +154,42 @@ public class JsonAnnotationManager {
 	 * Scans class for annotations and returns {@link TypeData}.
 	 */
 	private TypeData scanClassForAnnotations(final Class type) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
-		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
+		final PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
-		ArrayList<String> includedList = new ArrayList<>();
-		ArrayList<String> excludedList = new ArrayList<>();
-		ArrayList<String> jsonNames = new ArrayList<>();
-		ArrayList<String> realNames = new ArrayList<>();
+		final ArrayList<String> includedList = new ArrayList<>();
+		final ArrayList<String> excludedList = new ArrayList<>();
+		final ArrayList<String> jsonNames = new ArrayList<>();
+		final ArrayList<String> realNames = new ArrayList<>();
 
-		AnnotationParser annotationParser = JSONAnnotationValues.parserFor(jsonAnnotation);
+		final AnnotationParser annotationParser = JSONAnnotationValues.parserFor(jsonAnnotation);
 
-		for (PropertyDescriptor pd : pds) {
+		for (final PropertyDescriptor pd : pds) {
 			JSONAnnotationValues data = null;
 			{
-				MethodDescriptor md = pd.getReadMethodDescriptor();
+				final MethodDescriptor md = pd.getReadMethodDescriptor();
 
 				if (md != null) {
-					Method method = md.getMethod();
+					final Method method = md.getMethod();
 					data = JSONAnnotationValues.of(annotationParser, method);
 				}
 			}
 
 			if (data == null) {
-				MethodDescriptor md = pd.getWriteMethodDescriptor();
+				final MethodDescriptor md = pd.getWriteMethodDescriptor();
 
 				if (md != null) {
-					Method method = md.getMethod();
+					final Method method = md.getMethod();
 					data = JSONAnnotationValues.of(annotationParser, method);
 				}
 			}
 
 			if (data == null) {
-				FieldDescriptor fd = pd.getFieldDescriptor();
+				final FieldDescriptor fd = pd.getFieldDescriptor();
 
 				if (fd != null) {
-					Field field = fd.getField();
+					final Field field = fd.getField();
 					data = JSONAnnotationValues.of(annotationParser, field);
 				}
 			}
@@ -198,7 +198,7 @@ public class JsonAnnotationManager {
 				// annotation found
 				String propertyName = pd.getName();
 
-				String newPropertyName = data.name();
+				final String newPropertyName = data.name();
 				if (newPropertyName != null) {
 					realNames.add(propertyName);
 					jsonNames.add(newPropertyName);
@@ -229,7 +229,7 @@ public class JsonAnnotationManager {
 
 		// type
 
-		JSONAnnotationValues data = JSONAnnotationValues.of(annotationParser, type);
+		final JSONAnnotationValues data = JSONAnnotationValues.of(annotationParser, type);
 
 		return new TypeData(includedList, excludedList, data != null && data.strict(), jsons, reals);
 	}

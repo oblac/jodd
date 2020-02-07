@@ -42,11 +42,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	@PetiteInject
 	protected ProxettaSupplier proxettaSupplier;
 
-	protected final TypeCache<Class> proxyActionClasses;
-
-	public ProxettaAwareActionsManager() {
-		this.proxyActionClasses = TypeCache.createDefault();
-	}
+	protected final TypeCache<Class> proxyActionClasses = TypeCache.<Class>create().threadsafe(true).get();
 
 	/**
 	 * Registers actions and applies proxetta on actions that are not already registered.

@@ -44,7 +44,7 @@ public class Pathref<C> {
 
 	public static final int ALL = -1;
 
-	public static TypeCache<Class> cache = TypeCache.createDefault();
+	public static TypeCache<Class> cache = TypeCache.<Class>create().threadsafe(true).get();
 
 	private static final PathrefProxetta proxetta = new PathrefProxetta();
 
@@ -82,13 +82,7 @@ public class Pathref<C> {
 	protected C createProxyObject(Class<C> target) {
 		target = ProxettaUtil.resolveTargetClass(target);
 
-		Class proxyClass = cache.get(target);
-
-		if (proxyClass == null) {
-			proxyClass = proxetta.defineProxy(target);
-
-			cache.put(target, proxyClass);
-		}
+		final Class proxyClass = cache.get(target, proxetta::defineProxy);
 
 		final C proxy;
 

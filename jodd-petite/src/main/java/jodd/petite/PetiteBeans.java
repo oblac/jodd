@@ -164,7 +164,7 @@ public abstract class PetiteBeans {
 
 			try {
 				scope = newInternalInstance(scopeType, (PetiteContainer) this);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				throw new PetiteException("Invalid Petite scope: " + scopeType.getName(), ex);
 			}
 
@@ -185,9 +185,9 @@ public abstract class PetiteBeans {
 
 		// first try ctor(PetiteContainer)
 		try {
-			Constructor<T> ctor = type.getConstructor(PetiteContainer.class);
+			final Constructor<T> ctor = type.getConstructor(PetiteContainer.class);
 			t = ctor.newInstance(petiteContainer);
-		} catch (NoSuchMethodException nsmex) {
+		} catch (final NoSuchMethodException nsmex) {
 			// ignore
 		}
 
@@ -239,7 +239,7 @@ public abstract class PetiteBeans {
 		for (int i = 0; i < total; i++) {
 			final String name = beanReferences.name(i);
 
-			BeanDefinition beanDefinition = lookupBeanDefinition(name);
+			final BeanDefinition beanDefinition = lookupBeanDefinition(name);
 
 			if (beanDefinition != null) {
 				return beanDefinition;
@@ -253,7 +253,7 @@ public abstract class PetiteBeans {
 	 * Throws exception if bean is not found.
 	 */
 	protected BeanDefinition lookupExistingBeanDefinition(final String name) {
-		BeanDefinition beanDefinition = lookupBeanDefinition(name);
+		final BeanDefinition beanDefinition = lookupBeanDefinition(name);
 		if (beanDefinition == null) {
 			throw new PetiteException("Bean not found: " + name);
 		}
@@ -351,7 +351,7 @@ public abstract class PetiteBeans {
 		}
 
 		// remove existing bean
-		BeanDefinition existing = removeBean(name);
+		final BeanDefinition existing = removeBean(name);
 		if (existing != null) {
 			if (petiteConfig.getDetectDuplicatedBeanNames()) {
 				throw new PetiteException(
@@ -374,16 +374,16 @@ public abstract class PetiteBeans {
 		}
 
 		// register
-		Scope scope = resolveScope(scopeType);
-		BeanDefinition<T> beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);
+		final Scope scope = resolveScope(scopeType);
+		final BeanDefinition<T> beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);
 
 		registerBean(name, beanDefinition);
 
 		// providers
-		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(type, name);
+		final ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(type, name);
 
 		if (providerDefinitions != null) {
-			for (ProviderDefinition providerDefinition : providerDefinitions) {
+			for (final ProviderDefinition providerDefinition : providerDefinitions) {
 				providers.put(providerDefinition.name, providerDefinition);
 			}
 		}
@@ -413,16 +413,16 @@ public abstract class PetiteBeans {
 			return;
 		}
 
-		Class type = beanDefinition.type();
+		final Class type = beanDefinition.type();
 
 		if (annotationResolver.beanHasAnnotationName(type)) {
 			return;
 		}
 
-		Class[] interfaces = ClassUtil.resolveAllInterfaces(type);
+		final Class[] interfaces = ClassUtil.resolveAllInterfaces(type);
 
-		for (Class anInterface : interfaces) {
-			String altName = annotationResolver.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
+		for (final Class anInterface : interfaces) {
+			final String altName = annotationResolver.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
 
 			if (name.equals(altName)) {
 				continue;
@@ -433,7 +433,7 @@ public abstract class PetiteBeans {
 			}
 
 			if (beansAlt.containsKey(altName)) {
-				BeanDefinition existing = beansAlt.get(altName);
+				final BeanDefinition existing = beansAlt.get(altName);
 
 				if (existing != null) {
 					beansAlt.put(altName, null);		// store null as value to mark that alt name is duplicate
@@ -452,16 +452,16 @@ public abstract class PetiteBeans {
 	 */
 	public void removeBean(final Class type) {
 		// collect bean names
-		Set<String> beanNames = new HashSet<>();
+		final Set<String> beanNames = new HashSet<>();
 
-		for (BeanDefinition def : beans.values()) {
+		for (final BeanDefinition def : beans.values()) {
 			if (def.type.equals(type)) {
 				beanNames.add(def.name);
 			}
 		}
 
 		// remove collected bean names
-		for (String beanName : beanNames) {
+		for (final String beanName : beanNames) {
 			removeBean(beanName);
 		}
 	}
@@ -472,7 +472,7 @@ public abstract class PetiteBeans {
 	 * Returns bean definition of removed bean or <code>null</code>.
 	 */
 	public BeanDefinition removeBean(final String name) {
-		BeanDefinition bd = beans.remove(name);
+		final BeanDefinition bd = beans.remove(name);
 		if (bd == null) {
 			return null;
 		}
@@ -491,13 +491,13 @@ public abstract class PetiteBeans {
 			return beanNames;
 		}
 
-		ArrayList<String> list = new ArrayList<>();
+		final ArrayList<String> list = new ArrayList<>();
 
-		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
-			BeanDefinition beanDefinition = entry.getValue();
+		for (final Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
+			final BeanDefinition beanDefinition = entry.getValue();
 
 			if (ClassUtil.isTypeOf(beanDefinition.type, type)) {
-				String beanName = entry.getKey();
+				final String beanName = entry.getKey();
 				list.add(beanName);
 			}
 		}
@@ -522,13 +522,13 @@ public abstract class PetiteBeans {
 	 * @param references references for arguments
 	 */
 	public void registerPetiteCtorInjectionPoint(final String beanName, final Class[] paramTypes, final String[] references) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		Constructor constructor = null;
 
 		if (paramTypes == null) {
-			CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
+			final CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
 			if (ctors != null && ctors.length > 0) {
 				if (ctors.length > 1) {
 					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + beanDefinition.type.getName());
@@ -536,7 +536,7 @@ public abstract class PetiteBeans {
 				constructor = ctors[0].getConstructor();
 			}
 		} else {
-			CtorDescriptor ctorDescriptor = cd.getCtorDescriptor(paramTypes, true);
+			final CtorDescriptor ctorDescriptor = cd.getCtorDescriptor(paramTypes, true);
 
 			if (ctorDescriptor != null) {
 				constructor = ctorDescriptor.getConstructor();
@@ -547,7 +547,7 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Constructor not found: " + beanDefinition.type.getName());
 		}
 
-		BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(constructor, references);
+		final BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(constructor, references);
 
 		beanDefinition.ctor = new CtorInjectionPoint(constructor, ref);
 	}
@@ -560,18 +560,18 @@ public abstract class PetiteBeans {
 	 * @param reference explicit injection reference, may be <code>null</code>
 	 */
 	public void registerPetitePropertyInjectionPoint(final String beanName, final String property, final String reference) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
-		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 
 		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		BeanReferences ref = referencesResolver.resolveReferenceFromValue(propertyDescriptor, reference);
+		final BeanReferences ref = referencesResolver.resolveReferenceFromValue(propertyDescriptor, reference);
 
-		PropertyInjectionPoint pip = new PropertyInjectionPoint(propertyDescriptor, ref);
+		final PropertyInjectionPoint pip = new PropertyInjectionPoint(propertyDescriptor, ref);
 
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
@@ -583,16 +583,16 @@ public abstract class PetiteBeans {
 	 * @param property set property name
 	 */
 	public void registerPetiteSetInjectionPoint(final String beanName, final String property) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
-		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+		final PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 
 		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		SetInjectionPoint sip = new SetInjectionPoint(propertyDescriptor);
+		final SetInjectionPoint sip = new SetInjectionPoint(propertyDescriptor);
 
 		beanDefinition.addSetInjectionPoint(sip);
 	}
@@ -606,13 +606,13 @@ public abstract class PetiteBeans {
 	 * @param references injection references
 	 */
 	public void registerPetiteMethodInjectionPoint(final String beanName, final String methodName, final Class[] arguments, final String[] references) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		Method method = null;
 		if (arguments == null) {
-			MethodDescriptor[] methods = cd.getAllMethodDescriptors(methodName);
+			final MethodDescriptor[] methods = cd.getAllMethodDescriptors(methodName);
 
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
@@ -621,7 +621,7 @@ public abstract class PetiteBeans {
 				method = methods[0].getMethod();
 			}
 		} else {
-			MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
+			final MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
 			if (md != null) {
 				method = md.getMethod();
 			}
@@ -630,9 +630,9 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Method not found: " + beanDefinition.type.getName() + '#' + methodName);
 		}
 
-		BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(method, references);
+		final BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(method, references);
 
-		MethodInjectionPoint mip = new MethodInjectionPoint(method, ref);
+		final MethodInjectionPoint mip = new MethodInjectionPoint(method, ref);
 
 		beanDefinition.addMethodInjectionPoint(mip);
 	}
@@ -645,19 +645,19 @@ public abstract class PetiteBeans {
 	 * @param initMethodNames init method names
 	 */
 	public void registerPetiteInitMethods(final String beanName, final InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (initMethodNames == null) {
 			initMethodNames = StringPool.EMPTY_ARRAY;
 		}
 
-		int total = initMethodNames.length;
-		InitMethodPoint[] initMethodPoints = new InitMethodPoint[total];
+		final int total = initMethodNames.length;
+		final InitMethodPoint[] initMethodPoints = new InitMethodPoint[total];
 
 		int i;
 		for (i = 0; i < initMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
+			final MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
 			if (md == null) {
 				throw new PetiteException("Init method not found: " + beanDefinition.type.getName() + '#' + initMethodNames[i]);
 			}
@@ -674,19 +674,19 @@ public abstract class PetiteBeans {
 	 * @param destroyMethodNames destroy method names
 	 */
 	public void registerPetiteDestroyMethods(final String beanName, String... destroyMethodNames) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (destroyMethodNames == null) {
 			destroyMethodNames = StringPool.EMPTY_ARRAY;
 		}
 
-		int total = destroyMethodNames.length;
-		DestroyMethodPoint[] destroyMethodPoints = new DestroyMethodPoint[total];
+		final int total = destroyMethodNames.length;
+		final DestroyMethodPoint[] destroyMethodPoints = new DestroyMethodPoint[total];
 
 		int i;
 		for (i = 0; i < destroyMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
+			final MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
 			if (md == null) {
 				throw new PetiteException("Destroy method not found: " + beanDefinition.type.getName() + '#' + destroyMethodNames[i]);
 			}
@@ -707,22 +707,22 @@ public abstract class PetiteBeans {
 	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(final String providerName, final String beanName, final String methodName, final Class[] arguments) {
-		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
+		final BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
 
 		if (beanDefinition == null) {
 			throw new PetiteException("Bean not found: " + beanName);
 		}
 
-		Class beanType = beanDefinition.type;
+		final Class beanType = beanDefinition.type;
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(beanType);
-		MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(beanType);
+		final MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
 
 		if (md == null) {
 			throw new PetiteException("Provider method not found: " + methodName);
 		}
 
-		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, beanName, md.getMethod());
+		final ProviderDefinition providerDefinition = new ProviderDefinition(providerName, beanName, md.getMethod());
 
 		providers.put(providerName, providerDefinition);
 	}
@@ -736,14 +736,14 @@ public abstract class PetiteBeans {
 	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(final String providerName, final Class type, final String staticMethodName, final Class[] arguments) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
 
 		if (md == null) {
 			throw new PetiteException("Provider method not found: " + staticMethodName);
 		}
 
-		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, md.getMethod());
+		final ProviderDefinition providerDefinition = new ProviderDefinition(providerName, md.getMethod());
 
 		providers.put(providerName, providerDefinition);
 	}
@@ -777,8 +777,8 @@ public abstract class PetiteBeans {
 	 */
 	public void forEachBean(final Consumer<BeanDefinition> beanDefinitionConsumer) {
 		final Set<String> names = beanNames();
-		for (String beanName : names) {
-			BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
+		for (final String beanName : names) {
+			final BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
 
 			if (beanDefinition != null) {
 				beanDefinitionConsumer.accept(beanDefinition);
@@ -817,7 +817,7 @@ public abstract class PetiteBeans {
 	 * Defines many parameters at once.
 	 */
 	public void defineParameters(final Map<?, ?> properties) {
-		for (Map.Entry<?, ?> entry : properties.entrySet()) {
+		for (final Map.Entry<?, ?> entry : properties.entrySet()) {
 			defineParameter(entry.getKey().toString(), entry.getValue());
 		}
 	}
@@ -826,7 +826,7 @@ public abstract class PetiteBeans {
 	 * Defines many parameters at once from {@link jodd.props.Props}.
 	 */
 	public void defineParameters(final Props props) {
-		Map<?, ?> map = new HashMap<>();
+		final Map<?, ?> map = new HashMap<>();
 		props.extractProps(map);
 		defineParameters(map);
 	}

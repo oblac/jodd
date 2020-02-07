@@ -106,7 +106,7 @@ final class ProxyAspectData {
 		try {
 			inputStream = ClassLoaderUtil.getClassAsStream(advice);
 			return new ClassReader(inputStream);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new ProxettaException(ioex);
 		} finally {
 			StreamUtil.close(inputStream);
@@ -120,12 +120,7 @@ final class ProxyAspectData {
 		if (adviceClassReaderCache == null) {
 			adviceClassReaderCache = TypeCache.createDefault();
 		}
-		ClassReader adviceReader = adviceClassReaderCache.get(advice);
-		if (adviceReader == null) {
-			adviceReader = createAdviceClassReader(advice);
-			adviceClassReaderCache.put(advice, adviceReader);
-		}
-		return adviceReader;
+		return adviceClassReaderCache.get(advice, this::createAdviceClassReader);
 	}
 
 	/**

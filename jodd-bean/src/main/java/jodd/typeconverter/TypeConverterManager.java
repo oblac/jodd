@@ -126,41 +126,41 @@ public class TypeConverterManager {
 		register(String.class, new StringConverter());
 		register(String[].class, new StringArrayConverter(this));
 
-		IntegerConverter integerConverter = new IntegerConverter();
+		final IntegerConverter integerConverter = new IntegerConverter();
 		register(Integer.class, integerConverter);
 		register(int.class, integerConverter);
 		register(MutableInteger.class, new MutableIntegerConverter(this));
 
-		ShortConverter shortConverter = new ShortConverter();
+		final ShortConverter shortConverter = new ShortConverter();
 		register(Short.class, shortConverter);
 		register(short.class, shortConverter);
 		register(MutableShort.class, new MutableShortConverter(this));
 
-		LongConverter longConverter = new LongConverter();
+		final LongConverter longConverter = new LongConverter();
 		register(Long.class, longConverter);
 		register(long.class, longConverter);
 		register(MutableLong.class, new MutableLongConverter(this));
 
-		ByteConverter byteConverter = new ByteConverter();
+		final ByteConverter byteConverter = new ByteConverter();
 		register(Byte.class, byteConverter);
 		register(byte.class, byteConverter);
 		register(MutableByte.class, new MutableByteConverter(this));
 
-		FloatConverter floatConverter = new FloatConverter();
+		final FloatConverter floatConverter = new FloatConverter();
 		register(Float.class, floatConverter);
 		register(float.class, floatConverter);
 		register(MutableFloat.class, new MutableFloatConverter(this));
 
-		DoubleConverter doubleConverter = new DoubleConverter();
+		final DoubleConverter doubleConverter = new DoubleConverter();
 		register(Double.class, doubleConverter);
 		register(double.class, doubleConverter);
 		register(MutableDouble.class, new MutableDoubleConverter(this));
 
-		BooleanConverter booleanConverter = new BooleanConverter();
+		final BooleanConverter booleanConverter = new BooleanConverter();
 		register(Boolean.class, booleanConverter);
 		register(boolean.class, booleanConverter);
 
-		CharacterConverter characterConverter = new CharacterConverter();
+		final CharacterConverter characterConverter = new CharacterConverter();
 		register(Character.class, characterConverter);
 		register(char.class, characterConverter);
 
@@ -326,16 +326,16 @@ public class TypeConverterManager {
 
 		// handle destination arrays
 		if (destinationType.isArray()) {
-			ArrayConverter<T> arrayConverter = new ArrayConverter(this, destinationType.getComponentType());
+			final ArrayConverter<T> arrayConverter = new ArrayConverter(this, destinationType.getComponentType());
 
 			return (T) arrayConverter.convert(value);
 		}
 
 		// handle enums
 		if (destinationType.isEnum()) {
-			Object[] enums = destinationType.getEnumConstants();
-			String valStr = value.toString();
-			for (Object e : enums) {
+			final Object[] enums = destinationType.getEnumConstants();
+			final String valStr = value.toString();
+			for (final Object e : enums) {
 				if (e.toString().equals(valStr)) {
 					return (T) e;
 				}
@@ -345,7 +345,7 @@ public class TypeConverterManager {
 		// collection
 		if (ClassUtil.isTypeOf(destinationType, Collection.class)) {
 			// component type is unknown because of Java's type-erasure
-			CollectionConverter<T> collectionConverter =
+			final CollectionConverter<T> collectionConverter =
 					new CollectionConverter(this, destinationType, Object.class);
 
 			return (T) collectionConverter.convert(value);

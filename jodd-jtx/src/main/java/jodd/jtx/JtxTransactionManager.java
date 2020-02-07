@@ -135,7 +135,7 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions associated with current thread.
 	 */
 	public int totalThreadTransactions() {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		final ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return 0;
 		}
@@ -146,12 +146,12 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions of the specified status associated with current thread.
 	 */
 	public int totalThreadTransactionsWithStatus(final JtxStatus status) {
-		ArrayList<JtxTransaction> txlist = txStack.get();
+		final ArrayList<JtxTransaction> txlist = txStack.get();
 		if (txlist == null) {
 			return 0;
 		}
 		int count = 0;
-		for (JtxTransaction tx : txlist) {
+		for (final JtxTransaction tx : txlist) {
 			if (tx.getStatus() == status) {
 				count++;
 			}
@@ -171,7 +171,7 @@ public class JtxTransactionManager {
 	 * is associated with current thread.
 	 */
 	public boolean isAssociatedWithThread(final JtxTransaction tx) {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		final ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
 		}
@@ -187,12 +187,12 @@ public class JtxTransactionManager {
 	 * Also removes thread list from this thread.
 	 */
 	protected boolean removeTransaction(final JtxTransaction tx) {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		final ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
 		}
 
-		boolean removed = txList.remove(tx);
+		final boolean removed = txList.remove(tx);
 		if (removed) {
 			totalTransactions--;
 		}
@@ -211,7 +211,7 @@ public class JtxTransactionManager {
 	 * by this transaction manager.
 	 */
 	public JtxTransaction getTransaction() {
-		ArrayList<JtxTransaction> txlist = txStack.get();
+		final ArrayList<JtxTransaction> txlist = txStack.get();
 		if (txlist == null) {
 			return null;
 		}
@@ -271,7 +271,7 @@ public class JtxTransactionManager {
 		if (log.isDebugEnabled()) {
 			log.debug("Requesting TX " + mode.toString());
 		}
-		JtxTransaction currentTx = getTransaction();
+		final JtxTransaction currentTx = getTransaction();
 		if (!isNewTxScope(currentTx, scope)) {
 			return currentTx;
 		}
@@ -313,10 +313,10 @@ public class JtxTransactionManager {
 		if (!validateExistingTransaction) {
 			return;
 		}
-		JtxTransactionMode sourceMode = sourceTx.getTransactionMode();
-		JtxIsolationLevel destIsolationLevel = destMode.getIsolationLevel();
+		final JtxTransactionMode sourceMode = sourceTx.getTransactionMode();
+		final JtxIsolationLevel destIsolationLevel = destMode.getIsolationLevel();
 		if (destIsolationLevel != ISOLATION_DEFAULT) {
-			JtxIsolationLevel currentIsolationLevel = sourceMode.getIsolationLevel();
+			final JtxIsolationLevel currentIsolationLevel = sourceMode.getIsolationLevel();
 			if (currentIsolationLevel != destIsolationLevel) {
 				throw new JtxException("Participating TX specifies isolation level: " + destIsolationLevel +
 						" which is incompatible with existing TX: " + currentIsolationLevel);
@@ -440,7 +440,7 @@ public class JtxTransactionManager {
 	 */
 	protected <E> JtxResourceManager<E> lookupResourceManager(final Class<E> resourceType) {
 		//noinspection unchecked
-		JtxResourceManager<E> resourceManager = this.resourceManagers.get(resourceType);
+		final JtxResourceManager<E> resourceManager = this.resourceManagers.get(resourceType);
 		if (resourceManager == null) {
 			throw new JtxException("No registered resource manager for resource type: " + resourceType.getSimpleName());
 		}
@@ -458,7 +458,7 @@ public class JtxTransactionManager {
 		this.resourceManagers.forEachValue(resourceManager -> {
 			try {
 				resourceManager.close();
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				// ignore
 			}
 		});

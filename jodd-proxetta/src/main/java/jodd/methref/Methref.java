@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Methref<C> {
 
-	public static TypeCache<Class> cache = TypeCache.createDefault();
+	public static TypeCache<Class> cache = TypeCache.<Class>create().threadsafe(true).get();
 
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
 
