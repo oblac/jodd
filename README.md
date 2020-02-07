@@ -8,11 +8,9 @@
 [![JitPack](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
 [![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](https://stackoverflow.com/questions/tagged/jodd)
 [![BSD License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](https://jodd.org/license.html)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Hey,@joddorg%20is%20cool!&url=%5Bobject%20Object%5D)
-[![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd) 
 
 
-> We want to inspire the world to create. To use tech skills and build something truly... Awesome. Beautiful. Helpful. Impactful. Now you can produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
+> Produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
 
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
