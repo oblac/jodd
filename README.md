@@ -12,19 +12,21 @@
 
 > Produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
 
+## 👋 Hello!
+
+Welcome to Jodd - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less. Keep in mind that Jodd is mostly developed and maintained by a single person.
+
+<h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
+
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
 + Talk to Jodd via [slack](https://jodd.slack.com).
 
-<h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
-
-👋 Keep in mind that Jodd is mostly developed and maintained by a single person. The vision is to have a lightweight set of Java tools; low-ceremony and developer-friendly. I wish to have time to complete the vision.
-
-# :zap: Jodd
+## :zap: Jodd
 
 **Jodd** is set of micro-frameworks and developer-friendly tools and utilities.
 
-_Use what you like._ **Thank you.**
+_Use what you like._ **Thank you.** 🙏
 
 **Cool libraries**:
 
