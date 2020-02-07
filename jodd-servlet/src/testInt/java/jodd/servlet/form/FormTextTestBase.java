@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
@@ -37,7 +37,7 @@ public abstract class FormTextTestBase {
 
 	@Test
 	public void testFormTagTextGet() {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.get("localhost:8173/text.jsp")
 				.query("iname", "foo")
 				.send();
@@ -47,7 +47,7 @@ public abstract class FormTextTestBase {
 
 	@Test
 	public void testFormTagTextGetWithValue() {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.get("localhost:8173/text2.jsp")
 				.query("iname", "foo")
 				.send();
@@ -57,7 +57,7 @@ public abstract class FormTextTestBase {
 
 	@Test
 	public void testFormTagTextPost() {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("localhost:8173/text.jsp")
 				.form("iname", "foo")
 				.send();
@@ -67,7 +67,7 @@ public abstract class FormTextTestBase {
 
 	@Test
 	public void testFormTagTextPostMulti() {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("localhost:8173/text.jsp")
 				.form("iname", "foo")
 				.multipart(true)
@@ -78,7 +78,7 @@ public abstract class FormTextTestBase {
 
 	@Test
 	public void testFormTagDuplicateNames() {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("localhost:8173/text3.jsp")
 				.form("cc", "one")
 				.form("cc", "two")

@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import jodd.exception.UncheckedException;
 import org.junit.jupiter.api.AfterAll;
@@ -63,7 +63,7 @@ class LagartoFormSuiteTest {
 	/**
 	 * Starts Tomcat.
 	 */
-	protected static void startTomcat(String webXmlFileName) {
+	protected static void startTomcat(final String webXmlFileName) {
 		if (server != null) {
 			return;
 		}
@@ -71,7 +71,7 @@ class LagartoFormSuiteTest {
 		try {
 			server.start();
 			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UncheckedException(e);
 		}
 	}
@@ -88,7 +88,7 @@ class LagartoFormSuiteTest {
 		}
 		try {
 			server.stop();
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 		} finally {
 			System.out.println("Tomcat test server stopped");
 			server = null;

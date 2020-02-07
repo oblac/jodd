@@ -24,7 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 buildscript {
-	ext.kotlin_version = '1.3.31'
+	ext.kotlin_version = '1.3.61'
 	repositories {
 		mavenCentral()
 	}
@@ -57,7 +57,7 @@ ext {
 
 	tomcatVersion = '8.0.47'
 	jettyVersion = '9.3.25.v20180904'
-	jmhVersion = '1.21'
+	jmhVersion = '1.23'
 
 	lib = [
 		mail:			[
@@ -142,26 +142,12 @@ def javaModules() {
 	}
 }
 
-def java9Modules() {
-	subprojects.findAll {
-		it.name.equals('jodd-core')
-	}
-}
-
 def javaBundleModules() {
 	rootProject.subprojects.findAll {
 		it.name.contains('jodd-') &&
 		!it.name.equals('jodd-joy') &&
 		!it.name.equals('jodd-bom') &&
 		!it.name.equals('jodd-all')
-	}
-}
-
-def javaMobileModules() {
-	rootProject.subprojects.findAll {
-		it.name.equals('jodd-core') ||
-		it.name.equals('jodd-bean') ||
-		it.name.equals('jodd-props')
 	}
 }
 
@@ -181,7 +167,6 @@ idea {
 configure(javaModules()) {
 	apply plugin: 'java'
 	apply plugin: 'jacoco'
-	apply plugin: 'osgi'
 	apply plugin: 'signing'
 	apply plugin: 'maven-publish'
 	apply plugin: 'idea'
@@ -194,8 +179,8 @@ configure(javaModules()) {
 	// compile
 
 	compileJava {
-		sourceCompatibility = '1.8'
-		targetCompatibility = '1.8'
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
 	}
 
 	if (JavaVersion.current() < JavaVersion.VERSION_1_8) {
@@ -246,9 +231,9 @@ configure(javaModules()) {
 	}
 
 	dependencies {
-		jmhCompile project
+		jmhImplementation project
 		jmhImplementation "org.openjdk.jmh:jmh-core:${jmhVersion}"
-		jmhImplementation "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
+		jmhAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
 	}
 
 	idea {
@@ -308,7 +293,7 @@ configure(javaModules()) {
 		description 'Runs the unit tests.'
 
 		dependencies {
-			testRuntime lib.junit5_console
+			testRuntimeOnly lib.junit5_console
 		}
 		classpath = sourceSets.test.runtimeClasspath
 
@@ -324,7 +309,7 @@ configure(javaModules()) {
 		description 'Runs the integration tests.'
 
 		dependencies {
-			testRuntime lib.junit5_console
+			testRuntimeOnly lib.junit5_console
 		}
 
 		classpath = sourceSets.testInt.runtimeClasspath
@@ -384,10 +369,11 @@ configure(javaModules()) {
 		afterEvaluate {
 			manifest.attributes << commonManifest
 			manifest {
-				name = project.moduleName
-				version = project.version
+				//name = project.moduleName
+				//version = project.version
 				description = project.moduleDescription
 				attributes 'Implementation-Title': project.moduleName
+				attributes 'Implementation-Version': project.version
 			}
 		}
 	}
@@ -409,10 +395,6 @@ configure(javaModules()) {
 			}
 		}
 	}
-}
-
-configure (java9Modules()) {
-	apply from: "${gradleScriptDir}/jre9.gradle"
 }
 
 // --- project ----------------------------------------------------------------
@@ -579,5 +561,5 @@ static def date() {
 // --- wrapper ----------------------------------------------------------------
 
 wrapper {
-	gradleVersion = '5.4.1'
+	gradleVersion = '6.1.1'
 }

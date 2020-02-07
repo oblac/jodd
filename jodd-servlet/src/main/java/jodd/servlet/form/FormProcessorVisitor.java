@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Form processor. Invokes {@link jodd.lagarto.form.FormFieldResolver} on form fields.
+ * Form processor. Invokes {@link jodd.servlet.form.FormFieldResolver} on form fields.
  */
 public class FormProcessorVisitor extends TagWriter {
 
@@ -112,23 +112,23 @@ public class FormProcessorVisitor extends TagWriter {
 
 	private void processInputStartTag(final Tag tag) {
 		// INPUT
-		CharSequence tagType = tag.getAttributeValue(TYPE);
+		final CharSequence tagType = tag.getAttributeValue(TYPE);
 		if (tagType == null) {
 			return;
 		}
-		CharSequence nameSequence = tag.getAttributeValue(NAME);
+		final CharSequence nameSequence = tag.getAttributeValue(NAME);
 		if (nameSequence == null) {
 			return;
 		}
 
-		String name = nameSequence.toString();
+		final String name = nameSequence.toString();
 
-		Object valueObject = resolver.value(name);
+		final Object valueObject = resolver.value(name);
 		if (valueObject == null) {
 			return;
 		}
 
-		String tagTypeName = tagType.toString().toLowerCase();
+		final String tagTypeName = tagType.toString().toLowerCase();
 
 		if (
 				tagTypeName.equals(TEXT) ||
@@ -136,7 +136,7 @@ public class FormProcessorVisitor extends TagWriter {
 				tagTypeName.equals(IMAGE) ||
 				tagTypeName.equals(PASSWORD)) {
 
-			String value = valueToString(name, valueObject);
+			final String value = valueToString(name, valueObject);
 
 			if (value == null) {
 				return;
@@ -153,8 +153,8 @@ public class FormProcessorVisitor extends TagWriter {
 
 			if (valueObject.getClass().isArray()) {
 				// checkbox group
-				String[] vs = StringUtil.toStringArray(valueObject);
-				for (String vsk : vs) {
+				final String[] vs = StringUtil.toStringArray(valueObject);
+				for (final String vsk : vs) {
 					if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 						tag.setAttribute(CHECKED, null);
 					}
@@ -187,7 +187,7 @@ public class FormProcessorVisitor extends TagWriter {
 		}
 
 		// array
-		String[] array = (String[]) valueObject;
+		final String[] array = (String[]) valueObject;
 
 		if (valueNameIndexes == null) {
 			valueNameIndexes = new HashMap<>();
@@ -203,7 +203,7 @@ public class FormProcessorVisitor extends TagWriter {
 			return null;
 		}
 
-		String result = array[index.value];
+		final String result = array[index.value];
 
 		index.value++;
 
@@ -216,7 +216,7 @@ public class FormProcessorVisitor extends TagWriter {
 	private String currentSelectName;
 
 	private void processSelectOpenTag(final Tag tag) {
-		CharSequence name = tag.getAttributeValue(NAME);
+		final CharSequence name = tag.getAttributeValue(NAME);
 
 		if (name == null) {
 			return;
@@ -237,21 +237,21 @@ public class FormProcessorVisitor extends TagWriter {
 			return;
 		}
 
-		Object vals = resolver.value(currentSelectName);
+		final Object vals = resolver.value(currentSelectName);
 		if (vals == null) {
 			return;
 		}
 		tagValue = tagValue.toString();
 
 		if (vals.getClass().isArray()) {
-			String[] vs = StringUtil.toStringArray(vals);
-			for (String vsk : vs) {
+			final String[] vs = StringUtil.toStringArray(vals);
+			for (final String vsk : vs) {
 				if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 					tag.setAttribute(SELECTED, null);
 				}
 			}
 		} else {
-			String value = StringUtil.toString(vals);
+			final String value = StringUtil.toString(vals);
 			if (value.contentEquals(tagValue)) {
 				tag.setAttribute(SELECTED, null);
 			}
@@ -266,11 +266,11 @@ public class FormProcessorVisitor extends TagWriter {
 	private void processTextareaStartTag(final Tag tag) {
 		inTextArea = true;
 
-		CharSequence name = tag.getAttributeValue(NAME);
+		final CharSequence name = tag.getAttributeValue(NAME);
 		if (name == null) {
 			return;
 		}
-		Object valueObject = resolver.value(name.toString());
+		final Object valueObject = resolver.value(name.toString());
 		if (valueObject != null) {
 			textAreaValue = valueObject.toString();
 		}

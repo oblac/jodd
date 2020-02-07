@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,28 +32,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FormTagTest {
 
 	static FormFieldResolver foo = new FormFieldResolver() {
-		public Object value(String name) {
+		public Object value(final String name) {
 			return '*' + name + '*';
 		}
 	};
 	static FormFieldResolver foo2 = new FormFieldResolver() {
-		public Object value(String name) {
+		public Object value(final String name) {
 			return "*\"" + name + '*';
 		}
 	};
 
-	static String form(String form) {
-		String result = new FormTag().populateForm(form, foo);
+	static String form(final String form) {
+		final String result = new FormTag().populateForm(form, foo);
 		assertEquals(result, form1(form));
 		return result;
 	}
 
-	static String form1(String form) {
-		FormTag ft = new FormTag();
+	static String form1(final String form) {
+		final FormTag ft = new FormTag();
 		return ft.populateForm(form, foo);
 	}
 
-	static String form2(String form) {
+	static String form2(final String form) {
 		return new FormTag().populateForm(form, foo2);
 	}
 
@@ -137,15 +137,15 @@ class FormTagTest {
 
 	@Test
 	void testMultipleInputs() {
-		String form =
+		final String form =
 			"<input type=\"text\" name=\"cc\" id=\"cc1\"/>\n" +
 			"<input type=\"text\" name=\"cc\" id=\"cc2\" />\n" +
 			"<input type=\"text\" name=\"cc\" id=\"cc3\" />";
 
-		FormTag ft = new FormTag();
+		final FormTag ft = new FormTag();
 
-		String populatedForm = ft.populateForm(form, new FormFieldResolver() {
-			public Object value(String name) {
+		final String populatedForm = ft.populateForm(form, new FormFieldResolver() {
+			public Object value(final String name) {
 				return new String[] {"a@b.c", "c@d.e", "e@f.g"};
 			}
 		});

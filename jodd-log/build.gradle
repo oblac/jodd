@@ -8,9 +8,9 @@ dependencies {
 	provided lib.log_logback_classic, optional
 	provided lib.log_log4j2, optional
 
-	testCompile project(':jodd-core')
-	testCompile lib.junit5
-	testCompile lib.mockito
-	testCompile lib.log_logback_core
-	testCompile lib.log_log4j2_core
+	testImplementation project(':jodd-core')
+	testImplementation lib.junit5
+	testImplementation lib.mockito
+	testImplementation lib.log_logback_core
+	testImplementation lib.log_log4j2_core
 }

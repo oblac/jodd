@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.filter;
+package jodd.servlet.lagarto;
 
 import jodd.io.FastCharArrayWriter;
 import jodd.lagarto.LagartoParser;
@@ -46,7 +46,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 	@Override
 	protected final char[] parse(final char[] content, final HttpServletRequest request) {
 
-		LagartoParsingProcessor lpp = createParsingProcessor();
+		final LagartoParsingProcessor lpp = createParsingProcessor();
 
 		if (lpp == null) {
 			return content;

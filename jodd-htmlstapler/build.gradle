@@ -2,12 +2,14 @@ ext.moduleName = 'Jodd HTMLStapler'
 ext.moduleDescription = 'Jodd HtmlStapler.'
 
 dependencies {
-	compile project(':jodd-lagarto')
-	compile project(':jodd-servlet')
-	compile project(':jodd-log')
+	implementation project(':jodd-core')
+	implementation project(':jodd-bean')
+	implementation project(':jodd-lagarto')
+	implementation project(':jodd-log')
+	implementation project(':jodd-servlet')
 
 	provided lib.servlet
 	provided lib.jsp
 
-	testCompile lib.junit5
+	testImplementation lib.junit5
 }

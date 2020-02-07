@@ -10,11 +10,11 @@ apply from: "${gradleScriptDir}/publish-maven.gradle"
 group = 'org.jodd'
 
 dependencies {
-    compile javaBundleModules()
+	implementation javaBundleModules()
 }
 
 jar {
-    baseName = 'jodd-all'
+	archiveBaseName = 'jodd-all'
     javaBundleModules().each { subproject ->
         from { subproject.sourceSets.main.output }
     }

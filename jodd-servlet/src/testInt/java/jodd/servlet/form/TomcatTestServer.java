@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import jodd.io.FileUtil;
 import org.apache.catalina.startup.Tomcat;
@@ -38,7 +38,7 @@ public class TomcatTestServer {
 
 	private final String webXml;
 
-	public TomcatTestServer(String webXml) {
+	public TomcatTestServer(final String webXml) {
 		this.webXml = webXml;
 	}
 
@@ -50,7 +50,7 @@ public class TomcatTestServer {
 	public void start() throws Exception {
 		prepareWebApplication();
 
-		String workingDir = System.getProperty("java.io.tmpdir");
+		final String workingDir = System.getProperty("java.io.tmpdir");
 
 		tomcat = new Tomcat();
 		tomcat.setPort(8173);
@@ -66,33 +66,33 @@ public class TomcatTestServer {
 
 		// web-inf
 
-		File webInfFolder = new File(webRoot, "WEB-INF");
+		final File webInfFolder = new File(webRoot, "WEB-INF");
 		webInfFolder.mkdir();
 
 		// web.xml
 
-		URL webXmlUrl = TomcatTestServer.class.getResource(webXml);
-		File webXmlFile = FileUtil.toFile(webXmlUrl);
+		final URL webXmlUrl = TomcatTestServer.class.getResource(webXml);
+		final File webXmlFile = FileUtil.toFile(webXmlUrl);
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
 		// tld
-		URL taglibUrl = TomcatTestServer.class.getResource("/META-INF/jodd-lagarto-taglib.tld");
-		File taglibFile = FileUtil.toFile(taglibUrl);
+		final URL taglibUrl = TomcatTestServer.class.getResource("/META-INF/jodd-lagarto-taglib.tld");
+		final File taglibFile = FileUtil.toFile(taglibUrl);
 		FileUtil.copyFileToDir(taglibFile, webInfFolder);
 
 		// jsp
 
-		File jspFolder = new File(webXmlFile.getParent(), "jsp");
+		final File jspFolder = new File(webXmlFile.getParent(), "jsp");
 		FileUtil.copyDir(jspFolder, webRoot);
 
 		// lib folder
 
-		File libFolder = new File(webInfFolder, "lib");
+		final File libFolder = new File(webInfFolder, "lib");
 		libFolder.mkdir();
 
 		// classes
 
-		File classes = new File(webInfFolder, "classes");
+		final File classes = new File(webInfFolder, "classes");
 		classes.mkdirs();
 	}
 

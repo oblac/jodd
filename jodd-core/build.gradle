@@ -3,17 +3,12 @@ ext.moduleName = 'Jodd Core'
 ext.moduleDescription = 'Jodd Core tools and huge number of utilities.'
 
 dependencies {
-	testCompile lib.junit5
-	testCompile lib.junit5_params
-	testCompile 'org.webjars:jquery:3.4.1'
-	testCompile 'commons-codec:commons-codec:1.13'
-	testCompile project(':jodd-bean')
+	testImplementation project(':jodd-bean')
 
-	jmhCompile 'net.openhft:smoothie-map:1.3'
-}
+	testImplementation lib.junit5
+	testImplementation lib.junit5_params
+	testImplementation 'org.webjars:jquery:3.4.1'
+	testImplementation 'commons-codec:commons-codec:1.13'
 
-jar {
-	manifest {
-		instruction 'Import-Package', '*;resolution:=optional'
-	}
+	jmhImplementation 'net.openhft:smoothie-map:1.3'
 }

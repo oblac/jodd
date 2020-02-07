@@ -295,4 +295,11 @@ POSSIBILITY OF SUCH DAMAGE.
 		</attribute>
 	</tag>
 
+	<tag>
+		<description>Form tag</description>
+		<name>form</name>
+		<tag-class>jodd.servlet.form.FormTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+
 </taglib>

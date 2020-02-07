@@ -5,12 +5,12 @@ ext.moduleDescription = 'Jodd Proxetta is the fastest proxy creator with unique 
 apply plugin: 'kotlin'
 
 dependencies {
-	compile project(':jodd-core')
-	compile project(':jodd-log')
+	implementation project(':jodd-core')
+	implementation project(':jodd-log')
 
-	testCompile project(':jodd-bean')
-	testCompile project(':jodd-petite')
-	testCompile lib.junit5
-	testCompile lib.junit5_params
-	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	testImplementation project(':jodd-bean')
+	testImplementation project(':jodd-petite')
+	testImplementation lib.junit5
+	testImplementation lib.junit5_params
+	testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

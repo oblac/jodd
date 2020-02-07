@@ -23,11 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.filter;
+package jodd.servlet.lagarto;
 
 import jodd.io.FileNameUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 
@@ -48,8 +46,6 @@ import java.io.IOException;
  */
 public abstract class LagartoServletFilter implements Filter {
 
-	private static final Logger log = LoggerFactory.getLogger(LagartoServletFilter.class);
-
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
 	}
@@ -66,9 +62,9 @@ public abstract class LagartoServletFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		String actionPath = DispatcherUtil.getServletPath(request);
+		final HttpServletRequest request = (HttpServletRequest) servletRequest;
+		final HttpServletResponse response = (HttpServletResponse) servletResponse;
+		final String actionPath = DispatcherUtil.getServletPath(request);
 
 		if (processActionPath(request, response, actionPath)) {
 			return;
@@ -79,7 +75,7 @@ public abstract class LagartoServletFilter implements Filter {
 			return;
 		}
 
-		BufferResponseWrapper wrapper = new BufferResponseWrapper(response);
+		final BufferResponseWrapper wrapper = new BufferResponseWrapper(response);
 		filterChain.doFilter(servletRequest, wrapper);
 
 		// reset servlet response content length AFTER the chain, since
@@ -89,13 +85,9 @@ public abstract class LagartoServletFilter implements Filter {
 		char[] content = wrapper.getBufferContentAsChars();
 
 		if ((content != null) && (content.length != 0)) {
-			if (log.isDebugEnabled()) {
-				log.debug("Lagarto is about to parse: " + actionPath);
-			}
 			try {
 				content = parse(content, request);
-			} catch (Exception ex) {
-				log.error("Error parsing", ex);
+			} catch (final Exception ex) {
 				throw new ServletException(ex);
 			}
 
@@ -121,7 +113,7 @@ public abstract class LagartoServletFilter implements Filter {
 	 * requests are passed through and those without any extension.
 	 */
 	protected boolean acceptActionPath(final HttpServletRequest request, final String actionPath) {
-		String extension = FileNameUtil.getExtension(actionPath);
+		final String extension = FileNameUtil.getExtension(actionPath);
 		if (extension.length() == 0) {
 			return true;
 		}

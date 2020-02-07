@@ -3,30 +3,34 @@ ext.moduleName = 'Jodd Joy'
 ext.moduleDescription = 'Jodd Joy is set of Jodd extensions that makes development of web applications even easier.'
 
 dependencies {
-	compile project(':jodd-core')
-	compile project(':jodd-petite')
-	compile project(':jodd-madvoc')
-	compile project(':jodd-vtor')
-	compile project(':jodd-jtx')
-	compile project(':jodd-db')
-	compile project(':jodd-proxetta')
-	compile project(':jodd-mail')
-	compile project(':jodd-log')
-	compile project(':jodd-lagarto')
-	compile project(':jodd-decora')
-	compile project(':jodd-http')
+	implementation project(':jodd-core')
+	implementation project(':jodd-bean')
+	implementation project(':jodd-json')
+	implementation project(':jodd-props')
+	implementation project(':jodd-petite')
+	implementation project(':jodd-madvoc')
+	implementation project(':jodd-vtor')
+	implementation project(':jodd-jtx')
+	implementation project(':jodd-db')
+	implementation project(':jodd-proxetta')
+	implementation project(':jodd-mail')
+	implementation project(':jodd-log')
+	implementation project(':jodd-lagarto')
+	implementation project(':jodd-decora')
+	implementation project(':jodd-http')
+	implementation project(':jodd-servlet')
 
-	provided lib.servlet
-	provided lib.jsp
+	compileOnly lib.servlet
+	compileOnly lib.jsp
 
-	testCompile project(':jodd-http')
+	testImplementation project(':jodd-http')
 //	testCompile project(':jodd-db').sourceSets.test.output
-	testCompile lib.junit5
-	testCompile lib.junit5_params
-	testCompile lib.hsqldb
-	testCompile lib.tomcat_embed
-	testCompile lib.jetty_embed
-	testCompile lib.mockito
-	testCompile lib.mysql
-	testRuntime lib.servlet
+	testImplementation lib.junit5
+	testImplementation lib.junit5_params
+	testImplementation lib.hsqldb
+	testImplementation lib.tomcat_embed
+	testImplementation lib.jetty_embed
+	testImplementation lib.mockito
+	testImplementation lib.mysql
+	testRuntimeOnly lib.servlet
 }

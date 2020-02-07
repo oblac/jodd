@@ -6,8 +6,8 @@ task clean(type: Delete) {
 task bundleJar(type: Jar) {
 	dependsOn rootProject.buildModules
 
-	baseName = 'jodd-' + project.version
-	destinationDir = new File(buildDir, 'lib')
+	archiveBaseName = 'jodd-' + project.version
+	destinationDirectory = new File(buildDir, 'lib')
 
 	javaBundleModules().each {submodule ->
 		from submodule.sourceSets.main.output
@@ -28,8 +28,8 @@ task bundleJar(type: Jar) {
 
 task bundleSourcesJar(type: Jar, dependsOn: bundleJar) {
 
-	baseName = 'jodd-' + project.version
-	destinationDir = new File(buildDir, 'lib')
+	archiveBaseName = 'jodd-' + project.version
+	destinationDirectory = new File(buildDir, 'lib')
 
 	classifier = 'sources'
 	from javaBundleModules().sourceSets.main.allSource
@@ -38,12 +38,8 @@ task bundleSourcesJar(type: Jar, dependsOn: bundleJar) {
 task bundleMobileJar(type: Jar) {
 	dependsOn rootProject.buildModules
 
-	baseName = 'jodd-mobile-' + project.version
-	destinationDir = new File(buildDir, 'lib')
-
-	javaMobileModules().each {submodule ->
-		from submodule.sourceSets.main.output
-	}
+	archiveBaseName = 'jodd-mobile-' + project.version
+	destinationDirectory = new File(buildDir, 'lib')
 
 	exclude 'jodd/bean/loader/*'
 	exclude 'jodd/bean/BeanLoaderManager.class'
@@ -99,8 +95,8 @@ task distroZip(type: Zip) {
 	dependsOn bundleJar
 	dependsOn bundleMobileJar
 
-	baseName = 'jodd-' + project.version
-	destinationDir = new File(buildDir, 'zip')
+	archiveBaseName = 'jodd-' + project.version
+	destinationDirectory = new File(buildDir, 'zip')
 
 	this.tasks.withType(Jar).each { jar ->
 		from jar

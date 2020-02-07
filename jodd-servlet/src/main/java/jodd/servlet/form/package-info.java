@@ -26,4 +26,4 @@
 /**
  * Form tag automatically populates form fields.
  */
-package jodd.lagarto.form;
+package jodd.servlet.form;

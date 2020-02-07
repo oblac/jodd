@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.lagarto.form;
+package jodd.servlet.form;
 
 import jodd.bean.BeanUtil;
 import jodd.lagarto.LagartoParser;
@@ -54,22 +54,22 @@ public class FormTag extends BodyTagSupport {
 	 */
 	@Override
 	public int doAfterBody() throws JspException {
-		BodyContent body = getBodyContent();
-		JspWriter out = body.getEnclosingWriter();
+		final BodyContent body = getBodyContent();
+		final JspWriter out = body.getEnclosingWriter();
 
-		String bodytext = populateForm(body.getString(), name -> value(name, pageContext));
+		final String bodytext = populateForm(body.getString(), name -> value(name, pageContext));
 
 		try {
 			out.print(bodytext);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new JspException(ioex);
 		}
 		return SKIP_BODY;
 	}
 
 	protected Object value(final String name, final PageContext pageContext) {
-		String thisRef = BeanUtil.pojo.extractThisReference(name);
-		Object value = ServletUtil.value(pageContext, thisRef);
+		final String thisRef = BeanUtil.pojo.extractThisReference(name);
+		final Object value = ServletUtil.value(pageContext, thisRef);
 		if (value == null) {
 			return ServletUtil.value(pageContext, name);
 		}
@@ -78,7 +78,7 @@ public class FormTag extends BodyTagSupport {
 			return value;
 		}
 
-		String propertyName = name.substring(thisRef.length() + 1);
+		final String propertyName = name.substring(thisRef.length() + 1);
 
 		return BeanUtil.declaredSilent.getProperty(value, propertyName);
 	}
@@ -93,8 +93,8 @@ public class FormTag extends BodyTagSupport {
 	}
 
 	protected String populateForm(final String formHtml, final FormFieldResolver resolver) {
-		LagartoParser lagartoParser = new LagartoParser(formHtml);
-		StringBuilder result = new StringBuilder();
+		final LagartoParser lagartoParser = new LagartoParser(formHtml);
+		final StringBuilder result = new StringBuilder();
 
 		lagartoParser.parse(new FormProcessorVisitor(result, resolver));
 
