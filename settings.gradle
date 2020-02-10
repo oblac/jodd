@@ -1,6 +1,5 @@
 include 'distribution'
 
-include 'jodd-all'
 include 'jodd-bean'
 include 'jodd-core'
 include 'jodd-db'
