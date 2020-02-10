@@ -3,8 +3,8 @@ ext.moduleName = 'Jodd VTor'
 ext.moduleDescription = 'Jodd VTor is focused validation framework for any Java object.'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-bean')
+	api project(':jodd-core')
+	api project(':jodd-bean')
 
 	testImplementation lib.mockito
 	testImplementation lib.junit5

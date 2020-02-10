@@ -3,9 +3,9 @@ ext.moduleName = 'Jodd Servlet'
 ext.moduleDescription = 'Jodd Servlet is set of web tools, including the nice tag library, wrappers and some filters.'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-bean')
-	implementation project(':jodd-lagarto')
+	api project(':jodd-core')
+	api project(':jodd-bean')
+	api project(':jodd-lagarto')
 
 	provided lib.servlet
 	provided lib.jsp

@@ -3,30 +3,29 @@ ext.moduleName = 'Jodd Joy'
 ext.moduleDescription = 'Jodd Joy is set of Jodd extensions that makes development of web applications even easier.'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-bean')
-	implementation project(':jodd-json')
-	implementation project(':jodd-props')
-	implementation project(':jodd-petite')
-	implementation project(':jodd-madvoc')
-	implementation project(':jodd-vtor')
-	implementation project(':jodd-jtx')
-	implementation project(':jodd-db')
-	implementation project(':jodd-proxetta')
-	implementation project(':jodd-mail')
-	implementation project(':jodd-log')
-	implementation project(':jodd-lagarto')
-	implementation project(':jodd-decora')
-	implementation project(':jodd-http')
-	implementation project(':jodd-servlet')
+	api project(':jodd-core')
+	api project(':jodd-bean')
+	api project(':jodd-json')
+	api project(':jodd-props')
+	api project(':jodd-petite')
+	api project(':jodd-madvoc')
+	api project(':jodd-vtor')
+	api project(':jodd-jtx')
+	api project(':jodd-db')
+	api project(':jodd-proxetta')
+	api project(':jodd-mail')
+	api project(':jodd-log')
+	api project(':jodd-lagarto')
+	api project(':jodd-decora')
+	api project(':jodd-http')
+	api project(':jodd-servlet')
 
-	compileOnly lib.servlet
-	compileOnly lib.jsp
+	provided lib.servlet
+	provided lib.jsp
 
 	testImplementation project(':jodd-http')
 //	testCompile project(':jodd-db').sourceSets.test.output
 	testImplementation lib.junit5
-	testImplementation lib.junit5_params
 	testImplementation lib.hsqldb
 	testImplementation lib.tomcat_embed
 	testImplementation lib.jetty_embed

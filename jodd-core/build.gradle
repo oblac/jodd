@@ -6,7 +6,6 @@ dependencies {
 	testImplementation project(':jodd-bean')
 
 	testImplementation lib.junit5
-	testImplementation lib.junit5_params
 	testImplementation 'org.webjars:jquery:3.4.1'
 	testImplementation 'commons-codec:commons-codec:1.13'
 

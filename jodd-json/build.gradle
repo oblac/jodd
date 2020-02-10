@@ -3,8 +3,8 @@ ext.moduleName = 'Jodd JSON'
 ext.moduleDescription = 'Jodd JSON parser.'
 
 dependencies {
-	implementation project(':jodd-bean')
-	implementation project(':jodd-core')
+	api project(':jodd-bean')
+	api project(':jodd-core')
 
 	testImplementation lib.junit5
 }

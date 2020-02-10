@@ -5,14 +5,13 @@ ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is
 apply plugin: 'kotlin'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-bean')
-	implementation project(':jodd-jtx')
-	implementation project(':jodd-props')
+	api project(':jodd-core')
+	api project(':jodd-bean')
+	api project(':jodd-jtx')
+	api project(':jodd-props')
 	implementation project(':jodd-log')
 
 	testImplementation lib.junit5
-	testImplementation lib.junit5_params
 	testImplementation lib.hsqldb
 	testImplementation lib.h2db
 	testImplementation lib.mysql

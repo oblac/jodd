@@ -3,10 +3,9 @@ ext.moduleName = 'Jodd Props'
 ext.moduleDescription = 'Jodd Props is super properties replacement, featuring: UTF8, sections, profiles, macros and more.'
 
 dependencies {
-	implementation project(':jodd-core')
+	api project(':jodd-core')
 
 	testImplementation project(':jodd-bean')
 	testImplementation project(':jodd-core').sourceSets.test.output
 	testImplementation lib.junit5
-	testImplementation lib.junit5_params
 }

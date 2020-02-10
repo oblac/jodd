@@ -3,12 +3,11 @@ ext.moduleName = 'Jodd BeanUtil'
 ext.moduleDescription = 'Jodd BeanUtil is fast and powerful bean manipulation library.'
 
 dependencies {
-	implementation project(':jodd-core')
+	api project(':jodd-core')
 
 	jmhImplementation 'commons-beanutils:commons-beanutils:1.9.4'
 	
 	testImplementation project(':jodd-core').sourceSets.test.output
 	testImplementation lib.junit5
-	testImplementation lib.junit5_params
 	testImplementation lib.mockito
 }

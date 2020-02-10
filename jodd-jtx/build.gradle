@@ -3,8 +3,8 @@ ext.moduleName = 'Jodd JTX'
 ext.moduleDescription = 'Jodd JTX manager.'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-proxetta')
+	api project(':jodd-core')
+	api project(':jodd-proxetta')
 	implementation project(':jodd-log')
 
 	testImplementation lib.junit5

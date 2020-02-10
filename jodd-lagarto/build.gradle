@@ -3,7 +3,7 @@ ext.moduleName = 'Jodd Lagarto'
 ext.moduleDescription = 'Jodd Lagarto is fast and versatile all purpose HTML parser. Includes Jerry and CSSelly.'
 
 dependencies {
-	implementation project(':jodd-core')
+	api project(':jodd-core')
 	implementation project(':jodd-log')
 
 	testImplementation lib.junit5

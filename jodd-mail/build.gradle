@@ -3,7 +3,7 @@ ext.moduleName = 'Jodd Mail'
 ext.moduleDescription = 'Jodd Mail is a little tool for sending and receiving emails.'
 
 dependencies {
-	implementation project(':jodd-core')
+	api project(':jodd-core')
 
 	implementation lib.mail
 	//compile lib.activation

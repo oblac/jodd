@@ -9,11 +9,11 @@ apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 group = 'org.jodd'
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
-}
-task javadocJar(type: Jar, dependsOn: classes) {
-	classifier = 'javadoc'
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+	withJavadocJar()
+	withSourcesJar()
 }
 
 artifacts {

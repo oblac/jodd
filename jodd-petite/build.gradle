@@ -3,13 +3,13 @@ ext.moduleName = 'Jodd Petite'
 ext.moduleDescription = 'Jodd Petite is slick and lightweight DI container that uses annotations and supports sufficient most of features offered by other containers.'
 
 dependencies {
-	implementation project(':jodd-core')
-	implementation project(':jodd-bean')
-	implementation project(':jodd-props')
-	implementation project(':jodd-log')
+	api project(':jodd-core')
+	api project(':jodd-bean')
+	api project(':jodd-props')
+	api project(':jodd-proxetta')
+	api project(':jodd-servlet'), optional
 
-	implementation project(':jodd-servlet'), optional
-	implementation project(':jodd-proxetta')
+	implementation project(':jodd-log')
 
 	provided lib.servlet, optional
 
