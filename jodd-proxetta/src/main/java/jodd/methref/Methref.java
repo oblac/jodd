@@ -63,7 +63,7 @@ public class Methref<C> {
 			throw new MethrefException(ex);
 		}
 
-        this.instance = proxy;
+		this.instance = proxy;
 	}
 
 	// ---------------------------------------------------------------- use
@@ -86,11 +86,25 @@ public class Methref<C> {
 
 	// ---------------------------------------------------------------- proxy method
 
+	private boolean injectedMethref = false;
+
 	/**
 	 * Returns proxy instance that is ready to collect the method name of invoked methods.
 	 */
 	public C proxy() {
+		if (!injectedMethref) {
+			injectMethref(instance);
+			injectedMethref = true;
+		}
 		return instance;
+	}
+
+	/**
+	 * Returns {@code true} if given object is proxified by this Methref.
+	 */
+	public boolean isMyProxy(final Object instance) {
+		final Methref usedMethref = readMethref(instance);
+		return this == usedMethref;
 	}
 
 	/**
@@ -99,6 +113,7 @@ public class Methref<C> {
 	public static String lastName(final Object instance) {
 		return ref(instance);
 	}
+
 	public <T> String lastName() {
 		return ref(instance);
 	}
@@ -121,8 +136,35 @@ public class Methref<C> {
 			if (ex instanceof MethrefException) {
 				throw ((MethrefException) ex);
 			}
+			throw new MethrefException("Name field not found", ex);
+		}
+	}
+
+	// ---------------------------------------------------------------- detect
+
+	private void injectMethref(final C instance) {
+		try {
+			final Field f = instance.getClass().getDeclaredField("$__methref$0");
+			f.setAccessible(true);
+			f.set(instance, this);
+		} catch (final Exception ex) {
+			if (ex instanceof MethrefException) {
+				throw ((MethrefException) ex);
+			}
 			throw new MethrefException("Methref field not found", ex);
 		}
 	}
 
+	private Methref readMethref(final Object instance) {
+		try {
+			final Field f = instance.getClass().getDeclaredField("$__methref$0");
+			f.setAccessible(true);
+			return (Methref) f.get(instance);
+		} catch (final Exception ex) {
+			if (ex instanceof MethrefException) {
+				throw ((MethrefException) ex);
+			}
+			return null;
+		}
+	}
 }

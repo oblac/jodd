@@ -25,36 +25,23 @@
 
 package jodd.methref;
 
-import jodd.proxetta.ProxyAdvice;
-import jodd.proxetta.ProxyTarget;
+import jodd.proxetta.fixtures.data.Str;
+import org.junit.jupiter.api.Test;
 
-import static jodd.proxetta.ProxyTarget.returnType;
-import static jodd.proxetta.ProxyTarget.targetMethodName;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Methref advice applied on all methods. It puts method name in
- * class variable that can be accessed later using reflection.
- */
-public class MethrefAdvice implements ProxyAdvice {
+class MethrefDetectionTest {
 
-	String methodName;
-	Methref methref;
+	@Test
+	void testMyProxy() {
+		final Methref<Str> m1 = Methref.of(Str.class);
+		final Methref<Str> m2 = Methref.of(Str.class);
 
-	/**
-	 * Reads method name and stores it in local variable.
-	 * For methods that return <code>String</code> returns the method name,
-	 * otherwise returns <code>null</code>.
-	 */
-	@Override
-	public Object execute() {
-		methodName = targetMethodName();
+		assertTrue(m1.isMyProxy(m1.proxy()));
+		assertFalse(m1.isMyProxy(m2.proxy()));
 
-		final Class returnType = returnType();
-
-		if (returnType == String.class) {
-			return ProxyTarget.returnValue(targetMethodName());
-		}
-		return ProxyTarget.returnValue(null);
+		assertTrue(m2.isMyProxy(m2.proxy()));
+		assertFalse(m2.isMyProxy(m1.proxy()));
 	}
-
 }
