@@ -37,7 +37,6 @@ import static jodd.proxetta.ProxyTarget.targetMethodName;
  */
 public class MethrefAdvice implements ProxyAdvice {
 
-	String methodName;
 	Methref methref;
 
 	/**
@@ -47,7 +46,7 @@ public class MethrefAdvice implements ProxyAdvice {
 	 */
 	@Override
 	public Object execute() {
-		methodName = targetMethodName();
+		methref.lastName(targetMethodName());
 
 		final Class returnType = returnType();
 

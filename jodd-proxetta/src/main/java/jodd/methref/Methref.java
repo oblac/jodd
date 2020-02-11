@@ -43,6 +43,11 @@ public class Methref<C> {
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
 
 	private final C instance;
+	/**
+	 * Last called method name. Don't use this field directly.
+	 */
+	private String lastName;
+
 
 	/**
 	 * Creates new proxified instance of target.
@@ -59,6 +64,7 @@ public class Methref<C> {
 
 		try {
 			proxy = (C) ClassUtil.newInstance(proxyClass);
+			injectMethref(proxy);
 		} catch (final Exception ex) {
 			throw new MethrefException(ex);
 		}
@@ -93,7 +99,7 @@ public class Methref<C> {
 	 */
 	public C proxy() {
 		if (!injectedMethref) {
-			injectMethref(instance);
+
 			injectedMethref = true;
 		}
 		return instance;
@@ -111,34 +117,24 @@ public class Methref<C> {
 	 * Returns method name of last invoked method on a proxy.
 	 */
 	public static String lastName(final Object instance) {
-		return ref(instance);
-	}
-
-	public <T> String lastName() {
-		return ref(instance);
-	}
-
-	// ---------------------------------------------------------------- ref
-
-	private static String ref(final Object instance) {
-		if (instance == null) {
+		final Methref m = readMethref(instance);
+		if (m == null) {
 			return null;
 		}
-		try {
-			final Field f = instance.getClass().getDeclaredField("$__methodName$0");
-			f.setAccessible(true);
-			final Object name = f.get(instance);
-			if (name == null) {
-				throw new MethrefException("Target method not collected");
-			}
-			return name.toString();
-		} catch (final Exception ex) {
-			if (ex instanceof MethrefException) {
-				throw ((MethrefException) ex);
-			}
-			throw new MethrefException("Name field not found", ex);
-		}
+		return m.lastName;
 	}
+
+	/**
+	 * Returns name of last method invoked on proxy.
+	 */
+	public <T> String lastName() {
+		return lastName;
+	}
+
+	public void lastName(final String name) {
+		this.lastName = name;
+	}
+
 
 	// ---------------------------------------------------------------- detect
 
@@ -155,7 +151,7 @@ public class Methref<C> {
 		}
 	}
 
-	private Methref readMethref(final Object instance) {
+	private static Methref readMethref(final Object instance) {
 		try {
 			final Field f = instance.getClass().getDeclaredField("$__methref$0");
 			f.setAccessible(true);
