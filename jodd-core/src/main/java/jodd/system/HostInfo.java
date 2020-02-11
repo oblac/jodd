@@ -34,40 +34,54 @@ import java.net.UnknownHostException;
  */
 abstract class HostInfo {
 
-	private final String HOST_NAME;
-	private final String HOST_ADDRESS;
+	/**
+	 * Delegate host info to be resolved lazy.
+	 * Android detection will initialize this class too and since InetAddress.getLocalHost()
+	 * is forbidden in Android, we will get an exception.
+	 */
+	private static class HostInfoLazy {
+		private final String HOST_NAME;
+		private final String HOST_ADDRESS;
 
-	public HostInfo() {
-		String hostName;
-		String hostAddress;
+		public HostInfoLazy() {
+			String hostName;
+			String hostAddress;
 
-		try {
-			final InetAddress localhost = InetAddress.getLocalHost();
+			try {
+				final InetAddress localhost = InetAddress.getLocalHost();
 
-			hostName = localhost.getHostName();
-			hostAddress = localhost.getHostAddress();
+				hostName = localhost.getHostName();
+				hostAddress = localhost.getHostAddress();
+			} catch (final UnknownHostException uhex) {
+				hostName = "localhost";
+				hostAddress = "127.0.0.1";
+			}
+
+			this.HOST_NAME = hostName;
+			this.HOST_ADDRESS = hostAddress;
 		}
-		catch (UnknownHostException uhex) {
-			hostName = "localhost";
-			hostAddress = "127.0.0.1";
-		}
-
-		this.HOST_NAME = hostName;
-		this.HOST_ADDRESS = hostAddress;
 	}
+
+	private static HostInfoLazy hostInfoLazy;
 
 	/**
 	 * Returns host name.
 	 */
 	public final String getHostName() {
-		return HOST_NAME;
+		if (hostInfoLazy == null) {
+			hostInfoLazy = new HostInfoLazy();
+		}
+		return hostInfoLazy.HOST_NAME;
 	}
 
 	/**
 	 * Returns host IP address.
 	 */
 	public final String getHostAddress() {
-		return HOST_ADDRESS;
+		if (hostInfoLazy == null) {
+			hostInfoLazy = new HostInfoLazy();
+		}
+		return hostInfoLazy.HOST_ADDRESS;
 	}
 
 	// ---------------------------------------------------------------- util
