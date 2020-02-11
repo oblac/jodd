@@ -41,13 +41,20 @@ class MethrefTest {
 	void testString() {
 		assertEquals("foo", Methref.of(Str.class).name(Str::foo));
 		assertEquals("foo2", Methref.of(Str.class).name(s -> s.foo2(null, null)));
+
+		final Str str = Methref.of(Str.class).proxy();
+		str.foo();
+		assertEquals("foo", Methref.lastName(str));
+		str.foo2(null, null);
+		assertEquals("foo2", Methref.lastName(str));
 	}
 
 	@Test
 	void testNonString() {
 		final Methref<Str> mref = Methref.of(Str.class);
 		assertEquals("redirect:boo", "redirect:" + mref.name(Str::boo));
-		assertEquals("foo", mref.name(Str::foo));
+		mref.proxy().boo();
+		assertEquals("redirect:boo", "redirect:" + Methref.lastName(mref.proxy()));
 	}
 
 	@Test
@@ -61,12 +68,32 @@ class MethrefTest {
 		assertEquals("szoo", mref.name(Str::szoo));
 		assertEquals("czoo", mref.name(Str::czoo));
 		assertEquals("yzoo", mref.name(Str::yzoo));
+
+		mref.proxy().izoo();
+		assertEquals("izoo", mref.lastName());
+		mref.proxy().fzoo();
+		assertEquals("fzoo", mref.lastName());
+		mref.proxy().dzoo();
+		assertEquals("dzoo", mref.lastName());
+		mref.proxy().lzoo();
+		assertEquals("lzoo", mref.lastName());
+		mref.proxy().bzoo();
+		assertEquals("bzoo", mref.lastName());
+		mref.proxy().szoo();
+		assertEquals("szoo", mref.lastName());
+		mref.proxy().czoo();
+		assertEquals("czoo", mref.lastName());
+		mref.proxy().yzoo();
+		assertEquals("yzoo", mref.lastName());
 	}
 
 	@Test
 	void testVoidOrTwoSteps() {
 		final Methref<Str> m = Methref.of(Str.class);
 		assertEquals("voo", m.name(Str::voo));
+
+		m.proxy().voo();
+		assertEquals("voo", m.lastName());
 	}
 
 	@Test

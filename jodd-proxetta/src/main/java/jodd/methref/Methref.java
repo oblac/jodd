@@ -79,11 +79,33 @@ public class Methref<C> {
 	 * Returns name of called method.
 	 */
 	public String name(final Consumer<C> consumer) {
-		consumer.accept(instance);
-		return ref();
+		consumer.accept(proxy());
+		return lastName();
 	}
 
-	private String ref() {
+
+	// ---------------------------------------------------------------- proxy method
+
+	/**
+	 * Returns proxy instance that is ready to collect the method name of invoked methods.
+	 */
+	public C proxy() {
+		return instance;
+	}
+
+	/**
+	 * Returns method name of last invoked method on a proxy.
+	 */
+	public static String lastName(final Object instance) {
+		return ref(instance);
+	}
+	public <T> String lastName() {
+		return ref(instance);
+	}
+
+	// ---------------------------------------------------------------- ref
+
+	private static String ref(final Object instance) {
 		if (instance == null) {
 			return null;
 		}

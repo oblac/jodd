@@ -128,8 +128,8 @@ public class Pathref<C> {
 
 	public String path(final Consumer<C> consumer) {
 		path = StringPool.EMPTY;
-		consumer.accept(instance);
-		return path;
+		consumer.accept(proxy());
+		return path();
 	}
 
 	protected static void injectPathRef(final Pathref pathref, final Object target) {
@@ -140,6 +140,18 @@ public class Pathref<C> {
 		} catch (final Exception ex) {
 			throw new PathrefException("Pathref field not found", ex);
 		}
+	}
+
+	// ----------------------------------------------------------------
+
+	public C proxy() {
+		return instance;
+	}
+
+	public String path() {
+		final String collectedPath = path;
+		this.path = StringPool.EMPTY;
+		return collectedPath;
 	}
 
 }
