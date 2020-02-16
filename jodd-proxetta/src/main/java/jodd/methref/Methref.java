@@ -58,6 +58,11 @@ public class Methref<C> {
 	public Methref(Class<C> target) {
 		target = ProxettaUtil.resolveTargetClass(target);
 
+		if (target.isInterface()) {
+			this.instance = InterfaceImplementation.of(target).createInstanceFor(this);
+			return;
+		}
+
 		final Class proxyClass = cache.get(target, proxetta::defineProxy);
 
 		final C proxy;
