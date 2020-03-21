@@ -61,8 +61,8 @@ ext {
 
 	lib = [
 		mail:			[
-							'jakarta.mail:jakarta.mail-api:1.6.4',
-							'com.sun.mail:jakarta.mail:1.6.4'
+							'jakarta.mail:jakarta.mail-api:1.6.5',
+							'com.sun.mail:jakarta.mail:1.6.5'
 						],
 		activation:		'javax.activation:javax.activation-api:1.2.0',
 		servlet:		'javax.servlet:javax.servlet-api:3.1.0',
