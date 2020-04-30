@@ -30,6 +30,7 @@ import jodd.util.StringUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
@@ -190,6 +191,25 @@ public class NetUtil {
 				StandardOpenOption.WRITE)
 		) {
 			fileChannel.transferFrom(rbc, 0, Long.MAX_VALUE);
+		}
+	}
+
+	/**
+	 * Get remote file size. Returns -1 if the content length is unknown
+	 *
+	 * @param url remote file url
+	 * @return file size
+	 * @throws IOException JDK-IOException
+	 */
+	public static long getRemoteFileSize(String url) throws IOException {
+		HttpURLConnection connection = null;
+		try {
+			connection = (HttpURLConnection) new URL(url).openConnection();
+			return connection.getContentLengthLong();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
 	}
 }

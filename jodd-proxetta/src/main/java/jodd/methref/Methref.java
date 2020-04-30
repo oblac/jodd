@@ -135,7 +135,7 @@ public class Methref<C> {
 	public <T> String lastName() {
 		return lastName;
 	}
-
+	
 	public void lastName(final String name) {
 		this.lastName = name;
 	}
