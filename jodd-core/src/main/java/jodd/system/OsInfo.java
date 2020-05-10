@@ -184,17 +184,4 @@ abstract class OsInfo extends JvmInfo {
 
 		return OS_NAME.startsWith(osNamePrefix) && OS_VERSION.startsWith(osVersionPrefix);
 	}
-
-	@Override
-	public String toString() {
-		return super.toString() +
-			 "\nOS architecture: " + getOsArchitecture() +
-			 "\nOS name:         " + getOsName() +
-			 "\nOS version:      " + getOsVersion() +
-			 "\nFile separator:  " + getFileSeparator() +
-			 "\nLine separator:  " + getLineSeparator() +
-			 "\nPath separator:  " + getPathSeparator() +
-			 "\nFile encoding:   " + getFileEncoding();
-	}
-
 }

@@ -31,7 +31,7 @@ import java.lang.management.ManagementFactory;
 
 abstract class RuntimeInfo extends OsInfo {
 
-	private Runtime runtime = Runtime.getRuntime();
+	private final Runtime runtime = Runtime.getRuntime();
 
 	/**
 	 * Returns MAX memory.
@@ -62,20 +62,24 @@ abstract class RuntimeInfo extends OsInfo {
 	}
 
 	/**
+	 * Returns used memory.
+	 */
+	public final long getUsedMemory(){
+		return runtime.totalMemory() - runtime.freeMemory();
+	}
+
+	/**
 	 * Returns PID of current Java process.
 	 */
 	public final long getCurrentPID() {
 		return Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 	}
 
-	@Override
-	public String toString() {
-		return  super.toString() +
-				"\nMax memory:              " + Format.humanReadableByteCount(getMaxMemory(), false) +
-				"\nTotal memory:            " + Format.humanReadableByteCount(getTotalMemory(), false) +
-				"\nFree memory:             " + Format.humanReadableByteCount(getFreeMemory(), false) +
-				"\nAvailableMemory memory:  " + Format.humanReadableByteCount(getAvailableMemory(), false) +
-				"\nProcess ID (PID):        " + getCurrentPID();
+	/**
+	 * Returns number of CPUs.
+	 */
+	public final long getCPUs() {
+		return runtime.availableProcessors();
 	}
 
 }

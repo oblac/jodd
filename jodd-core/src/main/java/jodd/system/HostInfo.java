@@ -36,7 +36,7 @@ abstract class HostInfo {
 
 	/**
 	 * Delegate host info to be resolved lazy.
-	 * Android detection will initialize this class too and since InetAddress.getLocalHost()
+	 * Android detection will initialize this class too and since {@code InetAddress.getLocalHost()}
 	 * is forbidden in Android, we will get an exception.
 	 */
 	private static class HostInfoLazy {
@@ -92,13 +92,4 @@ abstract class HostInfo {
 		}
 		return in;
 	}
-
-	// ---------------------------------------------------------------- toString
-
-	@Override
-	public String toString() {
-		return  "\nHost name:    " + getHostName() +
-				"\nHost address: " + getHostAddress();
-	}
-
 }
