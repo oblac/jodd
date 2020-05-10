@@ -114,8 +114,8 @@ class NetUtilTest {
 
 	@ParameterizedTest
 	@MethodSource("testdata_testValidateAgaintIPAdressV4Format")
-	void testValidateAgaintIPAdressV4Format(final boolean expected, final String input) {
-		final boolean actual = NetUtil.validateAgaintIPAdressV4Format(input);
+	void testvalidateIPv4(final boolean expected, final String input) {
+		final boolean actual = NetUtil.validateIPv4(input);
 
 		// asserts
 		assertEquals(expected, actual);

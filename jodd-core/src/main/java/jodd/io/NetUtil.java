@@ -39,6 +39,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.StandardOpenOption;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Network utilities.
@@ -84,7 +86,7 @@ public class NetUtil {
 	}
 
 	public static int getMaskAsInt(String mask) {
-		if (!validateAgaintIPAdressV4Format(mask)) {
+		if (!validateIPv4(mask)) {
 			mask = DEFAULT_MASK;
 		}
 		return getIpAsInt(mask);
@@ -99,6 +101,8 @@ public class NetUtil {
 		return _retVal;
 	}
 
+	private static final Pattern ip4RegExp = Pattern.compile("^((?:1?[1-9]?\\d|2(?:[0-4]\\d|5[0-5]))\\.){4}$");
+
 	/**
 	 * Checks given string against IP address v4 format.
 	 *
@@ -106,34 +110,9 @@ public class NetUtil {
 	 * @return <tt>true</tt> if param has a valid ip v4 format <tt>false</tt> otherwise
 	 * @see <a href="https://en.wikipedia.org/wiki/IP_address#IPv4_addresses">ip address v4</a>
 	 */
-	public static boolean validateAgaintIPAdressV4Format(final String input) {
-		if (input == null) {
-			return false;
-		}
-
-		int hitDots = 0;
-		char[] data = input.toCharArray();
-		for (int i = 0; i < data.length; i++) {
-			char c = data[i];
-			int b = 0;
-			do {
-				if (c < '0' || c > '9') {
-					return false;
-				}
-				b = (b * 10 + c) - 48;
-				if (++i >= data.length) {
-					break;
-				}
-				c = data[i];
-			} while (c != '.');
-
-			if (b > 255) {
-				return false;
-			}
-			hitDots++;
-		}
-
-		return hitDots == 4;
+	public static boolean validateIPv4(final String input) {
+		Matcher m = ip4RegExp.matcher(input + '.');
+		return m.matches();
 	}
 
 	/**
