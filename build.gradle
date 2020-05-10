@@ -45,8 +45,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '5.1.4-' + date()
-version = '5.1.4'
+version = '5.1.5-' + date()
+//version = '5.1.4'
 
 // --- properties -------------------------------------------------------------
 
@@ -500,5 +500,5 @@ static def date() {
 // --- wrapper ----------------------------------------------------------------
 
 wrapper {
-	gradleVersion = '6.1.1'
+	gradleVersion = '6.4'
 }
