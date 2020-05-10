@@ -43,7 +43,7 @@ import java.util.concurrent.locks.StampedLock;
  */
 public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
-	class CacheObject<K2,V2> {
+	static class CacheObject<K2,V2> {
 		CacheObject(final K2 key, final V2 object, final long ttl) {
 			this.key = key;
 			this.cachedObject = object;
@@ -136,7 +136,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		final long stamp = lock.writeLock();
 
 		try {
-			final CacheObject<K,V> co = new CacheObject<>(key, object, timeout);
+			final CacheObject<K,V> co = createCacheObject(key, object, timeout);
 			if (timeout != 0) {
 				existCustomTimeout = true;
 			}
@@ -150,6 +150,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		}
 	}
 
+	protected CacheObject<K, V> createCacheObject(K key, V object, long timeout) {
+		return new CacheObject<>(key, object, timeout);
+	}
 
 	// ---------------------------------------------------------------- get
 

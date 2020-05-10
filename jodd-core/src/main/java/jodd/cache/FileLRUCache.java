@@ -70,6 +70,12 @@ public class FileLRUCache extends FileCache {
 			protected void onRemove(final File key, final byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
+
+			@Override
+			protected CacheObject<File, byte[]> createCacheObject(File key, byte[] object, long timeout) {
+				return createFileCacheObject(key, object, timeout);
+			}
+
 		};
 	}
 }

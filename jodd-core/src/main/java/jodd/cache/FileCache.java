@@ -59,6 +59,21 @@ public abstract class FileCache {
 	 */
 	protected abstract Cache<File, byte[]> createCache();
 
+	/**
+	 * Creates CacheObject that updates last access time based on files last modification.
+	 */
+	protected AbstractCacheMap.CacheObject<File, byte[]> createFileCacheObject(File fileKey, byte[] object, long timeout) {
+		return new AbstractCacheMap.CacheObject<File, byte[]>(fileKey, object, timeout) {
+			@Override
+			boolean isExpired() {
+				if (fileKey.lastModified() > this.lastAccess) {
+					this.lastAccess = fileKey.lastModified();
+				}
+				return super.isExpired();
+			}
+		};
+	}
+
 	// ---------------------------------------------------------------- get
 
 	/**
