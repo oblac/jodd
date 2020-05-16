@@ -134,7 +134,7 @@ public class JsonArray implements Iterable<Object> {
 	}
 
 	/**
-	 * Retruns the JsonObject at position {@code pos} in the array.
+	 * Returns the JsonObject at position {@code pos} in the array.
 	 */
 	public JsonObject getJsonObject(final int pos) {
 		Object val = list.get(pos);
