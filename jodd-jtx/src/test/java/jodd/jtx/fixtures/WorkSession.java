@@ -47,7 +47,7 @@ public class WorkSession {
 
 	String sessionValue;
 	boolean readOnly;
-	int txno;
+	public int txno;
 
 	public void writeValue(String value) {
 		if (txno == 0) {	// no transaction

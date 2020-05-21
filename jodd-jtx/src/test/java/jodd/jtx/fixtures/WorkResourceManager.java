@@ -28,9 +28,11 @@ package jodd.jtx.fixtures;
 import jodd.jtx.JtxResourceManager;
 import jodd.jtx.JtxTransactionMode;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class WorkResourceManager implements JtxResourceManager<WorkSession> {
 
-	int txno = 1;
+	public AtomicInteger txno = new AtomicInteger();
 
 	@Override
 	public Class<WorkSession> getResourceType() {
@@ -42,7 +44,7 @@ public class WorkResourceManager implements JtxResourceManager<WorkSession> {
 		if (!active) {
 			return new WorkSession();
 		}
-		WorkSession work = new WorkSession(txno++);
+		WorkSession work = new WorkSession(txno.getAndIncrement());
 		work.readOnly = jtxMode.isReadOnly();
 		return work;
 	}
@@ -50,13 +52,13 @@ public class WorkResourceManager implements JtxResourceManager<WorkSession> {
 	@Override
 	public void commitTransaction(WorkSession resource) {
 		resource.done();
-		txno--;
+		txno.decrementAndGet();
 	}
 
 	@Override
 	public void rollbackTransaction(WorkSession resource) {
 		resource.back();
-		txno--;
+		txno.decrementAndGet();
 	}
 
 	@Override
