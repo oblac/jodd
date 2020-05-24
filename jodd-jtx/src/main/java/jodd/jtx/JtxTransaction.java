@@ -292,13 +292,13 @@ public class JtxTransaction {
 	protected void commitAllResources() throws JtxException {
 		status = STATUS_COMMITTING;
 		Exception lastException = null;
-		Iterator<JtxResource> it = resources.iterator();
+		final Iterator<JtxResource> it = resources.iterator();
 		while (it.hasNext()) {
-			JtxResource resource = it.next();
+			final JtxResource resource = it.next();
 			try {
 				resource.commitTransaction();
 				it.remove();
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				lastException = ex;
 			}
 		}
@@ -317,12 +317,12 @@ public class JtxTransaction {
 	protected void rollbackAllResources(final boolean wasForced) {
 		status = STATUS_ROLLING_BACK;
 		Exception lastException = null;
-		Iterator<JtxResource> it = resources.iterator();
+		final Iterator<JtxResource> it = resources.iterator();
 		while (it.hasNext()) {
-			JtxResource resource = it.next();
+			final JtxResource resource = it.next();
 			try {
 				resource.rollbackTransaction();
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				lastException = ex;
 			} finally {
 				it.remove();
@@ -347,22 +347,22 @@ public class JtxTransaction {
 	 */
 	public <E> E requestResource(final Class<E> resourceType) {
 		if (isCompleted()) {
-			throw new JtxException("TX is already completed, resource are not available after commit or rollback");
+			throw new JtxException("TX is already completed, resource is not available after commit or rollback");
 		}
 		if (isRollbackOnly()) {
-			throw new JtxException("TX is marked as rollback only, resource are not available", rollbackCause);
+			throw new JtxException("TX is marked as rollback only, resource is not available", rollbackCause);
 		}
 		if (!isNoTransaction() && !isActive()) {
-			throw new JtxException("Resources are not available since TX is not active");
+			throw new JtxException("Resource is not available since TX is not active");
 		}
 		checkTimeout();
 		E resource = lookupResource(resourceType);
 		if (resource == null) {
-			int maxResources = txManager.getMaxResourcesPerTransaction();
+			final int maxResources = txManager.getMaxResourcesPerTransaction();
 			if ((maxResources != -1) && (resources.size() >= maxResources)) {
 				throw new JtxException("TX already has attached max. number of resources");
 			}
-			JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
+			final JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
 			resource = resourceManager.beginTransaction(mode, isActive());
 			resources.add(new JtxResource<>(this, resourceManager, resource));
 		}
@@ -374,7 +374,7 @@ public class JtxTransaction {
 	 * Only open resources can be found.
 	 */
 	protected <E> E lookupResource(final Class<E> resourceType) {
-		for (JtxResource jtxResource : resources) {
+		for (final JtxResource jtxResource : resources) {
 			if (jtxResource.isSameTypeAsResource(resourceType)) {
 				//noinspection unchecked
 				return (E) jtxResource.getResource();

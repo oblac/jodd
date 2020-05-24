@@ -13,9 +13,10 @@ import java.util.concurrent.TimeUnit;
 import static jodd.jtx.JtxPropagationBehavior.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class JtxThreadTest {
+
+	public static final int COUNT = 2_000_000;
 
 	@Test
 	void testMultithreadsAndJtx() throws InterruptedException {
@@ -25,10 +26,10 @@ class JtxThreadTest {
 		jtxManager.registerResourceManager(workResourceManager);
 		LeanJtxWorker x = new LeanJtxWorker(jtxManager);
 
-		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
-		CountDownLatch latch = new CountDownLatch(10000);
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(200);
+		CountDownLatch latch = new CountDownLatch(COUNT);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < COUNT; i++) {
 			executor.execute(() -> {
 				JtxTransaction jtx = askForTx(x);
 				WorkSession work = jtx.requestResource(WorkSession.class);
