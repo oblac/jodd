@@ -2,7 +2,11 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.13...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.15...master)
+
+
+
+## [v5.0.15](https://github.com/oblac/jodd/compare/v5.0.13...v5.0.15)
 
 ### New Features
 
@@ -18,8 +22,8 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
-+ **http** - cookies not passed down in `HttpBrowser` after a redirect occurs. 
-
++ **http** - cookies not passed down in `HttpBrowser` after a redirect occurs.
++ **lagarto** - fixed issue with the conditional comments 
 
 ## [v5.0.13](https://github.com/oblac/jodd/compare/v5.0.12...v5.0.13)
 

@@ -45,8 +45,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '5.1.5-' + date()
-//version = '5.1.4'
+//version = '5.1.5-' + date()
+version = '5.1.5'
 
 // --- properties -------------------------------------------------------------
 
@@ -437,7 +437,6 @@ task release() {
 	dependsOn testAll
 	dependsOn codeCoverageReport
 	dependsOn javadocAll
-	dependsOn ':distribution:build'
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
