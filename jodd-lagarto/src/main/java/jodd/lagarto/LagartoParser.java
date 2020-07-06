@@ -406,7 +406,8 @@ public class LagartoParser extends Scanner {
 			return;
 		}
 
-		if (((value >= 0xD800) && (value <= 0xDFF)) || (value > 0x10FFFF)) {
+		// Otherwise, if the number is in the range 0xD800 to 0xDFFF or is greater than 0x10FFFF, then this is a parse error.
+		if (((value >= 0xD800) && (value <= 0xDFFF)) || (value > 0x10FFFF)) {
 			errorCharReference();
 			textEmitChar(REPLACEMENT_CHAR);
 			return;
