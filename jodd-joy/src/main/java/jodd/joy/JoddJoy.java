@@ -120,7 +120,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- props
 
-	private JoyProps joyProps;
+	private final JoyProps joyProps;
 
 	private final Consumers<JoyPropsConfig> joyPropsConsumers = Consumers.empty();
 
@@ -146,7 +146,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- proxetta
 
-	private JoyProxetta joyProxetta;
+	private final JoyProxetta joyProxetta;
 	private final Consumers<JoyProxettaConfig> joyProxettaConsumers = Consumers.empty();
 
 	/**
@@ -159,7 +159,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- petite
 
-	private JoyPetite joyPetite;
+	private final JoyPetite joyPetite;
 
 	private final Consumers<JoyPetiteConfig> joyPetiteConsumers = Consumers.empty();
 
@@ -173,7 +173,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- db
 
-	private JoyDb joyDb;
+	private final JoyDb joyDb;
 
 	private final Consumers<JoyDbConfig> joyDbConsumers = Consumers.empty();
 
@@ -257,13 +257,15 @@ public class JoddJoy {
 			joyMadvoc.setServletContext(servletContext);
 			joyMadvoc.start();
 
+			printJoyConfiguration();
+
 			runJoyInitBeans();
 
 			// cleanup things we will not use
 
 			joyScanner.stop();
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			if (log != null) {
 				log.error(ex.toString(), ex);
 			} else {
@@ -273,14 +275,6 @@ public class JoddJoy {
 			stop();
 			throw ex;
 		}
-
-		joyPetite.printBeans(100);
-		joyDb.printEntities(100);
-		joyMadvoc.printRoutes(100);
-
-		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");
-
-		log.info("Joy is up. Enjoy!");
 
 		if (joyDb.isDatabaseEnabled()) {
 			return new JoddJoyRuntime(
@@ -307,6 +301,16 @@ public class JoddJoy {
 		}
 	}
 
+	private void printJoyConfiguration() {
+		joyPetite.printBeans(100);
+		joyDb.printEntities(100);
+		joyMadvoc.printRoutes(100);
+
+		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");
+
+		log.info("Joy is up. Enjoy!");
+	}
+
 	/**
 	 * Prints a logo.
 	 */
@@ -323,7 +327,7 @@ public class JoddJoy {
 			joyDb.stop();
 			joyPetite.stop();
 		}
-		catch (Exception ignore) {
+		catch (final Exception ignore) {
 		}
 
 		if (log != null) {
