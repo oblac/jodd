@@ -30,6 +30,7 @@ import jodd.jerry.Jerry;
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
+import jodd.mutable.MutableInteger;
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class ParsingProblemsTest {
 	protected String testDataRoot;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -324,6 +325,45 @@ class ParsingProblemsTest {
 			}
 		});
 		assertEquals("Jean-Pierre Vitrac, CO&CO", stringBuilder.toString());
+	}
+
+
+	@Test
+	void testCnnConditionals() {
+		final String html =
+				"<html><head>\n" +
+				"<!--[if lte IE 9]><meta http-equiv=\"refresh\" content=\"1;url=/2.218.0/static/unsupp.html\" /><![endif]-->\n" +
+				"<!--[if gt IE 9><!--><script>alert(\"Hello!\");</script><!--<![endif]-->\n" +
+				"</head>\n" +
+				"</html>";
+
+		final StringBuilder sb = new StringBuilder();
+		final MutableInteger errorCount = MutableInteger.of(0);
+
+		new LagartoParser(html).parse(new EmptyTagVisitor() {
+			@Override
+			public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
+				sb.append("C:").append(expression).append('-').append(isStartingTag).append('\n');
+			}
+
+			@Override
+			public void comment(final CharSequence comment) {
+				sb.append("R:").append(comment).append('\n');
+			}
+
+			@Override
+			public void error(final String message) {
+				errorCount.value++;
+			}
+		});
+
+		assertEquals(0, errorCount.value);
+		assertEquals(
+				"C:if lte IE 9-true\n" +
+				"C:endif-false\n" +
+				"R:[if gt IE 9><!\n" +
+				"R:<![endif]\n",
+				sb.toString());
 	}
 
 }
