@@ -2974,6 +2974,11 @@ public class LagartoParser extends Scanner {
 	 * Emits a comment. Also checks for conditional comments!
 	 */
 	protected void emitComment(final int from, final int to) {
+		if (from == -1) {
+			// special case when `from` is `-1` in invalid comment
+			visitor.comment(CharArraySequence.EMPTY);
+			return;
+		}
 		if (config.enableConditionalComments) {
 			// CC: downlevel-hidden starting
 			if (match(CC_IF, from)) {

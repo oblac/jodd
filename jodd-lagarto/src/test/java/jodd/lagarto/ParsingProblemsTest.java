@@ -366,4 +366,38 @@ class ParsingProblemsTest {
 				sb.toString());
 	}
 
+	@Test
+	void testShortComment() {
+		final StringBuilder sb = new StringBuilder();
+		final MutableInteger errorCount = MutableInteger.of(0);
+
+		new LagartoParser("<!---->").parse(new EmptyTagVisitor() {
+			@Override
+			public void comment(final CharSequence comment) {
+				sb.append(comment);
+			}
+			@Override
+			public void error(final String message) {
+				errorCount.value++;
+			}
+		});
+		assertEquals(0, errorCount.value);
+		assertEquals("", sb.toString());
+
+		// err
+		sb.setLength(0);
+		new LagartoParser("<!--->").parse(new EmptyTagVisitor() {
+			@Override
+			public void comment(final CharSequence comment) {
+				sb.append(comment);
+			}
+			@Override
+			public void error(final String message) {
+				errorCount.value++;
+			}
+		});
+		assertEquals(2, errorCount.value);
+		assertEquals("-", sb.toString());
+	}
+
 }
