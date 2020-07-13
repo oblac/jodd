@@ -400,4 +400,28 @@ class ParsingProblemsTest {
 		assertEquals("-", sb.toString());
 	}
 
+	@Test
+	void testShortComment2() {
+		final StringBuilder sb = new StringBuilder();
+		final MutableInteger errorCount = MutableInteger.of(0);
+
+		new LagartoParser("<html>\n" +
+				"<body>\n" +
+				"<!--->\n" +
+				"-->\n" +
+				"</body>\n" +
+				"</html>").parse(new EmptyTagVisitor() {
+			@Override
+			public void comment(final CharSequence comment) {
+				sb.append(comment);
+			}
+			@Override
+			public void error(final String message) {
+				errorCount.value++;
+			}
+		});
+		assertEquals(1, errorCount.value);
+		assertEquals("-", sb.toString());
+	}
+
 }
