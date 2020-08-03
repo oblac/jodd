@@ -43,7 +43,7 @@ class EmailGreenTest {
 	private static final String ZERO = "zero";
 	private static final String ONE = "one";
 	private static final String TWO = "two";
-	private static final String THREE = "three";
+	private static final String THREE = "对账单-Billing-2007-014.pdf";
 
 	private static final String CID_1 = "CID1";
 	private static final byte[] BYTES_0_1_0 = {0, 1, 0};
