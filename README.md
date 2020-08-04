@@ -20,7 +20,6 @@ Welcome to **Jodd** - a unique, alternative world of Java :) You can find here s
 
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
-+ Talk to Jodd via [slack](https://jodd.slack.com).
 
 ## :zap: Jodd
 
@@ -69,38 +68,6 @@ targeting Java 1.8. You don't have to install anything,
 the only prerequisites are [Git](http://help.github.com/set-up-git-redirect)
 and Java JDK.
 
-### Check out sources
-
-Simply clone **Jodd** Git repo:
-
-    git clone https://github.com/oblac/jodd.git jodd
-
-### Compile and test, build jars
-
-You can build the **Jodd** project with:
-
-    gradlew build
-
-This will build all jars and run all unit tests.
-To skip the tests (for faster build), execute:
-
-    gradlew build -x test
-
-### Build full release with reports
-
-To generate _full release_, including running integration tests and generating various reports,
-you need [Docker](https://www.docker.com/) v1.12+.
-
-	docker-compose -f etc/docker-compose.yml up
-    gradlew clean release
-
-Integration tests requires some infrastructure (like databases), hence Docker is
-used.
-
-### Install Jodd into local Maven repo
-
-    gradlew install
-
 ## :gift_heart: Contribute
 
 Feel free to [contribute](CONTRIBUTING.md)! Follow these steps:
@@ -109,7 +76,6 @@ First time only:
 
 + fork the **Jodd** repo (`upstream`) to your GitHub account (`origin`)
 + clone `origin` as your `local` repo
-+ install the [ZenHub](https://www.zenhub.com) plugin to track tasks
 
 Every other time:
 
