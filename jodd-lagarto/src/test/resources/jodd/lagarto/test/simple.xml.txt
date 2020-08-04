@@ -1,4 +1,0 @@
-xml:1.0:UTF8:null
-tag:foo:1<
-cdt:[<>]
-tag:foo:1>

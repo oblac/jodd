@@ -1,3 +1,0 @@
-txt:[comment: ]
-wrn:[Parse error: EOF [1:22 @21]
-com:[ comment]

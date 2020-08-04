@@ -1,2 +1,0 @@
-txt:[foo]
-scr:1[scr]

@@ -1,4 +1,0 @@
-doc:[HTML -//W3C//DTD HTML 4.01 Transitional//EN http://www.w3.org/TR/html4/loose.dtd]
-com:[NewPage]
-tag:HTML:1<
-tag:HTML:1>

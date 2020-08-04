@@ -1,3 +1,0 @@
-txt:[aaa]
-scr:1[<!--<script>script data double escaped</script>-->]
-txt:[bb]

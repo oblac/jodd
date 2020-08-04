@@ -1,3 +1,0 @@
-txt:[aaa]
-wrn:[Parse error: invalid token [1:5 @4]
-txt:[<3me>bbb]

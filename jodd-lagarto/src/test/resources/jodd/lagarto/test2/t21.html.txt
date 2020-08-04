@@ -1,5 +1,0 @@
-txt:[aaa]
-tag:xmp:1<
-txt:[ddd]
-tag:xmp:1>
-txt:[bb]

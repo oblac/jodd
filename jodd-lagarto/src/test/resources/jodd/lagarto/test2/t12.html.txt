@@ -1,3 +1,0 @@
-txt:[bef]
-com:[a]
-txt:[aft]
