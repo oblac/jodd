@@ -34,7 +34,7 @@ import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
-import jodd.util.function.Consumers;
+import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.Objects;

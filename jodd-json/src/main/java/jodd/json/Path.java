@@ -63,7 +63,7 @@ public final class Path implements Cloneable {
 		}
 	}
 
-	private Path(CharSequence[] paths, int index, Path altPath) {
+	private Path(final CharSequence[] paths, final int index, final Path altPath) {
 		this.paths = paths;
 		this.index = index;
 		this.altPath = altPath;
@@ -99,7 +99,7 @@ public final class Path implements Cloneable {
 
 	private void _push(final CharSequence field) {
 		if (index == paths.length) {	// ensure size
-			CharSequence[] newPaths = new CharSequence[paths.length << 1];
+			final CharSequence[] newPaths = new CharSequence[paths.length << 1];
 			System.arraycopy(paths, 0, newPaths, 0, paths.length);
 			paths = newPaths;
 		}
@@ -137,11 +137,11 @@ public final class Path implements Cloneable {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		builder.append('[');
 		for (int i = 0; i < index; i++) {
-			CharSequence current = paths[i];
+			final CharSequence current = paths[i];
 			if (i > 0) {
 				builder.append('.');
 			}
@@ -163,17 +163,17 @@ public final class Path implements Cloneable {
 //			return false;
 //		}
 
-		Path path1 = (Path) o;
+		final Path path1 = (Path) o;
 
-		int length = path1.length();
+		final int length = path1.length();
 
 		if (this.length() != length) {
 			return false;
 		}
 
 		for (int i = 0; i < length; i++) {
-			Object o1 = path1.paths[i];
-			Object o2 = paths[i];
+			final Object o1 = path1.paths[i];
+			final Object o2 = paths[i];
 
 			if (!Objects.equals(o1, o2)) {
 				return false;
@@ -188,7 +188,7 @@ public final class Path implements Cloneable {
 		int result = 1;
 
 		for (int i = 0; i < index; i++) {
-			CharSequence element = paths[i];
+			final CharSequence element = paths[i];
 			result = 31 * result + (element == null ? 0 : element.hashCode());
 		}
 
@@ -197,7 +197,7 @@ public final class Path implements Cloneable {
 
 	@Override
 	public Path clone() {
-		CharSequence[] clonedPaths = new CharSequence[paths.length];
+		final CharSequence[] clonedPaths = new CharSequence[paths.length];
 
 		System.arraycopy(paths, 0, clonedPaths, 0, paths.length);
 

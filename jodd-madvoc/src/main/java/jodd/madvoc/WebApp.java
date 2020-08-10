@@ -54,7 +54,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.RestAction;
 import jodd.props.Props;
 import jodd.util.ClassConsumer;
-import jodd.util.function.Consumers;
+import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class WebApp {
 
 	protected ServletContext servletContext;
 	private List<Props> propsList = new ArrayList<>();
-	private List<Map<String, Object>> paramsList = new ArrayList<>();
+	private final List<Map<String, Object>> paramsList = new ArrayList<>();
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
 	private Consumers<MadvocRouter> madvocRouterConsumers = Consumers.empty();

@@ -34,9 +34,9 @@ import java.util.NoSuchElementException;
  */
 public class ArrayEnumeration<E> implements Enumeration<E>, Serializable {
 
-	private E[] array;
+	private final E[] array;
 	private int ndx;
-	private int endNdx;
+	private final int endNdx;
 
 	public ArrayEnumeration(final E[] arr) {
 		this(arr, 0, arr.length);

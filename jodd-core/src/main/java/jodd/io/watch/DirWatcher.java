@@ -27,9 +27,9 @@ package jodd.io.watch;
 
 import jodd.io.FileUtil;
 import jodd.mutable.MutableLong;
+import jodd.util.Consumers;
 import jodd.util.StringPool;
 import jodd.util.Wildcard;
-import jodd.util.function.Consumers;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,14 +74,14 @@ public class DirWatcher {
 	 * from watched folder.
 	 */
 	protected void init() {
-		File[] filesArray = dir.listFiles();
+		final File[] filesArray = dir.listFiles();
 
 		filesCount = 0;
 
 		if (filesArray != null) {
 			filesCount = filesArray.length;
 
-			for (File file : filesArray) {
+			for (final File file : filesArray) {
 				if (!acceptFile(file)) {
 					continue;
 				}
@@ -132,7 +132,7 @@ public class DirWatcher {
 			return false;			// ignore non-files
 		}
 
-		String fileName = file.getName();
+		final String fileName = file.getName();
 
 		if (ignoreDotFiles) {
 			if (fileName.startsWith(StringPool.DOT)) {
@@ -168,7 +168,7 @@ public class DirWatcher {
 		if (!watchFile.isFile() || !watchFile.exists()) {
 			try {
 				FileUtil.touch(watchFile);
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new DirWatcherException("Invalid watch file: " + name, ioex);
 			}
 		}
@@ -221,7 +221,7 @@ public class DirWatcher {
 
 			if (watchFile != null) {
 				// wait for watch file changes
-				long last = watchFile.lastModified();
+				final long last = watchFile.lastModified();
 
 				if (last <= watchFileLastAccessTime) {
 					running = false;
@@ -232,7 +232,7 @@ public class DirWatcher {
 
 			// scan!
 
-			File[] filesArray = dir.listFiles();
+			final File[] filesArray = dir.listFiles();
 
 			if (filesArray == null) {
 				running = false;
@@ -249,18 +249,18 @@ public class DirWatcher {
 			filesCount = filesArray.length;
 
 			// scan the files and check for modification/addition
-			for (File file : filesArray) {
+			for (final File file : filesArray) {
 				if (!acceptFile(file)) {
 					continue;
 				}
 
-				MutableLong currentTime = map.get(file);
+				final MutableLong currentTime = map.get(file);
 
 				if (deletedFiles != null) {
 					deletedFiles.remove(file);
 				}
 
-				long lastModified = file.lastModified();
+				final long lastModified = file.lastModified();
 
 				if (currentTime == null) {
 					// new file
@@ -276,7 +276,7 @@ public class DirWatcher {
 
 			// check for deleted files
 			if (deletedFiles != null) {
-				for (File deletedFile : deletedFiles) {
+				for (final File deletedFile : deletedFiles) {
 					map.remove(deletedFile);
 					onChange(DirWatcherEvent.Type.DELETED, deletedFile);
 				}

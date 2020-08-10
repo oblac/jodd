@@ -53,7 +53,7 @@ class BinarySearchTest {
 		list.add("iii");    // 8
 		list.add("sss");
 
-		listBinarySearch = BinarySearch.forList(list);
+		listBinarySearch = BinarySearch.on(list);
 	}
 
 	@Test

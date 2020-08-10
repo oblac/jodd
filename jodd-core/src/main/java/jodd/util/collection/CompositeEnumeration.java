@@ -48,7 +48,7 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
 	 * Creates new composite enumeration with provided enumerations.
 	 */
 	public CompositeEnumeration(final Enumeration<T>... enumerations) {
-		for (Enumeration<T> enumeration : enumerations) {
+		for (final Enumeration<T> enumeration : enumerations) {
 			add(enumeration);
 		}
 	}
@@ -75,7 +75,7 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
 			currentEnumeration = 0;
 		}
 		for (int i = currentEnumeration; i < allEnumerations.size(); i++) {
-			Enumeration enumeration = allEnumerations.get(i);
+			final Enumeration<T> enumeration = allEnumerations.get(i);
 			if (enumeration.hasMoreElements()) {
 				currentEnumeration = i;
 				return true;

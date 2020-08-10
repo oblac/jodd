@@ -47,7 +47,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	 * Creates new composite iterator with provided iterators.
 	 */
 	public CompositeIterator(final Iterator<T>... iterators) {
-		for (Iterator<T> iterator : iterators) {
+		for (final Iterator<T> iterator : iterators) {
 			add(iterator);
 		}
 	}
@@ -75,7 +75,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 			currentIterator = 0;
 		}
 		for (int i = currentIterator; i < allIterators.size(); i++) {
-			Iterator iterator = allIterators.get(i);
+			final Iterator<T> iterator = allIterators.get(i);
 			if (iterator.hasNext()) {
 				currentIterator = i;
 				return true;

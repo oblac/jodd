@@ -32,8 +32,8 @@ import jodd.io.StreamUtil;
 import jodd.io.ZipUtil;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.Consumers;
 import jodd.util.StringUtil;
-import jodd.util.function.Consumers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -268,7 +268,7 @@ public class ClassScanner {
 		final ZipFile zipFile;
 		try {
 			zipFile = new ZipFile(file);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			if (!ignoreException) {
 				throw new FindFileException("Invalid zip: " + file.getName(), ioex);
 			}
@@ -296,7 +296,7 @@ public class ClassScanner {
 						classPathEntry.closeInputStream();
 					}
 				}
-			} catch (RuntimeException rex) {
+			} catch (final RuntimeException rex) {
 				if (!ignoreException) {
 					ZipUtil.close(zipFile);
 					throw rex;
@@ -326,7 +326,7 @@ public class ClassScanner {
 				} else if (includeResources) {
 					scanClassFile(filePath, rootPath, file, false);
 				}
-			} catch (RuntimeException rex) {
+			} catch (final RuntimeException rex) {
 				if (!ignoreException) {
 					throw rex;
 				}
@@ -380,7 +380,7 @@ public class ClassScanner {
 		}
 		try {
 			onEntry(classPathEntry);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new FindFileException("Scan entry error: " + classPathEntry, ex);
 		}
 	}
@@ -388,7 +388,7 @@ public class ClassScanner {
 
 	// ---------------------------------------------------------------- callback
 
-	private Consumers<ClassPathEntry> entryDataConsumers = Consumers.empty();
+	private final Consumers<ClassPathEntry> entryDataConsumers = Consumers.empty();
 
 	/**
 	 * Registers a {@link ClassPathEntry class path entry} consumer.
@@ -489,7 +489,7 @@ public class ClassScanner {
 				final byte[] data = readBytes();
 				final int index = ArraysUtil.indexOf(data, bytes);
 				return index != -1;
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new FindFileException("Read error", ioex);
 			}
 		}
@@ -518,7 +518,7 @@ public class ClassScanner {
 				try {
 					inputStream = zipFile.getInputStream(zipEntry);
 					return inputStream;
-				} catch (IOException ioex) {
+				} catch (final IOException ioex) {
 					throw new FindFileException("Input stream error: '" + zipFile.getName()
 						+ "', entry: '" + zipEntry.getName() + "'." , ioex);
 				}
@@ -527,7 +527,7 @@ public class ClassScanner {
 				try {
 					inputStream = new FileInputStream(file);
 					return inputStream;
-				} catch (FileNotFoundException fnfex) {
+				} catch (final FileNotFoundException fnfex) {
 					throw new FindFileException("Unable to open: " + file.getAbsolutePath(), fnfex);
 				}
 			}
@@ -553,7 +553,7 @@ public class ClassScanner {
 		public Class loadClass() throws ClassNotFoundException {
 			try {
 				return ClassLoaderUtil.loadClass(name);
-			} catch (ClassNotFoundException | Error cnfex) {
+			} catch (final ClassNotFoundException | Error cnfex) {
 				if (ignoreException) {
 					return null;
 				}
@@ -569,7 +569,7 @@ public class ClassScanner {
 
 	// ---------------------------------------------------------------- public scanning
 
-	private Set<File> filesToScan = new LinkedHashSet<>();
+	private final Set<File> filesToScan = new LinkedHashSet<>();
 
 	/**
 	 * Scans URLs. If (#ignoreExceptions} is set, exceptions

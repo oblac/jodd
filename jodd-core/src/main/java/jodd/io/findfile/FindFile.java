@@ -28,9 +28,9 @@ package jodd.io.findfile;
 import jodd.inex.InExRules;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
+import jodd.util.Consumers;
 import jodd.util.MultiComparator;
 import jodd.util.StringUtil;
-import jodd.util.function.Consumers;
 
 import java.io.File;
 import java.net.URI;
@@ -186,7 +186,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies a set of search paths.
 	 */
 	public FindFile searchPath(final File... searchPath) {
-		for (File file : searchPath) {
+		for (final File file : searchPath) {
 			addPath(file);
 		}
 		return this;
@@ -199,8 +199,8 @@ public class FindFile implements Iterable<File> {
 	 */
 	public FindFile searchPath(final String searchPath) {
 		if (searchPath.indexOf(File.pathSeparatorChar) != -1) {
-			String[] paths = StringUtil.split(searchPath, File.pathSeparator);
-			for (String path : paths) {
+			final String[] paths = StringUtil.split(searchPath, File.pathSeparator);
+			for (final String path : paths) {
 				addPath(new File(path));
 			}
 		} else {
@@ -214,7 +214,7 @@ public class FindFile implements Iterable<File> {
 	 * @see #searchPath(String) 
 	 */
 	public FindFile searchPaths(final String... searchPaths) {
-		for (String searchPath : searchPaths) {
+		for (final String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
 		return this;
@@ -224,10 +224,10 @@ public class FindFile implements Iterable<File> {
 	 * Specifies the search path. Throws an exception if URI is invalid.
 	 */
 	public FindFile searchPath(final URI searchPath) {
-		File file;
+		final File file;
 		try {
 			file = new File(searchPath);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new FindFileException("URI error: " + searchPath, ex);
 		}
 
@@ -240,7 +240,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies the search path.
 	 */
 	public FindFile searchPaths(final URI... searchPath) {
-		for (URI uri : searchPath) {
+		for (final URI uri : searchPath) {
 			searchPath(uri);
 		}
 		return this;
@@ -250,7 +250,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies the search path. Throws an exception if URL is invalid.
 	 */
 	public FindFile searchPath(final URL searchPath) {
-		File file = FileUtil.toContainerFile(searchPath);
+		final File file = FileUtil.toContainerFile(searchPath);
 		if (file == null) {
 			throw new FindFileException("URL error: " + searchPath);
 		}
@@ -262,7 +262,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies the search path.
 	 */
 	public FindFile searchPaths(final URL... searchPath) {
-		for (URL url : searchPath) {
+		for (final URL url : searchPath) {
 			searchPath(url);
 		}
 		return this;
@@ -299,11 +299,11 @@ public class FindFile implements Iterable<File> {
 		public FilesIterator(final String[] fileNames) {
 			this.folder = null;
 			if (sortComparators != null) {
-				int fileNamesLength = fileNames.length;
+				final int fileNamesLength = fileNames.length;
 				this.files = new File[fileNamesLength];
 
 				for (int i = 0; i < fileNamesLength; i++) {
-					String fileName = fileNames[i];
+					final String fileName = fileNames[i];
 					if (fileName != null) {
 						this.files[i] = new File(fileName);
 					}
@@ -334,7 +334,7 @@ public class FindFile implements Iterable<File> {
 
 		protected File nextFileName() {
 			while (index < fileNames.length) {
-				String fileName = fileNames[index];
+				final String fileName = fileNames[index];
 
 				if (fileName == null) {
 					index++;
@@ -343,7 +343,7 @@ public class FindFile implements Iterable<File> {
 				fileNames[index] = null;
 				index++;
 
-				File file;
+				final File file;
 				if (folder == null) {
 					file = new File(fileName);
 				} else {
@@ -366,7 +366,7 @@ public class FindFile implements Iterable<File> {
 
 		protected File nextFile() {
 			while (index < files.length) {
-				File file = files[index];
+				final File file = files[index];
 
 				if (file == null) {
 					index++;
@@ -413,7 +413,7 @@ public class FindFile implements Iterable<File> {
 	 * Defines include patterns.
 	 */
 	public FindFile include(final String... patterns) {
-		for (String pattern : patterns) {
+		for (final String pattern : patterns) {
 			rules.include(pattern);
 		}
 		return this;
@@ -447,7 +447,7 @@ public class FindFile implements Iterable<File> {
 	 * Defines exclude patterns.
 	 */
 	public FindFile exclude(final String... patterns) {
-		for (String pattern : patterns) {
+		for (final String pattern : patterns) {
 			rules.exclude(pattern);
 		}
 		return this;
@@ -461,7 +461,7 @@ public class FindFile implements Iterable<File> {
 	 * @see InExRules
 	 */
 	protected boolean acceptFile(final File file) {
-		String matchingFilePath = getMatchingFilePath(file);
+		final String matchingFilePath = getMatchingFilePath(file);
 
 		if (rules.match(matchingFilePath)) {
 			if (consumers != null) {
@@ -558,8 +558,8 @@ public class FindFile implements Iterable<File> {
 			// iterate files
 
 			if (!todoFiles.isEmpty()) {
-				FilesIterator filesIterator = todoFiles.getLast();
-				File nextFile = filesIterator.next();
+				final FilesIterator filesIterator = todoFiles.getLast();
+				final File nextFile = filesIterator.next();
 
 				if (nextFile == null) {
 					todoFiles.removeLast();
@@ -590,7 +590,7 @@ public class FindFile implements Iterable<File> {
 
 			// process folders
 
-			File folder;
+			final File folder;
 			boolean initialDir = false;
 
 			if (todoFolders.isEmpty()) {
@@ -626,7 +626,7 @@ public class FindFile implements Iterable<File> {
 	 * Finds all files and returns list of founded files.
 	 */
 	public List<File> findAll() {
-		List<File> allFiles = new ArrayList<>();
+		final List<File> allFiles = new ArrayList<>();
 		File file;
 		while ((file = nextFile()) != null) {
 			allFiles.add(file);
@@ -652,12 +652,12 @@ public class FindFile implements Iterable<File> {
 		if (pathListOriginal == null) {
 			pathListOriginal = (LinkedList<File>) pathList.clone();
 		}
-		String[] files = new String[pathList.size()];
+		final String[] files = new String[pathList.size()];
 
 		int index = 0;
-		Iterator<File> iterator = pathList.iterator();
+		final Iterator<File> iterator = pathList.iterator();
 		while (iterator.hasNext()) {
-			File file = iterator.next();
+			final File file = iterator.next();
 
 			if (file.isFile()) {
 				files[index++] = file.getAbsolutePath();
@@ -666,7 +666,7 @@ public class FindFile implements Iterable<File> {
 		}
 
 		if (index != 0) {
-			FilesIterator filesIterator = new FilesIterator(files);
+			final FilesIterator filesIterator = new FilesIterator(files);
 			todoFiles.add(filesIterator);
 		}
 	}

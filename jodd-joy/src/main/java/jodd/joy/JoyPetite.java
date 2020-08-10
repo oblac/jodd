@@ -34,8 +34,8 @@ import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.util.ClassUtil;
+import jodd.util.Consumers;
 import jodd.util.StringUtil;
-import jodd.util.function.Consumers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 
 	private boolean autoConfiguration = true;
 	private boolean externalsCache = true;
-	private Consumers<PetiteContainer> petiteContainerConsumers = Consumers.empty();
+	private final Consumers<PetiteContainer> petiteContainerConsumers = Consumers.empty();
 
 	@Override
 	public JoyPetite disableAutoConfiguration() {

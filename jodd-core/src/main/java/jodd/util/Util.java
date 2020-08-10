@@ -30,23 +30,13 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Some general utilities.
  * All methods are safe as possible and operates with as many types as possible.
  */
 public class Util {
-
-	/**
-	 * Safely compares two objects just like <code>equals()</code> would, except
-	 * it allows any of the 2 objects to be <code>null</code>.
-	 *
-	 * @return <code>true</code> if arguments are equal, otherwise <code>false</code>
-	 */
-	public static boolean equals(final Object obj1, final Object obj2) {
-		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
-	}
-
 
 	/**
 	 * Returns string representation of an object, while checking for <code>null</code>.
@@ -80,7 +70,7 @@ public class Util {
 
 		int count;
 		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
+			final Iterator iter = (Iterator) obj;
 			count = 0;
 			while (iter.hasNext()) {
 				count++;
@@ -89,7 +79,7 @@ public class Util {
 			return count;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
+			final Enumeration enumeration = (Enumeration) obj;
 			count = 0;
 			while (enumeration.hasMoreElements()) {
 				count++;
@@ -125,30 +115,30 @@ s	 */
 		}
 
 		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
+			final Iterator iter = (Iterator) obj;
 			while (iter.hasNext()) {
-				Object o = iter.next();
-				if (equals(o, element)) {
+				final Object o = iter.next();
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}
 			return false;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
+			final Enumeration enumeration = (Enumeration) obj;
 			while (enumeration.hasMoreElements()) {
-				Object o = enumeration.nextElement();
-				if (equals(o, element)) {
+				final Object o = enumeration.nextElement();
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}
 			return false;
 		}
 		if (obj.getClass().isArray()) {
-			int len = Array.getLength(obj);
+			final int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
-				if (equals(o, element)) {
+				final Object o = Array.get(obj, i);
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}

@@ -29,7 +29,7 @@ import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.util.function.Consumers;
+import jodd.util.Consumers;
 
 import java.util.function.Consumer;
 
@@ -73,7 +73,7 @@ public class AutomagicDbOomConfigurator {
 
 		try {
 			classScanner.start();
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new DbOomException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
@@ -96,7 +96,7 @@ public class AutomagicDbOomConfigurator {
 			final Class<?> beanClass;
 			try {
 				beanClass = classPathEntry.loadClass();
-			} catch (ClassNotFoundException cnfex) {
+			} catch (final ClassNotFoundException cnfex) {
 				throw new DbOomException("Entry class not found: " + classPathEntry.name(), cnfex);
 			}
 

@@ -48,7 +48,7 @@ import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 import jodd.util.ClassUtil;
-import jodd.util.function.Consumers;
+import jodd.util.Consumers;
 
 import java.lang.annotation.Annotation;
 import java.sql.Connection;
@@ -114,7 +114,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 	private boolean databaseEnabled = true;
 	private boolean autoConfiguration = true;
 	private Supplier<ConnectionProvider> connectionProviderSupplier;
-	private Consumers<DbEntityManager> dbEntityManagerConsumers = Consumers.empty();
+	private final Consumers<DbEntityManager> dbEntityManagerConsumers = Consumers.empty();
 
 	@Override
 	public JoyDb disableDatabase() {
@@ -257,13 +257,13 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		final Connection connection = connectionProvider.getConnection();
 		try {
 			final DatabaseMetaData databaseMetaData = connection.getMetaData();
-			String name = databaseMetaData.getDatabaseProductName();
-			String version = databaseMetaData.getDatabaseProductVersion();
+			final String name = databaseMetaData.getDatabaseProductName();
+			final String version = databaseMetaData.getDatabaseProductVersion();
 
 			if (log.isInfoEnabled()) {
 				log.info("Connected to database: " + name + " v" + version);
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			log.error("DB connection failed: ", sex);
 		} finally {
 			connectionProvider.closeConnection(connection);

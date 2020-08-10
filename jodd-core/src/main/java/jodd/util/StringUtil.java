@@ -31,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static jodd.util.StringPool.EMPTY;
@@ -60,8 +61,8 @@ public class StringUtil {
 		if (i == -1) {
 			return s;
 		}
-		int length = s.length();
-		StringBuilder sb = new StringBuilder(length + with.length());
+		final int length = s.length();
+		final StringBuilder sb = new StringBuilder(length + with.length());
 		do {
 			sb.append(s, c, i);
 			sb.append(with);
@@ -81,11 +82,11 @@ public class StringUtil {
 	 * @param with   character to replace with
 	 */
 	public static String replaceChar(final String s, final char sub, final char with) {
-		int startIndex = s.indexOf(sub);
+		final int startIndex = s.indexOf(sub);
 		if (startIndex == -1) {
 			return s;
 		}
-		char[] str = s.toCharArray();
+		final char[] str = s.toCharArray();
 		for (int i = startIndex; i < str.length; i++) {
 			if (str[i] == sub) {
 				str[i] = with;
@@ -102,9 +103,9 @@ public class StringUtil {
 	 * @param with   characters to replace with
 	 */
 	public static String replaceChars(final String s, final char[] sub, final char[] with) {
-		char[] str = s.toCharArray();
+		final char[] str = s.toCharArray();
 		for (int i = 0; i < str.length; i++) {
-			char c = str[i];
+			final char c = str[i];
 			for (int j = 0; j < sub.length; j++) {
 			    if (c == sub[j]) {
 					str[i] = with[j];
@@ -123,7 +124,7 @@ public class StringUtil {
 	 * @param with   substring to replace with
 	 */
 	public static String replaceFirst(final String s, final String sub, final String with) {
-		int i = s.indexOf(sub);
+		final int i = s.indexOf(sub);
 		if (i == -1) {
 			return s;
 		}
@@ -138,11 +139,11 @@ public class StringUtil {
 	 * @param with   char to replace with
 	 */
 	public static String replaceFirst(final String s, final char sub, final char with) {
-		int index = s.indexOf(sub);
+		final int index = s.indexOf(sub);
 		if (index == -1) {
 			return s;
 		}
-		char[] str = s.toCharArray();
+		final char[] str = s.toCharArray();
 		str[index] = with;
 		return new String(str);
 	}
@@ -155,7 +156,7 @@ public class StringUtil {
 	 * @param with   substring to replace with
 	 */
 	public static String replaceLast(final String s, final String sub, final String with) {
-		int i = s.lastIndexOf(sub);
+		final int i = s.lastIndexOf(sub);
 		if (i == -1) {
 			return s;
 		}
@@ -170,11 +171,11 @@ public class StringUtil {
 	 * @param with   char to replace with
 	 */
 	public static String replaceLast(final String s, final char sub, final char with) {
-		int index = s.lastIndexOf(sub);
+		final int index = s.lastIndexOf(sub);
 		if (index == -1) {
 			return s;
 		}
-		char[] str = s.toCharArray();
+		final char[] str = s.toCharArray();
 		str[index] = with;
 		return new String(str);
 	}
@@ -189,7 +190,7 @@ public class StringUtil {
 	 */
 	public static String remove(final String s, final String sub) {
 		int c = 0;
-		int sublen = sub.length();
+		final int sublen = sub.length();
 		if (sublen == 0) {
 			return s;
 		}
@@ -197,7 +198,7 @@ public class StringUtil {
 		if (i == -1) {
 			return s;
 		}
-		StringBuilder sb = new StringBuilder(s.length());
+		final StringBuilder sb = new StringBuilder(s.length());
 		do {
 			 sb.append(s, c, i);
 			 c = i + sublen;
@@ -215,10 +216,10 @@ public class StringUtil {
 	 * @param chars  string containing characters to remove
 	 */
 	public static String removeChars(final String src, final String chars) {
-		int i = src.length();
-		StringBuilder sb = new StringBuilder(i);
+		final int i = src.length();
+		final StringBuilder sb = new StringBuilder(i);
 		for (int j = 0; j < i; j++) {
-			char c = src.charAt(j);
+			final char c = src.charAt(j);
 			if (chars.indexOf(c) == -1) {
 				sb.append(c);
 			}
@@ -234,12 +235,12 @@ public class StringUtil {
 	 * @param chars  characters to remove
 	 */
 	public static String removeChars(final String src, final char... chars) {
-		int i = src.length();
-		StringBuilder sb = new StringBuilder(i);
+		final int i = src.length();
+		final StringBuilder sb = new StringBuilder(i);
 		mainloop:
 		for (int j = 0; j < i; j++) {
-			char c = src.charAt(j);
-			for (char aChar : chars) {
+			final char c = src.charAt(j);
+			for (final char aChar : chars) {
 				if (c == aChar) {
 					continue mainloop;
 				}
@@ -256,12 +257,12 @@ public class StringUtil {
 	 * @param ch  character to remove
 	 */
 	public static String remove(final String string, final char ch) {
-		int stringLen = string.length();
-		char[] result = new char[stringLen];
+		final int stringLen = string.length();
+		final char[] result = new char[stringLen];
 		int offset = 0;
 
 		for (int i = 0; i < stringLen; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 
 			if (c == ch) {
 				continue;
@@ -290,7 +291,7 @@ public class StringUtil {
 	 * @return <code>true</code> if strings are equal, otherwise <code>false</code>
 	 */
 	public static boolean equals(final String s1, final String s2) {
-		return Util.equals(s1, s2);
+		return Objects.equals(s1, s2);
 	}
 
 	/**
@@ -305,7 +306,7 @@ public class StringUtil {
 	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isAllEmpty(final String... strings) {
-		for (String string : strings) {
+		for (final String string : strings) {
 			if (!isEmpty(string)) {
 				return false;
 			}
@@ -331,7 +332,7 @@ public class StringUtil {
 	 * Determines if string array contains just blank strings.
 	 */
 	public static boolean isAllBlank(final String... strings) {
-		for (String string : strings) {
+		for (final String string : strings) {
 			if (!isBlank(string)) {
 				return false;
 			}
@@ -344,9 +345,9 @@ public class StringUtil {
 	 * Returns <code>true</code> if string contains only white spaces.
 	 */
 	public static boolean containsOnlyWhitespaces(final CharSequence string) {
-		int size = string.length();
+		final int size = string.length();
 		for (int i = 0; i < size; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			if (!CharUtil.isWhitespace(c)) {
 				return false;
 			}
@@ -358,9 +359,9 @@ public class StringUtil {
 	 * Returns <code>true</code> if string contains only digits.
 	 */
 	public static boolean containsOnlyDigits(final CharSequence string) {
-		int size = string.length();
+		final int size = string.length();
 		for (int i = 0; i < size; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			if (!CharUtil.isDigit(c)) {
 				return false;
 			}
@@ -373,9 +374,9 @@ public class StringUtil {
 	 * or signs plus or minus.
 	 */
 	public static boolean containsOnlyDigitsAndSigns(final CharSequence string) {
-		int size = string.length();
+		final int size = string.length();
 		for (int i = 0; i < size; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			if ((!CharUtil.isDigit(c)) && (c != '-') && (c != '+')) {
 				return false;
 			}
@@ -422,13 +423,13 @@ public class StringUtil {
 		if (value == null) {
 			return new String[0];
 		}
-		Class<?> type = value.getClass();
+		final Class<?> type = value.getClass();
 
 		if (!type.isArray()) {
 			return new String[] {value.toString()};
 		}
 
-		Class componentType = type.getComponentType();
+		final Class componentType = type.getComponentType();
 
 		if (componentType.isPrimitive()) {
 			if (componentType == int.class) {
@@ -490,13 +491,13 @@ public class StringUtil {
 	 * Internal method for changing the first character case.
 	 */
 	private static String changeFirstCharacterCase(final boolean capitalize, final String string) {
-		int strLen = string.length();
+		final int strLen = string.length();
 		if (strLen == 0) {
 			return string;
 		}
 
-		char ch = string.charAt(0);
-		char modifiedCh;
+		final char ch = string.charAt(0);
+		final char modifiedCh;
 		if (capitalize) {
 			modifiedCh = Character.toUpperCase(ch);
 		} else {
@@ -509,7 +510,7 @@ public class StringUtil {
 
 		}
 
-		char[] chars = string.toCharArray();
+		final char[] chars = string.toCharArray();
 		chars[0] = modifiedCh;
 		return new String(chars);
 	}
@@ -538,9 +539,9 @@ public class StringUtil {
 			return name;
 		}
 
-		char[] chars = name.toCharArray();
-		char c = chars[0];
-		char modifiedChar = Character.toLowerCase(c);
+		final char[] chars = name.toCharArray();
+		final char c = chars[0];
+		final char modifiedChar = Character.toLowerCase(c);
 		if (modifiedChar == c) {
 			return name;
 		}
@@ -553,12 +554,12 @@ public class StringUtil {
 	 * Makes a title-cased string from given input.
 	 */
 	public static String title(final String string) {
-		char[] chars = string.toCharArray();
+		final char[] chars = string.toCharArray();
 		
 		boolean wasWhitespace = true;
 		
 		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
+			final char c = chars[i];
 			
 			if (CharUtil.isWhitespace(c)) {
 				wasWhitespace = true;
@@ -602,7 +603,7 @@ public class StringUtil {
 	 * Also, this method will never throw an exception if index is out of range.
 	 */
 	public static String substring(final String string, int fromIndex, int toIndex) {
-		int len = string.length();
+		final int len = string.length();
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
@@ -635,9 +636,9 @@ public class StringUtil {
 	 * Returns <code>true</code> if substring exist at given offset in a string.
 	 */
 	public static boolean isSubstringAt(final String string, final String substring, final int offset) {
-		int len = substring.length();
+		final int len = substring.length();
 
-		int max = offset + len;
+		final int max = offset + len;
 
 		if (max > string.length()) {
 			return false;
@@ -671,9 +672,9 @@ public class StringUtil {
 	 * @return array of split strings
 	 */
 	public static String[] split(final String src, final String delimiter) {
-		int maxparts = (src.length() / delimiter.length()) + 2;		// one more for the last
-		int[] positions = new int[maxparts];
-		int dellen = delimiter.length();
+		final int maxparts = (src.length() / delimiter.length()) + 2;		// one more for the last
+		final int[] positions = new int[maxparts];
+		final int dellen = delimiter.length();
 
 		int i, j = 0;
 		int count = 0;
@@ -686,7 +687,7 @@ public class StringUtil {
 		count++;
 		positions[count] = src.length();
 
-		String[] result = new String[count];
+		final String[] result = new String[count];
 
 		for (i = 0; i < count; i++) {
 			result[i] = src.substring(positions[i] + dellen, positions[i + 1]);
@@ -724,11 +725,11 @@ public class StringUtil {
 		if ((delimiters.length == 0) || (src.length() == 0) ) {
 			return new String[] {src};
 		}
-		char[] srcc = src.toCharArray();
+		final char[] srcc = src.toCharArray();
 
-		int maxparts = srcc.length + 1;
-		int[] start = new int[maxparts];
-		int[] end = new int[maxparts];
+		final int maxparts = srcc.length + 1;
+		final int[] start = new int[maxparts];
+		final int[] end = new int[maxparts];
 
 		int count = 0;
 
@@ -762,7 +763,7 @@ public class StringUtil {
 			start[count] = s;
 		}
 		count++;
-		String[] result = new String[count];
+		final String[] result = new String[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = src.substring(start[i], end[i]);
 		}
@@ -782,11 +783,11 @@ public class StringUtil {
 		if (src.length() == 0) {
 			return new String[] {EMPTY};
 		}
-		char[] srcc = src.toCharArray();
+		final char[] srcc = src.toCharArray();
 
-		int maxparts = srcc.length + 1;
-		int[] start = new int[maxparts];
-		int[] end = new int[maxparts];
+		final int maxparts = srcc.length + 1;
+		final int[] start = new int[maxparts];
+		final int[] end = new int[maxparts];
 
 		int count = 0;
 
@@ -820,7 +821,7 @@ public class StringUtil {
 			start[count] = s;
 		}
 		count++;
-		String[] result = new String[count];
+		final String[] result = new String[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = src.substring(start[i], end[i]);
 		}
@@ -831,11 +832,11 @@ public class StringUtil {
 	 * Compress multiple occurrences of given char into one appearance.
 	 */
 	public static String compressChars(final String s, final char c) {
-		int len = s.length();
-		StringBuilder sb = new StringBuilder(len);
+		final int len = s.length();
+		final StringBuilder sb = new StringBuilder(len);
 		boolean wasChar = false;
 		for (int i = 0; i < len; i++) {
-			char c1 = s.charAt(i);
+			final char c1 = s.charAt(i);
 			if (c1 == c) {
 				if (wasChar) {
 					continue;
@@ -870,17 +871,17 @@ public class StringUtil {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		int srclen = src.length();
+		final int srclen = src.length();
 		if (endIndex > srclen) {
 			endIndex = srclen;
 		}
-		int sublen = sub.length();
+		final int sublen = sub.length();
 		if (sublen == 0) {
 			return startIndex > srclen ? srclen : startIndex;
 		}
 
-		int total = endIndex - sublen + 1;
-		char c = sub.charAt(0);
+		final int total = endIndex - sublen + 1;
+		final char c = sub.charAt(0);
 	mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (src.charAt(i) != c) {
@@ -906,7 +907,7 @@ public class StringUtil {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		int srclen = src.length();
+		final int srclen = src.length();
 		if (endIndex > srclen) {
 			endIndex = srclen;
 		}
@@ -925,7 +926,7 @@ public class StringUtil {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		int srclen = src.length();
+		final int srclen = src.length();
 		if (endIndex > srclen) {
 			endIndex = srclen;
 		}
@@ -984,18 +985,18 @@ public class StringUtil {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		int srclen = src.length();
+		final int srclen = src.length();
 		if (endIndex > srclen) {
 			endIndex = srclen;
 		}
 
-		int sublen = sub.length();
+		final int sublen = sub.length();
 		if (sublen == 0) {
 			return startIndex > srclen ? srclen : startIndex;
 		}
 		sub = sub.toLowerCase();
-		int total = endIndex - sublen + 1;
-		char c = sub.charAt(0);
+		final int total = endIndex - sublen + 1;
+		final char c = sub.charAt(0);
 	mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (Character.toLowerCase(src.charAt(i)) != c) {
@@ -1004,7 +1005,7 @@ public class StringUtil {
 			int j = 1;
 			int k = i + 1;
 			while (j < sublen) {
-				char source = Character.toLowerCase(src.charAt(k));
+				final char source = Character.toLowerCase(src.charAt(k));
 				if (sub.charAt(j) != source) {
 					continue mainloop;
 				}
@@ -1056,13 +1057,13 @@ public class StringUtil {
 	 * @return last index of founded substring or -1 if substring is not found
 	 */
 	public static int lastIndexOfIgnoreCase(final String src, String sub, int startIndex, int endIndex) {
-		int sublen = sub.length();
-		int srclen = src.length();
+		final int sublen = sub.length();
+		final int srclen = src.length();
 		if (sublen == 0) {
 			return startIndex > srclen ? srclen : (startIndex < -1 ? -1 : startIndex);
 		}
 		sub = sub.toLowerCase();
-		int total = srclen - sublen;
+		final int total = srclen - sublen;
 		if (total < 0) {
 			return -1;
 		}
@@ -1072,7 +1073,7 @@ public class StringUtil {
 		if (endIndex < 0) {
 			endIndex = 0;
 		}
-		char c = sub.charAt(0);
+		final char c = sub.charAt(0);
 	mainloop:
 		for (int i = startIndex; i >= endIndex; i--) {
 			if (Character.toLowerCase(src.charAt(i)) != c) {
@@ -1081,7 +1082,7 @@ public class StringUtil {
 			int j = 1;
 			int k = i + 1;
 			while (j < sublen) {
-				char source = Character.toLowerCase(src.charAt(k));
+				final char source = Character.toLowerCase(src.charAt(k));
 				if (sub.charAt(j) != source) {
 					continue mainloop;
 				}
@@ -1103,12 +1104,12 @@ public class StringUtil {
 	 * @return last index of founded substring or -1 if substring is not found
 	 */
 	public static int lastIndexOf(final String src, final String sub, int startIndex, int endIndex) {
-		int sublen = sub.length();
-		int srclen = src.length();
+		final int sublen = sub.length();
+		final int srclen = src.length();
 		if (sublen == 0) {
 			return startIndex > srclen ? srclen : (startIndex < -1 ? -1 : startIndex);
 		}
-		int total = srclen - sublen;
+		final int total = srclen - sublen;
 		if (total < 0) {
 			return -1;
 		}
@@ -1118,7 +1119,7 @@ public class StringUtil {
 		if (endIndex < 0) {
 			endIndex = 0;
 		}
-		char c = sub.charAt(0);
+		final char c = sub.charAt(0);
 	mainloop:
 		for (int i = startIndex; i >= endIndex; i--) {
 			if (src.charAt(i) != c) {
@@ -1141,7 +1142,7 @@ public class StringUtil {
 	 * Finds last index of a character in the given source string in specified range [end, start]
 	 */
 	public static int lastIndexOf(final String src, final char c, int startIndex, int endIndex) {
-		int total = src.length() - 1;
+		final int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
 		}
@@ -1163,7 +1164,7 @@ public class StringUtil {
 	 * Finds last index of a character in the given source string in specified range [end, start]
 	 */
 	public static int lastIndexOfIgnoreCase(final String src, char c, int startIndex, int endIndex) {
-		int total = src.length() - 1;
+		final int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
 		}
@@ -1197,7 +1198,7 @@ public class StringUtil {
 	 * Returns last index of a whitespace.
 	 */
 	public static int lastIndexOfWhitespace(final String src, int startIndex, int endIndex) {
-		int total = src.length() - 1;
+		final int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
 		}
@@ -1223,7 +1224,7 @@ public class StringUtil {
 		return lastIndexOfNonWhitespace(src, startIndex, 0);
 	}
 	public static int lastIndexOfNonWhitespace(final String src, int startIndex, int endIndex) {
-		int total = src.length() - 1;
+		final int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
 		}
@@ -1270,15 +1271,15 @@ public class StringUtil {
 	 *         <code>false</code> otherwise.
 	 */
 	public static boolean startsWithIgnoreCase(final String src, final String subS, final int startIndex) {
-		String sub = subS.toLowerCase();
-		int sublen = sub.length();
+		final String sub = subS.toLowerCase();
+		final int sublen = sub.length();
 		if (startIndex + sublen > src.length()) {
 			return false;
 		}
 		int j = 0;
 		int i = startIndex;
 		while (j < sublen) {
-			char source = Character.toLowerCase(src.charAt(i));
+			final char source = Character.toLowerCase(src.charAt(i));
 			if (sub.charAt(j) != source) {
 				return false;
 			}
@@ -1298,15 +1299,15 @@ public class StringUtil {
 	 *         <code>false</code> otherwise.
 	 */
 	public static boolean endsWithIgnoreCase(final String src, final String subS) {
-		String sub = subS.toLowerCase();
-		int sublen = sub.length();
+		final String sub = subS.toLowerCase();
+		final int sublen = sub.length();
 		int j = 0;
 		int i = src.length() - sublen;
 		if (i < 0) {
 			return false;
 		}
 		while (j < sublen) {
-			char source = Character.toLowerCase(src.charAt(i));
+			final char source = Character.toLowerCase(src.charAt(i));
 			if (sub.charAt(j) != source) {
 				return false;
 			}
@@ -1351,12 +1352,12 @@ public class StringUtil {
 	public static int count(final String source, final String sub, final int start) {
 		int count = 0;
 		int j = start;
-		int sublen = sub.length();
+		final int sublen = sub.length();
 		if (sublen == 0) {
 			return 0;
 		}
 		while (true) {
-			int i = source.indexOf(sub, j);
+			final int i = source.indexOf(sub, j);
 			if (i == -1) {
 				break;
 			}
@@ -1373,7 +1374,7 @@ public class StringUtil {
 		int count = 0;
 		int j = start;
 		while (true) {
-			int i = source.indexOf(c, j);
+			final int i = source.indexOf(c, j);
 			if (i == -1) {
 				break;
 			}
@@ -1395,12 +1396,12 @@ public class StringUtil {
 	public static int countIgnoreCase(final String source, final String sub) {
 		int count = 0;
 		int j = 0;
-		int sublen = sub.length();
+		final int sublen = sub.length();
 		if (sublen == 0) {
 			return 0;
 		}
 		while (true) {
-			int i = indexOfIgnoreCase(source, sub, j);
+			final int i = indexOfIgnoreCase(source, sub, j);
 			if (i == -1) {
 				break;
 			}
@@ -1435,11 +1436,11 @@ public class StringUtil {
 	 * @param offset  starting position
 	 */
 	public static int[] indexOf(final String s, final String[] arr, final int offset) {
-		int arrLen = arr.length;
+		final int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
-			int i = s.indexOf(arr[j], offset);
+			final int i = s.indexOf(arr[j], offset);
 			if (i != -1) {
 				if (i < index) {
 					index = i;
@@ -1473,11 +1474,11 @@ public class StringUtil {
 	 * @param start  starting position
 	 */
 	public static int[] indexOfIgnoreCase(final String s, final String[] arr, final int start) {
-		int arrLen = arr.length;
+		final int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
-			int i = indexOfIgnoreCase(s, arr[j], start);
+			final int i = indexOfIgnoreCase(s, arr[j], start);
 			if (i != -1) {
 				if (i < index) {
 					index = i;
@@ -1511,11 +1512,11 @@ public class StringUtil {
 	 * @param fromIndex starting position
 	 */
 	public static int[] lastIndexOf(final String s, final String[] arr, final int fromIndex) {
-		int arrLen = arr.length;
+		final int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
-			int i = s.lastIndexOf(arr[j], fromIndex);
+			final int i = s.lastIndexOf(arr[j], fromIndex);
 			if (i != -1) {
 				if (i > index) {
 					index = i;
@@ -1551,11 +1552,11 @@ public class StringUtil {
 	 * @param fromIndex starting position
 	 */
 	public static int[] lastIndexOfIgnoreCase(final String s, final String[] arr, final int fromIndex) {
-		int arrLen = arr.length;
+		final int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
-			int i = lastIndexOfIgnoreCase(s, arr[j], fromIndex);
+			final int i = lastIndexOfIgnoreCase(s, arr[j], fromIndex);
 			if (i != -1) {
 				if (i > index) {
 					index = i;
@@ -1620,13 +1621,13 @@ public class StringUtil {
 			return s;
 		}
 		int start = 0;
-		StringBuilder buf = new StringBuilder(s.length());
+		final StringBuilder buf = new StringBuilder(s.length());
 		while (true) {
-			int[] res = indexOf(s, sub, start);
+			final int[] res = indexOf(s, sub, start);
 			if (res == null) {
 				break;
 			}
-			int end = res[1];
+			final int end = res[1];
 			buf.append(s, start, end);
 			buf.append(with[res[0]]);
 			start = end + sub[res[0]].length();
@@ -1649,13 +1650,13 @@ public class StringUtil {
 			return s;
 		}
 		int start = 0;
-		StringBuilder buf = new StringBuilder(s.length());
+		final StringBuilder buf = new StringBuilder(s.length());
 		while (true) {
-			int[] res = indexOfIgnoreCase(s, sub, start);
+			final int[] res = indexOfIgnoreCase(s, sub, start);
 			if (res == null) {
 				break;
 			}
-			int end = res[1];
+			final int end = res[1];
 			buf.append(s, start, end);
 			buf.append(with[res[0]]);
 			start = end + sub[0].length();
@@ -1701,7 +1702,7 @@ public class StringUtil {
 	 */
 	public static int startsWithOne(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
-			String m = dest[i];
+			final String m = dest[i];
 			if (m == null) {
 				continue;
 			}
@@ -1719,7 +1720,7 @@ public class StringUtil {
 	 */
 	public static int startsWithOneIgnoreCase(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
-			String m = dest[i];
+			final String m = dest[i];
 			if (m == null) {
 				continue;
 			}
@@ -1738,7 +1739,7 @@ public class StringUtil {
 	 */
 	public static int endsWithOne(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
-			String m = dest[i];
+			final String m = dest[i];
 			if (m == null) {
 				continue;
 			}
@@ -1756,7 +1757,7 @@ public class StringUtil {
 	 */
 	public static int endsWithOneIgnoreCase(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
-			String m = dest[i];
+			final String m = dest[i];
 			if (m == null) {
 				continue;
 			}
@@ -1783,13 +1784,13 @@ public class StringUtil {
 	 * Returns index of founded char, or <code>-1</code> if nothing found.
 	 */
 	public static int indexOfChars(final String string, final String chars, int startindex) {
-		int stringLen = string.length();
-		int charsLen = chars.length();
+		final int stringLen = string.length();
+		final int charsLen = chars.length();
 		if (startindex < 0) {
 			startindex = 0;
 		}
 		for (int i = startindex; i < stringLen; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			for (int j = 0; j < charsLen; j++) {
 				if (c == chars.charAt(j)) {
 					return i;
@@ -1808,10 +1809,10 @@ public class StringUtil {
 	 * Returns index of founded char, or <code>-1</code> if nothing found.
 	 */
 	public static int indexOfChars(final String string, final char[] chars, final int startindex) {
-		int stringLen = string.length();
-		int charsLen = chars.length;
+		final int stringLen = string.length();
+		final int charsLen = chars.length;
 		for (int i = startindex; i < stringLen; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			for (int j = 0; j < charsLen; j++) {
 				if (c == chars[j]) {
 					return i;
@@ -1916,7 +1917,7 @@ public class StringUtil {
 	 * Character IS included in the returned string.
 	 */
 	public static String stripToChar(final String string, final char c) {
-		int ndx = string.indexOf(c);
+		final int ndx = string.indexOf(c);
 
 		if (ndx == -1) {
 			return string;
@@ -1930,7 +1931,7 @@ public class StringUtil {
 	 * Character IS NOT included in the returned string.
 	 */
 	public static String stripFromChar(final String string, final char c) {
-		int ndx = string.indexOf(c);
+		final int ndx = string.indexOf(c);
 
 		if (ndx == -1) {
 			return string;
@@ -1945,7 +1946,7 @@ public class StringUtil {
 	 */
 	public static void trimAll(final String... strings) {
 		for (int i = 0; i < strings.length; i++) {
-			String string = strings[i];
+			final String string = strings[i];
 			if (string != null) {
 				strings[i] = string.trim();
 			}
@@ -1959,7 +1960,7 @@ public class StringUtil {
 	 */
 	public static void trimDownAll(final String... strings) {
 		for (int i = 0; i < strings.length; i++) {
-			String string = strings[i];
+			final String string = strings[i];
 			if (string != null) {
 				strings[i] = trimDown(string);
 			}
@@ -2005,7 +2006,7 @@ public class StringUtil {
 	 * Trim whitespaces from the left.
 	 */
 	public static String trimLeft(final String src) {
-		int len = src.length();
+		final int len = src.length();
 		int st = 0;
 		while ((st < len) && (CharUtil.isWhitespace(src.charAt(st)))) {
 			st++;
@@ -2018,7 +2019,7 @@ public class StringUtil {
 	 */
 	public static String trimRight(final String src) {
 		int len = src.length();
-		int count = len;
+		final int count = len;
 		while ((len > 0) && (CharUtil.isWhitespace(src.charAt(len - 1)))) {
 			len--;
 		}
@@ -2042,7 +2043,7 @@ public class StringUtil {
 	 */
 	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary, final int offset) {
 		int ndx = offset;
-		int[] res = new int[4];
+		final int[] res = new int[4];
 		ndx = string.indexOf(leftBoundary, ndx);
 		if (ndx == -1) {
 			return null;
@@ -2085,7 +2086,7 @@ public class StringUtil {
 	 */
 	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary, final char escape, final int offset) {
 		int ndx = offset;
-		int[] res = new int[4];
+		final int[] res = new int[4];
 		while (true) {
 			ndx = string.indexOf(leftBoundary, ndx);
 			if (ndx == -1) {
@@ -2345,7 +2346,7 @@ public class StringUtil {
 	 * Cuts the string from beginning to the first index of provided substring.
 	 */
 	public static String cutToIndexOf(String string, final String substring) {
-		int i = string.indexOf(substring);
+		final int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(0, i);
 		}
@@ -2355,7 +2356,7 @@ public class StringUtil {
 	 * Cuts the string from beginning to the first index of provided char.
 	 */
 	public static String cutToIndexOf(String string, final char c) {
-		int i = string.indexOf(c);
+		final int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(0, i);
 		}
@@ -2366,7 +2367,7 @@ public class StringUtil {
 	 * Cuts the string from the first index of provided substring to the end.
 	 */
 	public static String cutFromIndexOf(String string, final String substring) {
-		int i = string.indexOf(substring);
+		final int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(i);
 		}
@@ -2376,7 +2377,7 @@ public class StringUtil {
 	 * Cuts the string from the first index of provided char to the end.
 	 */
 	public static String cutFromIndexOf(String string, final char c) {
-		int i = string.indexOf(c);
+		final int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(i);
 		}
@@ -2442,7 +2443,7 @@ public class StringUtil {
 			return null;
 		}
 
-		int rightNdx = string.indexOf(right);
+		final int rightNdx = string.indexOf(right);
 		if (rightNdx == -1) {
 			return null;
 		}
@@ -2479,7 +2480,7 @@ public class StringUtil {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-		int srclen = src.length();
+		final int srclen = src.length();
 		char previous;
 		char c = 0;
 		for (int i = startIndex; i < srclen; i++) {
@@ -2514,7 +2515,7 @@ public class StringUtil {
 		if (offset > src.length()) {
 			offset = src.length();
 		}
-		StringBuilder sb = new StringBuilder(src);
+		final StringBuilder sb = new StringBuilder(src);
 		sb.insert(offset, insert);
 		return sb.toString();
 	}
@@ -2525,7 +2526,7 @@ public class StringUtil {
 	 * Creates a new string that contains the provided string a number of times.
 	 */
 	public static String repeat(final String source, int count) {
-		StringBand result = new StringBand(count);
+		final StringBand result = new StringBand(count);
 		while (count > 0) {
 			result.append(source);
 			count--;
@@ -2534,7 +2535,7 @@ public class StringUtil {
 	}
 
 	public static String repeat(final char c, final int count) {
-		char[] result = new char[count];
+		final char[] result = new char[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = c;
 		}
@@ -2545,7 +2546,7 @@ public class StringUtil {
 	 * Reverse a string.
 	 */
 	public static String reverse(final String s) {
-		StringBuilder result = new StringBuilder(s.length());
+		final StringBuilder result = new StringBuilder(s.length());
 		for (int i = s.length() -1; i >= 0; i--) {
 			result.append(s.charAt(i));
 		}
@@ -2577,7 +2578,7 @@ public class StringUtil {
 	 * arguments do not have a common prefix.
 	 */
 	public static String findCommonPrefix(final String... strings) {
-		StringBuilder prefix = new StringBuilder();
+		final StringBuilder prefix = new StringBuilder();
 		int index = 0;
 		char c = 0;
 
@@ -2585,7 +2586,7 @@ public class StringUtil {
 		while (true) {
 			for (int i = 0; i < strings.length; i++) {
 
-				String s = strings[i];
+				final String s = strings[i];
 				if (index == s.length()) {
 					break loop;
 				}
@@ -2621,7 +2622,7 @@ public class StringUtil {
 					break;
 				}
 			}
-			String temp = s.substring(0, length);
+			final String temp = s.substring(0, length);
 			s = temp.concat(suffix);
 		}
 
@@ -2660,7 +2661,7 @@ public class StringUtil {
 		StringBuilder sb = null;
 
 		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
+			final char c = s.charAt(i);
 
 			if (c > 127) {
 				// found non-ascii char, fallback to the slow unicode detection
@@ -2717,7 +2718,7 @@ public class StringUtil {
 		StringBuilder sb = null;
 
 		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
+			final char c = s.charAt(i);
 
 			if (c > 127) {
 				// found non-ascii char, fallback to the slow unicode detection
@@ -2767,10 +2768,10 @@ public class StringUtil {
 	 * Converts bytes to hex string.
 	 */
 	public static String toHexString(final byte[] bytes) {
-		char[] chars = new char[bytes.length * 2];
+		final char[] chars = new char[bytes.length * 2];
 
 		int i = 0;
-		for (byte b : bytes) {
+		for (final byte b : bytes) {
 			chars[i++] = CharUtil.int2hex((b & 0xF0) >> 4);
 			chars[i++] = CharUtil.int2hex(b & 0x0F);
 		}
@@ -2799,14 +2800,14 @@ public class StringUtil {
 	public static byte[] getBytes(final String string) {
 		try {
 			return string.getBytes(JoddCore.encoding);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	public static byte[] getBytes(final String string, final String charsetName) {
 		try {
 			return string.getBytes(charsetName);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -2814,14 +2815,14 @@ public class StringUtil {
 	public static String newString(final byte[] bytes) {
 		try {
 			return new String(bytes, JoddCore.encoding);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	public static String newString(final byte[] bytes, final String charsetName) {
 		try {
 			return new String(bytes, charsetName);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}

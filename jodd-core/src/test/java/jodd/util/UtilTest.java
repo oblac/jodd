@@ -25,39 +25,39 @@
 
 package jodd.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import jodd.util.collection.ArrayEnumeration;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
-import jodd.util.collection.ArrayEnumeration;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UtilTest {
 
 	@Test
 	void testEquals() {
-		Object a = new Integer(173);
-		Object b = new Integer(1);
-		Object c = new Integer(173);
+		final Object a = new Integer(173);
+		final Object b = new Integer(1);
+		final Object c = new Integer(173);
 
-		assertTrue(Util.equals(a, a));
-		assertTrue(Util.equals(a, c));
-		assertTrue(Util.equals(c, a));
-		assertFalse(Util.equals(a, b));
-		assertFalse(Util.equals(b, a));
+		assertTrue(Objects.equals(a, a));
+		assertTrue(Objects.equals(a, c));
+		assertTrue(Objects.equals(c, a));
+		assertFalse(Objects.equals(a, b));
+		assertFalse(Objects.equals(b, a));
 
-		assertFalse(Util.equals(a, null));
-		assertFalse(Util.equals(null, a));
+		assertFalse(Objects.equals(a, null));
+		assertFalse(Objects.equals(null, a));
 
-		assertTrue(Util.equals(null, null));
+		assertTrue(Objects.equals(null, null));
 	}
 
 	@Test
@@ -76,24 +76,24 @@ class UtilTest {
 		assertEquals(0, Util.length(StringPool.EMPTY));
 		assertEquals(4, Util.length("abcd"));
 
-		Collection<String> coll = new ArrayList<>();
+		final Collection<String> coll = new ArrayList<>();
 		assertEquals(0, Util.length(coll));
 		coll.add("abcd");
 		coll.add("1234");
 		assertEquals(2, Util.length(coll));
 
-		Iterator<String> iterator = coll.iterator();
+		final Iterator<String> iterator = coll.iterator();
 		assertEquals(2, Util.length(iterator));
 
-		Map<Long, String> map = new HashMap<>();
+		final Map<Long, String> map = new HashMap<>();
 		assertEquals(0, Util.length(map));
 		map.put(1l, "abcd");
 		map.put(2l, "1234");
 		assertEquals(2, Util.length(map));
 
-		Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
+		final Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
 		assertEquals(5, Util.length(array));
-		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
+		final ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
 		assertEquals(5, Util.length(ae));
 	}
 	
@@ -106,26 +106,26 @@ class UtilTest {
 		assertTrue(Util.containsElement("abcd", "bc"));
 		assertFalse(Util.containsElement("abcd", "xx"));
 
-		Collection<String> coll = new ArrayList<>();
+		final Collection<String> coll = new ArrayList<>();
 		coll.add("abcd");
 		coll.add("1234");
 		assertTrue(Util.containsElement(coll, "abcd"));
 		assertFalse(Util.containsElement(coll, "xx"));
 
-		Iterator<String> iterator = coll.iterator();
+		final Iterator<String> iterator = coll.iterator();
 		assertTrue(Util.containsElement(iterator, "abcd"));
 		assertFalse(Util.containsElement(iterator, "xx"));
 
-		Map<Long, String> map = new HashMap<>();
+		final Map<Long, String> map = new HashMap<>();
 		map.put(1l, "abcd");
 		map.put(2l, "1234");
 		assertTrue(Util.containsElement(map, "abcd"));
 		assertFalse(Util.containsElement(map, "xx"));
 
-		Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
+		final Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
 		assertTrue(Util.containsElement(array, 1));
 		assertFalse(Util.containsElement(array, 10));
-		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
+		final ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
 		assertTrue(Util.containsElement(ae, 1));
 		assertFalse(Util.containsElement(ae, 10));
 	}

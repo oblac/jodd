@@ -41,7 +41,7 @@ import jodd.madvoc.proxetta.ProxettaSupplier;
 import jodd.props.Props;
 import jodd.proxetta.ProxettaUtil;
 import jodd.util.ClassUtil;
-import jodd.util.function.Consumers;
+import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.Comparator;
