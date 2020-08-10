@@ -4,9 +4,10 @@ ext.moduleDescription = 'Jodd Decora: put decoration around your templates'
 dependencies {
 	api project(':jodd-core')
 	api project(':jodd-bean')
-	api project(':jodd-lagarto')
 	api project(':jodd-servlet')
 	implementation project(':jodd-log')
+
+	api 'org.jodd:jodd-lagarto:5.1.+'
 
 	provided lib.servlet
 

@@ -15,7 +15,6 @@ dependencies {
 	api project(':jodd-proxetta')
 	api project(':jodd-mail')
 	api project(':jodd-log')
-	api project(':jodd-lagarto')
 	api project(':jodd-decora')
 	api project(':jodd-http')
 	api project(':jodd-servlet')
