@@ -27,7 +27,7 @@ package jodd.servlet.form;
 
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
-import jodd.lagarto.TagWriter;
+import jodd.lagarto.visitor.TagWriter;
 import jodd.mutable.MutableInteger;
 import jodd.util.CharSequenceUtil;
 import jodd.util.StringUtil;

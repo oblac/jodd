@@ -28,7 +28,7 @@ package jodd.servlet.lagarto;
 import jodd.io.FastCharArrayWriter;
 import jodd.lagarto.LagartoParser;
 import jodd.lagarto.TagAdapter;
-import jodd.lagarto.TagWriter;
+import jodd.lagarto.visitor.TagWriter;
 
 import javax.servlet.http.HttpServletRequest;
 

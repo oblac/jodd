@@ -7,7 +7,7 @@ dependencies {
 	api project(':jodd-servlet')
 	implementation project(':jodd-log')
 
-	api 'org.jodd:jodd-lagarto:5.1.+'
+	api 'org.jodd:jodd-lagarto:6.0.+'
 
 	provided lib.servlet
 
