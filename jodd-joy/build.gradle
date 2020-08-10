@@ -19,6 +19,8 @@ dependencies {
 	api project(':jodd-http')
 	api project(':jodd-servlet')
 
+	api 'org.mindrot:jbcrypt:0.4'
+
 	provided lib.servlet
 	provided lib.jsp
 

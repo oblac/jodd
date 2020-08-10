@@ -23,10 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.crypt;
+package jodd.util;
 
 import jodd.io.StreamUtil;
-import jodd.util.StringUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -42,12 +41,12 @@ public interface DigestEngine {
 
 	class JavaDigestEngine implements DigestEngine {
 
-		private MessageDigest messageDigest;
+		private final MessageDigest messageDigest;
 
 		JavaDigestEngine(final String algorithm) {
 			try {
 				this.messageDigest = MessageDigest.getInstance(algorithm);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new RuntimeException(e);
 			}
 		}

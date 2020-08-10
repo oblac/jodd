@@ -26,9 +26,9 @@
 package jodd.io;
 
 import jodd.core.JoddCore;
-import jodd.crypt.DigestEngine;
 import jodd.net.URLDecoder;
 import jodd.system.SystemUtil;
+import jodd.util.DigestEngine;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -101,7 +101,7 @@ public class FileUtil {
 		try {
 			one = one.getCanonicalFile();
 			two = two.getCanonicalFile();
-		} catch (IOException ignore) {
+		} catch (final IOException ignore) {
 			return false;
 		}
 		return one.equals(two);
@@ -111,7 +111,7 @@ public class FileUtil {
 	 * Converts {@link File} {@link URL}s to {@link File}. Ignores other schemes and returns {@code null}.
 	 */
 	public static File toFile(final URL url) {
-		String fileName = toFileName(url);
+		final String fileName = toFileName(url);
 		if (fileName == null) {
 			return null;
 		}
@@ -139,7 +139,7 @@ public class FileUtil {
 		if ((url == null) || !(url.getProtocol().equals(FILE_PROTOCOL))) {
 			return null;
 		}
-		String filename = url.getFile().replace('/', File.separatorChar);
+		final String filename = url.getFile().replace('/', File.separatorChar);
 
 		return URLDecoder.decode(filename, encoding());
 	}
@@ -148,12 +148,12 @@ public class FileUtil {
 	 * Returns a file of either a folder or a containing archive.
 	 */
 	public static File toContainerFile(final URL url) {
-		String protocol = url.getProtocol();
+		final String protocol = url.getProtocol();
 		if (protocol.equals(FILE_PROTOCOL)) {
 			return toFile(url);
 		}
 
-		String path = url.getPath();
+		final String path = url.getPath();
 
 		return new File(URI.create(
 			path.substring(ZERO, path.lastIndexOf("!/"))));
@@ -306,7 +306,7 @@ public class FileUtil {
 	 */
 	public static File copyFileToDir(final File srcFile, final File destDir) throws IOException {
 		checkExistsAndDirectory(destDir);
-		File destFile = file(destDir, srcFile.getName());
+		final File destFile = file(destDir, srcFile.getName());
 		copyFile(srcFile, destFile);
 		return destFile;
 	}
@@ -343,14 +343,14 @@ public class FileUtil {
 			destDir.setLastModified(srcDir.lastModified());
 		}
 
-		File[] files = srcDir.listFiles();
+		final File[] files = srcDir.listFiles();
 		if (files == null) {
 			throw new IOException("Failed to list contents of: " + srcDir);
 		}
 
 		IOException exception = null;
-		for (File file : files) {
-			File destFile = file(destDir, file.getName());
+		for (final File file : files) {
+			final File destFile = file(destDir, file.getName());
 			try {
 
 				if (file.isDirectory()) {
@@ -358,7 +358,7 @@ public class FileUtil {
 				} else {
 					_copyFile(file, destFile);
 				}
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				exception = ioex;
 			}
 		}
@@ -523,20 +523,20 @@ public class FileUtil {
 		checkExists(destDir);
 		checkIsDirectory(destDir);
 
-		File[] files = destDir.listFiles();
+		final File[] files = destDir.listFiles();
 		if (files == null) {
 			throw new IOException("Failed to list contents of: " + destDir);
 		}
 
 		IOException exception = null;
-		for (File file : files) {
+		for (final File file : files) {
 			try {
 				if (file.isDirectory()) {
 					deleteDir(file);
 				} else {
 					file.delete();
 				}
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				exception = ioex;
 				continue;
 			}
@@ -567,7 +567,7 @@ public class FileUtil {
 		checkExists(file);
 		checkIsFile(file);
 
-		UnicodeInputStream in = unicodeInputStreamOf(file);
+		final UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
 			return StreamUtil.readChars(in, detectEncoding(in));
 		} finally {
@@ -587,7 +587,7 @@ public class FileUtil {
 		checkExists(file);
 		checkIsFile(file);
 
-		InputStream in = streamOf(file, encoding);
+		final InputStream in = streamOf(file, encoding);
 		try {
 			return StreamUtil.readChars(in, encoding);
 		} finally {
@@ -659,7 +659,7 @@ public class FileUtil {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
-		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(new FileOutputStream(dest, append), encoding));
+		final Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(new FileOutputStream(dest, append), encoding));
 		try {
 			out.write(data);
 		} finally {
@@ -687,7 +687,7 @@ public class FileUtil {
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readUTFString(final File file) throws IOException {
-		UnicodeInputStream in = unicodeInputStreamOf(file);
+		final UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
 			return StreamUtil.copy(in, detectEncoding(in)).toString();
 		} finally {
@@ -729,7 +729,7 @@ public class FileUtil {
 	public static String readString(final File file, final String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
-		InputStream in = streamOf(file, encoding);
+		final InputStream in = streamOf(file, encoding);
 		try {
 			return StreamUtil.copy(in, encoding).toString();
 		} finally {
@@ -907,11 +907,11 @@ public class FileUtil {
 	public static String[] readLines(final File file, final String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
-		List<String> list = new ArrayList<>();
+		final List<String> list = new ArrayList<>();
 
-		InputStream in = streamOf(file, encoding);
+		final InputStream in = streamOf(file, encoding);
 		try {
-			BufferedReader br = new BufferedReader(StreamUtil.inputStreamReadeOf(in, encoding));
+			final BufferedReader br = new BufferedReader(StreamUtil.inputStreamReadeOf(in, encoding));
 			String strLine;
 			while ((strLine = br.readLine()) != null) {
 				list.add(strLine);
@@ -959,8 +959,8 @@ public class FileUtil {
 			numToRead = count;
 		}
 
-		byte[] bytes = new byte[(int) numToRead];
-		RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+		final byte[] bytes = new byte[(int) numToRead];
+		final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
 		randomAccessFile.readFully(bytes);
 		randomAccessFile.close();
 
@@ -1067,7 +1067,7 @@ public class FileUtil {
 	 * Code origin: Avalon
 	 */
 	public static boolean compare(final File one, final File two) throws IOException {
-		boolean file1Exists = one.exists();
+		final boolean file1Exists = one.exists();
 		if (file1Exists != two.exists()) {
 			return false;
 		}
@@ -1360,7 +1360,7 @@ public class FileUtil {
 	 * @see #createTempFile(String, String, File)
 	 */
 	public static File createTempDirectory(final String prefix, final String suffix, final File tempDir) throws IOException {
-		File file = createTempFile(prefix, suffix, tempDir);
+		final File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		file.mkdir();
 		return file;
@@ -1390,7 +1390,7 @@ public class FileUtil {
 	 * @return File
 	 */
 	public static File createTempFile(final String prefix, final String suffix, final File tempDir, final boolean create) throws IOException {
-		File file = createTempFile(prefix, suffix, tempDir);
+		final File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		if (create) {
 			file.createNewFile();
@@ -1416,7 +1416,7 @@ public class FileUtil {
 		while (true) {
 			try {
 				return File.createTempFile(prefix, suffix, tempDir).getCanonicalFile();
-			} catch (IOException ioex) {  // fixes java.io.WinNTFileSystem.createFileExclusively access denied
+			} catch (final IOException ioex) {  // fixes java.io.WinNTFileSystem.createFileExclusively access denied
 				if (++exceptionsCount >= 50) {
 					throw ioex;
 				}
@@ -1475,9 +1475,9 @@ public class FileUtil {
 	 * @return true if the the start of the {@link File} is ASCII control characters.
 	 */
 	public static boolean isBinary(final File file) throws IOException {
-		byte[] bytes = readBytes(file, 128);
+		final byte[] bytes = readBytes(file, 128);
 
-		for (byte b : bytes) {
+		for (final byte b : bytes) {
 			if (b < 32 && b != 9 && b != 10 && b != 13) {
 				return true;
 			}
@@ -1559,7 +1559,7 @@ public class FileUtil {
 	private static void checkReferenceExists(final File file) throws IllegalArgumentException {
 		try {
 			checkExists(file);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			throw new IllegalArgumentException("Reference file not found: " + file);
 		}
 	}
@@ -1659,7 +1659,7 @@ public class FileUtil {
 			throw new IOException("Files '" + srcFile + "' and '" + destFile + "' are equal");
 		}
 
-		File destParent = destFile.getParentFile();
+		final File destParent = destFile.getParentFile();
 		if (destParent != null && !destParent.exists()) {
 			checkCreateDirectory(destParent);
 		}
