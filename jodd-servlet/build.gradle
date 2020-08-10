@@ -5,7 +5,7 @@ ext.moduleDescription = 'Jodd Servlet is set of web tools, including the nice ta
 dependencies {
 	api project(':jodd-core')
 	api project(':jodd-bean')
-	api 'org.jodd:jodd-lagarto:6.0.+'
+	api 'org.jodd:jodd-lagarto:6.0.0'
 
 	provided lib.servlet
 	provided lib.jsp
