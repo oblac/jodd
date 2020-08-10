@@ -33,7 +33,6 @@ import jodd.json.meta.TypeData;
 import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
-import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -238,7 +237,7 @@ public class JsonParser extends JsonParserBase {
 
 		// first try alt paths
 
-		Path altPath = path.getAltPath();
+		final Path altPath = path.getAltPath();
 
 		if (altPath != null) {
 			if (!altPath.equals(path)) {
@@ -425,7 +424,7 @@ public class JsonParser extends JsonParserBase {
 		try {
 			value = parseValue(rootType, null, null);
 		}
-		catch (IndexOutOfBoundsException iofbex) {
+		catch (final IndexOutOfBoundsException iofbex) {
 			syntaxError("End of JSON");
 			return null;
 		}
@@ -446,7 +445,7 @@ public class JsonParser extends JsonParserBase {
 
 		if (classMetadataName != null && rootType == null) {
 			if (value instanceof Map) {
-				Map map = (Map) value;
+				final Map map = (Map) value;
 
 				value = mapToBean.map2bean(map, null);
 			}
@@ -763,7 +762,7 @@ public class JsonParser extends JsonParserBase {
 	 */
 	protected void growEmpty() {
 		if (textLen >= text.length) {
-			int newSize = textLen << 1;
+			final int newSize = textLen << 1;
 
 			text = new char[newSize];
 		}
@@ -774,9 +773,9 @@ public class JsonParser extends JsonParserBase {
 	 */
 	protected void growAndCopy() {
 		if (textLen == text.length) {
-			int newSize = text.length << 1;
+			final int newSize = text.length << 1;
 
-			char[] newText = new char[newSize];
+			final char[] newText = new char[newSize];
 
 			if (textLen > 0) {
 				System.arraycopy(text, 0, newText, 0, textLen);
@@ -790,10 +789,10 @@ public class JsonParser extends JsonParserBase {
 	 * Parses 4 characters and returns unicode character.
 	 */
 	protected char parseUnicode() {
-		int i0 = CharUtil.hex2int(input[ndx++]);
-		int i1 = CharUtil.hex2int(input[ndx++]);
-		int i2 = CharUtil.hex2int(input[ndx++]);
-		int i3 = CharUtil.hex2int(input[ndx]);
+		final int i0 = CharUtil.hex2int(input[ndx++]);
+		final int i1 = CharUtil.hex2int(input[ndx++]);
+		final int i2 = CharUtil.hex2int(input[ndx++]);
+		final int i3 = CharUtil.hex2int(input[ndx]);
 
 		return (char) ((i0 << 12) + (i1 << 8) + (i2 << 4) + i3);
 	}
@@ -876,7 +875,7 @@ public class JsonParser extends JsonParserBase {
 			return Double.valueOf(value);
 		}
 
-		long longNumber;
+		final long longNumber;
 
 		if (isExp) {
 			longNumber = Double.valueOf(value).longValue();
@@ -884,7 +883,7 @@ public class JsonParser extends JsonParserBase {
 		else {
 			if (value.length() >= 19) {
 				// if string is 19 chars and longer, it can be over the limit
-				BigInteger bigInteger = new BigInteger(value);
+				final BigInteger bigInteger = new BigInteger(value);
 
 				if (isGreaterThanLong(bigInteger)) {
 					return bigInteger;
@@ -933,7 +932,7 @@ public class JsonParser extends JsonParserBase {
 
 		componentType = replaceWithMappedTypeForPath(componentType);
 
-		Collection<Object> target = newArrayInstance(targetType);
+		final Collection<Object> target = newArrayInstance(targetType);
 
 		boolean koma = false;
 
@@ -953,7 +952,7 @@ public class JsonParser extends JsonParserBase {
 				return target;
 			}
 
-			Object value = parseValue(componentType, null, null);
+			final Object value = parseValue(componentType, null, null);
 
 			target.add(value);
 
@@ -1049,7 +1048,7 @@ public class JsonParser extends JsonParserBase {
 			koma = false;
 
 			String key = parseString();
-			String keyOriginal = key;
+			final String keyOriginal = key;
 
 			skipWhiteSpaces();
 
@@ -1168,7 +1167,7 @@ public class JsonParser extends JsonParserBase {
 	 * If matched, returns matched char.
 	 */
 	protected char consumeOneOf(final char c1, final char c2) {
-		char c = input[ndx];
+		final char c = input[ndx];
 
 		if ((c != c1) && (c != c2)) {
 			return 0;
@@ -1206,7 +1205,7 @@ public class JsonParser extends JsonParserBase {
 	 * Matches char buffer with content on given location.
 	 */
 	protected final boolean match(final char[] target) {
-		for (char c : target) {
+		for (final char c : target) {
 			if (input[ndx] != c) {
 				return false;
 			}
@@ -1225,7 +1224,7 @@ public class JsonParser extends JsonParserBase {
 	protected void syntaxError(final String message) {
 		String left = "...";
 		String right = "...";
-		int offset = 10;
+		final int offset = 10;
 
 		int from = ndx - offset;
 		if (from < 0) {

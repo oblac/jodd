@@ -39,42 +39,6 @@ import org.openjdk.jmh.annotations.Warmup;
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
 
-/*
- THE TEST WITH PREVIOUS IMPLEMENTATION THAT SHOWS THAT IT MAKE NO SENSE TO HAVE IT.
-
- 1 MB
- FastBufferBenchmark.fastBuffer    1048576  thrpt    2  24842.200          ops/min
- FastBufferBenchmark.outputStream  1048576  thrpt    2  24676.125          ops/min
- 128 MB
- FastBufferBenchmark.fastBuffer    157810688  thrpt    2  126.644          ops/min
- FastBufferBenchmark.outputStream  157810688  thrpt    2  124.815          ops/min
- 128 MB +1
- FastBufferBenchmark.fastBuffer    157810689  thrpt    2  130.189          ops/min
- FastBufferBenchmark.outputStream  157810689  thrpt    2  132.132          ops/min
- 130 MB
- FastBufferBenchmark.fastBuffer    136314880  thrpt    2  149.155          ops/min
- FastBufferBenchmark.outputStream  136314880  thrpt    2  148.231          ops/min
- 150 MB
- FastBufferBenchmark.fastBuffer    157286400  thrpt    2  135.111          ops/min
- FastBufferBenchmark.outputStream  157286400  thrpt    2  131.013          ops/min
- 200 MB
- FastBufferBenchmark.fastBuffer    209715200  thrpt    2  106.592          ops/min
- FastBufferBenchmark.outputStream  209715200  thrpt    2  103.280          ops/min
- 256 MB
- FastBufferBenchmark.fastBuffer    268435456  thrpt    2  84.519          ops/min
- FastBufferBenchmark.outputStream  268435456  thrpt    2  55.932          ops/min
- 300 MB
- FastBufferBenchmark.fastBuffer    314572800  thrpt    2  58.508          ops/min
- FastBufferBenchmark.outputStream  314572800  thrpt    2  60.417          ops/min
- 400 MB
- FastBufferBenchmark.fastBuffer    419430400  thrpt    2  35.836          ops/min
- FastBufferBenchmark.outputStream  419430400  thrpt    2  48.079          ops/min
- 512 MB
- FastBufferBenchmark.fastBuffer    536870912  thrpt    2  41.725          ops/min
- FastBufferBenchmark.outputStream  536870912  thrpt    2  28.819          ops/min
- */
-
-
 /**
  Benchmark                         (size)   Mode  Cnt      Score      Error   Units
  FastBufferBenchmark.fastBuffer         1  thrpt    3  79324.336 ± 5717.098  ops/ms
