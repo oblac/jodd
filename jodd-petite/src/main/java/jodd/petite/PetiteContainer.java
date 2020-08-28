@@ -156,11 +156,17 @@ public class PetiteContainer extends PetiteBeans {
 		Object bean = def.scopeLookup();
 
 		if (bean == null) {
-			// Create new bean in the scope
-			initBeanDefinition(def);
-			final BeanData beanData = new BeanData(this, def);
-			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(beanData);
-			bean = beanData.bean();
+			// synchronize bean creation on the bean definitions
+			synchronized (def) {
+				bean = def.scopeLookup();
+				if (bean == null) {
+					// Create new bean in the scope
+					initBeanDefinition(def);
+					final BeanData beanData = new BeanData(this, def);
+					registerBeanAndWireAndInjectParamsAndInvokeInitMethods(beanData);
+					bean = beanData.bean();
+				}
+			}
 		}
 
 		return (T) bean;
