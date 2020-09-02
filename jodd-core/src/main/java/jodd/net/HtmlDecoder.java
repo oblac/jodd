@@ -115,7 +115,7 @@ public class HtmlDecoder {
 		final int len = html.length();
 mainloop:
 		while (ndx != -1) {
-			result.append(html.substring(lastIndex, ndx));
+			result.append(html, lastIndex, ndx);
 
 			lastIndex = ndx;
 			while (html.charAt(lastIndex) != ';') {
