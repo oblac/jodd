@@ -130,14 +130,14 @@ public class MultipartStreamParser {
 
 			if (header.isFile) {
 				String fileName = header.fileName;
-				if (fileName.length() > 0) {
+				if (!fileName.isEmpty()) {
 					if (header.contentType.indexOf("application/x-macbinary") > 0) {
 						input.skipBytes(128);
 					}
 				}
 				FileUpload newFile = fileUploadFactory.create(input);
 				newFile.processStream();
-				if (fileName.length() == 0) {
+				if (fileName.isEmpty()) {
 					// file was specified, but no name was provided, therefore it was not uploaded
 					if (newFile.getSize() == 0) {
 						newFile.size = -1;

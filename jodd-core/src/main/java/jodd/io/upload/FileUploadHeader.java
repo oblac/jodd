@@ -56,7 +56,7 @@ public class FileUploadHeader {
 			if (formFileName == null) {
 				return;
 			}
-			if (formFileName.length() == 0) {
+			if (formFileName.isEmpty()) {
 				path = StringPool.EMPTY;
 				fileName = StringPool.EMPTY;
 			}
@@ -68,7 +68,7 @@ public class FileUploadHeader {
 				path = formFileName.substring(0, ls);
 				fileName = formFileName.substring(ls + 1);
 			}
-			if (fileName.length() > 0) {
+			if (!fileName.isEmpty()) {
 				this.contentType = getContentType(dataHeader);
 				mimeType = getMimeType(contentType);
 				mimeSubtype = getMimeSubtype(contentType);

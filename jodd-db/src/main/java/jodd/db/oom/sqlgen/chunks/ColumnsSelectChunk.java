@@ -155,7 +155,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.columnRefArr = null;
 				this.includeColumns = COLS_ALL_BUT_ID;
 			} else if (
-					reference.length() != 0
+					!reference.isEmpty()
 					&& reference.charAt(0) == '['
 					&& reference.charAt(reference.length() - 1) == ']') {
 
@@ -197,7 +197,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		separateByCommaOrSpace(out);
 
 		// special case, only column name, no table ref/name
-		if (tableRef.length() == 0) {
+		if (tableRef.isEmpty()) {
 			out.append(columnRef);
 			return;
 		}

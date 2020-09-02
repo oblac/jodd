@@ -101,7 +101,7 @@ public class Pathref<C> {
 	 * Appends method name to existing path.
 	 */
 	protected void append(final String methodName) {
-		if (path.length() != 0) {
+		if (!path.isEmpty()) {
 			path += StringPool.DOT;
 		}
 		if (methodName.startsWith(StringPool.LEFT_SQ_BRACKET)) {

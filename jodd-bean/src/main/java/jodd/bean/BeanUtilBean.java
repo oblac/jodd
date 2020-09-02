@@ -139,7 +139,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	protected Object getSimpleProperty(final BeanProperty bp) {
 
-		if (bp.name.length() == 0) {
+		if (bp.name.isEmpty()) {
 			if (bp.indexString != null) {
 				// index string exist, but property name is missing
 				return bp.bean;

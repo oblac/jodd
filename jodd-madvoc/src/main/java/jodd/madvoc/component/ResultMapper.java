@@ -169,7 +169,7 @@ public class ResultMapper extends ResultMapperCfg {
 							path += '.' + value.substring(0, dotNdx);
 							value = value.substring(dotNdx + 2);
 						} else {
-							if (value.length() > 0) {
+							if (!value.isEmpty()) {
 								if (StringUtil.endsWithChar(path, '/')) {
 									path += value;
 								} else {

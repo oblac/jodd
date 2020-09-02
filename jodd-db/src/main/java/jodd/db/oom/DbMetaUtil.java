@@ -52,7 +52,7 @@ public class DbMetaUtil {
 		if (dbTable != null) {
 			tableName = dbTable.value().trim();
 		}
-		if ((tableName == null) || (tableName.length() == 0)) {
+		if (tableName == null || tableName.isEmpty()) {
 			tableName = tableNamingStrategy.convertEntityNameToTableName(type);
 		} else {
 			if (!tableNamingStrategy.isStrictAnnotationNames()) {
@@ -72,7 +72,7 @@ public class DbMetaUtil {
 		if (dbTable != null) {
 			schemaName = dbTable.schema().trim();
 		}
-		if ((schemaName == null) || (schemaName.length() == 0)) {
+		if (schemaName == null || schemaName.isEmpty()) {
 			schemaName = defaultSchemaName;
 		}
 		return schemaName;

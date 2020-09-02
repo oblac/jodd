@@ -192,7 +192,7 @@ public class GzipFilter implements Filter {
 	protected boolean isGzipEligible(final HttpServletRequest request) {
 		// request parameter name
 
-		if (requestParameterName.length() != 0) {
+		if (!requestParameterName.isEmpty()) {
 			String forceGzipString = request.getParameter(requestParameterName);
 
 			if (forceGzipString != null) {
@@ -221,7 +221,7 @@ public class GzipFilter implements Filter {
 			// extension
 			String extension = FileNameUtil.getExtension(uri);
 
-			if (extension.length() > 0) {
+			if (!extension.isEmpty()) {
 				extension = extension.toLowerCase();
 
 				if (StringUtil.equalsOne(extension, extensions) != -1) {

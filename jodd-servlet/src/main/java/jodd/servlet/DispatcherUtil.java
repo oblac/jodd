@@ -182,7 +182,7 @@ public class DispatcherUtil {
 	public static String getFullUrl(final HttpServletRequest request) {
 		String url = request.getRequestURI();
 		String query = request.getQueryString();
-		if ((query != null) && (query.length() != 0)) {
+		if (query != null && !query.isEmpty()) {
 			url += '?' + query;
 		}
 		return url;
@@ -194,7 +194,7 @@ public class DispatcherUtil {
 	public static String getUrl(final HttpServletRequest request) {
 		String servletPath = request.getServletPath();
 		String query = request.getQueryString();
-		if ((query != null) && (query.length() != 0)) {
+		if (query != null && !query.isEmpty()) {
 			servletPath += '?' + query;
 		}
 		return servletPath;

@@ -114,7 +114,7 @@ public abstract class LagartoServletFilter implements Filter {
 	 */
 	protected boolean acceptActionPath(final HttpServletRequest request, final String actionPath) {
 		final String extension = FileNameUtil.getExtension(actionPath);
-		if (extension.length() == 0) {
+		if (extension.isEmpty()) {
 			return true;
 		}
 		if (extension.equals("html") || extension.equals("htm")) {

@@ -225,7 +225,7 @@ public class PropsParser implements Cloneable {
 							currentSection = sb.toString().trim();
 							sb.setLength(0);
 							insideSection = false;
-							if (currentSection.length() == 0) {
+							if (currentSection.isEmpty()) {
 								currentSection = null;
 							}
 						} else {
@@ -370,7 +370,7 @@ public class PropsParser implements Cloneable {
 		String fullKey = key;
 
 		if (section != null) {
-			if (fullKey.length() != 0) {
+			if (!fullKey.isEmpty()) {
 				fullKey = section + '.' + fullKey;
 			} else {
 				fullKey = section;
@@ -388,7 +388,7 @@ public class PropsParser implements Cloneable {
 			}
 		}
 
-		if (v.length() == 0 && skipEmptyProps) {
+		if (v.isEmpty() && skipEmptyProps) {
 			return;
 		}
 

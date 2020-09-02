@@ -169,14 +169,14 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 						} catch (SQLException sex) {
 							// ignore
 					}
-						if ((tableName != null) && (tableName.length() == 0)) {
+						if (tableName != null && tableName.isEmpty()) {
 							tableName = null;
 						}
 					}
 				}
 
 				columnName = columnName.trim();
-				if (columnName.length() == 0) {
+				if (columnName.isEmpty()) {
 					columnName = null;
 				}
 

@@ -66,13 +66,13 @@ public class ReferenceChunk extends SqlChunk {
 			this.onlyId = false;
 		} else {
 			String ref = reference.substring(0, dotNdx);
-			if (ref.length() == 0) {
+			if (ref.isEmpty()) {
 				ref = null;
 			}
 			this.tableRef = ref;
 
 			ref = reference.substring(dotNdx + 1);
-			if (ref.length() == 0) {
+			if (ref.isEmpty()) {
 				ref = null;
 			}
 			this.columnRef = ref;

@@ -539,7 +539,7 @@ public class NanoHTTPD
 				if ( st.hasMoreTokens())
 				{
 					String line = in.readLine();
-					while ( line != null && line.trim().length() > 0 )
+					while (line != null && !line.trim().isEmpty())
 					{
 						int p = line.indexOf( ':' );
 						if ( p >= 0 )
@@ -575,7 +575,7 @@ public class NanoHTTPD
 					boundarycount++;
 					Properties item = new Properties();
 					mpline = in.readLine();
-					while (mpline != null && mpline.trim().length() > 0)
+					while (mpline != null && !mpline.trim().isEmpty())
 					{
 						int p = mpline.indexOf( ':' );
 						if (p != -1)

@@ -190,7 +190,7 @@ public abstract class BasePathMacros implements PathMacros {
 					break;
 				}
 				nextFixed = fixed[nexti];
-				if (nextFixed.length() != 0) {
+				if (!nextFixed.isEmpty()) {
 					break;
 				}
 				// next fixed is an empty string, so skip the next macro.

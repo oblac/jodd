@@ -269,7 +269,7 @@ public class PropsData implements Cloneable {
 			}
 
 			if (skipEmptyProps) {
-				if (newValue.length() == 0) {
+				if (newValue.isEmpty()) {
 					return null;
 				}
 			}

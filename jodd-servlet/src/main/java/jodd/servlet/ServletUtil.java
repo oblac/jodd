@@ -615,7 +615,7 @@ public class ServletUtil {
 					emptyCount++;
 					continue;
 				}
-				if (paramValue.length() == 0) {
+				if (paramValue.isEmpty()) {
 					emptyCount++;
 					if (treatEmptyParamsAsNull) {
 						paramValue = null;

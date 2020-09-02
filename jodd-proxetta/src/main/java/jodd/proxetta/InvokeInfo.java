@@ -58,7 +58,7 @@ public class InvokeInfo {
 		// arguments
 		List<String> args = new ArrayList<>();
 		MutableInteger from = new MutableInteger(1);
-		if (description.length() != 0) {
+		if (!description.isEmpty()) {
 			while (description.charAt(from.value) != ')') {
 				String a = AsmUtil.typedescToSignature(description, from);
 				args.add(a);
@@ -69,7 +69,7 @@ public class InvokeInfo {
 		args.toArray(arguments);
 
 		from.value++;
-		returnType = description.length() > 0 ?
+		returnType = !description.isEmpty() ?
 				AsmUtil.typedescToSignature(description, from) :
 				className;
 

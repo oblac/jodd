@@ -58,7 +58,7 @@ public class AnnotationResolver {
 		if (petiteBean != null) {
 			name = petiteBean.value().trim();
 		}
-		if ((name == null) || (name.length() == 0)) {
+		if (name == null || name.isEmpty()) {
 			if (useLongTypeName) {
 				name = type.getName();
 			} else {

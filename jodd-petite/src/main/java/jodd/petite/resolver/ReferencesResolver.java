@@ -114,7 +114,7 @@ public class ReferencesResolver {
 		BeanReferences reference = null;
 
 		String name = ref.value().trim();
-		if (name.length() != 0) {
+		if (!name.isEmpty()) {
 			reference = BeanReferences.of(name);
 		}
 
@@ -135,7 +135,7 @@ public class ReferencesResolver {
 		BeanReferences reference = null;
 
 		String name = ref.value().trim();
-		if (name.length() != 0) {
+		if (!name.isEmpty()) {
 			reference = BeanReferences.of(name);
 		}
 
@@ -358,7 +358,7 @@ public class ReferencesResolver {
 		}
 
 		value = value.trim();
-		if (value.length() == 0) {
+		if (value.isEmpty()) {
 			return null;
 		}
 

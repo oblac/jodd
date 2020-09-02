@@ -599,7 +599,7 @@ public class ProxettaAsmUtil {
 				break;
 			default:
 				String rtname = methodInfo.getReturnType().getRawName();
-				returnType = rtname.length() == 0 ?
+				returnType = rtname.isEmpty() ?
 					AsmUtil.typeToSignature(methodInfo.getReturnType().getType()) :
 					AsmUtil.typedesc2ClassName(rtname);
 				break;

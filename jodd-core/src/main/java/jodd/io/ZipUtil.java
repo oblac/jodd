@@ -286,7 +286,7 @@ public class ZipUtil {
 			path = file.getName();
 		}
 
-		while (path.length() != 0 && path.charAt(0) == '/') {
+		while (!path.isEmpty() && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 
@@ -345,7 +345,7 @@ public class ZipUtil {
 	 * Adds byte content into the zip as a file.
 	 */
 	public static void addToZip(final ZipOutputStream zos, final byte[] content, String path, final String comment) throws IOException {
-		while (path.length() != 0 && path.charAt(0) == '/') {
+		while (!path.isEmpty() && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 
@@ -373,7 +373,7 @@ public class ZipUtil {
 	}
 
 	public static void addFolderToZip(final ZipOutputStream zos, String path, final String comment) throws IOException {
-		while (path.length() != 0 && path.charAt(0) == '/') {
+		while (!path.isEmpty() && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
 

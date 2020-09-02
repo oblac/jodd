@@ -88,7 +88,7 @@ public class TableChunk extends SqlChunk {
 		if (spaceNdx != -1) {
 			this.entityName = tableRef.substring(0, spaceNdx);
 			String alias = tableRef.substring(spaceNdx + 1).trim();
-			tableAlias = alias.length() == 0 ? null : alias;
+			tableAlias = alias.isEmpty() ? null : alias;
 		} else {
 			this.entityName = tableRef;
 			this.tableAlias = null;

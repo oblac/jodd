@@ -106,7 +106,7 @@ public class ResourceBundleMessageResolver {
 				return msg;
 			}
 
-			if (bundleName == null || bundleName.length() == 0) {
+			if (bundleName == null || bundleName.isEmpty()) {
 				break;
 			}
 			int ndx = bundleName.lastIndexOf('.');

@@ -70,7 +70,7 @@ public class RootPackages {
 		}
 
 		// fix mapping
-		if (mapping.length() > 0) {
+		if (!mapping.isEmpty()) {
 			// mapping must start with the slash
 			if (!mapping.startsWith(StringPool.SLASH)) {
 				mapping = StringPool.SLASH + mapping;

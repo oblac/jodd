@@ -493,7 +493,7 @@ public class URLCoder {
 
 			url.append(encodeQueryParam(name, encoding));
 
-			if ((value != null) && (value.length() > 0)) {
+			if (value != null && !value.isEmpty()) {
 				url.append('=');
 				url.append(encodeQueryParam(value, encoding));
 			}
