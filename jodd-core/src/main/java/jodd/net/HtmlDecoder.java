@@ -28,6 +28,7 @@ package jodd.net;
 import jodd.io.StreamUtil;
 import jodd.util.BinarySearchBase;
 import jodd.util.CharUtil;
+import jodd.util.StringBuilderPool;
 import jodd.util.StringUtil;
 
 import java.io.InputStream;
@@ -104,61 +105,63 @@ public class HtmlDecoder {
 	 */
 	public static String decode(final String html) {
 
-		int ndx = html.indexOf('&');
-		if (ndx == -1) {
+		final int originalNdx = html.indexOf('&');
+		if (originalNdx == -1) {
 			return html;
 		}
 
-		final StringBuilder result = new StringBuilder(html.length());
+		return StringBuilderPool.DEFAULT.withPooledBuffer(result -> {
+				int lastIndex = 0;
+				final int len = html.length();
+				int ndx = originalNdx;
+				mainloop:
+				while (ndx != -1) {
+					result.append(html, lastIndex, ndx);
 
-		int lastIndex = 0;
-		final int len = html.length();
-mainloop:
-		while (ndx != -1) {
-			result.append(html.substring(lastIndex, ndx));
-
-			lastIndex = ndx;
-			while (html.charAt(lastIndex) != ';') {
-				lastIndex++;
-				if (lastIndex == len) {
 					lastIndex = ndx;
-					break mainloop;
+					while (html.charAt(lastIndex) != ';') {
+						lastIndex++;
+						if (lastIndex == len) {
+							lastIndex = ndx;
+							break mainloop;
+						}
+					}
+
+					if (html.charAt(ndx + 1) == '#') {
+						// decimal/hex
+						final char c = html.charAt(ndx + 2);
+						final int radix;
+						if ((c == 'x') || (c == 'X')) {
+							radix = 16;
+							ndx += 3;
+						} else {
+							radix = 10;
+							ndx += 2;
+						}
+
+						final String number = html.substring(ndx, lastIndex);
+						final int i = Integer.parseInt(number, radix);
+						result.append((char) i);
+						lastIndex++;
+					} else {
+						// token
+						final String encodeToken = html.substring(ndx + 1, lastIndex);
+
+						final char[] replacement = ENTITY_MAP.get(encodeToken);
+						if (replacement == null) {
+							result.append('&');
+							lastIndex = ndx + 1;
+						} else {
+							result.append(replacement);
+							lastIndex++;
+						}
+					}
+					ndx = html.indexOf('&', lastIndex);
 				}
+				result.append(html.substring(lastIndex));
+				return result.toString();
 			}
-
-			if (html.charAt(ndx + 1) == '#') {
-				// decimal/hex
-				final char c = html.charAt(ndx + 2);
-				final int radix;
-				if ((c == 'x') || (c == 'X')) {
-					radix = 16;
-					ndx += 3;
-				} else {
-					radix = 10;
-					ndx += 2;
-				}
-
-				final String number = html.substring(ndx, lastIndex);
-				final int i = Integer.parseInt(number, radix);
-				result.append((char) i);
-				lastIndex++;
-			} else {
-				// token
-				final String encodeToken = html.substring(ndx + 1, lastIndex);
-
-				final char[] replacement = ENTITY_MAP.get(encodeToken);
-				if (replacement == null) {
-					result.append('&');
-					lastIndex = ndx + 1;
-				} else {
-					result.append(replacement);
-					lastIndex++;
-				}
-			}
-			ndx = html.indexOf('&', lastIndex);
-		}
-		result.append(html.substring(lastIndex));
-		return result.toString();
+		);
 	}
 
 	private static final class Ptr {

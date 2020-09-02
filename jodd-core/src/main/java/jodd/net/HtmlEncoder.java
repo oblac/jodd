@@ -25,6 +25,7 @@
 
 package jodd.net;
 
+import jodd.util.StringBuilderPool;
 import jodd.util.StringPool;
 
 /**
@@ -140,19 +141,17 @@ public class HtmlEncoder {
 			return StringPool.EMPTY;
 		}
 
-		StringBuilder buffer = new StringBuilder(len + (len >> 2));
-
-		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
-
-			if (c < bufflen) {
-				buffer.append(buff[c]);
-			} else {
-				buffer.append(c);
+		return StringBuilderPool.DEFAULT.withPooledBuffer(sb -> {
+				for (int i = 0; i < len; i++) {
+					char c = text.charAt(i);
+					if (c < bufflen) {
+						sb.append(buff[c]);
+					} else {
+						sb.append(c);
+					}
+				}
+				return sb.toString();
 			}
-		}
-		return buffer.toString();
+		);
 	}
-
-
 }

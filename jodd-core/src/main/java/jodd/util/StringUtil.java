@@ -257,26 +257,21 @@ public class StringUtil {
 	 * @param ch  character to remove
 	 */
 	public static String remove(final String string, final char ch) {
+		if (isEmpty(string)) {
+			return string;
+		}
+
 		final int stringLen = string.length();
-		final char[] result = new char[stringLen];
-		int offset = 0;
 
-		for (int i = 0; i < stringLen; i++) {
-			final char c = string.charAt(i);
-
-			if (c == ch) {
-				continue;
+		return StringBuilderPool.DEFAULT.withPooledBuffer(sb -> {
+			for (int i = 0; i < stringLen; i++) {
+				char c = string.charAt(i);
+				if (c != ch) {
+					sb.append(c);
+				}
 			}
-
-			result[offset] = c;
-			offset++;
-		}
-
-		if (offset == stringLen) {
-			return string;	// no changes
-		}
-
-		return new String(result, 0, offset);
+			return sb.length() == stringLen ? string : sb.toString();
+		});
 	}
 
 	// ---------------------------------------------------------------- miscellaneous
