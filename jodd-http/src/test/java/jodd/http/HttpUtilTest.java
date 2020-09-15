@@ -25,8 +25,9 @@
 
 package jodd.http;
 
-import jodd.util.StringPool;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -108,21 +109,21 @@ class HttpUtilTest {
 
 	@Test
 	void testBuildQuery() {
-		HttpMultiMap<String> map = HttpMultiMap.newCaseInsensitiveMap();
+		final HttpMultiMap<String> map = HttpMultiMap.newCaseInsensitiveMap();
 
-		assertEquals("", HttpUtil.buildQuery(map, StringPool.UTF_8));
+		assertEquals("", HttpUtil.buildQuery(map, StandardCharsets.UTF_8.name()));
 
 		map.add("aaa", "one");
-		assertEquals("aaa=one", HttpUtil.buildQuery(map, StringPool.UTF_8));
+		assertEquals("aaa=one", HttpUtil.buildQuery(map, StandardCharsets.UTF_8.name()));
 
 		map.add("bbb", "two");
-		assertEquals("aaa=one&bbb=two", HttpUtil.buildQuery(map, StringPool.UTF_8));
+		assertEquals("aaa=one&bbb=two", HttpUtil.buildQuery(map, StandardCharsets.UTF_8.name()));
 
 		map.clear().add("ccc", null);
-		assertEquals("ccc", HttpUtil.buildQuery(map, StringPool.UTF_8));
+		assertEquals("ccc", HttpUtil.buildQuery(map, StandardCharsets.UTF_8.name()));
 
 		map.add("ddd", "four");
-		assertEquals("ccc&ddd=four", HttpUtil.buildQuery(map, StringPool.UTF_8));
+		assertEquals("ccc&ddd=four", HttpUtil.buildQuery(map, StandardCharsets.UTF_8.name()));
 	}
 
 	@Test

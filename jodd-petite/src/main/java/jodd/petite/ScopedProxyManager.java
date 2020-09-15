@@ -25,7 +25,6 @@
 
 package jodd.petite;
 
-import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.proxetta.ProxettaBeanDefinition;
@@ -37,6 +36,7 @@ import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
+import jodd.util.TypeCache;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

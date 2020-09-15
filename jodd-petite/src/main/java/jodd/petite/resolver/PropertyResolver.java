@@ -62,7 +62,7 @@ public class PropertyResolver {
 			final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 			final PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
 
-			for (PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {
+			for (final PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {
 
 				if (propertyDescriptor.isGetterOnly()) {
 					continue;
@@ -72,7 +72,7 @@ public class PropertyResolver {
 					continue;
 				}
 
-				Class propertyType = propertyDescriptor.getType();
+				final Class propertyType = propertyDescriptor.getType();
 				if (ClassUtil.isTypeOf(propertyType, Collection.class)) {
 					continue;
 				}

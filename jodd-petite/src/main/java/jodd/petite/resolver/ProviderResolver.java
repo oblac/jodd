@@ -46,15 +46,15 @@ public class ProviderResolver {
 	 * Resolves all providers in the class
 	 */
 	public ProviderDefinition[] resolve(final Class type, final String name) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
-		List<ProviderDefinition> list = new ArrayList<>();
+		final List<ProviderDefinition> list = new ArrayList<>();
 
-		for (MethodDescriptor methodDescriptor : methods) {
-			Method method = methodDescriptor.getMethod();
+		for (final MethodDescriptor methodDescriptor : methods) {
+			final Method method = methodDescriptor.getMethod();
 
-			PetiteProvider petiteProvider = method.getAnnotation(PetiteProvider.class);
+			final PetiteProvider petiteProvider = method.getAnnotation(PetiteProvider.class);
 			if (petiteProvider == null) {
 				continue;
 			}
@@ -70,7 +70,7 @@ public class ProviderResolver {
 				}
 			}
 
-			ProviderDefinition providerDefinition;
+			final ProviderDefinition providerDefinition;
 
 			if (Modifier.isStatic(method.getModifiers())) {
 				providerDefinition = new ProviderDefinition(providerName, method);
@@ -81,7 +81,7 @@ public class ProviderResolver {
 			list.add(providerDefinition);
 		}
 
-		ProviderDefinition[] providers;
+		final ProviderDefinition[] providers;
 
 		if (list.isEmpty()) {
 			providers = ProviderDefinition.EMPTY;

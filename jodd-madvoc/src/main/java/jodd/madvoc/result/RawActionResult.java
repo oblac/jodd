@@ -25,7 +25,7 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.servlet.ServletUtil;
 
@@ -47,20 +47,20 @@ public class RawActionResult implements ActionResult<RawData> {
 			return;
 		}
 
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		// reset content type and prepare response
 		// since we are using MadvocResponseWrapper, the charset will be reset as well.
 		ServletUtil.prepareResponse(response, resultValue.downloadFileName(), resultValue.mimeType(), resultValue.contentLength());
 
 		// write out
-		InputStream contentInputStream = resultValue.contentInputStream();
-		OutputStream out = response.getOutputStream();
+		final InputStream contentInputStream = resultValue.contentInputStream();
+		final OutputStream out = response.getOutputStream();
 
-		StreamUtil.copy(contentInputStream, out);
+		IOUtil.copy(contentInputStream, out);
 
 		out.flush();
 
-		StreamUtil.close(contentInputStream);
+		IOUtil.close(contentInputStream);
 	}
 }

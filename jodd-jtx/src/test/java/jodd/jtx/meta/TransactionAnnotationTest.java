@@ -25,7 +25,7 @@
 
 package jodd.jtx.meta;
 
-import jodd.util.annotation.AnnotationParser;
+import jodd.util.AnnotationParser;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ class TransactionAnnotationTest {
 
 	@Test
 	void testTransactionAnnotationOnly() throws NoSuchMethodException {
-		AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(Transaction.class);
+		final AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(Transaction.class);
 
 		Method method = this.getClass().getMethod("hello");
 		TransactionAnnotationValues annotationData = TransactionAnnotationValues.of(annotationParser, method);
@@ -80,7 +80,7 @@ class TransactionAnnotationTest {
 
 	@Test
 	void testCustomTransactionAnnotation() throws NoSuchMethodException {
-		AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(CustomTransaction.class);
+		final AnnotationParser annotationParser = TransactionAnnotationValues.parserFor(CustomTransaction.class);
 
 		Method method = this.getClass().getMethod("hello3");
 		TransactionAnnotationValues annotationData = TransactionAnnotationValues.of(annotationParser, method);

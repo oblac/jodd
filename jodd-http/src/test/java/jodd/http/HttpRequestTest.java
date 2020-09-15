@@ -25,9 +25,8 @@
 
 package jodd.http;
 
-import jodd.io.FastCharArrayWriter;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.upload.FileUpload;
 import jodd.net.MimeTypes;
 import jodd.util.ResourcesUtil;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -386,7 +386,7 @@ class HttpRequestTest {
 	void testBigRequest() throws IOException {
 		final InputStream inputStream = ResourcesUtil.getResourceAsStream("/jodd/http/answer.json");
 
-		final FastCharArrayWriter writter = StreamUtil.copy(inputStream);
+		final CharArrayWriter writter = IOUtil.copy(inputStream);
 		final String body = writter.toString();
 
 		final HttpRequest httpRequest = HttpRequest.get("").body(body);

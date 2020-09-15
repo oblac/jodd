@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
@@ -38,6 +37,7 @@ import jodd.madvoc.meta.Scope;
 import jodd.madvoc.scope.MadvocScope;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.StringUtil;
+import jodd.util.TypeCache;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

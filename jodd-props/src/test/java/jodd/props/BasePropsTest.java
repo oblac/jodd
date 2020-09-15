@@ -26,7 +26,7 @@
 package jodd.props;
 
 import jodd.io.FastCharArrayWriter;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.util.ResourcesUtil;
 
 import java.io.File;
@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 abstract class BasePropsTest {
 
@@ -62,8 +63,8 @@ abstract class BasePropsTest {
 		if (fileName.endsWith(".properties")) {
 			encoding = "ISO-8859-1";
 		}
-		StreamUtil.copy(is, out, encoding);
-		StreamUtil.close(is);
+		IOUtil.copy(is, out, Charset.forName(encoding));
+		IOUtil.close(is);
 		return out.toString();
 	}
 

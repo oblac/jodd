@@ -32,7 +32,7 @@ import jodd.asm7.AnnotationVisitor;
 import jodd.asm7.ClassReader;
 import jodd.asm7.MethodVisitor;
 import jodd.asm7.signature.SignatureReader;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.proxetta.AnnotationInfo;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.GenericsReader;
@@ -81,7 +81,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 * Founded signatures means that those method can be proxyfied.
 	 */
 	public MethodSignatureVisitor lookupMethodSignatureVisitor(final int access, final String name, final String desc, final String className) {
-		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, className);
+		final String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, className);
 		return methodSignatures.get(key);
 	}
 
@@ -161,7 +161,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		AnnotationReader ar = new AnnotationReader(desc, visible);
+		final AnnotationReader ar = new AnnotationReader(desc, visible);
 		if (classAnnotations == null) {
 			classAnnotations = new ArrayList<>();
 		}
@@ -177,8 +177,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 //		if ((access & AsmUtil.ACC_FINAL) != 0) {
 //			return null;	// skip finals
 //		}
-		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.generics);
-		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
+		final MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.generics);
+		final String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
 		allMethodSignatures.add(msign.getCleanSignature());
 		return new MethodAnnotationReader(msign);
@@ -213,10 +213,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			try {
 				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername, classLoader);
 				cr = new ClassReader(inputStream);
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				throw new ProxettaException("Unable to inspect super class: " + nextSupername, ioex);
 			} finally {
-				StreamUtil.close(inputStream);
+				IOUtil.close(inputStream);
 			}
 
 			superList.add(nextSupername);
@@ -231,29 +231,29 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		// check all interface methods that are not overridden in super-interface
 
-		Set<String> todoInterfaces = new HashSet<>(allInterfaces);
-		Set<String> newCollectedInterfaces = new HashSet<>();
+		final Set<String> todoInterfaces = new HashSet<>(allInterfaces);
+		final Set<String> newCollectedInterfaces = new HashSet<>();
 
 		while (true) {
 
-			for (String next : todoInterfaces) {
+			for (final String next : todoInterfaces) {
 				InputStream inputStream = null;
 				ClassReader cr;
 				try {
 					inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
 					cr = new ClassReader(inputStream);
 				}
-				catch (IOException ioex) {
+				catch (final IOException ioex) {
 					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
 				}
 				finally {
-					StreamUtil.close(inputStream);
+					IOUtil.close(inputStream);
 				}
 				superClassReaders.add(cr);				// remember the super class reader
 				cr.accept(new SuperClassVisitor(this), 0);
 
 				if (cr.getInterfaces() != null) {
-					for (String newInterface : cr.getInterfaces()) {
+					for (final String newInterface : cr.getInterfaces()) {
 						if (!allInterfaces.contains(newInterface) && !todoInterfaces.contains(newInterface)) {
 							// new interface found
 							newCollectedInterfaces.add(newInterface);
@@ -288,7 +288,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			final String[] exceptions,
 			final String classname,
 			final Map<String, String> declaredTypeGenerics) {
-		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, declaredTypeGenerics, this);
+		final MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, declaredTypeGenerics, this);
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
 	}
@@ -313,14 +313,14 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		@Override
 		public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-			AnnotationReader ar = new AnnotationReader(desc, visible);
+			final AnnotationReader ar = new AnnotationReader(desc, visible);
 			methodAnns.add(ar);
 			return ar;
 		}
 
 		@Override
 		public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
-			AnnotationReader ar = new AnnotationReader(desc, visible);
+			final AnnotationReader ar = new AnnotationReader(desc, visible);
 			if (methodParamsAnns[parameter] == null) {
 				methodParamsAnns[parameter] = new ArrayList<>();
 			}
@@ -340,7 +340,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			// arguments annotations
 
 			for (int i = 0; i < methodParamsAnns.length; i++) {
-				List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
+				final List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
 
 				if (methodParamsAnn != null) {
 					msign.getArgument(i + 1).annotations = methodParamsAnn.toArray(new AnnotationInfo[0]);
@@ -402,13 +402,13 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				return null;
 			}
 
-			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.superGeneric);
+			final MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.superGeneric);
 			if (allMethodSignatures.contains(msign.getCleanSignature())) {		// skip overridden method by some in above classes
 				return null;
 			}
 
 			msign.setDeclaredClassName(declaredClassName);		// indicates it is not a top level class
-			String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, declaredClassName);
+			final String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, declaredClassName);
 			methodSignatures.put(key, msign);
 			allMethodSignatures.add(msign.getCleanSignature());
 			return new MethodAnnotationReader(msign);

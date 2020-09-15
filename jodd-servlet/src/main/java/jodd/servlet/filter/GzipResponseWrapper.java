@@ -25,7 +25,7 @@
 
 package jodd.servlet.filter;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -101,7 +101,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * with this Response.
 	 */
 	public ServletOutputStream createOutputStream() throws IOException {
-		GzipResponseStream gzstream = new GzipResponseStream(origResponse);
+		final GzipResponseStream gzstream = new GzipResponseStream(origResponse);
 		gzstream.setBuffer(threshold);
 		return gzstream;
 	}
@@ -110,8 +110,8 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * Finishes a response.
 	 */
 	public void finishResponse() {
-		StreamUtil.close(writer);
-		StreamUtil.close(stream);
+		IOUtil.close(writer);
+		IOUtil.close(stream);
 	}
 
 	// ---------------------------------------------------------------- ServletResponse
@@ -157,7 +157,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 
 		stream = createOutputStream();
 		
-		String charEnc = origResponse.getCharacterEncoding();
+		final String charEnc = origResponse.getCharacterEncoding();
 		if (charEnc != null) {
 			writer = new PrintWriter(new OutputStreamWriter(stream, charEnc));
 		} else {

@@ -25,9 +25,9 @@
 
 package jodd.joy.vtor;
 
-import jodd.bean.BeanTemplateParser;
 import jodd.joy.i18n.LocalizationUtil;
 import jodd.util.StringPool;
+import jodd.util.StringTemplateParser;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.Violation;
 
@@ -47,9 +47,9 @@ public class VtorUtil {
 		if (violations == null) {
 			return StringPool.EMPTY;
 		}
-		StringBuilder sb = new StringBuilder().append('[');
+		final StringBuilder sb = new StringBuilder().append('[');
 		for (int i = 0, violationsSize = violations.size(); i < violationsSize; i++) {
-			Violation violation = violations.get(i);
+			final Violation violation = violations.get(i);
 			if (i != 0) {
 				sb.append(',');
 			}
@@ -67,15 +67,14 @@ public class VtorUtil {
 	 * Key is either validation constraint class name or violation name.
 	 */
 	public static String resolveValidationMessage(final HttpServletRequest request, final Violation violation) {
-		ValidationConstraint vc = violation.getConstraint();
-		String key = vc != null ? vc.getClass().getName() : violation.getName();
-		String msg = LocalizationUtil.findMessage(request, key);
+		final ValidationConstraint vc = violation.getConstraint();
+		final String key = vc != null ? vc.getClass().getName() : violation.getName();
+		final String msg = LocalizationUtil.findMessage(request, key);
 		if (msg != null) {
-			return beanTemplateParser.parseWithBean(msg, violation);
+			final StringTemplateParser stringTemplateParser = StringTemplateParser.ofBean(violation);
+			return stringTemplateParser.apply(msg);
 		}
 		return null;
 	}
-
-	private static BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 }

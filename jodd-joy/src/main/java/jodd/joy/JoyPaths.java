@@ -25,9 +25,9 @@
 
 package jodd.joy;
 
-import jodd.system.SystemUtil;
 import jodd.util.ResourcesUtil;
 import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;

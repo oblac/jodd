@@ -25,8 +25,8 @@
 
 package jodd.db.oom.naming;
 
-import jodd.util.Format;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Naming strategy for converting entity names
@@ -89,19 +89,19 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 	 * Converts entity (type) name to table name.
 	 */
 	public String convertEntityNameToTableName(String entityName) {
-		int ndx = entityName.indexOf(entityNameTerminator);
+		final int ndx = entityName.indexOf(entityNameTerminator);
 		if (ndx != -1) {
 			entityName = entityName.substring(0, ndx);
 		}
 
-		StringBuilder tableName = new StringBuilder(entityName.length() * 2);
+		final StringBuilder tableName = new StringBuilder(entityName.length() * 2);
 
 		if (prefix != null) {
 			tableName.append(prefix);
 		}
 
 		if (splitCamelCase) {
-			String convertedTableName = Format.fromCamelCase(entityName, separatorChar);
+			final String convertedTableName = StringUtil.fromCamelCase(entityName, separatorChar);
 			tableName.append(convertedTableName);
 		} else {
 			tableName.append(entityName);
@@ -124,7 +124,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 	 * Converts table name to entity (type) name.
 	 */
 	public String convertTableNameToEntityName(final String tableName) {
-		StringBuilder className = new StringBuilder(tableName.length());
+		final StringBuilder className = new StringBuilder(tableName.length());
 		int len = tableName.length();
 
 		int i = 0;
@@ -142,7 +142,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 		if (splitCamelCase) {
 			boolean toUpper = true;
 			for (; i < len; i++) {
-				char c = tableName.charAt(i);
+				final char c = tableName.charAt(i);
 				if (c == separatorChar) {
 					toUpper = true;
 					continue;
@@ -165,7 +165,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 	 * Returns full table name.
 	 */
 	public String applyToTableName(final String tableName) {
-		String entityName = convertTableNameToEntityName(tableName);
+		final String entityName = convertTableNameToEntityName(tableName);
 
 		return convertEntityNameToTableName(entityName);
 	}

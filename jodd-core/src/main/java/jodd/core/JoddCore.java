@@ -25,8 +25,6 @@
 
 package jodd.core;
 
-import jodd.util.StringPool;
-
 import java.security.Security;
 
 /**
@@ -51,7 +49,7 @@ public class JoddCore {
 	/**
 	 * The encoding used across the Jodd classes, "UTF-8" by default.
 	 */
-	public static String encoding = StringPool.UTF_8;
+	public static String encoding = "UTF-8";
 
 	/**
 	 * Buffer size for various I/O operations.

@@ -46,7 +46,7 @@ description = '''
 '''
 
 //version = '5.1.6-' + date()
-version = '5.1.6'
+version = '5.2.1'
 
 // --- properties -------------------------------------------------------------
 
@@ -60,10 +60,6 @@ ext {
 	jmhVersion = '1.23'
 
 	lib = [
-		mail:			[
-							'jakarta.mail:jakarta.mail-api:1.6.5',
-							'com.sun.mail:jakarta.mail:1.6.5'
-						],
 		activation:		'javax.activation:javax.activation-api:1.2.0',
 		servlet:		'javax.servlet:javax.servlet-api:3.1.0',
 		jsp:			'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3',
@@ -85,7 +81,6 @@ ext {
 		mysql:			'mysql:mysql-connector-java:8.0.12',
 		mssql:			'com.microsoft.sqlserver:mssql-jdbc:6.2.2.jre8',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
-		greenmail:		'com.icegreen:greenmail:1.5.11',
 
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 		server_tomcat:	"org.apache.tomcat:tomcat-catalina:${tomcatVersion}",
@@ -129,6 +124,7 @@ allprojects {
 
 	repositories {
 		mavenCentral()
+//		mavenLocal()
 	}
 }
 

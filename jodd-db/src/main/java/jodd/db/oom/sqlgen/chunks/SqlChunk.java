@@ -87,7 +87,7 @@ public abstract class SqlChunk {
 	 * Current surrounding connections of this chunk will be cut-off.
 	 */
 	public void insertChunkAfter(final SqlChunk previous) {
-		SqlChunk next = previous.nextChunk;
+		final SqlChunk next = previous.nextChunk;
 		previous.nextChunk = this;
 		this.previousChunk = previous;
 		if (next != null) {
@@ -158,7 +158,7 @@ public abstract class SqlChunk {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(final String entityName) {
-		DbEntityDescriptor ded = dbEntityManager.lookupName(entityName);
+		final DbEntityDescriptor ded = dbEntityManager.lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -187,7 +187,7 @@ public abstract class SqlChunk {
 	 * Lookups for table reference and optionally throws an exception if table reference not found.
 	 */
 	protected DbEntityDescriptor lookupTableRef(final String tableRef, final boolean throwExceptionIfNotFound) {
-		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
+		final DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
 		if (ded == null) {
 			if (throwExceptionIfNotFound) {
 				throw new DbSqlBuilderException("Invalid table reference: " + tableRef);
@@ -200,7 +200,7 @@ public abstract class SqlChunk {
 	 * Finds a table that contains given column.
 	 */
 	protected DbEntityDescriptor findColumnRef(final String columnRef) {
-		DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
+		final DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid column reference: [" + columnRef + "]");
 		}
@@ -213,7 +213,7 @@ public abstract class SqlChunk {
 	 * Resolves table name or alias that will be used in the query.
 	 */
 	protected String resolveTable(final String tableRef, final DbEntityDescriptor ded) {
-		String tableAlias = templateData.getTableAlias(tableRef);
+		final String tableAlias = templateData.getTableAlias(tableRef);
 		if (tableAlias != null) {
 			return tableAlias;
 		}
@@ -235,7 +235,7 @@ public abstract class SqlChunk {
 	 * Resolves object to a class.
 	 */
 	protected static Class resolveClass(final Object object) {
-		Class type = object.getClass();
+		final Class type = object.getClass();
 		return type == Class.class ? (Class) object : type;
 	}
 

@@ -25,26 +25,24 @@
 
 package jodd.madvoc.action;
 
-import jodd.mutable.MutableInteger;
-
 public class Person {
 	private String name;
-	private MutableInteger data;
+	private Integer data;
 
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
-	public MutableInteger getData() {
+	public Integer getData() {
 		return data;
 	}
 
-	public void setData(MutableInteger data) {
+	public void setData(final Integer data) {
 		this.data = data;
 	}
 

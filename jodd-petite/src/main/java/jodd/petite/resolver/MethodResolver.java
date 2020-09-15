@@ -52,12 +52,12 @@ public class MethodResolver {
 	 */
 	public MethodInjectionPoint[] resolve(final Class type) {
 		// lookup methods
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		List<MethodInjectionPoint> list = new ArrayList<>();
-		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final List<MethodInjectionPoint> list = new ArrayList<>();
+		final MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 
-		for (MethodDescriptor methodDescriptor : allMethods) {
-			Method method = methodDescriptor.getMethod();
+		for (final MethodDescriptor methodDescriptor : allMethods) {
+			final Method method = methodDescriptor.getMethod();
 
 			if (ClassUtil.isBeanPropertySetter(method)) {
 				// ignore setters
@@ -69,10 +69,10 @@ public class MethodResolver {
 				continue;
 			}
 
-			BeanReferences[] references = referencesResolver.readAllReferencesFromAnnotation(method);
+			final BeanReferences[] references = referencesResolver.readAllReferencesFromAnnotation(method);
 
 			if (references != null) {
-				MethodInjectionPoint methodInjectionPoint = new MethodInjectionPoint(method, references);
+				final MethodInjectionPoint methodInjectionPoint = new MethodInjectionPoint(method, references);
 
 				list.add(methodInjectionPoint);
 			}

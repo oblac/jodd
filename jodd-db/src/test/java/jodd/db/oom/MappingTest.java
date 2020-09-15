@@ -57,7 +57,7 @@ class MappingTest extends DbHsqldbTestCase {
 
 	@Test
 	void testMapping() throws SQLException {
-		DbSession session = new DbThreadSession(cp);
+		final DbSession session = new DbThreadSession(cp);
 
 		executeUpdate(session, "drop table FOO if exists");
 		String sql = "create table FOO (" +
@@ -93,7 +93,7 @@ class MappingTest extends DbHsqldbTestCase {
 		assertEquals(1, foos.size());
 		Foo foo = foos.get(0);
 		assertEquals(1, foo.id);
-		assertEquals(555, foo.number.value);
+		assertEquals(555, foo.number);
 		assertEquals("173", foo.string);
 		assertEquals("7", foo.string2);
 		assertEquals(999, foo.boo.value);
@@ -127,7 +127,7 @@ class MappingTest extends DbHsqldbTestCase {
 		foo.boo.value = 213;
 		foo.color = FooColor.yellow;
 		foo.weight = FooWeight.heavy;
-		foo.number.value = 222;
+		foo.number = 222;
 		foo.timestamp.setYear(108);
 		foo.decimal = new Double("34.12");
 		foo.decimal2 = new BigDecimal("1.099");
@@ -150,7 +150,7 @@ class MappingTest extends DbHsqldbTestCase {
 		assertEquals("371", foo.string);
 		assertEquals("7", foo.string2);
 		assertEquals(213, foo.boo.value);
-		assertEquals(222, foo.number.value);
+		assertEquals(222, foo.number);
 		assertEquals(FooColor.yellow, foo.color);
 		assertEquals(FooWeight.heavy, foo.weight);
 		assertEquals(108, foo.timestamp.getYear());

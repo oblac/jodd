@@ -29,7 +29,6 @@ import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 import jodd.db.type.IntegerSqlType;
-import jodd.mutable.MutableInteger;
 import jodd.time.JulianDate;
 
 import java.math.BigDecimal;
@@ -45,7 +44,7 @@ public class Foo {
 	public long id;
 
 	@DbColumn
-	public MutableInteger number;
+	public Integer number;
 
 	@DbColumn(sqlType = IntegerSqlType.class)
 	public String string;

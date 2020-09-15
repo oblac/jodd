@@ -25,11 +25,11 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.ActionRequest;
+import jodd.util.TypeCache;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -49,12 +49,12 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 
 	@Override
 	public Object intercept(final ActionRequest actionRequest) throws Exception {
-		Object action = actionRequest.getAction();
-		Class actionType = action.getClass();
+		final Object action = actionRequest.getAction();
+		final Class actionType = action.getClass();
 
-		PropertyDescriptor[] allProperties = lookupAnnotatedProperties(actionType);
+		final PropertyDescriptor[] allProperties = lookupAnnotatedProperties(actionType);
 
-		for (PropertyDescriptor propertyDescriptor : allProperties) {
+		for (final PropertyDescriptor propertyDescriptor : allProperties) {
 			onAnnotatedProperty(actionRequest, propertyDescriptor);
 		}
 		return actionRequest.invoke();
@@ -82,12 +82,12 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 			return properties;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
-		List<PropertyDescriptor> list = new ArrayList<>();
+		final List<PropertyDescriptor> list = new ArrayList<>();
 
-		for (PropertyDescriptor propertyDescriptor : allProperties) {
+		for (final PropertyDescriptor propertyDescriptor : allProperties) {
 
 			Annotation ann = null;
 

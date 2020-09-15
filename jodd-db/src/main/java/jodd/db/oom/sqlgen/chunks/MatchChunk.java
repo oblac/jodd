@@ -84,7 +84,7 @@ public class MatchChunk extends SqlChunk {
 		} else {
 			includeColumns = COLS_ONLY_EXISTING;
 		}
-		int eq = expression.indexOf('=');
+		final int eq = expression.indexOf('=');
 		if (eq == -1) {
 			throw new DbSqlBuilderException("Syntax error, expected 'match' equality: {tableRef=objectRef}.");
 		}
@@ -98,23 +98,23 @@ public class MatchChunk extends SqlChunk {
 			data = templateData.lookupObject(objectRef);
 		}
 
-		DbEntityDescriptor ded = tableRef != null ?
+		final DbEntityDescriptor ded = tableRef != null ?
 			lookupTableRef(tableRef) :
 			lookupType(resolveClass(data));
 
-		String table = resolveTable(tableRef, ded);
-		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
-		String typeName = StringUtil.uncapitalize(ded.getEntityName());
+		final String table = resolveTable(tableRef, ded);
+		final DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
+		final String typeName = StringUtil.uncapitalize(ded.getEntityName());
 
 		int count = 0;
 		out.append('(');
-		for (DbEntityColumnDescriptor dec : decList) {
+		for (final DbEntityColumnDescriptor dec : decList) {
 			if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
 				continue;
 			}
-			String property = dec.getPropertyName();
+			final String property = dec.getPropertyName();
 
-			Object value = BeanUtil.declaredSilent.getProperty(data, property);
+			final Object value = BeanUtil.declaredSilent.getProperty(data, property);
 
 			if ((includeColumns == COLS_ONLY_EXISTING) && (value == null)) {
 				continue;

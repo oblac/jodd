@@ -32,8 +32,8 @@ import jodd.jtx.meta.Transaction;
 import jodd.jtx.meta.TransactionAnnotationValues;
 import jodd.jtx.worker.LeanJtxWorker;
 import jodd.proxetta.ProxettaException;
+import jodd.util.AnnotationParser;
 import jodd.util.StringUtil;
-import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -117,7 +117,7 @@ public class AnnotationTxAdviceManager {
 	 * @param unique unique method fingerprint that contains return and arguments type information
 	 */
 	public synchronized JtxTransactionMode getTxMode(final Class type, final String methodName, final Class[] methodArgTypes, final String unique) {
-		String signature = type.getName() + '#' + methodName + '%' + unique;
+		final String signature = type.getName() + '#' + methodName + '%' + unique;
 		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
 			if (!txmap.containsKey(signature)) {
@@ -125,7 +125,7 @@ public class AnnotationTxAdviceManager {
 				final Method m;
 				try {
 					m = type.getMethod(methodName, methodArgTypes);
-				} catch (NoSuchMethodException nsmex) {
+				} catch (final NoSuchMethodException nsmex) {
 					throw new ProxettaException(nsmex);
 				}
 
@@ -173,8 +173,8 @@ public class AnnotationTxAdviceManager {
 	 * Finds TX annotation.
 	 */
 	protected TransactionAnnotationValues readTransactionAnnotation(final Method method) {
-		for (AnnotationParser annotationParser : annotationParsers) {
-			TransactionAnnotationValues tad = TransactionAnnotationValues.of(annotationParser, method);
+		for (final AnnotationParser annotationParser : annotationParsers) {
+			final TransactionAnnotationValues tad = TransactionAnnotationValues.of(annotationParser, method);
 			if (tad != null) {
 				return tad;
 			}

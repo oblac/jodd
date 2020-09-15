@@ -30,7 +30,7 @@ import jodd.http.up.FileUploadable;
 import jodd.http.up.Uploadable;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.MultipartStreamParser;
 import jodd.net.MimeTypes;
@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -66,11 +68,11 @@ public abstract class HttpBase<T> {
 		/**
 		 * Default HTTP query parameters encoding (UTF-8).
 		 */
-		public static String queryEncoding = StringPool.UTF_8;
+		public static String queryEncoding = "UTF-8";
 		/**
 		 * Default form encoding (UTF-8).
 		 */
-		public static String formEncoding = StringPool.UTF_8;
+		public static String formEncoding = "UTF-8";
 		/**
 		 * Default body media type.
 		 */
@@ -78,7 +80,7 @@ public abstract class HttpBase<T> {
 		/**
 		 * Default body encoding (UTF-8).
 		 */
-		public static String bodyEncoding = StringPool.UTF_8;
+		public static String bodyEncoding = "UTF-8";
 		/**
 		 * Default user agent value.
 		 */
@@ -619,11 +621,7 @@ public abstract class HttpBase<T> {
 		if (body == null) {
 			return null;
 		}
-		try {
-			return body.getBytes(StringPool.ISO_8859_1);
-		} catch (final UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return body.getBytes(StandardCharsets.ISO_8859_1);
 	}
 
 	/**
@@ -636,7 +634,7 @@ public abstract class HttpBase<T> {
 			return StringPool.EMPTY;
 		}
 		if (charset != null) {
-			return StringUtil.convertCharset(body, StringPool.ISO_8859_1, charset);
+			return StringUtil.convertCharset(body, StandardCharsets.ISO_8859_1, Charset.forName(charset));
 		}
 		return body();
 	}
@@ -660,7 +658,7 @@ public abstract class HttpBase<T> {
 	 * and "Content-Type" header will be set.
 	 */
 	public T bodyText(String body, final String mediaType, final String charset) {
-		body = StringUtil.convertCharset(body, charset, StringPool.ISO_8859_1);
+		body = StringUtil.convertCharset(body, Charset.forName(charset), StandardCharsets.ISO_8859_1);
 		contentType(mediaType, charset);
 		body(body);
 		return _this();
@@ -693,7 +691,7 @@ public abstract class HttpBase<T> {
 	public T body(final byte[] content, final String contentType) {
 		String body = null;
 		try {
-			body = new String(content, StringPool.ISO_8859_1);
+			body = new String(content, StandardCharsets.ISO_8859_1.name());
 		} catch (final UnsupportedEncodingException ignore) {
 		}
 		contentType(contentType);
@@ -763,7 +761,7 @@ public abstract class HttpBase<T> {
 				final String formEncoding = resolveFormEncoding();
 
 				final String utf8String = StringUtil.convertCharset(
-					string, formEncoding, StringPool.ISO_8859_1);
+					string, Charset.forName(formEncoding), StandardCharsets.ISO_8859_1);
 
 				buffer.append(utf8String);
 			}
@@ -777,7 +775,7 @@ public abstract class HttpBase<T> {
 					final String formEncoding = resolveFormEncoding();
 
 					fileName = StringUtil.convertCharset(
-						fileName, formEncoding, StringPool.ISO_8859_1);
+						fileName, Charset.forName(formEncoding), StandardCharsets.ISO_8859_1);
 				}
 
 				buffer.append("Content-Disposition: form-data; name=\"").append(name);
@@ -986,7 +984,7 @@ public abstract class HttpBase<T> {
 				final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(contentLenValue);
 
 				try {
-					StreamUtil.copy(reader, fastCharArrayWriter, contentLenValue);
+					IOUtil.copy(reader, fastCharArrayWriter, contentLenValue);
 				} catch (final IOException ioex) {
 					throw new HttpException(ioex);
 				}
@@ -1012,7 +1010,7 @@ public abstract class HttpBase<T> {
 					}
 
 					if (len > 0) {
-						StreamUtil.copy(reader, fastCharArrayWriter, len);
+						IOUtil.copy(reader, fastCharArrayWriter, len);
 						reader.readLine();
 					} else {
 						// end reached, read trailing headers, if there is any
@@ -1032,7 +1030,7 @@ public abstract class HttpBase<T> {
 			// body ends when stream closes
 			final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 			try {
-				StreamUtil.copy(reader, fastCharArrayWriter);
+				IOUtil.copy(reader, fastCharArrayWriter);
 			} catch (final IOException ioex) {
 				throw new HttpException(ioex);
 			}
@@ -1042,7 +1040,7 @@ public abstract class HttpBase<T> {
 		// BODY READY - PARSE BODY
 		String charset = this.charset;
 		if (charset == null) {
-			charset = StringPool.ISO_8859_1;
+			charset = StandardCharsets.ISO_8859_1.name();
 		}
 		body = bodyString;
 
@@ -1065,7 +1063,7 @@ public abstract class HttpBase<T> {
 			final MultipartStreamParser multipartParser = new MultipartStreamParser();
 
 			try {
-				final byte[] bodyBytes = bodyString.getBytes(StringPool.ISO_8859_1);
+				final byte[] bodyBytes = bodyString.getBytes(StandardCharsets.ISO_8859_1.name());
 				final ByteArrayInputStream bin = new ByteArrayInputStream(bodyBytes);
 				multipartParser.parseRequestStream(bin, charset);
 			} catch (final IOException ioex) {

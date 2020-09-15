@@ -43,7 +43,7 @@ class PropsBeanTest {
 
 	@Test
 	void testInnerMapToBean() {
-		String data = "http.port=10101\n" +
+		final String data = "http.port=10101\n" +
 			"http.address=localhost\n" +
 			"http.pool=30\n" +
 			"foo=bar";
@@ -51,12 +51,12 @@ class PropsBeanTest {
 		Props props = new Props();
 		props.load(data);
 
-		Map innerMap = props.innerMap("http");
+		final Map innerMap = props.innerMap("http");
 		assertEquals(3, innerMap.size());
 
-		HttpConfig httpConfig = new HttpConfig();
+		final HttpConfig httpConfig = new HttpConfig();
 
-		BeanCopy.fromMap(innerMap).toBean(httpConfig).copy();
+		BeanCopy.from(innerMap).to(httpConfig).copy();
 
 		assertEquals(10101, httpConfig.port);
 		assertEquals(30, httpConfig.pool);
@@ -74,7 +74,7 @@ class PropsBeanTest {
 
 	@Test
 	void testToBean() {
-		String data = "port=10101\n" +
+		final String data = "port=10101\n" +
 			"address=localhost\n" +
 			"pool=30\n" +
 			"foo=bar";

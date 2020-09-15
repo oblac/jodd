@@ -148,20 +148,20 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 			return;
 		}
 		if (hints == null) {
-			String[] joinHints = sqlgen.getJoinHints();
+			final String[] joinHints = sqlgen.getJoinHints();
 			if (joinHints != null) {
 				withHints(joinHints);
 			}
 		}
 		// insert parameters
-		Map<String, ParameterValue> parameters = sqlgen.getQueryParameters();
+		final Map<String, ParameterValue> parameters = sqlgen.getQueryParameters();
 		if (parameters == null) {
 			return;
 		}
-		for (Map.Entry<String, ParameterValue> entry : parameters.entrySet()) {
-			String paramName = entry.getKey();
-			ParameterValue param = entry.getValue();
-			DbEntityColumnDescriptor dec = param.getColumnDescriptor();
+		for (final Map.Entry<String, ParameterValue> entry : parameters.entrySet()) {
+			final String paramName = entry.getKey();
+			final ParameterValue param = entry.getValue();
+			final DbEntityColumnDescriptor dec = param.getColumnDescriptor();
 			if (dec == null) {
 				setObject(paramName, param.getValue());
 			} else {
@@ -179,9 +179,9 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 			return;
 		}
 		ResultSet rs = null;
-		DbEntityDescriptor ded = dec.getDbEntityDescriptor();
+		final DbEntityDescriptor ded = dec.getDbEntityDescriptor();
 		try {
-			DatabaseMetaData dmd = connection.getMetaData();
+			final DatabaseMetaData dmd = connection.getMetaData();
 			rs = dmd.getColumns(null, ded.getSchemaName(), ded.getTableName(), dec.getColumnName());
 			if (rs.next()) {
 				dec.dbSqlType = rs.getInt("DATA_TYPE");
@@ -191,7 +191,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 					log.warn("Column SQL type not available: " + ded.toString() + '.' + dec.getColumnName());
 				}
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			dec.dbSqlType = SqlType.DB_SQLTYPE_NOT_AVAILABLE;
 			if (log.isWarnEnabled()) {
 				log.warn("Column SQL type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
@@ -282,7 +282,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * Executes the query and returns {@link #createResultSetMapper(java.sql.ResultSet) builded ResultSet mapper}.
 	 */
 	protected ResultSetMapper executeAndBuildResultSetMapper() {
-		ResultSet resultSet = execute();
+		final ResultSet resultSet = execute();
 
 		return createResultSetMapper(resultSet);
 	}
@@ -346,9 +346,9 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, final int max, final boolean close) {
-		List<T> result = new ArrayList<>(initialCollectionSize(max));
+		final List<T> result = new ArrayList<>(initialCollectionSize(max));
 
-		ResultSetMapper rsm = executeAndBuildResultSetMapper();
+		final ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
@@ -356,16 +356,16 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		Object previousElement = null;
 
 		while (rsm.next()) {
-			Object[] objects = rsm.parseObjects(types);
-			Object row = resolveRowResults(objects);
+			final Object[] objects = rsm.parseObjects(types);
+			final Object row = resolveRowResults(objects);
 
-			int size = result.size();
+			final int size = result.size();
 
-			T newElement = (T) row;
+			final T newElement = (T) row;
 
 			if (entityAwareMode && size > 0) {
 				if (previousElement != null && newElement != null) {
-					boolean equals;
+					final boolean equals;
 
 					if (newElement.getClass().isArray()) {
 						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
@@ -418,7 +418,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	protected <T> Set<T> listSet(Class[] types, final int max, final boolean close) {
 		final Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
 
-		ResultSetMapper rsm = executeAndBuildResultSetMapper();
+		final ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
@@ -426,16 +426,16 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		Object previousElement = null;
 
 		while (rsm.next()) {
-			Object[] objects = rsm.parseObjects(types);
-			Object row = resolveRowResults(objects);
+			final Object[] objects = rsm.parseObjects(types);
+			final Object row = resolveRowResults(objects);
 
-			int size = result.size();
+			final int size = result.size();
 
-			T newElement = (T) row;
+			final T newElement = (T) row;
 
 			if (entityAwareMode && size > 0) {
 				if (previousElement != null && newElement != null) {
-					boolean equals;
+					final boolean equals;
 
 					if (newElement.getClass().isArray()) {
 						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
@@ -473,9 +473,9 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		if (resultSet == null) {
 			resultSet = execute();
 		}
-		ResultSetMapper rsm = createResultSetMapper(resultSet);
+		final ResultSetMapper rsm = createResultSetMapper(resultSet);
 
-		Iterator<T> iterator = new DbListIterator<>(this, types, rsm, false);
+		final Iterator<T> iterator = new DbListIterator<>(this, types, rsm, false);
 
 		T result = null;
 
@@ -513,14 +513,14 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		if (generatedColumns == null) {
 			return;
 		}
-		DbEntityDescriptor ded = dbOom.entityManager().lookupType(entity.getClass());
+		final DbEntityDescriptor ded = dbOom.entityManager().lookupType(entity.getClass());
 
 		// prepare key types
-		Class[] keyTypes = new Class[generatedColumns.length];
-		String[] properties = new String[generatedColumns.length];
+		final Class[] keyTypes = new Class[generatedColumns.length];
+		final String[] properties = new String[generatedColumns.length];
 		for (int i = 0; i < generatedColumns.length; i++) {
-			String column = generatedColumns[i];
-			DbEntityColumnDescriptor decd = ded.findByColumnName(column);
+			final String column = generatedColumns[i];
+			final DbEntityColumnDescriptor decd = ded.findByColumnName(column);
 			if (decd != null) {
 				keyTypes[i] = decd.getPropertyType();
 				properties[i] = decd.getPropertyName();

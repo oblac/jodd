@@ -25,7 +25,7 @@
 
 package jodd.servlet.filter;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public class ByteArrayRequestWrapper extends HttpServletRequestWrapper {
 	public ByteArrayRequestWrapper(final HttpServletRequest request) throws IOException {
 		super(request);
 		final InputStream requestInputStream = request.getInputStream();
-		this.body = StreamUtil.readBytes(requestInputStream);
+		this.body = IOUtil.readBytes(requestInputStream);
 	}
 
 	@Override

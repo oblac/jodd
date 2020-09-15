@@ -141,13 +141,13 @@ public class Madvoc {
 	@SuppressWarnings("InstanceofCatchParameter")
 	public WebApp startWebApplication(final ServletContext servletContext) {
 		try {
-			WebApp webApp = _start(servletContext);
+			final WebApp webApp = _start(servletContext);
 
 			log.info("Madvoc is up and running.");
 
 			return webApp;
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			if (log != null) {
 				log.error("Madvoc startup failure.", ex);
 			} else {
@@ -230,7 +230,7 @@ public class Madvoc {
 			}
 			webApp = (WebApp) ClassUtil.newInstance(webAppClass);
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			throw new MadvocException("Unable to load Madvoc web application class: " + webAppClassName, ex);
 		}
 
@@ -246,7 +246,7 @@ public class Madvoc {
 		}
 		try {
 			return new Props().loadFromClasspath(patterns);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException("Unable to load Madvoc parameters from: " +
 					Converter.get().toString(patterns) + ".properties': " + ex.toString(), ex);
 		}
@@ -269,7 +269,7 @@ public class Madvoc {
 			}
 
 			log.info("Configuring Madvoc using: " + madvocConfiguratorClass.getName());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException("Unable to load Madvoc configurator class: " + madvocConfiguratorClassName, ex);
 		}
 	}

@@ -30,7 +30,7 @@ import jodd.exception.UncheckedException;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -40,6 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -246,7 +248,7 @@ public class Props implements Cloneable {
 		final String extension = FileNameUtil.getExtension(file.getAbsolutePath());
 		final String data;
 		if (extension.equalsIgnoreCase("properties")) {
-			data = FileUtil.readString(file, StringPool.ISO_8859_1);
+			data = FileUtil.readString(file, StandardCharsets.ISO_8859_1);
 		} else {
 			data = FileUtil.readString(file);
 		}
@@ -258,7 +260,7 @@ public class Props implements Cloneable {
 	 * Loads properties from the file in provided encoding.
 	 */
 	public Props load(final File file, final String encoding) throws IOException {
-		parse(FileUtil.readString(file, encoding));
+		parse(FileUtil.readString(file, Charset.forName(encoding)));
 		return this;
 	}
 
@@ -267,7 +269,7 @@ public class Props implements Cloneable {
 	 */
 	public Props load(final InputStream in) throws IOException {
 		final Writer out = new FastCharArrayWriter();
-		StreamUtil.copy(in, out);
+		IOUtil.copy(in, out);
 		parse(out.toString());
 		return this;
 	}
@@ -278,7 +280,7 @@ public class Props implements Cloneable {
 	 */
 	public Props load(final InputStream in, final String encoding) throws IOException {
 		final Writer out = new FastCharArrayWriter();
-		StreamUtil.copy(in, out, encoding);
+		IOUtil.copy(in, out, Charset.forName(encoding));
 		parse(out.toString());
 		return this;
 	}
@@ -346,7 +348,7 @@ public class Props implements Cloneable {
 			.registerEntryConsumer(entryData -> {
 				String usedEncoding = JoddCore.encoding;
 				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
-					usedEncoding = StringPool.ISO_8859_1;
+					usedEncoding = StandardCharsets.ISO_8859_1.name();
 				}
 
 				final String encoding = usedEncoding;
@@ -639,7 +641,7 @@ public class Props implements Cloneable {
 			prefix += StringPool.DOT;
 		}
 
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
+		for (final Map.Entry<?, ?> entry : map.entrySet()) {
 			String key = entry.getKey().toString();
 
 			key = prefix + key;
@@ -700,10 +702,10 @@ public class Props implements Cloneable {
 	 * Returns all profiles names.
 	 */
 	public String[] getAllProfiles() {
-		String[] profiles = new String[data.profileProperties.size()];
+		final String[] profiles = new String[data.profileProperties.size()];
 
 		int index = 0;
-		for (String profileName : data.profileProperties.keySet()) {
+		for (final String profileName : data.profileProperties.keySet()) {
 			profiles[index] = profileName;
 			index++;
 		}
@@ -715,15 +717,15 @@ public class Props implements Cloneable {
 	 * Key name is given as a wildcard, or it can be matched fully.
 	 */
 	public String[] getProfilesFor(final String propKeyNameWildcard) {
-		HashSet<String> profiles = new HashSet<>();
+		final HashSet<String> profiles = new HashSet<>();
 
 		profile:
-		for (Map.Entry<String, Map<String, PropsEntry>> entries : data.profileProperties.entrySet()) {
-			String profileName = entries.getKey();
+		for (final Map.Entry<String, Map<String, PropsEntry>> entries : data.profileProperties.entrySet()) {
+			final String profileName = entries.getKey();
 
-			Map<String, PropsEntry> value = entries.getValue();
+			final Map<String, PropsEntry> value = entries.getValue();
 
-			for (String propKeyName : value.keySet()) {
+			for (final String propKeyName : value.keySet()) {
 				if (Wildcard.equalsOrMatch(propKeyName, propKeyNameWildcard)) {
 					profiles.add(profileName);
 					continue profile;

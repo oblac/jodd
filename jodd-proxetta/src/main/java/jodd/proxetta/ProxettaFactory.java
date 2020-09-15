@@ -28,7 +28,7 @@ package jodd.proxetta;
 import jodd.asm7.ClassReader;
 import jodd.asm7.ClassWriter;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.proxetta.asm.TargetClassInfoReader;
@@ -126,7 +126,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			targetClass = null;
 		}
 		catch (final IOException ioex) {
-			StreamUtil.close(targetInputStream);
+			IOUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
 		return _this();
@@ -147,7 +147,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			targetClassName = target.getName();
 		}
 		catch (final IOException ioex) {
-			StreamUtil.close(targetInputStream);
+			IOUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
 		return _this();

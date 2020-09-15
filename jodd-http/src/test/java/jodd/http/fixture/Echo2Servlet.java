@@ -25,20 +25,19 @@
 
 package jodd.http.fixture;
 
-import jodd.util.StringPool;
-
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @MultipartConfig
 public class Echo2Servlet extends EchoServlet {
 
 	@Override
-	protected void readAll(HttpServletRequest req) throws IOException {
+	protected void readAll(final HttpServletRequest req) throws IOException {
 		Data.ref.queryString = req.getQueryString();
 		Data.ref.header = copyHeaders(req);
-		Data.ref.params = copyParams(req, StringPool.UTF_8);
+		Data.ref.params = copyParams(req, StandardCharsets.UTF_8.name());
 		Data.ref.parts = copyParts(req);
 		Data.ref.fileNames = copyFileName(req);
 	}

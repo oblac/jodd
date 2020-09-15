@@ -31,6 +31,7 @@ import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -48,16 +49,16 @@ public class HttpUtil {
 			return StringPool.EMPTY;
 		}
 
-		int queryMapSize = queryMap.size();
+		final int queryMapSize = queryMap.size();
 
-		StringBand query = new StringBand(queryMapSize * 4);
+		final StringBand query = new StringBand(queryMapSize * 4);
 
 		int count = 0;
-		for (Map.Entry<String, ?> entry : queryMap) {
+		for (final Map.Entry<String, ?> entry : queryMap) {
 			String key = entry.getKey();
-			key = URLCoder.encodeQueryParam(key, encoding);
+			key = URLCoder.encodeQueryParam(key, Charset.forName(encoding));
 
-			Object value = entry.getValue();
+			final Object value = entry.getValue();
 
 			if (value == null) {
 				if (count != 0) {
@@ -75,7 +76,7 @@ public class HttpUtil {
 				count++;
 				query.append('=');
 
-				String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
+				final String valueString = URLCoder.encodeQueryParam(value.toString(), Charset.forName(encoding));
 				query.append(valueString);
 			}
 		}
@@ -145,12 +146,12 @@ public class HttpUtil {
 			return "WWW-Authenticate";
 		}
 
-		char[] name = headerName.toCharArray();
+		final char[] name = headerName.toCharArray();
 
 		boolean capitalize = true;
 
 		for (int i = 0; i < name.length; i++) {
-			char c = name[i];
+			final char c = name[i];
 
 			if (c == '-') {
 				capitalize = true;
@@ -174,7 +175,7 @@ public class HttpUtil {
 	 * Extracts media-type from value of "Content Type" header.
 	 */
 	public static String extractMediaType(final String contentType) {
-		int index = contentType.indexOf(';');
+		final int index = contentType.indexOf(';');
 
 		if (index == -1) {
 			return contentType;
@@ -232,7 +233,7 @@ public class HttpUtil {
 				return null;
 			}
 
-			String paramName = header.substring(index, eqNdx);
+			final String paramName = header.substring(index, eqNdx);
 
 			eqNdx++;
 
@@ -241,7 +242,7 @@ public class HttpUtil {
 				continue;
 			}
 
-			int endIndex = header.indexOf(';', eqNdx);
+			final int endIndex = header.indexOf(';', eqNdx);
 
 			if (endIndex == -1) {
 				return header.substring(eqNdx);

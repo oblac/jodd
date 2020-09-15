@@ -25,7 +25,7 @@
 
 package jodd.test;
 
-import jodd.system.SystemUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;

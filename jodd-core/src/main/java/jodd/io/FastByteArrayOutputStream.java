@@ -25,12 +25,12 @@
 
 package jodd.io;
 
-import jodd.util.StringUtil;
 import jodd.buffer.FastByteBuffer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * This class implements an {@link OutputStream} in which the data is
@@ -141,6 +141,6 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @see ByteArrayOutputStream#toString(String)
 	 */
 	public String toString(final String enc) {
-		return StringUtil.newString(toByteArray(), enc);
+		return new String(toByteArray(), Charset.forName(enc));
 	}
 }

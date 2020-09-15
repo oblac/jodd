@@ -93,7 +93,7 @@ public class DecoraServletFilter implements Filter {
 			try {
 				final Class decoraManagerType = ClassLoaderUtil.loadClass(decoraManagerClass);
 				decoraManager = (DecoraManager) ClassUtil.newInstance(decoraManagerType);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				log.error("Unable to load Decora manager class: " + decoraManagerClass, ex);
 				throw new ServletException(ex);
 			}
@@ -109,7 +109,7 @@ public class DecoraServletFilter implements Filter {
 			try {
 				final Class decoraParserType = ClassLoaderUtil.loadClass(decoraParserClass);
 				decoraParser = (DecoraParser) ClassUtil.newInstance(decoraParserType);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				log.error("Unable to load Decora parser class: " + decoraParserClass, ex);
 				throw new ServletException(ex);
 			}

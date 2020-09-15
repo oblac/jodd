@@ -29,7 +29,7 @@ import jodd.core.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.MultipartRequestInputStream;
 
@@ -105,8 +105,8 @@ public class AdaptiveFileUpload extends FileUpload {
 
 
 	protected boolean matchFileExtension() throws IOException {
-		String fileNameExtension = FileNameUtil.getExtension(getHeader().getFileName());
-		for (String fileExtension : fileExtensions) {
+		final String fileNameExtension = FileNameUtil.getExtension(getHeader().getFileName());
+		for (final String fileExtension : fileExtensions) {
 			if (fileNameExtension.equalsIgnoreCase(fileExtension)) {
 				if (!allowFileExtensions) {	// extension matched and it is not allowed
 					if (breakOnError) {
@@ -147,8 +147,8 @@ public class AdaptiveFileUpload extends FileUpload {
 		}
 		size = 0;
 		if (memoryThreshold > 0) {
-			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream(memoryThreshold + 1);
-			int written = input.copyMax(fbaos, memoryThreshold + 1);
+			final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream(memoryThreshold + 1);
+			final int written = input.copyMax(fbaos, memoryThreshold + 1);
 			data = fbaos.toByteArray();
 			if (written <= memoryThreshold) {
 				size = data.length;
@@ -158,7 +158,7 @@ public class AdaptiveFileUpload extends FileUpload {
 		}
 
 		tempFile = FileUtil.createTempFile(JoddCore.tempFilePrefix, TMP_FILE_SUFFIX, uploadPath);
-		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
+		final BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;
 			out.write(data);
@@ -183,7 +183,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 			valid = true;
 		} finally {
-			StreamUtil.close(out);
+			IOUtil.close(out);
 			if (deleteTempFile) {
 				tempFile.delete();
 				tempFile = null;

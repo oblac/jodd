@@ -75,7 +75,7 @@ public abstract class SqlType<T> {
 	 * Stores value in database. Value is casted to sql type.
 	 */
 	public void storeValue(final PreparedStatement st, final int index, final Object value, final int dbSqlType) throws SQLException {
-		T t = TypeConverterManager.get().convertType(value, sqlType);
+		final T t = TypeConverterManager.get().convertType(value, sqlType);
 		set(st, index, t, dbSqlType);
 	}
 
@@ -87,7 +87,7 @@ public abstract class SqlType<T> {
 	 * @param dbSqlType hint for column sql type value
 	 */
 	public <E> E readValue(final ResultSet rs, final int index, final Class<E> destinationType, final int dbSqlType) throws SQLException {
-		T t = get(rs, index, dbSqlType);
+		final T t = get(rs, index, dbSqlType);
 		return prepareGetValue(t, destinationType);
 	}
 

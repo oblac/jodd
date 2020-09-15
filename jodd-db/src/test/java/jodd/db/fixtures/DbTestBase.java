@@ -32,7 +32,7 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
-import jodd.system.SystemUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,15 +115,15 @@ public abstract class DbTestBase {
 		return new DbThreadSession(cp);
 	}
 
-	protected int executeUpdate(DbSession session, String sql) {
+	protected int executeUpdate(final DbSession session, final String sql) {
 		return DbQuery.query(session, sql).autoClose().executeUpdate();
 	}
 
-	protected void executeUpdate(String sql) {
+	protected void executeUpdate(final String sql) {
 		DbQuery.query(sql).autoClose().executeUpdate();
 	}
 
-	protected long executeCount(DbSession session, String sql) {
+	protected long executeCount(final DbSession session, final String sql) {
 		return DbQuery.query(session, sql).autoClose().executeCount();
 	}
 

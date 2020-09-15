@@ -26,7 +26,6 @@
 package jodd.http;
 
 import jodd.http.up.Uploadable;
-import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +33,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,13 +47,13 @@ class BufferTest {
 		final int size;
 		final byte[] bytes;
 
-		public SimpleUploadable(int size) {
+		public SimpleUploadable(final int size) {
 			this.size = size;
 			bytes = new byte[size];
 
 			Arrays.fill(bytes, (byte) '*');
 		}
-		public SimpleUploadable(int size, char c) {
+		public SimpleUploadable(final int size, final char c) {
 			this.size = size;
 			bytes = new byte[size];
 
@@ -90,12 +90,12 @@ class BufferTest {
 		StringBuilder sb = new StringBuilder();
 
 		@Override
-		public int callbackSize(int size) {
+		public int callbackSize(final int size) {
 			return 10;
 		}
 
 		@Override
-		public void transferred(int len) {
+		public void transferred(final int len) {
 			if (sb.length() > 0) {
 				sb.append(':');
 			}
@@ -105,7 +105,7 @@ class BufferTest {
 
 	@Test
 	void testBufferAppend() {
-		Buffer buffer = new Buffer();
+		final Buffer buffer = new Buffer();
 
 		assertEquals(0, buffer.size());
 		assertEquals(0, buffer.list.size());
@@ -134,7 +134,7 @@ class BufferTest {
 		assertEquals(3, buffer.list.size());
 		assertNotNull(buffer.last);
 
-		Buffer buffer2 = new Buffer();
+		final Buffer buffer2 = new Buffer();
 		buffer2.append(new SimpleUploadable(20));
 
 		buffer.append(buffer2);
@@ -159,7 +159,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("12345", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("12345", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:5", hpl.sb.toString());
 
 		// size = callbackSize
@@ -171,7 +171,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("1234567890", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("1234567890", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10", hpl.sb.toString());
 
 		// size > callbackSize
@@ -183,7 +183,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("1234567890ABC", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("1234567890ABC", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:13", hpl.sb.toString());
 	}
 
@@ -205,7 +205,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("12345**********67", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("12345**********67", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:17", hpl.sb.toString());
 
 		// size = callbackSize
@@ -219,7 +219,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("12345*****", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("12345*****", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10", hpl.sb.toString());
 
 		// size > callbackSize
@@ -234,13 +234,13 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("12345*********************X", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("12345*********************X", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:20:27", hpl.sb.toString());
 	}
 
 	@Test
 	void testBufferWrite3() throws IOException {
-		Buffer buffer;
+		final Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;
 
@@ -256,7 +256,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("****++++----", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("****++++----", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:12", hpl.sb.toString());
 
 		//
@@ -268,7 +268,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("****++++----12345678", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("****++++----12345678", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:20", hpl.sb.toString());
 
 		//
@@ -280,7 +280,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("****++++----12345678A", baos.toString(StringPool.ISO_8859_1));
+		assertEquals("****++++----12345678A", baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:20:21", hpl.sb.toString());
 
 		//
@@ -292,7 +292,7 @@ class BufferTest {
 		hpl = new SimpleProgressListener();
 		buffer.writeTo(baos, hpl);
 
-		assertEquals("****++++----12345678A" + StringUtil.repeat('#', 30), baos.toString(StringPool.ISO_8859_1));
+		assertEquals("****++++----12345678A" + StringUtil.repeat('#', 30), baos.toString(StandardCharsets.ISO_8859_1.name()));
 		assertEquals("0:10:20:30:40:50:51", hpl.sb.toString());
 
 	}

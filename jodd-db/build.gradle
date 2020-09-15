@@ -6,7 +6,6 @@ apply plugin: 'kotlin'
 
 dependencies {
 	api project(':jodd-core')
-	api project(':jodd-bean')
 	api project(':jodd-jtx')
 	api project(':jodd-props')
 	implementation project(':jodd-log')

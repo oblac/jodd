@@ -28,7 +28,7 @@ package jodd.io.upload.impl;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.FileUploadFactory;
 import jodd.io.upload.MultipartRequestInputStream;
-import jodd.system.SystemUtil;
+import jodd.util.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 		if (destFolder == null) {
 			destFolder = SystemUtil.info().getTempDir();
 		}
-		File destination = new File(destFolder);
+		final File destination = new File(destFolder);
 		if (!destination.exists()) {
 			destination.mkdirs();
 		}

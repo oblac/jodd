@@ -25,9 +25,9 @@
 
 package jodd.methref;
 
-import jodd.cache.TypeCache;
 import jodd.proxetta.ProxettaUtil;
 import jodd.util.ClassUtil;
+import jodd.util.TypeCache;
 
 import java.lang.reflect.Field;
 import java.util.function.Consumer;

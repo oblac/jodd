@@ -49,19 +49,19 @@ class FindFileTest {
 		if (dataRoot != null) {
 			return;
 		}
-		URL data = FileUtilTest.class.getResource("data");
+		final URL data = FindFileTest.class.getResource("data");
 		dataRoot = data.getFile();
 	}
 
 	@Test
 	void testUncompleted() {
-		List<File> fileList = FindFile.create().findAll();
+		final List<File> fileList = FindFile.create().findAll();
 		assertEquals(0, fileList.size());
 	}
 
 	@Test
 	void testTwoAccept() {
-		FindFile ff = new WildcardFindFile()
+		final FindFile ff = new WildcardFindFile()
 						.include("**/*file/a.png")
 						.include("**/*file/a.txt")
 						.recursive(true)
@@ -81,7 +81,7 @@ class FindFileTest {
 					if (!path.startsWith("/")) {
 						path = '/' + path;
 					}
-					boolean matched =
+					final boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 							path.equals(dataRoot + "/file/a.txt");
 
@@ -95,7 +95,7 @@ class FindFileTest {
 
 	@Test
 	void testWildcardFile() {
-		FindFile ff = new WildcardFindFile()
+		final FindFile ff = new WildcardFindFile()
 				.include("**/*file/a*")
 				.recursive(true)
 				.includeDirs(true)
@@ -115,7 +115,7 @@ class FindFileTest {
 				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
-				boolean matched =
+				final boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 								path.equals(dataRoot + "/file/a.txt");
 
@@ -129,8 +129,8 @@ class FindFileTest {
 
 		ff.searchPath(dataRoot);
 
-		MutableInteger countDirs2 = new MutableInteger();
-		MutableInteger countFiles2 = new MutableInteger();
+		final MutableInteger countDirs2 = new MutableInteger();
+		final MutableInteger countFiles2 = new MutableInteger();
 
 		ff.forEach(file -> {
 			if (file.isDirectory()) {
@@ -143,7 +143,7 @@ class FindFileTest {
 					path = '/' + path;
 				}
 
-				boolean matched =
+				final boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 								path.equals(dataRoot + "/file/a.txt");
 
@@ -157,7 +157,7 @@ class FindFileTest {
 
 	@Test
 	void testWildcardPath() {
-		FindFile ff = new WildcardFindFile()
+		final FindFile ff = new WildcardFindFile()
 				.include("**/file/*")
 				.recursive(true)
 				.includeDirs(true)
@@ -178,7 +178,7 @@ class FindFileTest {
 					path = '/' + path;
 				}
 
-				boolean matched =
+				final boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 								path.equals(dataRoot + "/file/a.txt");
 
@@ -192,7 +192,7 @@ class FindFileTest {
 
 	@Test
 	void testRegexp() {
-		FindFile ff = FindFile.createRegExpFF()
+		final FindFile ff = FindFile.createRegExpFF()
 				.include(".*/a[.].*")
 				.recursive(true)
 				.includeDirs(true)
@@ -213,7 +213,7 @@ class FindFileTest {
 					path = '/' + path;
 				}
 
-				boolean matched =
+				final boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 								path.equals(dataRoot + "/file/a.txt");
 
@@ -228,7 +228,7 @@ class FindFileTest {
 
 	@Test
 	void testFindAll() {
-		List<File> foundedFiles = new WildcardFindFile()
+		final List<File> foundedFiles = new WildcardFindFile()
 			.include("**/*file/a*")
 			.recursive(true)
 			.includeDirs(true)
@@ -237,7 +237,7 @@ class FindFileTest {
 
 		assertEquals(2, foundedFiles.size());
 
-		List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
+		final List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
 
 		assertTrue(names.contains("a.png"));
 		assertTrue(names.contains("a.txt"));
@@ -257,7 +257,7 @@ class FindFileTest {
 
 		assertEquals(2, foundedFiles.size());
 
-		List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
+		final List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
 
 		assertTrue(names.contains("a.png"));
 		assertTrue(names.contains("a.txt"));

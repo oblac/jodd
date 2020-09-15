@@ -25,9 +25,9 @@
 
 package jodd.util.cl;
 
-import jodd.system.SystemUtil;
 import jodd.util.ArraysUtil;
 import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import jodd.util.Wildcard;
 
 import java.io.IOException;
@@ -98,7 +98,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		if (excludeJrePackagesFromLoader) {
 			final String[] corePackages = SystemUtil.info().getJrePackages();
 
-			for (String corePackage : corePackages) {
+			for (final String corePackage : corePackages) {
 				if (corePackage.equals("javax")) {
 					// javax is NOT forbidden
 					continue;
@@ -141,7 +141,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	 * at least one package rule from the list.
 	 */
 	protected boolean isMatchingRules(final String name, final String... rules) {
-		for (String rule : rules) {
+		for (final String rule : rules) {
 			if (Wildcard.equalsOrMatch(name, rule)) {
 				return true;
 			}
@@ -222,7 +222,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		// class not loaded yet
 
-		Loading loading = resolveLoading(parentFirst, className);
+		final Loading loading = resolveLoading(parentFirst, className);
 
 		if (parentFirst) {
 			// PARENT FIRST
@@ -230,7 +230,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 				try {
 					c = parentClassLoader.loadClass(className);
 				}
-				catch (ClassNotFoundException ignore) {
+				catch (final ClassNotFoundException ignore) {
 				}
 			}
 
@@ -248,7 +248,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 				try {
 					c = this.findClass(className);
 				}
-				catch (ClassNotFoundException ignore) {
+				catch (final ClassNotFoundException ignore) {
 				}
 			}
 
@@ -276,7 +276,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		URL url = null;
 
-		Loading loading = resolveResourceLoading(parentFirst, resourceName);
+		final Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			// PARENT FIRST
@@ -310,10 +310,10 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		final List<URL> urls = new ArrayList<>();
 
-		Enumeration<URL> loaderUrls = this.findResources(resourceName);
-		Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);
+		final Enumeration<URL> loaderUrls = this.findResources(resourceName);
+		final Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);
 
-		Loading loading = resolveResourceLoading(parentFirst, resourceName);
+		final Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			if (loading.withParent) {
@@ -340,7 +340,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 			}
 		}
 		return new Enumeration<URL>() {
-			Iterator<URL> iterator = urls.iterator();
+			final Iterator<URL> iterator = urls.iterator();
 
 			@Override
 			public boolean hasMoreElements() {

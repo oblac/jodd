@@ -55,7 +55,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#argumentsCount()}.
 	 */
 	public static void argumentsCount(final MethodVisitor mv, final MethodInfo methodInfo) {
-		int argsCount = methodInfo.getArgumentsCount();
+		final int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 	}
 
@@ -81,7 +81,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#createArgumentsArray()}.
 	 */
 	public static void createArgumentsArray(final MethodVisitor mv, final MethodInfo methodInfo) {
-		int argsCount = methodInfo.getArgumentsCount();
+		final int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 		mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT);
 		for (int i = 0; i < argsCount; i++) {
@@ -96,7 +96,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#createArgumentsClassArray()}.
 	 */
 	public static void createArgumentsClassArray(final MethodVisitor mv, final MethodInfo methodInfo) {
-		int argsCount = methodInfo.getArgumentsCount();
+		final int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 		mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_CLASS);
 		for (int i = 0; i < argsCount; i++) {
@@ -139,7 +139,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#targetClass()}.
 	 */
 	public static void targetClass(final MethodVisitor mv, final MethodInfo methodInfo) {
-		ClassInfo classInfo = methodInfo.getClassInfo();
+		final ClassInfo classInfo = methodInfo.getClassInfo();
 		mv.visitLdcInsn(Type.getType('L' + classInfo.getReference() + ';'));
 	}
 
@@ -204,7 +204,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(String, String)}.
 	 */
 	public static void targetMethodAnnotation(final MethodVisitor mv, final MethodInfo methodInfo, final String[] args) {
-		AnnotationInfo[] anns = methodInfo.getAnnotations();
+		final AnnotationInfo[] anns = methodInfo.getAnnotations();
 
 		if (anns != null) {
 			targetAnnotation(mv, anns, args);
@@ -215,7 +215,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#targetClassAnnotation(String, String)}.
 	 */
 	public static void targetClassAnnotation(final MethodVisitor mv, final ClassInfo classInfo, final String[] args) {
-		AnnotationInfo[] anns = classInfo.getAnnotations();
+		final AnnotationInfo[] anns = classInfo.getAnnotations();
 
 		if (anns != null) {
 			targetAnnotation(mv, anns, args);
@@ -225,26 +225,26 @@ public class ProxyTargetReplacement {
 	}
 
 	private static void targetAnnotation(final MethodVisitor mv, final AnnotationInfo[] anns, final String[] args) {
-		for (AnnotationInfo ann : anns) {
-			String annotationSignature = ann.getAnnotationSignature();
+		for (final AnnotationInfo ann : anns) {
+			final String annotationSignature = ann.getAnnotationSignature();
 			Method annotationMethod = null;
 
 			if (annotationSignature.equals(args[0])) {
-				String elementName = args[1];
+				final String elementName = args[1];
 				Object elementValue = ann.getElement(elementName);
 
 				if (elementValue == null) {
 					// read default annotation
-					String annotationClass = ann.getAnnotationClassname();
+					final String annotationClass = ann.getAnnotationClassname();
 
 					try {
-						Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+						final Class annotation = ClassLoaderUtil.loadClass(annotationClass);
 
 						annotationMethod = annotation.getMethod(elementName);
 
 						elementValue = annotationMethod.getDefaultValue();
 					}
-					catch (Exception ignore) {
+					catch (final Exception ignore) {
 						elementValue = null;
 					}
 
@@ -254,7 +254,7 @@ public class ProxyTargetReplacement {
 					}
 				}
 
-				Class elementValueClass = elementValue.getClass();
+				final Class elementValueClass = elementValue.getClass();
 
 				if (!elementValueClass.isArray()) {
 					// non-arrays
@@ -265,21 +265,21 @@ public class ProxyTargetReplacement {
 					// arrays
 					Class componentType = elementValueClass.getComponentType();
 
-					String annotationClass = ann.getAnnotationClassname();
+					final String annotationClass = ann.getAnnotationClassname();
 
 					try {
 						if (annotationMethod == null) {
-							Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+							final Class annotation = ClassLoaderUtil.loadClass(annotationClass);
 
 							annotationMethod = annotation.getMethod(elementName);
 						}
 
 						componentType = annotationMethod.getReturnType().getComponentType();
 					}
-					catch (Exception ignore) {
+					catch (final Exception ignore) {
 					}
 
-					int size = Array.getLength(elementValue);
+					final int size = Array.getLength(elementValue);
 
 					ProxettaAsmUtil.pushInt(mv, size);
 
@@ -290,7 +290,7 @@ public class ProxyTargetReplacement {
 
 						ProxettaAsmUtil.pushInt(mv, i);
 
-						Object value = Array.get(elementValue, i);
+						final Object value = Array.get(elementValue, i);
 						ProxettaAsmUtil.visitElementValue(mv, value, false);
 
 						ProxettaAsmUtil.storeIntoArray(mv, componentType);

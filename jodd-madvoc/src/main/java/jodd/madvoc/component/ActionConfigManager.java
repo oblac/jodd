@@ -25,15 +25,15 @@
 
 package jodd.madvoc.component;
 
-import jodd.cache.TypeCache;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotationValues;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.AnnotationParser;
 import jodd.util.ArraysUtil;
-import jodd.util.annotation.AnnotationParser;
+import jodd.util.TypeCache;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -148,7 +148,7 @@ public class ActionConfigManager {
 
 			return actionConfig;
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			throw new MadvocException("Invalid action configuration class: " + actionConfigClass.getSimpleName(), ex);
 		}
 	}

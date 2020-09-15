@@ -82,7 +82,7 @@ public class DbMetaUtil {
 	 * Returns <code>true</code> if class is annotated with <code>DbTable</code> annotation.
 	 */
 	public static boolean resolveIsAnnotated(final Class<?> type) {
-		DbTable dbTable = type.getAnnotation(DbTable.class);
+		final DbTable dbTable = type.getAnnotation(DbTable.class);
 		return dbTable != null;
 	}
 
@@ -167,7 +167,7 @@ public class DbMetaUtil {
 	 * Resolves mapped types from {@link jodd.db.oom.meta.DbMapTo} annotation.
 	 */
 	public static Class[] resolveMappedTypes(final Class type) {
-		DbMapTo dbMapTo = (DbMapTo) type.getAnnotation(DbMapTo.class);
+		final DbMapTo dbMapTo = (DbMapTo) type.getAnnotation(DbMapTo.class);
 		if (dbMapTo == null) {
 			return null;
 		}

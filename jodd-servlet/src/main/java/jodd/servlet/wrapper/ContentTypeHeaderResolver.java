@@ -38,7 +38,7 @@ public class ContentTypeHeaderResolver {
 	private final String encoding;
 
 	public ContentTypeHeaderResolver(final String fullContentType) {
-		int charsetNdx = fullContentType.lastIndexOf("charset=");
+		final int charsetNdx = fullContentType.lastIndexOf("charset=");
 
 		encoding = charsetNdx != -1 ? extractContentTypeValue(fullContentType, charsetNdx + 8) : null;
 

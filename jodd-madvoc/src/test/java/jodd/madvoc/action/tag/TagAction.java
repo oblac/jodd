@@ -26,10 +26,10 @@
 package jodd.madvoc.action.tag;
 
 import jodd.bean.BeanCopy;
-import jodd.madvoc.meta.method.GET;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.meta.method.GET;
 import jodd.madvoc.result.TextResult;
 
 @MadvocAction("/tag")
@@ -42,16 +42,16 @@ public class TagAction {
 	Tag tag;
 
 	// simulate service call
-	private Tag loadTagById(Long id) {
-		Tag tag = new Tag();
+	private Tag loadTagById(final Long id) {
+		final Tag tag = new Tag();
 		tag.setTagId(id);
 		tag.setName("jodd");
 		return tag;
 	}
 
 	// applies changes from source to destination
-	private void apply(Tag source, Tag dest) {
-		BeanCopy.beans(source, dest).ignoreNulls(true).copy();
+	private void apply(final Tag source, final Tag dest) {
+		BeanCopy.from(source).to(dest).filter((s, o) -> o != null).copy();
 	}
 
 	@RestAction(value = "disable/{id}")
@@ -71,7 +71,7 @@ public class TagAction {
 	@RestAction(value = "{id}")
 	//@RestAction(value = "edit/{id}")
 	public TextResult edit() {
-		Tag oldTag = loadTagById(id);
+		final Tag oldTag = loadTagById(id);
 
 		apply(tag, oldTag);
 
@@ -92,8 +92,8 @@ public class TagAction {
 
 	@GET @RestAction("boom")
 	public TextResult exception() {
-		int b = 0;
-		int a = 5 / b;
+		final int b = 0;
+		final int a = 5 / b;
 		return TextResult.of("Hi" + a);
 	}
 

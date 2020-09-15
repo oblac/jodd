@@ -26,7 +26,7 @@
 package jodd.io.upload.impl;
 
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.MultipartRequestInputStream;
 
@@ -112,7 +112,7 @@ public class DiskFileUpload extends FileUpload {
 			}
 			valid = true;
 		} finally {
-			StreamUtil.close(out);
+			IOUtil.close(out);
 		}
 	}
 

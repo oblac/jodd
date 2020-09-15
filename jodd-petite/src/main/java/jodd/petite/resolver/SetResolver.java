@@ -47,24 +47,24 @@ public class SetResolver {
 	 * Resolves all collections for given type.
 	 */
 	public SetInjectionPoint[] resolve(final Class type, final boolean autowire) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		List<SetInjectionPoint> list = new ArrayList<>();
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		final List<SetInjectionPoint> list = new ArrayList<>();
 
-		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+		final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
-		for (PropertyDescriptor propertyDescriptor : allProperties) {
+		for (final PropertyDescriptor propertyDescriptor : allProperties) {
 
 			if (propertyDescriptor.isGetterOnly()) {
 				continue;
 			}
 
-			Class propertyType = propertyDescriptor.getType();
+			final Class propertyType = propertyDescriptor.getType();
 			if (!ClassUtil.isTypeOf(propertyType, Collection.class)) {
 				continue;
 			}
 
-			MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
-			FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
+			final MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
+			final FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
 
 			PetiteInject ref = null;
 
@@ -82,7 +82,7 @@ public class SetResolver {
 			list.add(new SetInjectionPoint(propertyDescriptor));
 		}
 
-		SetInjectionPoint[] fields;
+		final SetInjectionPoint[] fields;
 
 		if (list.isEmpty()) {
 			fields = SetInjectionPoint.EMPTY;

@@ -25,7 +25,7 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.meta.In;
@@ -86,7 +86,7 @@ public class TextActionResult implements ActionResult {
 			out = response.getOutputStream();
 			out.write(data);
 		} finally {
-			StreamUtil.close(out);
+			IOUtil.close(out);
 		}
 	}
 }

@@ -51,7 +51,7 @@ class CommandLineTest {
 		@Test
 		void testRun() throws Exception {
 
-			ProcessResult processResult = new CommandLine("cmd.exe")
+			final ProcessResult processResult = new CommandLine("cmd.exe")
 					.arg("/c")
 					.args("dir")
 					.workingDirectory(".")
@@ -75,7 +75,7 @@ class CommandLineTest {
 		@Test
 		void testRun_with_expected_process_error() throws Exception {
 
-			ProcessResult processResult = new CommandLine("cmd.exe")
+			final ProcessResult processResult = new CommandLine("cmd.exe")
 					.arg("/c")
 					.args("this_command_is_unknown")
 					.workingDirectory(".")
@@ -106,7 +106,7 @@ class CommandLineTest {
 		@Test
 		void testRun() throws Exception {
 
-			ProcessResult processResult = new CommandLine("bash")
+			final ProcessResult processResult = new CommandLine("bash")
 					.arg("-c")
 					.args("ls")
 					.workingDirectory(".")
@@ -130,7 +130,7 @@ class CommandLineTest {
 		@Test
 		void testRun_with_expected_process_error() throws Exception {
 
-			ProcessResult processResult = new CommandLine("bash")
+			final ProcessResult processResult = new CommandLine("bash")
 					.arg("-c")
 					.args("this_command_is_unknown")
 					.workingDirectory(".")

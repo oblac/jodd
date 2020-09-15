@@ -120,7 +120,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 			this.hint = null;
 		} else {
 
-			String tref = reference.substring(0, dotNdx);
+			final String tref = reference.substring(0, dotNdx);
 			reference = reference.substring(dotNdx + 1);
 
 			// table
@@ -129,7 +129,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.tableRef = tref;
 				this.hint = null;
 			} else {
-				int doubleColumnNdx = tref.indexOf(':');
+				final int doubleColumnNdx = tref.indexOf(':');
 				if (doubleColumnNdx == -1) {
 					// no special hint
 					this.tableRef = tref.substring(dotNdx + 1);
@@ -210,10 +210,10 @@ public class ColumnsSelectChunk extends SqlChunk {
 		}
 
 		if (columnRef == null) {
-			DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
+			final DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 			int count = 0;
-			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
-			for (DbEntityColumnDescriptor dec : decList) {
+			final boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
+			for (final DbEntityColumnDescriptor dec : decList) {
 				if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
 					continue;
 				}

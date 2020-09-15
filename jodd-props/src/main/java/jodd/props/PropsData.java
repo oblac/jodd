@@ -25,8 +25,8 @@
 
 package jodd.props;
 
-import jodd.template.StringTemplateParser;
 import jodd.util.StringPool;
+import jodd.util.StringTemplateParser;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
@@ -102,12 +102,12 @@ public class PropsData implements Cloneable {
 	protected void put(final String profile, final Map<String, PropsEntry> map, final String key, final String value, final boolean append) {
 		String realValue = value;
 		if (append || appendDuplicateProps) {
-			PropsEntry pv = map.get(key);
+			final PropsEntry pv = map.get(key);
 			if (pv != null) {
 				realValue = pv.value + APPEND_SEPARATOR + realValue;
 			}
 		}
-		PropsEntry propsEntry = new PropsEntry(key, realValue, profile, this);
+		final PropsEntry propsEntry = new PropsEntry(key, realValue, profile, this);
 
 		// update position pointers
 		if (first == null) {
@@ -167,7 +167,7 @@ public class PropsData implements Cloneable {
 	 * Adds profile property.
 	 */
 	public void putProfileProperty(final String key, final String value, final String profile, final boolean append) {
-		Map<String, PropsEntry> map = profileProperties.computeIfAbsent(profile, k -> new HashMap<>());
+		final Map<String, PropsEntry> map = profileProperties.computeIfAbsent(profile, k -> new HashMap<>());
 		put(profile, map, key, value, append);
 	}
 
@@ -230,24 +230,14 @@ public class PropsData implements Cloneable {
 	 */
 	public String resolveMacros(String value, final String... profiles) {
 		// create string template parser that will be used internally
-		StringTemplateParser stringTemplateParser = new StringTemplateParser();
-		stringTemplateParser.setResolveEscapes(false);
-
-		if (!ignoreMissingMacros) {
-			stringTemplateParser.setReplaceMissingKey(false);
-		} else {
-			stringTemplateParser.setReplaceMissingKey(true);
-			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
-		}
-
 		final Function<String, String> macroResolver = macroName -> {
 			String[] lookupProfiles = profiles;
 
-			int leftIndex = macroName.indexOf('<');
+			final int leftIndex = macroName.indexOf('<');
 			if (leftIndex != -1) {
-				int rightIndex = macroName.indexOf('>');
+				final int rightIndex = macroName.indexOf('>');
 
-				String profiles1 = macroName.substring(leftIndex + 1, rightIndex);
+				final String profiles1 = macroName.substring(leftIndex + 1, rightIndex);
 				macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
 
 				lookupProfiles = StringUtil.splitc(profiles1, ',');
@@ -258,11 +248,22 @@ public class PropsData implements Cloneable {
 			return lookupValue(macroName, lookupProfiles);
 		};
 
+
+		final StringTemplateParser stringTemplateParser = new StringTemplateParser(macroResolver);
+		stringTemplateParser.setResolveEscapes(false);
+
+		if (!ignoreMissingMacros) {
+			stringTemplateParser.setReplaceMissingKey(false);
+		} else {
+			stringTemplateParser.setReplaceMissingKey(true);
+			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
+		}
+
 		// start parsing
 		int loopCount = 0;
 
 		while (loopCount++ < MAX_INNER_MACROS) {
-			final String newValue = stringTemplateParser.parse(value, macroResolver);
+			final String newValue = stringTemplateParser.apply(value);
 
 			if (newValue.equals(value)) {
 				break;
@@ -328,7 +329,7 @@ public class PropsData implements Cloneable {
 			final String prefix
 			) {
 
-		for (Map.Entry<String, PropsEntry> entry : map.entrySet()) {
+		for (final Map.Entry<String, PropsEntry> entry : map.entrySet()) {
 			String key = entry.getKey();
 
 			if (wildcardPatterns != null) {

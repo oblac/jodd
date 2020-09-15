@@ -153,15 +153,15 @@ public class DbEntityDescriptor<E> {
 	 * Resolves list of all columns and properties.
 	 */
 	private void resolveColumnsAndProperties(final Class type) {
-		PropertyDescriptor[] allProperties = ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
-		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
+		final PropertyDescriptor[] allProperties = ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
+		final List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
 
-		HashSet<String> names = new HashSet<>(allProperties.length);
+		final HashSet<String> names = new HashSet<>(allProperties.length);
 
-		for (PropertyDescriptor propertyDescriptor : allProperties) {
+		for (final PropertyDescriptor propertyDescriptor : allProperties) {
 
-			DbEntityColumnDescriptor dec =
+			final DbEntityColumnDescriptor dec =
 					DbMetaUtil.resolveColumnDescriptors(this, propertyDescriptor, isAnnotated, columnNamingStrategy);
 
 			if (dec != null) {
@@ -186,7 +186,7 @@ public class DbEntityDescriptor<E> {
 		if (idcount > 0) {
 			idColumnDescriptors = new DbEntityColumnDescriptor[idcount];
 			idcount = 0;
-			for (DbEntityColumnDescriptor dec : columnDescriptors) {
+			for (final DbEntityColumnDescriptor dec : columnDescriptors) {
 				if (dec.isId) {
 					idColumnDescriptors[idcount++] = dec;
 				}
@@ -204,7 +204,7 @@ public class DbEntityDescriptor<E> {
 			return null;
 		}
 		init();
-		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
+		for (final DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
 			if (columnDescriptor.columnName.equalsIgnoreCase(columnName)) {
 				return columnDescriptor;
 			}
@@ -219,7 +219,7 @@ public class DbEntityDescriptor<E> {
 			return null;
 		}
 		init();
-		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
+		for (final DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
 			if (columnDescriptor.propertyName.equals(propertyName)) {
 				return columnDescriptor;
 			}
@@ -232,7 +232,7 @@ public class DbEntityDescriptor<E> {
 	 * Returns property name for specified column name.
 	 */
 	public String getPropertyName(final String columnName) {
-		DbEntityColumnDescriptor dec = findByColumnName(columnName);
+		final DbEntityColumnDescriptor dec = findByColumnName(columnName);
 		return dec == null ? null : dec.propertyName;
 	}
 
@@ -240,7 +240,7 @@ public class DbEntityDescriptor<E> {
 	 * Returns column name for specified property name..
 	 */
 	public String getColumnName(final String propertyName) {
-		DbEntityColumnDescriptor dec = findByPropertyName(propertyName);
+		final DbEntityColumnDescriptor dec = findByPropertyName(propertyName);
 		return dec == null ? null : dec.columnName;
 	}
 
@@ -317,9 +317,9 @@ public class DbEntityDescriptor<E> {
 	 * is built from entity class and id value.
 	 */
 	public String getKeyValue(final E object) {
-		Object idValue = getIdValue(object);
+		final Object idValue = getIdValue(object);
 
-		String idValueString = idValue == null ?  StringPool.NULL : idValue.toString();
+		final String idValueString = idValue == null ?  StringPool.NULL : idValue.toString();
 
 		return type.getName().concat(StringPool.COLON).concat(idValueString);
 	}
@@ -328,7 +328,7 @@ public class DbEntityDescriptor<E> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("DbEntity: ");
 		if (schemaName != null) {
 			sb.append(schemaName);

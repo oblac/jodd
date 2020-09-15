@@ -75,7 +75,7 @@ public class MemoryFileUpload extends FileUpload {
 	 */
 	@Override
 	public void processStream() throws IOException {
-		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		size = 0;
 		if (maxFileSize == -1) {
 			size += input.copyAll(out);

@@ -3,7 +3,7 @@ ext.moduleName = 'Jodd Core'
 ext.moduleDescription = 'Jodd Core tools and huge number of utilities.'
 
 dependencies {
-	testImplementation project(':jodd-bean')
+	api 'org.jodd:jodd-util:6.0.0'
 
 	testImplementation lib.junit5
 	testImplementation 'org.webjars:jquery:3.4.1'

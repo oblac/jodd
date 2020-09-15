@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * Buffered servlet response wrapper.
@@ -190,14 +191,14 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 			return buffer.toCharArray();
 		}
 
-		byte[] content = buffer.toByteArray();
-		String encoding = getContentTypeEncoding();
+		final byte[] content = buffer.toByteArray();
+		final String encoding = getContentTypeEncoding();
 
 		if (encoding == null) {
 			// assume default encoding
 			return CharUtil.toCharArray(content);
 		} else {
-			return CharUtil.toCharArray(content, encoding);
+			return CharUtil.toCharArray(content, Charset.forName(encoding));
 		}
 	}
 
@@ -214,14 +215,14 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 			return buffer.toByteArray();
 		}
 
-		char[] content = buffer.toCharArray();
-		String encoding = getContentTypeEncoding();
+		final char[] content = buffer.toCharArray();
+		final String encoding = getContentTypeEncoding();
 
 		if (encoding == null) {
 			// assume default encoding
 			return CharUtil.toByteArray(content);
 		} else {
-			return CharUtil.toByteArray(content, encoding);
+			return CharUtil.toByteArray(content, Charset.forName(encoding));
 		}
 	}
 
@@ -235,18 +236,18 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 			return;
 		}
 		if (buffer.isUsingStream()) {
-			ServletOutputStream outputStream = getResponse().getOutputStream();
+			final ServletOutputStream outputStream = getResponse().getOutputStream();
 
-			String encoding = getContentTypeEncoding();
+			final String encoding = getContentTypeEncoding();
 			if (encoding == null) {
 				outputStream.write(CharUtil.toByteArray(content));
 			} else {
-				outputStream.write(CharUtil.toByteArray(content, encoding));
+				outputStream.write(CharUtil.toByteArray(content, Charset.forName(encoding)));
 			}
 
 			outputStream.flush();
 		} else {
-			Writer out = getResponse().getWriter();
+			final Writer out = getResponse().getWriter();
 			out.write(content);
 			out.flush();
 		}
@@ -262,11 +263,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 			return;
 		}
 		if (buffer.isUsingStream()) {
-			ServletOutputStream outputStream = getResponse().getOutputStream();
+			final ServletOutputStream outputStream = getResponse().getOutputStream();
 			outputStream.write(buffer.toByteArray());
 			outputStream.flush();
 		} else {
-			Writer out = getResponse().getWriter();
+			final Writer out = getResponse().getWriter();
 			out.write(buffer.toCharArray());
 			out.flush();
 		}
@@ -350,7 +351,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public void setHeader(final String name, final String value) {
-		String lowerName = name.toLowerCase();
+		final String lowerName = name.toLowerCase();
 		if (lowerName.equals(CONTENT_TYPE)) {
 			setContentType(value);
 		} else if (buffer == null || !lowerName.equals(CONTENT_LENGTH)) {
@@ -363,7 +364,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public void addHeader(final String name, final String value) {
-		String lowerName = name.toLowerCase();
+		final String lowerName = name.toLowerCase();
 
 		if (lowerName.equals(CONTENT_TYPE)) {
 			setContentType(value);
@@ -465,8 +466,8 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	public void print(final String string) throws IOException {
 		if (isBufferStreamBased()) {
-			String encoding = getContentTypeEncoding();
-			byte[] bytes;
+			final String encoding = getContentTypeEncoding();
+			final byte[] bytes;
 
 			if (encoding == null) {
 				bytes = string.getBytes();

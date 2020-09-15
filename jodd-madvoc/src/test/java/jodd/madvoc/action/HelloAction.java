@@ -32,7 +32,6 @@ import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.scope.Body;
 import jodd.madvoc.result.Chain;
 import jodd.madvoc.result.NoResult;
-import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,12 +52,12 @@ public class HelloAction {
 
 	@In @Out
 	private String name;
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = "planet " + name;
 	}
 
 	@In
-	MutableInteger data;
+	Integer data;
 
 	@Out
 	String retv;
@@ -124,8 +123,8 @@ public class HelloAction {
 	}
 
 	@Action
-	public void reqreq(ReqReqOut reqReqOut) {
-		String hey = servletRequest.getParameter("hey");
+	public void reqreq(final ReqReqOut reqReqOut) {
+		final String hey = servletRequest.getParameter("hey");
 
 		reqReqOut.name = hey;
 	}
@@ -171,7 +170,7 @@ public class HelloAction {
 	@Action
 	public String many() {
 		System.out.println("default action name");
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
 		if (plist == null) {
 			sb.append('-');

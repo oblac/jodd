@@ -58,7 +58,7 @@ class MethodSignatureVisitorTest {
 
 	@Test
 	void testMethodSignature1() throws IOException {
-		MethodInfo mi = getMethodSignatureForSingleMethod(M1.class);
+		final MethodInfo mi = getMethodSignatureForSingleMethod(M1.class);
 
 		assertEquals(0, mi.getArgumentsCount());
 
@@ -80,12 +80,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 2
 
 	public static class M2 {
-		public int macka(long in1, double in2) {return 0;}
+		public int macka(final long in1, final double in2) {return 0;}
 	}
 
 	@Test
 	void testMethodSignature2() throws IOException {
-		MethodInfo mi = getMethodSignatureForSingleMethod(M2.class);
+		final MethodInfo mi = getMethodSignatureForSingleMethod(M2.class);
 
 		assertEquals(2, mi.getArgumentsCount());
 
@@ -116,12 +116,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 3
 
 	public static class M3 {
-		public Integer macka(Long in1, Double in2) {return 0;}
+		public Integer macka(final Long in1, final Double in2) {return 0;}
 	}
 
 	@Test
 	void testMethodSignature3() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M3.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M3.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 
@@ -152,12 +152,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 4
 
 	public static class M4 {
-		public M4[] macka(Long[] in1, double[] in2) {return null;}
+		public M4[] macka(final Long[] in1, final double[] in2) {return null;}
 	}
 
 	@Test
 	void testMethodSignature4() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M4.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M4.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 
@@ -188,12 +188,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 5
 
 	public static class M5<Gen, T> {
-		public List<Gen> macka(Set<Gen> in1, T[] in2) {return null;}
+		public List<Gen> macka(final Set<Gen> in1, final T[] in2) {return null;}
 	}
 
 	@Test
 	void testMethodSignature5() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M5.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M5.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 		assertEquals("java.util.Set<Gen>", msv.getArgument(1).getType());
@@ -223,12 +223,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 6
 
 	public static class M6<Gen, Tuta> {
-		public Gen[] macka(Set<Gen> in1, Tuta[] in2) {return null;}
+		public Gen[] macka(final Set<Gen> in1, final Tuta[] in2) {return null;}
 	}
 
 	@Test
 	void testMethodSignature6() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M6.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M6.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 
@@ -259,12 +259,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 7
 
 	public static class M7<Gen> {
-		public <T> T[] macka(Set<Gen> in1, T[] in2) {return null;}
+		public <T> T[] macka(final Set<Gen> in1, final T[] in2) {return null;}
 	}
 
 	@Test
 	void testMethodSignature7() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M7.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M7.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 
@@ -300,7 +300,7 @@ class MethodSignatureVisitorTest {
 
 	@Test
 	void testMethodSignature8() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M8.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M8.class);
 
 		assertEquals(0, msv.getArgumentsCount());
 
@@ -316,13 +316,13 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 9
 
 	public static class M9 {
-		public static void main(String[] args) {
+		public static void main(final String[] args) {
 		}
 	}
 
 	@Test
 	void testMethodSignature9() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M9.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M9.class);
 
 		assertEquals(1, msv.getArgumentsCount());
 
@@ -344,12 +344,12 @@ class MethodSignatureVisitorTest {
 
 	public static class M10 {
 		@FooAnn
-		public void macka(int a, @FooAnn long b) {}
+		public void macka(final int a, @FooAnn final long b) {}
 	}
 
 	@Test
 	void testMethodSignature10() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M10.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M10.class);
 
 		assertEquals(2, msv.getArgumentsCount());
 
@@ -365,12 +365,12 @@ class MethodSignatureVisitorTest {
 	// ---------------------------------------------------------------- 11
 
 	public static class M11 {
-		public List<Map<String, Object>> macka(Set<List<Map<String, Object>>> in1) {return null;}
+		public List<Map<String, Object>> macka(final Set<List<Map<String, Object>>> in1) {return null;}
 	}
 
 	@Test
 	void testMethodSignature11() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M11.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M11.class);
 
 		assertEquals(1, msv.getArgumentsCount());
 		assertEquals("java.util.Set<java.util.List<java.util.Map<java.lang.String, java.lang.Object>>>", msv.getArgument(1).getType());
@@ -399,12 +399,12 @@ class MethodSignatureVisitorTest {
 	}
 
 	public static class M12 {
-		public Map<Map<Set<Integer>, Long>, Byte> macka(Tupel<List<Integer>, Integer> in1) {return null;}
+		public Map<Map<Set<Integer>, Long>, Byte> macka(final Tupel<List<Integer>, Integer> in1) {return null;}
 	}
 
 	@Test
 	void testMethodSignature12() throws IOException {
-		MethodInfo msv = getMethodSignatureForSingleMethod(M12.class);
+		final MethodInfo msv = getMethodSignatureForSingleMethod(M12.class);
 
 		assertEquals(1, msv.getArgumentsCount());
 		assertEquals(CLASS_NAME + "$Tupel<java.util.List<java.lang.Integer>, java.lang.Integer>", msv.getArgument(1).getType());
@@ -428,14 +428,14 @@ class MethodSignatureVisitorTest {
 
 	// ---------------------------------------------------------------- util
 
-	private MethodInfo getMethodSignatureForSingleMethod(Class klass) throws IOException {
-		InputStream in = ClassLoaderUtil.getClassAsStream(klass.getName());
-		ClassReader classReader = new ClassReader(in);
-		TargetClassInfoReaderFixture targetClassInfoReader = new TargetClassInfoReaderFixture(this.getClass().getClassLoader());
+	private MethodInfo getMethodSignatureForSingleMethod(final Class klass) throws IOException {
+		final InputStream in = ClassLoaderUtil.getClassAsStream(klass.getName());
+		final ClassReader classReader = new ClassReader(in);
+		final TargetClassInfoReaderFixture targetClassInfoReader = new TargetClassInfoReaderFixture(this.getClass().getClassLoader());
 		classReader.accept(targetClassInfoReader, 0);
 		in.close();
 
-		Map<String, MethodSignatureVisitor> methodSignatures = targetClassInfoReader.getMethodSignatures();
+		final Map<String, MethodSignatureVisitor> methodSignatures = targetClassInfoReader.getMethodSignatures();
 
 		return methodSignatures.values()
 			.stream()

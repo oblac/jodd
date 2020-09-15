@@ -89,8 +89,8 @@ public class GzipFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws ServletException, IOException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
+		final HttpServletRequest req = (HttpServletRequest) request;
+		final HttpServletResponse res = (HttpServletResponse) response;
 
 		if (
 				(threshold == 0) ||
@@ -101,7 +101,7 @@ public class GzipFilter implements Filter {
 			return;
 		}
 
-		GzipResponseWrapper wrappedResponse = new GzipResponseWrapper(res);
+		final GzipResponseWrapper wrappedResponse = new GzipResponseWrapper(res);
 		wrappedResponse.setCompressionThreshold(threshold);
 
 		try {
@@ -126,19 +126,19 @@ public class GzipFilter implements Filter {
 
 		try {
 			wildcards = Converter.get().toBooleanValue(config.getInitParameter("wildcards"), false);
-		} catch (TypeConversionException ignore) {
+		} catch (final TypeConversionException ignore) {
 			wildcards = false;
 		}
 
 		// min size
 		try {
 			threshold = Converter.get().toIntValue(config.getInitParameter("threshold"), 0);
-		} catch (TypeConversionException ignore) {
+		} catch (final TypeConversionException ignore) {
 			threshold = 0;
 		}
 
 		// match string
-		String uriMatch = config.getInitParameter("match");
+		final String uriMatch = config.getInitParameter("match");
 
 		if ((uriMatch != null) && (!uriMatch.equals(StringPool.STAR))) {
 			matches = StringUtil.splitc(uriMatch, ',');
@@ -148,7 +148,7 @@ public class GzipFilter implements Filter {
 		}
 
 		// exclude string
-		String uriExclude = config.getInitParameter("exclude");
+		final String uriExclude = config.getInitParameter("exclude");
 
 		if (uriExclude != null) {
 			excludes = StringUtil.splitc(uriExclude, ',');
@@ -168,7 +168,7 @@ public class GzipFilter implements Filter {
 
 		// allowed extensions
 
-		String urlExtensions = config.getInitParameter("extensions");
+		final String urlExtensions = config.getInitParameter("extensions");
 
 		if (urlExtensions != null) {
 			if (urlExtensions.equals(StringPool.STAR)) {
@@ -193,7 +193,7 @@ public class GzipFilter implements Filter {
 		// request parameter name
 
 		if (requestParameterName.length() != 0) {
-			String forceGzipString = request.getParameter(requestParameterName);
+			final String forceGzipString = request.getParameter(requestParameterName);
 
 			if (forceGzipString != null) {
 				return Converter.get().toBooleanValue(forceGzipString, false);
@@ -232,7 +232,7 @@ public class GzipFilter implements Filter {
 			if (wildcards) {
 				result = Wildcard.matchPathOne(uri, matches) != -1;
 			} else {
-				for (String match : matches) {
+				for (final String match : matches) {
 					if (uri.contains(match)) {
 						result = true;
 						break;
@@ -247,7 +247,7 @@ public class GzipFilter implements Filter {
 					result = false;
 				}
 			} else {
-				for (String exclude : excludes) {
+				for (final String exclude : excludes) {
 					if (uri.contains(exclude)) {
 						result = false;						// excludes founded
 						break;

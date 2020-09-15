@@ -26,7 +26,6 @@
 package jodd.joy;
 
 import jodd.chalk.Chalk256;
-import jodd.util.Format;
 import jodd.util.StringUtil;
 
 /**
@@ -65,7 +64,7 @@ public class Print {
 		System.out.print(chalk256.on(string));
 	}
 	public void out(final Chalk256 chalk256, final String string, final int maxLen) {
-		System.out.print(chalk256.on(Format.alignLeftAndPad(string, maxLen)));
+		System.out.print(chalk256.on(alignLeftAndPad(string, maxLen)));
 	}
 
 	public void outLeftRightNewLine(
@@ -99,6 +98,20 @@ public class Print {
 		}
 		out(chalk256Right, stringRight);
 		newLine();
+	}
+
+	private static String alignLeftAndPad(final String text, final int size) {
+		int textLength = text.length();
+		if (textLength > size) {
+			return text.substring(0, size);
+		}
+
+		final StringBuilder sb = new StringBuilder(size);
+		sb.append(text);
+		while (textLength++ < size) {
+			sb.append(' ');
+		}
+		return sb.toString();
 	}
 
 }

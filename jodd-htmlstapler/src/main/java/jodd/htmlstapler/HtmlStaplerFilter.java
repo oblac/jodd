@@ -26,7 +26,7 @@
 package jodd.htmlstapler;
 
 import jodd.bean.BeanUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.lagarto.TagVisitor;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.visitor.TagWriter;
@@ -221,10 +221,10 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 		final OutputStream out = resp.getOutputStream();
 		final FileInputStream fileInputStream = new FileInputStream(bundleFile);
 		try {
-			StreamUtil.copy(fileInputStream, out);
+			IOUtil.copy(fileInputStream, out);
 		}
 		finally {
-			StreamUtil.close(fileInputStream);
+			IOUtil.close(fileInputStream);
 		}
 	}
 

@@ -25,7 +25,6 @@
 
 package jodd.http.fixture;
 
-import jodd.util.StringPool;
 import jodd.util.ThreadUtil;
 
 import javax.servlet.ServletException;
@@ -33,18 +32,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class SlowServlet extends HttpServlet {
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 		ThreadUtil.sleep(5000);
 		write(resp, "OK");
 	}
 
-	protected void write(HttpServletResponse resp, String text) throws IOException {
+	protected void write(final HttpServletResponse resp, final String text) throws IOException {
 		if (text != null) {
-			resp.setContentLength(text.getBytes(StringPool.UTF_8).length);
+			resp.setContentLength(text.getBytes(StandardCharsets.UTF_8.name()).length);
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().write(text);
 			resp.flushBuffer();

@@ -27,15 +27,15 @@ package jodd.servlet;
 
 import jodd.core.JoddCore;
 import jodd.io.FileNameUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.upload.FileUpload;
+import jodd.net.MimeTypes;
+import jodd.net.URLCoder;
 import jodd.servlet.upload.MultipartRequest;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.util.Base64;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.net.MimeTypes;
-import jodd.net.URLCoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -78,7 +78,7 @@ public class ServletUtil {
 	 * Returns <code>true</code> if a request is multi-part request.
 	 */
 	public static boolean isMultipartRequest(final HttpServletRequest request) {
-		String type = request.getHeader(HEADER_CONTENT_TYPE);
+		final String type = request.getHeader(HEADER_CONTENT_TYPE);
 		return (type != null) && type.startsWith(TYPE_MULTIPART_FORM_DATA);
 	}
 
@@ -86,7 +86,7 @@ public class ServletUtil {
 	 * Returns <code>true</code> if client supports gzip encoding.
 	 */
 	public static boolean isGzipSupported(final HttpServletRequest request) {
-		String browserEncodings = request.getHeader(HEADER_ACCEPT_ENCODING);
+		final String browserEncodings = request.getHeader(HEADER_ACCEPT_ENCODING);
 		return (browserEncodings != null) && (browserEncodings.contains("gzip"));
 	}
 
@@ -96,7 +96,7 @@ public class ServletUtil {
 	 * user's name from it. Returns <code>null</code> if the header is not present.
 	 */
 	public static String resolveAuthUsername(final HttpServletRequest request) {
-		String header = request.getHeader(HEADER_AUTHORIZATION);
+		final String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
 		}
@@ -113,7 +113,7 @@ public class ServletUtil {
 	 * password from it. Returns <code>null</code> if the header is not present.
 	 */
 	public static String resolveAuthPassword(final HttpServletRequest request) {
-		String header = request.getHeader(HEADER_AUTHORIZATION);
+		final String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
 		}
@@ -129,11 +129,11 @@ public class ServletUtil {
 	 * Returns Bearer token.
 	 */
 	public static String resolveAuthBearerToken(final HttpServletRequest request) {
-		String header = request.getHeader(HEADER_AUTHORIZATION);
+		final String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
 		}
-		int ndx = header.indexOf("Bearer ");
+		final int ndx = header.indexOf("Bearer ");
 		if (ndx == -1) {
 			return null;
 		}
@@ -181,7 +181,7 @@ public class ServletUtil {
 	 */
 	public static void prepareResponse(final HttpServletResponse response, final String fileName, String mimeType, final int fileSize) {
 		if ((mimeType == null) && (fileName != null)) {
-			String extension = FileNameUtil.getExtension(fileName);
+			final String extension = FileNameUtil.getExtension(fileName);
 			mimeType = MimeTypes.getMimeType(extension);
 		}
 
@@ -196,8 +196,8 @@ public class ServletUtil {
 		// support internationalization
 		// See https://tools.ietf.org/html/rfc6266#section-5 for more information.
 		if (fileName != null) {
-			String name = FileNameUtil.getName(fileName);
-			String encodedFileName = URLCoder.encode(name);
+			final String name = FileNameUtil.getName(fileName);
+			final String encodedFileName = URLCoder.encode(name);
 
 			response.setHeader(CONTENT_DISPOSITION,
 				"attachment;filename=\"" + name + "\";filename*=utf8''" + encodedFileName);
@@ -213,9 +213,9 @@ public class ServletUtil {
 	 * @return cookie value or <code>null</code> if cookie with specified name doesn't exist.
 	 */
 	public static Cookie getCookie(final HttpServletRequest request, final String cookieName) {
-		Cookie[] cookies = request.getCookies();
+		final Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
-			for (Cookie cookie : cookies) {
+			for (final Cookie cookie : cookies) {
 				if (cookie.getName().equals(cookieName)) {
 					return cookie;
 				}
@@ -229,12 +229,12 @@ public class ServletUtil {
 	 * @see #getCookie(javax.servlet.http.HttpServletRequest, String) 
 	 */
 	public static Cookie[] getAllCookies(final HttpServletRequest request, final String cookieName) {
-		Cookie[] cookies = request.getCookies();
+		final Cookie[] cookies = request.getCookies();
 		if (cookies == null) {
 			return null;
 		}
-		ArrayList<Cookie> list = new ArrayList<>(cookies.length);
-		for (Cookie cookie : cookies) {
+		final ArrayList<Cookie> list = new ArrayList<>(cookies.length);
+		for (final Cookie cookie : cookies) {
 			if (cookie.getName().equals(cookieName)) {
 				list.add(cookie);
 			}
@@ -252,9 +252,9 @@ public class ServletUtil {
 	 * it cannot be read again!
 	 */
 	public static String readRequestBodyFromReader(final HttpServletRequest request) throws IOException {
-		BufferedReader buff = request.getReader();
-		StringWriter out = new StringWriter();
-		StreamUtil.copy(buff, out);
+		final BufferedReader buff = request.getReader();
+		final StringWriter out = new StringWriter();
+		IOUtil.copy(buff, out);
 		return out.toString();
 	}
 
@@ -267,20 +267,20 @@ public class ServletUtil {
 		if (charEncoding == null) {
 			charEncoding = JoddCore.encoding;
 		}
-		CharArrayWriter charArrayWriter = new CharArrayWriter();
+		final CharArrayWriter charArrayWriter = new CharArrayWriter();
 		BufferedReader bufferedReader = null;
 
 		try {
-			InputStream inputStream = request.getInputStream();
+			final InputStream inputStream = request.getInputStream();
 			if (inputStream != null) {
 				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charEncoding));
 
-				StreamUtil.copy(bufferedReader, charArrayWriter);
+				IOUtil.copy(bufferedReader, charArrayWriter);
 			} else {
 				return StringPool.EMPTY;
 			}
 		} finally {
-			StreamUtil.close(bufferedReader);
+			IOUtil.close(bufferedReader);
 		}
 
 		return charArrayWriter.toString();
@@ -332,12 +332,12 @@ public class ServletUtil {
 	 * Stores context path in server context and request scope.
 	 */
 	public static void storeContextPath(final PageContext pageContext, final String contextPathVariableName) {
-		String ctxPath = getContextPath(pageContext);
+		final String ctxPath = getContextPath(pageContext);
 
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		request.setAttribute(contextPathVariableName, ctxPath);
 
-		ServletContext servletContext = pageContext.getServletContext();
+		final ServletContext servletContext = pageContext.getServletContext();
 		servletContext.setAttribute(contextPathVariableName, ctxPath);
 	}
 
@@ -345,7 +345,7 @@ public class ServletUtil {
 	 * Stores context path in page context and request scope.
 	 */
 	public static void storeContextPath(final ServletContext servletContext, final String contextPathVariableName) {
-		String ctxPath = getContextPath(servletContext);
+		final String ctxPath = getContextPath(servletContext);
 
 		servletContext.setAttribute(contextPathVariableName, ctxPath);
 	}
@@ -357,7 +357,7 @@ public class ServletUtil {
 	 * following order: page, request, session, application.
 	 */
 	public static Object attribute(final PageContext pageContext, final String name) {
-		Object value = pageContext.getAttribute(name);
+		final Object value = pageContext.getAttribute(name);
 		if (value != null) {
 			return value;
 		}
@@ -390,7 +390,7 @@ public class ServletUtil {
 	 * </ul>
 	 */
 	public static Object value(final PageContext pageContext, final String name) {
-		Object value = pageContext.getAttribute(name);
+		final Object value = pageContext.getAttribute(name);
 		if (value != null) {
 			return value;
 		}
@@ -414,13 +414,13 @@ public class ServletUtil {
 
 		if (isMultipartRequest(request)) {
 			try {
-				MultipartRequest multipartRequest = MultipartRequest.getInstance(request);
+				final MultipartRequest multipartRequest = MultipartRequest.getInstance(request);
 				value = multipartRequest.getParameter(name);
-			} catch (IOException ignore) {
+			} catch (final IOException ignore) {
 			}
 		}
 		else {
-			String[] params = request.getParameterValues(name);
+			final String[] params = request.getParameterValues(name);
 			if (params != null) {
 				if (params.length == 1) {
 					value = params[0];
@@ -446,8 +446,8 @@ public class ServletUtil {
 	 * Sets scope attribute.
 	 */
 	public static void setScopeAttribute(final String name, final Object value, final String scope, final PageContext pageContext) {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		final String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
 			pageContext.setAttribute(name, value);
 		}
@@ -469,8 +469,8 @@ public class ServletUtil {
 	 * Removes scope attribute.
 	 */
 	public static void removeScopeAttribute(final String name, final String scope, final PageContext pageContext) {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		final String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
 			pageContext.removeAttribute(name);
 		}
@@ -502,7 +502,7 @@ public class ServletUtil {
 	    if (url == null) {      	    // a null URL is not absolute
 		    return false;
 	    }
-	    int colonPos;                   // fast simple check first
+	    final int colonPos;                   // fast simple check first
 	    if ((colonPos = url.indexOf(':')) == -1) {
 		    return false;
 	    }
@@ -524,7 +524,7 @@ public class ServletUtil {
 	 * and either EOS or a subsequent ';' (exclusive).
 	 */
 	public static String stripSessionId(final String url) {
-		StringBuilder u = new StringBuilder(url);
+		final StringBuilder u = new StringBuilder(url);
 		int sessionStart;
 		while ((sessionStart = u.toString().indexOf(";jsessionid=")) != -1) {
 			int sessionEnd = u.toString().indexOf(';', sessionStart + 1);
@@ -570,7 +570,7 @@ public class ServletUtil {
 	 * Returns HTTP request parameter as String or String[].
 	 */
 	public static Object getRequestParameter(final ServletRequest request, final String name) {
-		String[] values = request.getParameterValues(name);
+		final String[] values = request.getParameterValues(name);
 		if (values == null) {
 			return null;
 		}
@@ -585,9 +585,9 @@ public class ServletUtil {
 	 */
 	public boolean isGetParameter(final HttpServletRequest request, String name) {
 		name = URLCoder.encodeQueryParam(name) + '=';
-		String query = request.getQueryString();
-		String[] nameValuePairs = StringUtil.splitc(query, '&');
-		for (String nameValuePair : nameValuePairs) {
+		final String query = request.getQueryString();
+		final String[] nameValuePairs = StringUtil.splitc(query, '&');
+		for (final String nameValuePair : nameValuePairs) {
 			if (nameValuePair.startsWith(name)) {
 				return true;
 			}
@@ -608,7 +608,7 @@ public class ServletUtil {
 
 		if (treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
 			int emptyCount = 0;
-			int total = paramValues.length;
+			final int total = paramValues.length;
 			for (int i = 0; i < paramValues.length; i++) {
 				String paramValue = paramValues[i];
 				if (paramValue == null) {
@@ -635,7 +635,7 @@ public class ServletUtil {
 	/**
 	 * Returns {@code true} if request has JSON content type.
 	 */
-	public static boolean isJsonRequest(HttpServletRequest servletRequest) {
+	public static boolean isJsonRequest(final HttpServletRequest servletRequest) {
 		final String contentType = servletRequest.getContentType();
 		if (contentType == null) {
 			return false;
@@ -656,7 +656,7 @@ public class ServletUtil {
 
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
-			String paramName = (String) paramNames.nextElement();
+			final String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
@@ -673,17 +673,17 @@ public class ServletUtil {
 		if (!(servletRequest instanceof MultipartRequestWrapper)) {
 			return;
 		}
-		MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
+		final MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
 		if (!multipartRequest.isMultipart()) {
 			return;
 		}
 		paramNames = multipartRequest.getFileParameterNames();
 		while (paramNames.hasMoreElements()) {
-			String paramName = (String) paramNames.nextElement();
+			final String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
-			FileUpload[] paramValues = multipartRequest.getFiles(paramName);
+			final FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 			servletRequest.setAttribute(paramName, paramValues.length == 1 ? paramValues[0] : paramValues);
 		}
 	}
@@ -696,7 +696,7 @@ public class ServletUtil {
 		try {
 			ServletContext.class.getMethod("getContextPath");
 			isVersion2_5 = true;
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 		}
 	}
 

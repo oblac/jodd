@@ -28,7 +28,7 @@ package jodd.jtx.meta;
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransactionMode;
-import jodd.util.annotation.AnnotationParser;
+import jodd.util.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

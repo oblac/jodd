@@ -33,10 +33,10 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.TypeInfo;
-import jodd.system.SystemUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
+import jodd.util.SystemUtil;
 
 import java.lang.reflect.Method;
 
@@ -158,7 +158,7 @@ public class ProxettaAsmUtil {
 	// ---------------------------------------------------------------- load
 
 	public static void loadMethodArgumentClass(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
-		TypeInfo argument = methodInfo.getArgument(index);
+		final TypeInfo argument = methodInfo.getArgument(index);
 		loadClass(mv, argument.getOpcode(), argument.getRawName());
 	}
 
@@ -230,8 +230,8 @@ public class ProxettaAsmUtil {
 	 * Loads one argument. Index is 1-based. No conversion occurs.
 	 */
 	public static void loadMethodArgument(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
-		int offset = methodInfo.getArgumentOffset(index);
-		int type = methodInfo.getArgument(index).getOpcode();
+		final int offset = methodInfo.getArgumentOffset(index);
+		final int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
 			case 'V':
 				break;
@@ -258,8 +258,8 @@ public class ProxettaAsmUtil {
 
 
 	public static void loadMethodArgumentAsObject(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
-		int offset = methodInfo.getArgumentOffset(index);
-		int type = methodInfo.getArgument(index).getOpcode();
+		final int offset = methodInfo.getArgumentOffset(index);
+		final int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
 			case 'V':
 				break;
@@ -306,8 +306,8 @@ public class ProxettaAsmUtil {
 	 * Stores one argument. Index is 1-based. No conversion occurs.
 	 */
 	public static void storeMethodArgument(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
-		int offset = methodInfo.getArgumentOffset(index);
-		int type = methodInfo.getArgument(index).getOpcode();
+		final int offset = methodInfo.getArgumentOffset(index);
+		final int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
 			case 'V':
 				break;
@@ -341,8 +341,8 @@ public class ProxettaAsmUtil {
 
 
 	public static void storeMethodArgumentFromObject(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
-		int type = methodInfo.getArgument(index).getOpcode();
-		int offset = methodInfo.getArgumentOffset(index);
+		final int type = methodInfo.getArgument(index).getOpcode();
+		final int offset = methodInfo.getArgumentOffset(index);
 		storeValue(mv, offset, type);
 	}
 
@@ -404,7 +404,7 @@ public class ProxettaAsmUtil {
 			case 'B':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -419,7 +419,7 @@ public class ProxettaAsmUtil {
 			case 'C':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -434,7 +434,7 @@ public class ProxettaAsmUtil {
 			case 'S':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -449,7 +449,7 @@ public class ProxettaAsmUtil {
 			case 'I':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -464,7 +464,7 @@ public class ProxettaAsmUtil {
 			case 'Z':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -479,7 +479,7 @@ public class ProxettaAsmUtil {
 			case 'J':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(LCONST_0);
@@ -494,7 +494,7 @@ public class ProxettaAsmUtil {
 			case 'F':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(FCONST_0);
@@ -509,7 +509,7 @@ public class ProxettaAsmUtil {
 			case 'D':
 				if (isLast) {
 					mv.visitInsn(DUP);
-					Label label = new Label();
+					final Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
 						mv.visitInsn(POP);
 						mv.visitInsn(DCONST_0);
@@ -567,7 +567,7 @@ public class ProxettaAsmUtil {
 	public static void castToReturnType(final MethodVisitor mv, final MethodInfo methodInfo) {
 		final String returnType;
 
-		char returnOpcodeType = methodInfo.getReturnType().getOpcode();
+		final char returnOpcodeType = methodInfo.getReturnType().getOpcode();
 
 		switch (returnOpcodeType) {
 			case 'I':
@@ -598,7 +598,7 @@ public class ProxettaAsmUtil {
 				returnType = methodInfo.getReturnType().getRawName();
 				break;
 			default:
-				String rtname = methodInfo.getReturnType().getRawName();
+				final String rtname = methodInfo.getReturnType().getRawName();
 				returnType = rtname.length() == 0 ?
 					AsmUtil.typeToSignature(methodInfo.getReturnType().getType()) :
 					AsmUtil.typedesc2ClassName(rtname);
@@ -707,22 +707,22 @@ public class ProxettaAsmUtil {
 
 		// enum
 
-		Class elementValueClass = elementValue.getClass();
-		Class enumClass = ClassUtil.findEnum(elementValueClass);
+		final Class elementValueClass = elementValue.getClass();
+		final Class enumClass = ClassUtil.findEnum(elementValueClass);
 
 		if (enumClass != null) {
 			try {
-				String typeRef = AsmUtil.typeToTyperef(enumClass);
-				String typeSignature = AsmUtil.typeToSignature(enumClass);
+				final String typeRef = AsmUtil.typeToTyperef(enumClass);
+				final String typeSignature = AsmUtil.typeToSignature(enumClass);
 
 				// invoke
-				Method nameMethod = elementValue.getClass().getMethod("name");
-				String name = (String) nameMethod.invoke(elementValue);
+				final Method nameMethod = elementValue.getClass().getMethod("name");
+				final String name = (String) nameMethod.invoke(elementValue);
 
 				mv.visitFieldInsn(GETSTATIC, typeSignature, name, typeRef);
 
 				return;
-			} catch (Exception ignore) {
+			} catch (final Exception ignore) {
 			}
 		}
 

@@ -32,7 +32,6 @@ import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.meta.scope.JsonBody;
 import jodd.madvoc.result.JsonActionResult;
-import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,7 +61,7 @@ public class ArgsAction {
 			return id;
 		}
 
-		public void setId(long id) {
+		public void setId(final long id) {
 			this.id = id;
 		}
 
@@ -70,7 +69,7 @@ public class ArgsAction {
 			return username;
 		}
 
-		public void setUsername(String username) {
+		public void setUsername(final String username) {
 			this.username = username;
 		}
 
@@ -86,7 +85,7 @@ public class ArgsAction {
 	String name;
 
 	@Action
-	public void hello(Hello hello, Data2 data) {
+	public void hello(final Hello hello, final Data2 data) {
 		name = "mad " + hello.id;
 		hello.out = "voc";
 		data.value = "jodd " + data.id;
@@ -94,17 +93,15 @@ public class ArgsAction {
 
 	@Action
 	public void world(
-			@In @Out("ime") String name,
-			@In @Out MutableInteger muti,
-			@In("hello") Data2 hello,
-			Hello hello2,
-			@In HttpServletRequest request,
-			@Out User user
+			@In @Out("ime") final String name,
+			@In @Out final Integer muti,
+			@In("hello") final Data2 hello,
+			final Hello hello2,
+			@In final HttpServletRequest request,
+			@Out final User user
 			) {
 
-		hello2.out = "bye-" + (request != null) + "-" + muti.intValue();
-
-		muti.value++;
+		hello2.out = "bye-" + (request != null) + "-" + muti;
 
 		user.id = 7;
 		user.username = "jojo";
@@ -113,17 +110,17 @@ public class ArgsAction {
 	}
 
 	@Action
-	public void user(@In @Out User user) {
+	public void user(@In @Out final User user) {
 	}
 
 	@Action
 	@RenderWith(JsonActionResult.class)
-	public User user2(@In @JsonBody User user) {
+	public User user2(@In @JsonBody final User user) {
 		user.setUsername(user.getUsername() + "!");
 		return user;
 	}
 
-	public void zigzag(@In @Out int id) {
+	public void zigzag(@In @Out final int id) {
 		System.out.println("ArgsAction.zigzag");
 		System.out.println("id = [" + id + "]");
 	}

@@ -73,21 +73,21 @@ public class InsertChunk extends SqlChunk {
 
 	@Override
 	public void process(final StringBuilder out) {
-		DbEntityDescriptor ded = entityName != null ? lookupName(entityName) : lookupType(entityType);
-		StringBuilder col = new StringBuilder();
-		StringBuilder val = new StringBuilder();
+		final DbEntityDescriptor ded = entityName != null ? lookupName(entityName) : lookupType(entityType);
+		final StringBuilder col = new StringBuilder();
+		final StringBuilder val = new StringBuilder();
 
-		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
-		String typeName = StringUtil.uncapitalize(ded.getEntityName());
+		final DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
+		final String typeName = StringUtil.uncapitalize(ded.getEntityName());
 
 		int size = 0;
-		for (DbEntityColumnDescriptor dec : decList) {
+		for (final DbEntityColumnDescriptor dec : decList) {
 			 if (dec.isId() && !defaultIsUpdateablePrimaryKey) {
 			 	continue;
 			 }
 
-			String property = dec.getPropertyName();
-			Object value = BeanUtil.declared.getProperty(data, property);
+			final String property = dec.getPropertyName();
+			final Object value = BeanUtil.declared.getProperty(data, property);
 			if (value == null) {
 				continue;
 			}

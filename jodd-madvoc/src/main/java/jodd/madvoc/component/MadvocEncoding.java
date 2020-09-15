@@ -25,13 +25,11 @@
 
 package jodd.madvoc.component;
 
-import jodd.util.StringPool;
-
 import java.util.Objects;
 
 public class MadvocEncoding {
 
-	private String encoding = StringPool.UTF_8;
+	private String encoding = "UTF-8";
 
 	/**
 	 * Sets web application character encoding.

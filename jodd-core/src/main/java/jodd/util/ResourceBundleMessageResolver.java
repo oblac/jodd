@@ -64,9 +64,9 @@ public class ResourceBundleMessageResolver {
 			int i = -1;
 			indexedKey = key;
 			while ((i = indexedKey.indexOf('[', i + 1)) != -1) {
-				int j = indexedKey.indexOf(']', i);
-				String a = indexedKey.substring(0, i);
-				String b = indexedKey.substring(j);
+				final int j = indexedKey.indexOf(']', i);
+				final String a = indexedKey.substring(0, i);
+				final String b = indexedKey.substring(j);
 				indexedKey = a + "[*" + b;
 			}
 		}
@@ -96,12 +96,12 @@ public class ResourceBundleMessageResolver {
 	 */
 	public String findMessage(String bundleName, final Locale locale, final String key) {
 
-		String indexedKey = calcIndexKey(key);
+		final String indexedKey = calcIndexKey(key);
 
 		// hierarchy
 		String name = bundleName;
 		while (true) {
-			String msg = getMessage(name, locale, key, indexedKey);
+			final String msg = getMessage(name, locale, key, indexedKey);
 			if (msg != null) {
 				return msg;
 			}
@@ -109,7 +109,7 @@ public class ResourceBundleMessageResolver {
 			if (bundleName == null || bundleName.length() == 0) {
 				break;
 			}
-			int ndx = bundleName.lastIndexOf('.');
+			final int ndx = bundleName.lastIndexOf('.');
 			if (ndx == -1) {
 				bundleName = null;
 				name = fallbackBundlename;
@@ -120,8 +120,8 @@ public class ResourceBundleMessageResolver {
 		}
 
 		// default bundles
-		for (String bname : defaultBundles) {
-			String msg = getMessage(bname, locale, key, indexedKey);
+		for (final String bname : defaultBundles) {
+			final String msg = getMessage(bname, locale, key, indexedKey);
 			if (msg != null) {
 				return msg;
 			}
@@ -134,14 +134,14 @@ public class ResourceBundleMessageResolver {
 	 * Finds message in default bundles only, starting from fallback bundlename.
 	 */
 	public String findDefaultMessage(final Locale locale, final String key) {
-		String indexedKey = calcIndexKey(key);
+		final String indexedKey = calcIndexKey(key);
 
 		String msg = getMessage(fallbackBundlename, locale, key, indexedKey);
 		if (msg != null) {
 			return msg;
 		}
 
-		for (String bname : defaultBundles) {
+		for (final String bname : defaultBundles) {
 			msg = getMessage(bname, locale, key, indexedKey);
 			if (msg != null) {
 				return msg;
@@ -157,7 +157,7 @@ public class ResourceBundleMessageResolver {
 	 * bundle name or locale are not specified (i.e. are <code>null</code>).
 	 */
 	public String getMessage(final String bundleName, final Locale locale, final String key) {
-		ResourceBundle bundle = findResourceBundle(bundleName, locale);
+		final ResourceBundle bundle = findResourceBundle(bundleName, locale);
 		if (bundle == null) {
 			return null;
 		}
@@ -169,7 +169,7 @@ public class ResourceBundleMessageResolver {
 */
 		try {
 			return bundle.getString(key);
-		} catch (MissingResourceException mrex) {
+		} catch (final MissingResourceException mrex) {
 			return null;
 		}
 	}
@@ -193,11 +193,11 @@ public class ResourceBundleMessageResolver {
 		if (!cacheResourceBundles) {
 			try {
 				return getBundle(bundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
-			} catch (MissingResourceException ignore) {
+			} catch (final MissingResourceException ignore) {
 				return null;
 			}
 		}
-		String key = bundleName + '_' + locale.toLanguageTag();
+		final String key = bundleName + '_' + locale.toLanguageTag();
 		try {
 			if (!misses.contains(key)) {
 				ResourceBundle bundle = notmisses.get(key);
@@ -207,7 +207,7 @@ public class ResourceBundleMessageResolver {
 				}
 				return bundle;
 			}
-		} catch (MissingResourceException ignore) {
+		} catch (final MissingResourceException ignore) {
 			misses.add(key);
 		}
 		return null;

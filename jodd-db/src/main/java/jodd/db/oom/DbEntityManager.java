@@ -25,13 +25,13 @@
 
 package jodd.db.oom;
 
-import jodd.cache.TypeCache;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
+import jodd.util.TypeCache;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +93,7 @@ public class DbEntityManager {
 	 * are simply mapped to one column. 
 	 */
 	public <E> DbEntityDescriptor<E> lookupType(final Class<E> type) {
-		String typeName = type.getName();
+		final String typeName = type.getName();
 		if (StringUtil.startsWithOne(typeName, primitiveEntitiesPrefixes) != -1) {
 			return null;
 		}
@@ -125,7 +125,7 @@ public class DbEntityManager {
 	 * Registers just type and entity names. Enough for most usages.
 	 */
 	public <E> DbEntityDescriptor<E> registerType(final Class<E> type) {
-		DbEntityDescriptor<E> ded = createDbEntityDescriptor(type);
+		final DbEntityDescriptor<E> ded = createDbEntityDescriptor(type);
 		DbEntityDescriptor<E> existing = descriptorsMap.put(type, ded);
 
 		if (log.isDebugEnabled()) {
@@ -151,8 +151,8 @@ public class DbEntityManager {
 	 * Registers entity. {@link #registerType(Class) Registers types} and table names.
 	 */
 	public <E> DbEntityDescriptor<E> registerEntity(final Class<E> type) {
-		DbEntityDescriptor<E> ded = registerType(type);
-		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
+		final DbEntityDescriptor<E> ded = registerType(type);
+		final DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
 		if (existing != null) {
 			if (ded.getType() == type) {
@@ -235,7 +235,7 @@ public class DbEntityManager {
 	public <E> E createEntityInstance(final Class<E> type) {
 		try {
 			return ClassUtil.newInstance(type);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new DbOomException(ex);
 		}
 	}

@@ -25,7 +25,6 @@
 
 package jodd.petite;
 
-import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
@@ -48,6 +47,7 @@ import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
+import jodd.util.TypeCache;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

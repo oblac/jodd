@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
@@ -35,6 +34,7 @@ import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
+import jodd.util.TypeCache;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -81,11 +81,11 @@ public class ResultsManager {
 	 * <i>never</i> replace other results. After the registration, results are initialized.
 	 */
 	protected ActionResult register(final ActionResult result) {
-		Class<? extends ActionResult> actionResultClass = result.getClass();
+		final Class<? extends ActionResult> actionResultClass = result.getClass();
 
 		// check existing
 
-		ActionResult existingResult = allResults.get(actionResultClass);
+		final ActionResult existingResult = allResults.get(actionResultClass);
 
 		if (existingResult != null) {
 			if (log.isDebugEnabled()) {
@@ -190,7 +190,7 @@ public class ResultsManager {
 	protected ActionResult createResult(final Class<? extends ActionResult> actionResultClass) {
 		try {
 			return ClassUtil.newInstance(actionResultClass);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException("Invalid Madvoc result: " + actionResultClass, ex);
 		}
 	}

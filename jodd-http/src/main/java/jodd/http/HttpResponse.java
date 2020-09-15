@@ -25,7 +25,7 @@
 
 package jodd.http;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.util.StringPool;
 
 import java.io.BufferedReader;
@@ -34,7 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -108,21 +108,21 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * If no cookie found, returns an empty array. Invalid cookies are ignored.
 	 */
 	public Cookie[] cookies() {
-		List<String> newCookies = headers("set-cookie");
+		final List<String> newCookies = headers("set-cookie");
 
 		if (newCookies == null) {
 			return new Cookie[0];
 		}
 
-		List<Cookie> cookieList = new ArrayList<>(newCookies.size());
+		final List<Cookie> cookieList = new ArrayList<>(newCookies.size());
 
-		for (String cookieValue : newCookies) {
+		for (final String cookieValue : newCookies) {
 			try {
-				Cookie cookie = new Cookie(cookieValue);
+				final Cookie cookie = new Cookie(cookieValue);
 
 				cookieList.add(cookie);
 			}
-			catch (Exception ex) {
+			catch (final Exception ex) {
 				// ignore
 			}
 		}
@@ -137,21 +137,21 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * and sets the new content-length value.
 	 */
 	public HttpResponse unzip() {
-		String contentEncoding = contentEncoding();
+		final String contentEncoding = contentEncoding();
 
 		if (contentEncoding != null && contentEncoding().equals("gzip")) {
 			if (body != null) {
 				headerRemove(HEADER_CONTENT_ENCODING);
 				try {
-					ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StringPool.ISO_8859_1));
-					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
+					final ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StandardCharsets.ISO_8859_1));
+					final GZIPInputStream gzipInputStream = new GZIPInputStream(in);
 
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-					StreamUtil.copy(gzipInputStream, out);
+					IOUtil.copy(gzipInputStream, out);
 
-					body(out.toString(StringPool.ISO_8859_1));
-				} catch (IOException ioex) {
+					body(out.toString(StandardCharsets.ISO_8859_1.name()));
+				} catch (final IOException ioex) {
 					throw new HttpException(ioex);
 				}
 			}
@@ -169,11 +169,11 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	protected Buffer buffer(final boolean fullResponse) {
 		// form
 
-		Buffer formBuffer = formBuffer();
+		final Buffer formBuffer = formBuffer();
 
 		// response
 
-		Buffer response = new Buffer();
+		final Buffer response = new Buffer();
 
 		response.append(httpVersion)
 			.append(SPACE)
@@ -194,21 +194,16 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Supports both streamed and chunked response.
 	 */
 	public static HttpResponse readFrom(final InputStream in) {
-		InputStreamReader inputStreamReader;
-		try {
-			inputStreamReader = new InputStreamReader(in, StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException unee) {
-			throw new HttpException(unee);
-		}
-		BufferedReader reader = new BufferedReader(inputStreamReader);
+		final InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.ISO_8859_1);
+		final BufferedReader reader = new BufferedReader(inputStreamReader);
 
-		HttpResponse httpResponse = new HttpResponse();
+		final HttpResponse httpResponse = new HttpResponse();
 
 		// the first line
 		String line;
 		try {
 			line = reader.readLine();
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
@@ -237,7 +232,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			try {
 				httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
 			}
-			catch (NumberFormatException nfex) {
+			catch (final NumberFormatException nfex) {
 				httpResponse.statusCode(-1);
 			}
 
@@ -274,7 +269,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Otherwise, connection will be already closed.
 	 */
 	public HttpResponse close() {
-		HttpConnection httpConnection = httpRequest.httpConnection;
+		final HttpConnection httpConnection = httpRequest.httpConnection;
 		if (httpConnection != null) {
 			httpConnection.close();
 			httpRequest.httpConnection = null;

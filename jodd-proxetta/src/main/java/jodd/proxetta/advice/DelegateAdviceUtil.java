@@ -25,13 +25,13 @@
 
 package jodd.proxetta.advice;
 
-import jodd.cache.TypeCache;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassUtil;
+import jodd.util.TypeCache;
 
 import java.lang.reflect.Field;
 

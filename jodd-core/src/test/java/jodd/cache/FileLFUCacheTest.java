@@ -26,7 +26,7 @@
 package jodd.cache;
 
 import jodd.io.FileUtil;
-import jodd.system.SystemUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -36,15 +36,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileLFUCacheTest {
 
-	private File tempFolder = new File(SystemUtil.info().getTempDir());
+	private final File tempFolder = new File(SystemUtil.info().getTempDir());
 
-	private File file(String fileName, int size) throws IOException {
-		byte[] bytes = new byte[size];
+	private File file(final String fileName, final int size) throws IOException {
+		final byte[] bytes = new byte[size];
 		for (int i = 0; i < size; i++) {
 			bytes[i] = (byte) i;
 		}
 
-		File file = new File(tempFolder, fileName);
+		final File file = new File(tempFolder, fileName);
 		file.deleteOnExit();
 
 		FileUtil.writeBytes(file, bytes);
@@ -54,14 +54,14 @@ class FileLFUCacheTest {
 
 	@Test
 	void testCache() throws IOException {
-		FileLFUCache cache = new FileLFUCache(25);
+		final FileLFUCache cache = new FileLFUCache(25);
 
 		assertEquals(25, cache.maxSize());
 		assertEquals(12, cache.maxFileSize());
 
-		File a = file("a", 10);
-		File b = file("b", 9);
-		File c = file("c", 7);
+		final File a = file("a", 10);
+		final File b = file("b", 9);
+		final File c = file("c", 7);
 
 		cache.getFileBytes(a);
 		cache.getFileBytes(a);

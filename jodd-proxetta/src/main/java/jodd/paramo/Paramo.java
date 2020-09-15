@@ -26,7 +26,7 @@
 package jodd.paramo;
 
 import jodd.asm7.ClassReader;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.IOException;
@@ -94,7 +94,7 @@ public class Paramo {
 			throw new ParamoException(ioex);
 		}
 		finally {
-			StreamUtil.close(stream);
+			IOUtil.close(stream);
 		}
 	}
 

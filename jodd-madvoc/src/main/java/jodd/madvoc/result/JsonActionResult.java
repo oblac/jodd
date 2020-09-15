@@ -25,7 +25,7 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.json.JsonSerializer;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.component.MadvocEncoding;
@@ -62,7 +62,7 @@ public class JsonActionResult implements ActionResult {
 		final String statusMessage;
 
 		if (resultValue instanceof JsonResult) {
-			JsonResult jsonResult = (JsonResult) resultValue;
+			final JsonResult jsonResult = (JsonResult) resultValue;
 
 			json = jsonResult.value();
 			status = jsonResult.status();
@@ -86,7 +86,7 @@ public class JsonActionResult implements ActionResult {
 			out = response.getOutputStream();
 			out.write(data);
 		} finally {
-			StreamUtil.close(out);
+			IOUtil.close(out);
 		}
 	}
 }

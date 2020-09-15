@@ -5,7 +5,6 @@ ext.moduleDescription = 'Jodd Props is super properties replacement, featuring: 
 dependencies {
 	api project(':jodd-core')
 
-	testImplementation project(':jodd-bean')
 	testImplementation project(':jodd-core').sourceSets.test.output
 	testImplementation lib.junit5
 }

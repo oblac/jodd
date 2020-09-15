@@ -25,7 +25,7 @@
 
 package jodd.http;
 
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +80,7 @@ public class HttpTunnel {
 
 		running = true;
 		while (running) {
-			Socket socket = serverSocket.accept();
+			final Socket socket = serverSocket.accept();
 			socket.setKeepAlive(false);
 			executorService.execute(onSocketConnection(socket));
 		}
@@ -104,7 +104,7 @@ public class HttpTunnel {
 		executorService.shutdown();
 		try {
 			serverSocket.close();
-		} catch (IOException ignore) {
+		} catch (final IOException ignore) {
 		}
 	}
 
@@ -123,7 +123,7 @@ public class HttpTunnel {
 		public void run() {
 			try {
 				tunnel();
-			} catch (IOException ioex) {
+			} catch (final IOException ioex) {
 				ioex.printStackTrace();
 			}
 		}
@@ -160,8 +160,8 @@ public class HttpTunnel {
 		protected void tunnel() throws IOException {
 
 			// read request
-			InputStream socketInput = socket.getInputStream();
-			HttpRequest request = HttpRequest.readFrom(socketInput);
+			final InputStream socketInput = socket.getInputStream();
+			final HttpRequest request = HttpRequest.readFrom(socketInput);
 
 			// open client socket to target
 			final Socket clientSocket = Sockets.connect(targetHost, targetPort);
@@ -173,19 +173,19 @@ public class HttpTunnel {
 			onRequest(request);
 
 			// resend request to target
-			OutputStream out = clientSocket.getOutputStream();
+			final OutputStream out = clientSocket.getOutputStream();
 			request.sendTo(out);
 
 			// read target response
-			InputStream in = clientSocket.getInputStream();
-			HttpResponse response = HttpResponse.readFrom(in);
+			final InputStream in = clientSocket.getInputStream();
+			final HttpResponse response = HttpResponse.readFrom(in);
 
 			// close client socket
-			StreamUtil.close(in);
-			StreamUtil.close(out);
+			IOUtil.close(in);
+			IOUtil.close(out);
 			try {
 				clientSocket.close();
-			} catch (IOException ignore) {
+			} catch (final IOException ignore) {
 			}
 
 			// fix response
@@ -198,15 +198,15 @@ public class HttpTunnel {
 			onResponse(response);
 
 			// send response back
-			OutputStream socketOutput = socket.getOutputStream();
+			final OutputStream socketOutput = socket.getOutputStream();
 			response.sendTo(socketOutput);
 
 			// close socket
-			StreamUtil.close(socketInput);
-			StreamUtil.close(socketOutput);
+			IOUtil.close(socketInput);
+			IOUtil.close(socketOutput);
 			try {
 				socket.close();
-			} catch (IOException ignore) {
+			} catch (final IOException ignore) {
 			}
 		}
 	}

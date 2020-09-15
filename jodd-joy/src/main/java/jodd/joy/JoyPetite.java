@@ -25,7 +25,6 @@
 
 package jodd.joy;
 
-import jodd.cache.TypeCache;
 import jodd.chalk.Chalk256;
 import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.BeanDefinition;
@@ -36,6 +35,7 @@ import jodd.petite.scope.SingletonScope;
 import jodd.util.ClassUtil;
 import jodd.util.Consumers;
 import jodd.util.StringUtil;
+import jodd.util.TypeCache;
 
 import java.util.ArrayList;
 import java.util.List;

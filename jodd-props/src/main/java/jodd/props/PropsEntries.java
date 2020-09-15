@@ -63,7 +63,7 @@ public final class PropsEntries {
 		if (profiles == null) {
 			return this;
 		}
-		for (String profile : profiles) {
+		for (final String profile : profiles) {
 			addProfiles(profile);
 		}
 		return this;
@@ -95,7 +95,7 @@ public final class PropsEntries {
 	 * Enables sections to iterate.
 	 */
 	public PropsEntries section(final String... section) {
-		for (String s : section) {
+		for (final String s : section) {
 			addSection(s);
 		}
 		return this;
@@ -188,7 +188,7 @@ public final class PropsEntries {
 			if (profiles != null) {
 				if (entry.getProfile() != null) {
 					boolean found = false;
-					for (String profile : profiles) {
+					for (final String profile : profiles) {
 						if (entry.getProfile().equals(profile)) {
 							found = true;
 							break;
@@ -207,7 +207,7 @@ public final class PropsEntries {
 
 			if (sections != null) {
 				boolean found = false;
-				for (String section : sections) {
+				for (final String section : sections) {
 					if (entry.getKey().startsWith(section)) {
 						found = true;
 						break;
@@ -220,10 +220,10 @@ public final class PropsEntries {
 
 			if (profiles != null) {
 				if (skipDuplicatesByValue) {
-					String thisProfile = entry.getProfile();
+					final String thisProfile = entry.getProfile();
 
 					// iterate all profiles before this one
-					for (String profile : profiles) {
+					for (final String profile : profiles) {
 						if (profile.equals(thisProfile)) {
 							// if we came to this point, there is no
 							// property defined in higher profile
@@ -232,7 +232,7 @@ public final class PropsEntries {
 						}
 
 						// check if key exist in higher profile
-						Map<String, PropsEntry> profileMap = props.data.profileProperties.get(profile);
+						final Map<String, PropsEntry> profileMap = props.data.profileProperties.get(profile);
 						if (profileMap == null) {
 							continue;
 						}
@@ -265,7 +265,7 @@ public final class PropsEntries {
 				throw new NoSuchElementException();
 			}
 
-			PropsEntry returnValue =  next;
+			final PropsEntry returnValue =  next;
 
 			while (next != null) {
 				next = next.next;

@@ -28,10 +28,11 @@ package jodd.io.findfile;
 import jodd.inex.InExRules;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
+import jodd.io.IOUtil;
 import jodd.io.ZipUtil;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.ClassPathUtil;
 import jodd.util.Consumers;
 import jodd.util.StringUtil;
 
@@ -502,7 +503,7 @@ public class ClassScanner {
 			openInputStream();
 
 			if (inputStreamBytes == null) {
-				inputStreamBytes = StreamUtil.readBytes(inputStream);
+				inputStreamBytes = IOUtil.readBytes(inputStream);
 			}
 			return inputStreamBytes;
 		}
@@ -541,7 +542,7 @@ public class ClassScanner {
 			if (inputStream == null) {
 				return;
 			}
-			StreamUtil.close(inputStream);
+			IOUtil.close(inputStream);
 			inputStream = null;
 			inputStreamBytes = null;
 		}
@@ -591,10 +592,10 @@ public class ClassScanner {
 	}
 
 	/**
-	 * Scans {@link jodd.util.ClassLoaderUtil#getDefaultClasspath() default class path}.
+	 * Scans {@link ClassPathUtil#getDefaultClasspath() default class path}.
 	 */
 	public ClassScanner scanDefaultClasspath() {
-		return scan(ClassLoaderUtil.getDefaultClasspath());
+		return scan(ClassPathUtil.getDefaultClasspath());
 	}
 
 	/**

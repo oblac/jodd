@@ -58,7 +58,7 @@ public class ReferenceChunk extends SqlChunk {
 	public ReferenceChunk(final DbEntityManager dbEntityManager, final String reference) {
 		super(dbEntityManager, CHUNK_REFERENCE);
 
-		int dotNdx = reference.indexOf('.');
+		final int dotNdx = reference.indexOf('.');
 
 		if (dotNdx == -1) {
 			this.tableRef = reference;
@@ -104,7 +104,7 @@ public class ReferenceChunk extends SqlChunk {
 			}
 			out.append(ded.getIdColumnName());
 		} else if (columnRef != null) {
-			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
+			final DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
 			templateData.lastColumnDec = dec;
 
 			if (dec == null) {

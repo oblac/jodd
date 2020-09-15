@@ -4,7 +4,6 @@ ext.moduleDescription = 'Jodd Petite is slick and lightweight DI container that 
 
 dependencies {
 	api project(':jodd-core')
-	api project(':jodd-bean')
 	api project(':jodd-props')
 	api project(':jodd-proxetta')
 	api project(':jodd-servlet'), optional

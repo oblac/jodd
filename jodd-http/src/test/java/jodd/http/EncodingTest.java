@@ -27,7 +27,6 @@ package jodd.http;
 
 import jodd.http.fixture.Data;
 import jodd.http.up.ByteArrayUploadable;
-import jodd.util.StringPool;
 import jodd.net.MimeTypes;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,7 +59,7 @@ class EncodingTest {
 
 	@Test
 	void testContentTypeHeader() {
-		HttpRequest req = HttpRequest.get("localhost/hello");
+		final HttpRequest req = HttpRequest.get("localhost/hello");
 
 		assertNull(req.contentType());
 
@@ -100,23 +100,23 @@ class EncodingTest {
 	void testRequestEncoding4() throws IOException {
 		testRequestEncoding(4);
 	}
-	private void testRequestEncoding(int i) throws IOException {
-		HttpRequest request =
+	private void testRequestEncoding(final int i) throws IOException {
+		final HttpRequest request =
 				(i == 1 || i == 2) ?
 				HttpRequest.get("http://localhost:8173/echo?id=12"):
 				HttpRequest.post("http://localhost:8173/echo?id=12");
 
-		String utf8String = (i == 1 || i == 3) ? "Hello!" : "хелло!";
-		byte[] utf8Bytes = utf8String.getBytes(StringPool.UTF_8);
-		int utf8StringRealLen = utf8Bytes.length;
+		final String utf8String = (i == 1 || i == 3) ? "Hello!" : "хелло!";
+		final byte[] utf8Bytes = utf8String.getBytes(StandardCharsets.UTF_8);
+		final int utf8StringRealLen = utf8Bytes.length;
 
 		request.bodyText(utf8String);
 
-		String rawBody = request.body();
+		final String rawBody = request.body();
 		assertEquals(utf8StringRealLen, rawBody.length());
 		assertArrayEquals(utf8Bytes, request.bodyBytes());
 
-		HttpResponse response = request.send();
+		final HttpResponse response = request.send();
 		assertEquals(200, response.statusCode());
 
 		// servlet
@@ -138,7 +138,7 @@ class EncodingTest {
 		assertEquals(String.valueOf(utf8StringRealLen), response.contentLength());
 		assertEquals("text/html;charset=UTF-8", response.contentType());
 		assertEquals(utf8String, response.bodyText());
-		assertEquals(new String(utf8Bytes, StringPool.ISO_8859_1), response.body());
+		assertEquals(new String(utf8Bytes, StandardCharsets.ISO_8859_1), response.body());
 	}
 
 	@Test
@@ -153,18 +153,18 @@ class EncodingTest {
 	void testFormParams3() {
 		testFormParams(3);
 	}
-	private void testFormParams(int i) {
-		String encoding = i == 1 ?  "UTF-8" : "CP1251";
+	private void testFormParams(final int i) {
+		final String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.post("http://localhost:8173/echo3");
+		final HttpRequest request = HttpRequest.post("http://localhost:8173/echo3");
 		request.formEncoding(encoding);
 
 		if (i == 3) {
 			request.charset("UTF-8");
 		}
 
-		String value1 = "value";
-		String value2 = "валуе";
+		final String value1 = "value";
+		final String value2 = "валуе";
 
 		request.form("one", value1);
 		request.form("two", value2);
@@ -172,7 +172,7 @@ class EncodingTest {
 			request.form("enc", encoding);
 		}
 
-		HttpResponse httpResponse = request.send();
+		final HttpResponse httpResponse = request.send();
 
 		assertEquals("application/x-www-form-urlencoded", request.mediaType());
 		if (i == 3) {
@@ -200,20 +200,20 @@ class EncodingTest {
 	void testQueryParams2() throws IOException {
 		testQueryParams(2);
 	}
-	private void testQueryParams(int i) throws IOException {
-		String encoding = i == 1 ?  "UTF-8" : "CP1251";
+	private void testQueryParams(final int i) throws IOException {
+		final String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.get("http://localhost:8173/echo2");
+		final HttpRequest request = HttpRequest.get("http://localhost:8173/echo2");
 		request.queryEncoding(encoding);
 
-		String value1 = "value";
-		String value2 = "валуе";
+		final String value1 = "value";
+		final String value2 = "валуе";
 
 		request.query("one", value1);
 		request.query("two", value2);
 		request.query("enc", encoding);
 
-		HttpResponse httpResponse = request.send();
+		final HttpResponse httpResponse = request.send();
 
 		assertTrue(Data.ref.get);
 		assertFalse(Data.ref.post);
@@ -225,18 +225,18 @@ class EncodingTest {
 
 	@Test
 	void testMultipart() {
-		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
+		final HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
 		request
 			.formEncoding("UTF-8")		// optional
 			.multipart(true);
 
-		String value1 = "value";
-		String value2 = "валуе";
+		final String value1 = "value";
+		final String value2 = "валуе";
 
 		request.form("one", value1);
 		request.form("two", value2);
 
-		HttpResponse httpResponse = request.send();
+		final HttpResponse httpResponse = request.send();
 
 		assertEquals("multipart/form-data", request.mediaType());
 
@@ -249,12 +249,12 @@ class EncodingTest {
 
 	@Test
 	void testUploadWithUploadable() throws IOException {
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("http://localhost:8173/echo2")
 				.multipart(true)
 				.form("id", "12")
 				.form("file", new ByteArrayUploadable(
-					"upload тест".getBytes(StringPool.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
+					"upload тест".getBytes(StandardCharsets.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
 				.send();
 
 		assertEquals(200, response.statusCode());

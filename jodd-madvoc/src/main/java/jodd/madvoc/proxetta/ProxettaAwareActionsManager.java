@@ -25,12 +25,12 @@
 
 package jodd.madvoc.proxetta;
 
-import jodd.cache.TypeCache;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.petite.meta.PetiteInject;
 import jodd.proxetta.Proxetta;
+import jodd.util.TypeCache;
 
 import java.lang.reflect.Method;
 

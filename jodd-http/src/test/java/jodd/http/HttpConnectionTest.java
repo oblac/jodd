@@ -27,13 +27,13 @@ package jodd.http;
 
 import jodd.http.up.ByteArrayUploadable;
 import jodd.io.FileUtil;
-import jodd.util.StringPool;
-import jodd.util.StringUtil;
 import jodd.net.MimeTypes;
+import jodd.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,9 +42,9 @@ class HttpConnectionTest {
 
 	@Test
 	void testEcho() throws IOException {
-		EchoTestServer echoTestServer = new EchoTestServer();
+		final EchoTestServer echoTestServer = new EchoTestServer();
 
-		HttpResponse response = HttpRequest.get("http://localhost:8081/hello?id=12").send();
+		final HttpResponse response = HttpRequest.get("http://localhost:8081/hello?id=12").send();
 
 		assertEquals(200, response.statusCode());
 		assertEquals("OK", response.statusPhrase());
@@ -61,15 +61,15 @@ class HttpConnectionTest {
 
 	@Test
 	void testUpload() throws IOException {
-		EchoTestServer echoTestServer = new EchoTestServer();
+		final EchoTestServer echoTestServer = new EchoTestServer();
 
-		File file = FileUtil.createTempFile();
+		final File file = FileUtil.createTempFile();
 		file.deleteOnExit();
 
 		FileUtil.writeString(file, "upload тест");
 		assertEquals("upload тест", FileUtil.readString(file));
 
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("http://localhost:8081/hello")
 				.form("id", "12")
 				.form("file", file)
@@ -80,7 +80,7 @@ class HttpConnectionTest {
 
 		assertEquals("POST", echoTestServer.method);
 		assertEquals("12", echoTestServer.params.get("id"));
-		File uploadedFile = new File(echoTestServer.files.get("file").toString());
+		final File uploadedFile = new File(echoTestServer.files.get("file").toString());
 		assertNotNull(uploadedFile);
 		assertEquals("upload тест", FileUtil.readString(uploadedFile));
 
@@ -92,14 +92,14 @@ class HttpConnectionTest {
 
 	@Test
 	void testUploadWithUploadable() throws IOException {
-		EchoTestServer echoTestServer = new EchoTestServer();
+		final EchoTestServer echoTestServer = new EchoTestServer();
 
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("http://localhost:8081/hello")
 				.multipart(true)
 				.form("id", "12")
 				.form("file", new ByteArrayUploadable(
-					"upload тест".getBytes(StringPool.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
+					"upload тест".getBytes(StandardCharsets.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
 				.send();
 
 		assertEquals(200, response.statusCode());
@@ -107,7 +107,7 @@ class HttpConnectionTest {
 
 		assertEquals("POST", echoTestServer.method);
 		assertEquals("12", echoTestServer.params.get("id"));
-		File uploadedFile = new File(echoTestServer.files.get("file").toString());
+		final File uploadedFile = new File(echoTestServer.files.get("file").toString());
 		assertNotNull(uploadedFile);
 		assertEquals("upload тест", FileUtil.readString(uploadedFile));
 
@@ -118,22 +118,22 @@ class HttpConnectionTest {
 
 	@Test
 	void testUploadWithMonitor() throws IOException {
-		EchoTestServer echoTestServer = new EchoTestServer();
+		final EchoTestServer echoTestServer = new EchoTestServer();
 
-		File file = FileUtil.createTempFile();
+		final File file = FileUtil.createTempFile();
 		file.deleteOnExit();
 
 		FileUtil.writeString(file, StringUtil.repeat('A', 1024));
 
 		final StringBuilder sb = new StringBuilder();
 
-		HttpResponse response = HttpRequest
+		final HttpResponse response = HttpRequest
 				.post("http://localhost:8081/hello")
 				.form("id", "12")
 				.form("file", file)
 				.monitor(new HttpProgressListener() {
 					@Override
-					public void transferred(int len) {
+					public void transferred(final int len) {
 						sb.append(":" + len);
 					}
 				})

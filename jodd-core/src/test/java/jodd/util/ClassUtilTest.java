@@ -74,7 +74,7 @@ class ClassUtilTest {
 
 	@Test
 	void testMethod() {
-		TFooBean bean = new TFooBean();
+		final TFooBean bean = new TFooBean();
 		Method m;
 		m = ClassUtil.findMethod(TFooBean.class, "getMore");
 		assertNotNull(m);
@@ -89,9 +89,9 @@ class ClassUtilTest {
 
 	@Test
 	void testMatchClasses() {
-		TFooBean a = new TFooBean();
-		TFooBean b = new TFooBean();
-		TFooBean2 c = new TFooBean2();
+		final TFooBean a = new TFooBean();
+		final TFooBean b = new TFooBean();
+		final TFooBean2 c = new TFooBean2();
 
 		assertTrue(TFooBean.class.isInstance(a));
 		assertTrue(ClassUtil.isTypeOf(TFooBean.class, a.getClass()));
@@ -396,19 +396,19 @@ class ClassUtilTest {
 
 	public static class BaseClass3<A extends Number & Serializable> {
 		public A[] array1;
-		public void foo(A[] as){}
+		public void foo(final A[] as){}
 	}
 
 	@Test
 	void testGetFieldConcreteType() throws NoSuchFieldException {
-		Field f1 = BaseClass.class.getField("f1");
-		Field f2 = BaseClass.class.getField("f2");
-		Field f3 = BaseClass.class.getField("f3");
-		Field f4 = ConcreteClass.class.getField("f4");
-		Field f5 = ConcreteClass.class.getField("f5");
-		Field array1 = BaseClass.class.getField("array1");
+		final Field f1 = BaseClass.class.getField("f1");
+		final Field f2 = BaseClass.class.getField("f2");
+		final Field f3 = BaseClass.class.getField("f3");
+		final Field f4 = ConcreteClass.class.getField("f4");
+		final Field f5 = ConcreteClass.class.getField("f5");
+		final Field array1 = BaseClass.class.getField("array1");
 
-		Class[] genericSupertypes = ClassUtil.getGenericSupertypes(ConcreteClass.class);
+		final Class[] genericSupertypes = ClassUtil.getGenericSupertypes(ConcreteClass.class);
 		assertEquals(String.class, genericSupertypes[0]);
 		assertEquals(Integer.class, genericSupertypes[1]);
 
@@ -426,8 +426,8 @@ class ClassUtilTest {
 
 	@Test
 	void testGetFieldConcreteType2() throws Exception {
-		Field array1 = BaseClass.class.getField("array1");
-		Field f2 = ConcreteClass2.class.getField("f2");
+		final Field array1 = BaseClass.class.getField("array1");
+		final Field f2 = ConcreteClass2.class.getField("f2");
 
 		assertEquals(String[].class, ClassUtil.getRawType(array1.getGenericType(), ConcreteClass2.class));
 		assertEquals(Integer.class, ClassUtil.getRawType(f2.getGenericType(), ConcreteClass2.class));
@@ -436,18 +436,18 @@ class ClassUtilTest {
 
 	@Test
 	void testRawType_noConcreteClass() throws Exception {
-		Field array1 = BaseClass2.class.getField("array1");
+		final Field array1 = BaseClass2.class.getField("array1");
 		assertEquals(Object[].class, ClassUtil.getRawType(array1.getGenericType(), BaseClass2.class));
 	}
 
 	@Test
 	void testRawType_bounded() throws Exception {
-		Field array1 = BaseClass3.class.getField("array1");
+		final Field array1 = BaseClass3.class.getField("array1");
 		assertEquals(Number[].class, ClassUtil.getRawType(array1.getGenericType(), BaseClass3.class));
 
-		Method foo = ClassUtil.findMethod(BaseClass3.class, "foo");
+		final Method foo = ClassUtil.findMethod(BaseClass3.class, "foo");
 
-		MethodDescriptor mi = ClassIntrospector.get().lookup(BaseClass3.class).getMethodDescriptor("foo", true);
+		final MethodDescriptor mi = ClassIntrospector.get().lookup(BaseClass3.class).getMethodDescriptor("foo", true);
 	}
 
 
@@ -461,7 +461,7 @@ class ClassUtilTest {
 		public List<Integer> getIntegerList() {return null;}
 		public Integer[] getIntegers() {return null;}
 		public Integer getInteger() {return null;}
-		public <T> T getTemplate(T foo) {return null;}
+		public <T> T getTemplate(final T foo) {return null;}
 		public Collection<? extends Number> getCollection() {return null;}
 		public Collection<?> getCollection2() {return null;}
 	}
@@ -469,41 +469,41 @@ class ClassUtilTest {
 	@Test
 	void testGetRawAndComponentType() throws NoSuchFieldException {
 
-		Class<Soo> sooClass = Soo.class;
+		final Class<Soo> sooClass = Soo.class;
 
-		Field stringList = sooClass.getField("stringList");
+		final Field stringList = sooClass.getField("stringList");
 		assertEquals(List.class, ClassUtil.getRawType(stringList.getType()));
 		assertEquals(String.class, ClassUtil.getComponentType(stringList.getGenericType(), 0));
 
-		Field strings = sooClass.getField("strings");
+		final Field strings = sooClass.getField("strings");
 		assertEquals(String[].class, ClassUtil.getRawType(strings.getType()));
 		assertEquals(String.class, ClassUtil.getComponentType(strings.getGenericType(), -1));
 
-		Field string = sooClass.getField("string");
+		final Field string = sooClass.getField("string");
 		assertEquals(String.class, ClassUtil.getRawType(string.getType()));
 		assertNull(ClassUtil.getComponentType(string.getGenericType(), 0));
 
-		Method integerList = ClassUtil.findMethod(sooClass, "getIntegerList");
+		final Method integerList = ClassUtil.findMethod(sooClass, "getIntegerList");
 		assertEquals(List.class, ClassUtil.getRawType(integerList.getReturnType()));
 		assertEquals(Integer.class, ClassUtil.getComponentType(integerList.getGenericReturnType(), -1));
 
-		Method integers = ClassUtil.findMethod(sooClass, "getIntegers");
+		final Method integers = ClassUtil.findMethod(sooClass, "getIntegers");
 		assertEquals(Integer[].class, ClassUtil.getRawType(integers.getReturnType()));
 		assertEquals(Integer.class, ClassUtil.getComponentType(integers.getGenericReturnType(), 0));
 
-		Method integer = ClassUtil.findMethod(sooClass, "getInteger");
+		final Method integer = ClassUtil.findMethod(sooClass, "getInteger");
 		assertEquals(Integer.class, ClassUtil.getRawType(integer.getReturnType()));
 		assertNull(ClassUtil.getComponentType(integer.getGenericReturnType(), -1));
 
-		Method template = ClassUtil.findMethod(sooClass, "getTemplate");
+		final Method template = ClassUtil.findMethod(sooClass, "getTemplate");
 		assertEquals(Object.class, ClassUtil.getRawType(template.getReturnType()));
 		assertNull(ClassUtil.getComponentType(template.getGenericReturnType(), 0));
 
-		Method collection = ClassUtil.findMethod(sooClass, "getCollection");
+		final Method collection = ClassUtil.findMethod(sooClass, "getCollection");
 		assertEquals(Collection.class, ClassUtil.getRawType(collection.getReturnType()));
 		assertEquals(Number.class, ClassUtil.getComponentType(collection.getGenericReturnType(), -1));
 
-		Method collection2 = ClassUtil.findMethod(sooClass, "getCollection2");
+		final Method collection2 = ClassUtil.findMethod(sooClass, "getCollection2");
 		assertEquals(Collection.class, ClassUtil.getRawType(collection2.getReturnType()));
 		assertEquals(Object.class, ClassUtil.getComponentType(collection2.getGenericReturnType(), 0));
 	}
@@ -518,8 +518,8 @@ class ClassUtilTest {
 
 	@Test
 	void testGetRawWithImplClass() throws NoSuchFieldException {
-		Method number = ClassUtil.findMethod(Base2.class, "getNumber");
-		Method kiko = ClassUtil.findMethod(Base2.class, "getKiko");
+		final Method number = ClassUtil.findMethod(Base2.class, "getNumber");
+		final Method kiko = ClassUtil.findMethod(Base2.class, "getKiko");
 
 		assertEquals(Number.class, ClassUtil.getRawType(number.getReturnType()));
 		assertEquals(Number.class, ClassUtil.getRawType(number.getGenericReturnType()));
@@ -655,18 +655,18 @@ class ClassUtilTest {
 
 	@Test
 	void testFieldTypeToString() {
-		Field[] fields = FieldType.class.getDeclaredFields();
+		final Field[] fields = FieldType.class.getDeclaredFields();
 
 		Arrays.sort(fields, new Comparator<Field>() {
 			@Override
-			public int compare(Field o1, Field o2) {
+			public int compare(final Field o1, final Field o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
 
 		String result = "";
-		for (Field field : fields) {
-			Type type = field.getGenericType();
+		for (final Field field : fields) {
+			final Type type = field.getGenericType();
 			result += field.getName() + " - " + ClassUtil.typeToString(type) + '\n';
 		}
 
@@ -692,18 +692,18 @@ class ClassUtilTest {
 
 	@Test
 	void testMethodTypeToString() {
-		Method[] methods = MethodReturnType.class.getDeclaredMethods();
+		final Method[] methods = MethodReturnType.class.getDeclaredMethods();
 
 		Arrays.sort(methods, new Comparator<Method>() {
 			@Override
-			public int compare(Method o1, Method o2) {
+			public int compare(final Method o1, final Method o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
 
 		String result = "";
-		for (Method method : methods) {
-			Type type = method.getGenericReturnType();
+		for (final Method method : methods) {
+			final Type type = method.getGenericReturnType();
 			result += method.getName() + " - " + ClassUtil.typeToString(type) + '\n';
 		}
 
@@ -717,7 +717,7 @@ class ClassUtilTest {
 	}
 
 	public static class MethodParameterType<A> {
-		<T extends List<T>> void m(A a, String p1, T p2, List<?> p3, List<T> p4) { }
+		<T extends List<T>> void m(final A a, final String p1, final T p2, final List<?> p3, final List<T> p4) { }
 	}
 
 	public static class Mimple extends MethodParameterType<Long>{}
@@ -726,8 +726,8 @@ class ClassUtilTest {
 	void testMethodParameterTypeToString() {
 		String result = "";
 		Method method = null;
-		for (Method m : MethodParameterType.class.getDeclaredMethods()) {
-			for (Type type : m.getGenericParameterTypes()) {
+		for (final Method m : MethodParameterType.class.getDeclaredMethods()) {
+			for (final Type type : m.getGenericParameterTypes()) {
 				result += m.getName() + " - " + ClassUtil.typeToString(type) + '\n';
 			}
 			method = m;
@@ -742,7 +742,7 @@ class ClassUtilTest {
 				result);
 
 
-		Type[] types = method.getGenericParameterTypes();
+		final Type[] types = method.getGenericParameterTypes();
 		assertEquals(Object.class, ClassUtil.getRawType(types[0], MethodParameterType.class));
 		assertEquals(String.class, ClassUtil.getRawType(types[1], MethodParameterType.class));
 		assertEquals(List.class, ClassUtil.getRawType(types[2], MethodParameterType.class));

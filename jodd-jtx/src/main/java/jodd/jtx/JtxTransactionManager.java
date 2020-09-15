@@ -25,9 +25,9 @@
 
 package jodd.jtx;
 
-import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.TypeCache;
 
 import java.util.ArrayList;
 

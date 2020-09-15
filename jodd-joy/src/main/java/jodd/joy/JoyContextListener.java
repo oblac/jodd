@@ -25,8 +25,8 @@
 
 package jodd.joy;
 
-import jodd.system.SystemUtil;
 import jodd.util.ClassUtil;
+import jodd.util.SystemUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -68,7 +68,7 @@ public class JoyContextListener implements ServletContextListener {
 				ClassUtil.newInstance(joyContextListenerClass);
 
 			joyContextListener.createJoyAndInitServletContext(servletContext);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new JoyException(e);
 		}
 

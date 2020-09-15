@@ -58,24 +58,24 @@ public class UpdateSetChunk extends SqlChunk {
 			appendMissingSpace(out);
 		}
 
-		DbEntityDescriptor ded = tableRef != null ?
+		final DbEntityDescriptor ded = tableRef != null ?
 				lookupTableRef(tableRef) :
 				lookupType(resolveClass(data));
 
 		out.append(SET);
 
-		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
-		String typeName = StringUtil.uncapitalize(ded.getEntityName());
+		final DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
+		final String typeName = StringUtil.uncapitalize(ded.getEntityName());
 		//String table = resolveTable(tableRef, ded);
 
 		int size = 0;
-		for (DbEntityColumnDescriptor dec : decList) {
+		for (final DbEntityColumnDescriptor dec : decList) {
 			if (dec.isId() && !isUpdateablePrimaryKey) {
 				continue;
 			}
 
-			String property = dec.getPropertyName();
-			Object value = BeanUtil.declared.getProperty(data, property);
+			final String property = dec.getPropertyName();
+			final Object value = BeanUtil.declared.getProperty(data, property);
 
 			if (includeColumns == COLS_ONLY_EXISTING) {
 				if (isEmptyColumnValue(dec, value)) {
@@ -98,7 +98,7 @@ public class UpdateSetChunk extends SqlChunk {
 
 			out.append(dec.getColumnNameForQuery()).append('=');
 
-			String propertyName = typeName + '.' + property;
+			final String propertyName = typeName + '.' + property;
 			defineParameter(out, propertyName, value, dec);
 		}
 		if (size > 0) {

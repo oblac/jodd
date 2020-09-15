@@ -36,7 +36,7 @@ public abstract class ArgsTestBase {
 
 	@Test
 	public void testArgs() {
-		HttpResponse response;
+		final HttpResponse response;
 		response = HttpRequest.get("localhost:8173/args.hello.html?id=1").send();
 
 		assertEquals("+ mad 1voc + jodd 1", response.bodyText().trim());
@@ -45,7 +45,7 @@ public abstract class ArgsTestBase {
 	@Test
 	public void testArgs2() {
 		ArgsAction.User.counter = 0;
-		HttpResponse response;
+		final HttpResponse response;
 		response = HttpRequest.get("localhost:8173/args.world.html")
 				.query("who", "me")
 				.query("name", "Jupiter")
@@ -54,13 +54,13 @@ public abstract class ArgsTestBase {
 				.query("muti", "7")
 				.send();
 
-		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
+		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**7**jojo", response.bodyText().trim());
 	}
 
 	@Test
 	public void testArgs2_noValue() {
 		ArgsAction.User.counter = 0;
-		HttpResponse response;
+		final HttpResponse response;
 		response = HttpRequest.get("localhost:8173/args.world.html")
 				.query("who", "")
 				.query("name", "Jupiter")
@@ -69,13 +69,13 @@ public abstract class ArgsTestBase {
 				.query("muti", "7")
 				.send();
 
-		assertEquals("**null+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
+		assertEquals("**null+Jupiter+1+3**Jupiter**bye-true-7**7**jojo", response.bodyText().trim());
 	}
 
 	@Test
 	public void testArgs3() {
 		ArgsAction.User.counter = 0;
-		HttpResponse response;
+		final HttpResponse response;
 		response = HttpRequest.get("localhost:8173/args.user.html")
 				.query("user.id", "3")
 				.query("user.username", "Frank")
@@ -87,7 +87,7 @@ public abstract class ArgsTestBase {
 	@Test
 	public void testArgs3_requestBody() {
 		ArgsAction.User.counter = 0;
-		HttpResponse response;
+		final HttpResponse response;
 		response = HttpRequest.get("localhost:8173/args.user2")
 				.body("{\"id\": 3, \"username\": \"Frank\"}")
 				.send();

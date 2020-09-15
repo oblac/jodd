@@ -4,12 +4,11 @@ ext.moduleDescription = 'Jodd Madvoc is elegant web MVC framework that uses CoC 
 
 dependencies {
 	api project(':jodd-core')
-	api project(':jodd-bean')
 	api project(':jodd-props')
 	api project(':jodd-servlet')
 	api project(':jodd-petite')
 	api project(':jodd-proxetta')
-	api project(':jodd-json')
+	api 'org.jodd:jodd-json:6.0.1'
 	implementation project(':jodd-log')
 
 	provided lib.servlet

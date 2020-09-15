@@ -25,7 +25,7 @@
 
 package jodd.db.oom.naming;
 
-import jodd.util.Format;
+import jodd.util.StringUtil;
 
 /**
  * Naming strategy for converting property names
@@ -39,10 +39,10 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 	 * Converts property name to column name.
 	 */
 	public String convertPropertyNameToColumnName(final String propertyName) {
-		StringBuilder tableName = new StringBuilder(propertyName.length() * 2);
+		final StringBuilder tableName = new StringBuilder(propertyName.length() * 2);
 
 		if (splitCamelCase) {
-			String convertedTableName = Format.fromCamelCase(propertyName, separatorChar);
+			final String convertedTableName = StringUtil.fromCamelCase(propertyName, separatorChar);
 			tableName.append(convertedTableName);
 		} else {
 			tableName.append(propertyName);
@@ -61,13 +61,13 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 	 * Converts column name to property name.
 	 */
 	public String convertColumnNameToPropertyName(final String columnName) {
-		StringBuilder propertyName = new StringBuilder(columnName.length());
-		int len = columnName.length();
+		final StringBuilder propertyName = new StringBuilder(columnName.length());
+		final int len = columnName.length();
 
 		if (splitCamelCase) {
 			boolean toUpper = false;
 			for (int i = 0; i < len; i++) {
-				char c = columnName.charAt(i);
+				final char c = columnName.charAt(i);
 				if (c == separatorChar) {
 					toUpper = true;
 					continue;
@@ -89,7 +89,7 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 	 * Returns full column name.
 	 */
 	public String applyToColumnName(final String columnName) {
-		String propertyName = convertColumnNameToPropertyName(columnName);
+		final String propertyName = convertColumnNameToPropertyName(columnName);
 
 		return convertPropertyNameToColumnName(propertyName);
 	}

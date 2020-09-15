@@ -113,7 +113,7 @@ public class ReferencesResolver {
 
 		BeanReferences reference = null;
 
-		String name = ref.value().trim();
+		final String name = ref.value().trim();
 		if (name.length() != 0) {
 			reference = BeanReferences.of(name);
 		}
@@ -134,7 +134,7 @@ public class ReferencesResolver {
 
 		BeanReferences reference = null;
 
-		String name = ref.value().trim();
+		final String name = ref.value().trim();
 		if (name.length() != 0) {
 			reference = BeanReferences.of(name);
 		}
@@ -172,7 +172,7 @@ public class ReferencesResolver {
 		int parametersWithAnnotationCount = 0;
 
 		for (int i = 0; i < parameters.length; i++) {
-			Parameter parameter = parameters[i];
+			final Parameter parameter = parameters[i];
 
 			petiteInject = parameter.getAnnotation(PetiteInject.class);
 
@@ -182,7 +182,7 @@ public class ReferencesResolver {
 			}
 
 			// there is annotation on argument, override values
-			String annotationValue = readAnnotationValue(petiteInject);
+			final String annotationValue = readAnnotationValue(petiteInject);
 
 			if (annotationValue != null) {
 				references[i] = BeanReferences.of(annotationValue);
@@ -211,7 +211,7 @@ public class ReferencesResolver {
 	 * Reads annotation value and returns {@code null} if value is empty.
 	 */
 	private String readAnnotationValue(final PetiteInject annotation) {
-		String value = annotation.value().trim();
+		final String value = annotation.value().trim();
 
 		if (value.isEmpty()) {
 			return null;
@@ -220,7 +220,7 @@ public class ReferencesResolver {
 	}
 
 	private BeanReferences[] updateReferencesWithDefaultsIfNeeded(final Executable methodOrCtor, BeanReferences[] references) {
-		BeanReferences[] defaultReferences = buildDefaultReferences(methodOrCtor);
+		final BeanReferences[] defaultReferences = buildDefaultReferences(methodOrCtor);
 
 		if (references == null || references.length == 0) {
 			references = defaultReferences;
@@ -233,7 +233,7 @@ public class ReferencesResolver {
 
 		// apply default parameters
 		for (int i = 0; i < references.length; i++) {
-			BeanReferences parameterReferences = references[i];
+			final BeanReferences parameterReferences = references[i];
 
 			if (parameterReferenceIsNotSet(parameterReferences)) {
 				references[i] = defaultReferences[i];
@@ -277,7 +277,7 @@ public class ReferencesResolver {
 		final BeanReferences[] references = new BeanReferences[paramTypes.length];
 
 		for (int j = 0; j < paramTypes.length; j++) {
-			String[] ref = new String[lookupReferences.length];
+			final String[] ref = new String[lookupReferences.length];
 			references[j] = BeanReferences.of(ref);
 
 			for (int i = 0; i < ref.length; i++) {
@@ -328,7 +328,7 @@ public class ReferencesResolver {
 	 */
 	private void removeAllDuplicateNames(final BeanReferences[] allBeanReferences) {
 		for (int i = 0; i < allBeanReferences.length; i++) {
-			BeanReferences references = allBeanReferences[i];
+			final BeanReferences references = allBeanReferences[i];
 			allBeanReferences[i] = references.removeDuplicateNames();
 		}
 	}
@@ -341,7 +341,7 @@ public class ReferencesResolver {
 		if (references == null) {
 			return null;
 		}
-		BeanReferences[] ref = new BeanReferences[references.length];
+		final BeanReferences[] ref = new BeanReferences[references.length];
 
 		for (int i = 0; i < references.length; i++) {
 			ref[i] = BeanReferences.of(references[i]);
@@ -362,9 +362,9 @@ public class ReferencesResolver {
 			return null;
 		}
 
-		String[] refNames = Converter.get().toStringArray(value);
+		final String[] refNames = Converter.get().toStringArray(value);
 
-		BeanReferences[] references = new BeanReferences[refNames.length];
+		final BeanReferences[] references = new BeanReferences[refNames.length];
 		for (int i = 0; i < refNames.length; i++) {
 			references[i] = BeanReferences.of(refNames[i].trim());
 		}

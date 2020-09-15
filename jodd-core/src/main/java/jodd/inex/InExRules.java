@@ -54,6 +54,7 @@ import java.util.List;
  * About generics: rule engine examine Values (V). Rules are defined as Definitions (D).
  * They are stored internally as R, that is used with Values.
  */
+@Deprecated
 public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 
 	public InExRules<String, String, String> create() {
@@ -140,7 +141,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 				return false;
 			}
 
-			Rule rule = (Rule) o;
+			final Rule rule = (Rule) o;
 
 			if (include != rule.include) {
 				return false;
@@ -255,7 +256,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 			excludesCount++;
 		}
 
-		Rule<R> newRule = new Rule<>(makeRule(ruleDefinition), include);
+		final Rule<R> newRule = new Rule<>(makeRule(ruleDefinition), include);
 
 		if (rules.contains(newRule)) {
 			return;
@@ -333,7 +334,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	protected boolean processIncludes(final V value, boolean include) {
 		if (includesCount > 0) {
 			if (!include) {
-				for (Rule<R> rule : rules) {
+				for (final Rule<R> rule : rules) {
 					if (!rule.include) {
 						continue;
 					}
@@ -354,7 +355,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	protected boolean processExcludes(final V value, boolean include) {
 		if (excludesCount > 0) {
 			if (include) {
-				for (Rule<R> rule : rules) {
+				for (final Rule<R> rule : rules) {
 					if (rule.include) {
 						continue;
 					}

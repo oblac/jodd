@@ -25,8 +25,6 @@
 
 package jodd.util;
 
-import jodd.util.concurrent.ThreadFactoryBuilder;
-
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -46,8 +44,8 @@ public class Futures {
 			1,
 			ThreadFactoryBuilder
 				.create()
-				.setDaemon(true)
-				.setNameFormat("failAfter-%d")
+				.withDaemon(true)
+				.withNameFormat("failAfter-%d")
 				.get());
 
 	/**

@@ -25,8 +25,8 @@
 
 package jodd.petite;
 
-import jodd.cache.TypeCache;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.TypeCache;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

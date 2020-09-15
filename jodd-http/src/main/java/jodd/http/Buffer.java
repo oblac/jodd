@@ -25,16 +25,15 @@
 
 package jodd.http;
 
-import jodd.http.up.Uploadable;
-import jodd.io.StreamUtil;
-import jodd.util.StringPool;
 import jodd.buffer.FastByteBuffer;
+import jodd.http.up.Uploadable;
+import jodd.io.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 /**
@@ -54,14 +53,9 @@ public class Buffer {
 	public Buffer append(final String string) {
 		ensureLast();
 
-		try {
-			byte[] bytes = string.getBytes(StringPool.ISO_8859_1);
-
-			last.append(bytes);
-
-			size += bytes.length;
-		} catch (UnsupportedEncodingException ignore) {
-		}
+		final byte[] bytes = string.getBytes(StandardCharsets.ISO_8859_1);
+		last.append(bytes);
+		size += bytes.length;
 
 		return this;
 	}
@@ -129,24 +123,24 @@ public class Buffer {
 	 * Writes content to the writer.
 	 */
 	public void writeTo(final Writer writer) throws IOException {
-		for (Object o : list) {
+		for (final Object o : list) {
 			if (o instanceof FastByteBuffer) {
-				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
+				final FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
 
-				byte[] array = fastByteBuffer.toArray();
+				final byte[] array = fastByteBuffer.toArray();
 
-				writer.write(new String(array, StringPool.ISO_8859_1));
+				writer.write(new String(array, StandardCharsets.ISO_8859_1));
 			}
 			else if (o instanceof Uploadable) {
-				Uploadable uploadable = (Uploadable) o;
+				final Uploadable uploadable = (Uploadable) o;
 
-				InputStream inputStream = uploadable.openInputStream();
+				final InputStream inputStream = uploadable.openInputStream();
 
 				try {
-					StreamUtil.copy(inputStream, writer, StringPool.ISO_8859_1);
+					IOUtil.copy(inputStream, writer, StandardCharsets.ISO_8859_1);
 				}
 				finally {
-					StreamUtil.close(inputStream);
+					IOUtil.close(inputStream);
 				}
 			}
 		}
@@ -156,22 +150,22 @@ public class Buffer {
 	 * Writes content to the output stream.
 	 */
 	public void writeTo(final OutputStream out) throws IOException {
-		for (Object o : list) {
+		for (final Object o : list) {
 			if (o instanceof FastByteBuffer) {
-				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
+				final FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
 
 				out.write(fastByteBuffer.toArray());
 			}
 			else if (o instanceof Uploadable) {
-				Uploadable uploadable = (Uploadable) o;
+				final Uploadable uploadable = (Uploadable) o;
 
-				InputStream inputStream = uploadable.openInputStream();
+				final InputStream inputStream = uploadable.openInputStream();
 
 				try {
-					StreamUtil.copy(inputStream, out);
+					IOUtil.copy(inputStream, out);
 				}
 				finally {
-					StreamUtil.close(inputStream);
+					IOUtil.close(inputStream);
 				}
 			}
 		}
@@ -193,10 +187,10 @@ public class Buffer {
 
 		// loop
 
-		for (Object o : list) {
+		for (final Object o : list) {
 			if (o instanceof FastByteBuffer) {
-				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
-				byte[] bytes = fastByteBuffer.toArray();
+				final FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
+				final byte[] bytes = fastByteBuffer.toArray();
 
 				int offset = 0;
 
@@ -224,9 +218,9 @@ public class Buffer {
 				}
 			}
 			else if (o instanceof Uploadable) {
-				Uploadable uploadable = (Uploadable) o;
+				final Uploadable uploadable = (Uploadable) o;
 
-				InputStream inputStream = uploadable.openInputStream();
+				final InputStream inputStream = uploadable.openInputStream();
 
 				int remaining = uploadable.getSize();
 
@@ -241,7 +235,7 @@ public class Buffer {
 						}
 
 						// writes remaining chunk
-						StreamUtil.copy(inputStream, out, chunk);
+						IOUtil.copy(inputStream, out, chunk);
 
 						remaining -= chunk;
 						step += chunk;
@@ -255,7 +249,7 @@ public class Buffer {
 					}
 				}
 				finally {
-					StreamUtil.close(inputStream);
+					IOUtil.close(inputStream);
 				}
 			}
 		}

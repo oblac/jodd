@@ -32,10 +32,9 @@ import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.PetiteValue;
-import jodd.template.ContextTemplateParser;
-import jodd.template.MapTemplateParser;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
+import jodd.util.StringTemplateParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,11 +47,11 @@ import java.util.Map;
 public class ParamManager {
 
 	protected final Map<String, Object> params;
-	protected final ContextTemplateParser contextTemplateParser;
+	protected final StringTemplateParser contextTemplateParser;
 
 	public ParamManager() {
 		params = new HashMap<>();
-		contextTemplateParser =  new MapTemplateParser().of(params);
+		contextTemplateParser =  StringTemplateParser.ofMap(params);
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class ParamManager {
 	}
 
 	public String parseKeyTemplate(final String input) {
-		return contextTemplateParser.parse(input);
+		return contextTemplateParser.apply(input);
 	}
 
 	/**
@@ -81,9 +80,9 @@ public class ParamManager {
 	public String[] filterParametersForBeanName(String beanName, final boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 
-		List<String> list = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : params.entrySet()) {
-			String key = entry.getKey();
+		final List<String> list = new ArrayList<>();
+		for (final Map.Entry<String, Object> entry : params.entrySet()) {
+			final String key = entry.getKey();
 			if (!key.startsWith(beanName)) {
 				continue;
 			}
@@ -92,7 +91,7 @@ public class ParamManager {
 				continue;
 			}
 			// resolve all references
-			String value = PropertiesUtil.resolveProperty(params, key);
+			final String value = PropertiesUtil.resolveProperty(params, key);
 			entry.setValue(value);
 		}
 		if (list.isEmpty()) {
@@ -119,7 +118,7 @@ public class ParamManager {
 				}
 			}
 
-			MethodDescriptor md = pd.getWriteMethodDescriptor();
+			final MethodDescriptor md = pd.getWriteMethodDescriptor();
 			if (md != null) {
 				final PetiteValue petiteValue = md.getMethod().getAnnotation(PetiteValue.class);
 

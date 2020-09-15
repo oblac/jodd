@@ -32,7 +32,6 @@ import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.system.SystemUtil;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.DigestEngine;
@@ -40,9 +39,11 @@ import jodd.util.RandomString;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,7 @@ public class HtmlStaplerBundlesManager {
 	protected final Strategy strategy;
 
 	// parameters
-	protected String localFilesEncoding = StringPool.UTF_8;
+	protected String localFilesEncoding = "UTF-8";
 	protected String bundleFolder;
 	protected String staplerPath = "jodd-bundle";
 	protected String localAddressAndPort = "http://localhost:8080";
@@ -498,7 +499,7 @@ public class HtmlStaplerBundlesManager {
 	private String downloadString(final String localUrl) throws IOException {
 		String content;
 		try {
-			content = NetUtil.downloadString(localUrl, localFilesEncoding);
+			content = NetUtil.downloadString(localUrl, Charset.forName(localFilesEncoding));
 		} catch (final IOException ioex) {
 			if (notFoundExceptionEnabled) {
 				throw ioex;

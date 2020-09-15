@@ -42,17 +42,6 @@ class MathUtilTest {
 	}
 
 	@Test
-	void testFactorial() {
-		assertEquals(0, MathUtil.factorial(-1));
-		assertEquals(1, MathUtil.factorial(0));
-		assertEquals(1, MathUtil.factorial(1));
-		assertEquals(2, MathUtil.factorial(2));
-		assertEquals(6, MathUtil.factorial(3));
-		assertEquals(3628800, MathUtil.factorial(10));
-		assertEquals(1307674368000L, MathUtil.factorial(15));
-	}
-
-	@Test
 	void testParseDigit() {
 		assertEquals(0, MathUtil.parseDigit('0'));
 		assertEquals(1, MathUtil.parseDigit('1'));
@@ -67,12 +56,12 @@ class MathUtilTest {
 	@Test
 	void testRandom() {
 		assertTrue(0 == MathUtil.randomInt(0, 0));
-		int randomInt = MathUtil.randomInt(-10, 10);
+		final int randomInt = MathUtil.randomInt(-10, 10);
 		assertTrue(randomInt < 10);
 		assertTrue(randomInt >= -10);
 
 		assertTrue(0 == MathUtil.randomLong(0, 0));
-		long randomLong = MathUtil.randomLong(-100000, 100000);
+		final long randomLong = MathUtil.randomLong(-100000, 100000);
 		assertTrue(randomLong < 100000);
 		assertTrue(randomLong >= -100000);
 	}

@@ -25,13 +25,13 @@
 
 package jodd.madvoc.result;
 
-import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
+import jodd.util.StringTemplateParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,14 +43,6 @@ import javax.servlet.http.HttpServletResponse;
  * @see ServletPermanentRedirectActionResult
  */
 public class ServletRedirectActionResult implements ActionResult {
-
-	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
-
-	public ServletRedirectActionResult() {
-		beanTemplateParser.setMacroPrefix(null);
-		beanTemplateParser.setMacroStart("{");
-		beanTemplateParser.setMacroEnd("}");
-	}
 
 	@In @MadvocContext
 	protected ResultMapper resultMapper;
@@ -86,11 +78,17 @@ public class ServletRedirectActionResult implements ActionResult {
 			resultPath = resultMapper.resolveResultPathString(resultBasePath, redirectPath);
 		}
 
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		final HttpServletRequest request = actionRequest.getHttpServletRequest();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String path = resultPath;
-		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
+
+		final StringTemplateParser beanTemplateParser = StringTemplateParser.ofBean(actionRequest.getAction());
+		beanTemplateParser
+				.setMacroPrefix(null)
+				.setMacroStart("{")
+				.setMacroEnd("}");
+		path = beanTemplateParser.apply(path);
 
 		DispatcherUtil.redirect(request, response, path);
 	}

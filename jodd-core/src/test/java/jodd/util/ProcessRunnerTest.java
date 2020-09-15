@@ -25,7 +25,6 @@
 
 package jodd.util;
 
-import jodd.system.SystemUtil;
 import jodd.util.ProcessRunner.ProcessResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +54,7 @@ class ProcessRunnerTest {
 
 			process = new ProcessBuilder("cmd.exe", "/c", "dir").start();
 
-			ProcessResult processResult = ProcessRunner.run(process);
+			final ProcessResult processResult = ProcessRunner.run(process);
 
 			// asserts
 			doAsserts(processResult);
@@ -68,7 +67,7 @@ class ProcessRunnerTest {
 
 			process = new ProcessBuilder("bash", "-c", "ls").start();
 
-			ProcessResult processResult = ProcessRunner.run(process);
+			final ProcessResult processResult = ProcessRunner.run(process);
 
 			// asserts
 			doAsserts(processResult);
@@ -89,7 +88,7 @@ class ProcessRunnerTest {
 			if (process != null) {
 				try {
 					process.destroy();
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					// ignore
 				}
 			}

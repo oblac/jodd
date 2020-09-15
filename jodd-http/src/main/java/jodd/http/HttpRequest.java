@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -146,14 +147,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		int ndx = destination.indexOf(' ');
 
 		if (ndx != -1) {
-			String method = destination.substring(0, ndx).toUpperCase();
+			final String method = destination.substring(0, ndx).toUpperCase();
 
 			try {
-				HttpMethod httpMethod = HttpMethod.valueOf(method);
+				final HttpMethod httpMethod = HttpMethod.valueOf(method);
 				this.method = httpMethod.name();
 				destination = destination.substring(ndx + 1);
 			}
-			catch (IllegalArgumentException ignore) {
+			catch (final IllegalArgumentException ignore) {
 				// unknown http method
 			}
 		}
@@ -329,10 +330,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			path = StringPool.SLASH + path;
 		}
 
-		int ndx = path.indexOf('?');
+		final int ndx = path.indexOf('?');
 
 		if (ndx != -1) {
-			String queryString = path.substring(ndx + 1);
+			final String queryString = path.substring(ndx + 1);
 
 			path = path.substring(0, ndx);
 
@@ -368,12 +369,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return this;
 		}
 
-		StringBuilder cookieString = new StringBuilder();
+		final StringBuilder cookieString = new StringBuilder();
 
 		boolean first = true;
 
-		for (Cookie cookie : cookies) {
-			Integer maxAge = cookie.getMaxAge();
+		for (final Cookie cookie : cookies) {
+			final Integer maxAge = cookie.getMaxAge();
 			if (maxAge != null && maxAge.intValue() == 0) {
 				continue;
 			}
@@ -412,9 +413,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		query(name1, value1 == null ? null : value1.toString());
 
 		for (int i = 0; i < parameters.length; i += 2) {
-			String name = parameters[i].toString();
+			final String name = parameters[i].toString();
 
-			String value = parameters[i + 1].toString();
+			final String value = parameters[i + 1].toString();
 			query.add(name, value);
 		}
 		return this;
@@ -424,7 +425,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Adds all parameters from the provided map.
 	 */
 	public HttpRequest query(final Map<String, String> queryMap) {
-		for (Map.Entry<String, String> entry : queryMap.entrySet()) {
+		for (final Map.Entry<String, String> entry : queryMap.entrySet()) {
 			query.add(entry.getKey(), entry.getValue());
 		}
 		return this;
@@ -501,7 +502,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * {@link #port(int) port}, {@link #path(String) path} and {@link #queryString(String) query string}.
 	 */
 	public String url() {
-		StringBuilder url = new StringBuilder();
+		final StringBuilder url = new StringBuilder();
 
 		url.append(hostUrl());
 
@@ -509,7 +510,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			url.append(path);
 		}
 
-		String queryString = queryString();
+		final String queryString = queryString();
 
 		if (StringUtil.isNotBlank(queryString)) {
 			url.append('?');
@@ -523,7 +524,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Returns just host url, without path and query.
 	 */
 	public String hostUrl() {
-		StringBand url = new StringBand(8);
+		final StringBand url = new StringBand(8);
 
 		if (protocol != null) {
 			url.append(protocol);
@@ -549,9 +550,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest basicAuthentication(final String username, final String password) {
 		if (username != null && password != null) {
-			String data = username.concat(StringPool.COLON).concat(password);
+			final String data = username.concat(StringPool.COLON).concat(password);
 
-			String base64 = Base64.encodeToString(data);
+			final String base64 = Base64.encodeToString(data);
 
 			headerOverwrite(HEADER_AUTHORIZATION, "Basic " + base64);
 		}
@@ -773,7 +774,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		try {
 			this.httpConnectionProvider = httpConnectionProvider;
 			this.httpConnection = httpConnectionProvider.createHttpConnection(this);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new HttpException("Can't connect to: " + url(), ioex);
 		}
 
@@ -812,7 +813,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest keepAlive(final HttpResponse httpResponse, final boolean doContinue) {
 		boolean keepAlive = httpResponse.isConnectionPersistent();
 		if (keepAlive) {
-			HttpConnection previousConnection = httpResponse.getHttpRequest().httpConnection;
+			final HttpConnection previousConnection = httpResponse.getHttpRequest().httpConnection;
 
 			if (previousConnection != null) {
 				// keep using the connection!
@@ -890,20 +891,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// sends data
 		final HttpResponse httpResponse;
 		try {
-			OutputStream outputStream = httpConnection.getOutputStream();
+			final OutputStream outputStream = httpConnection.getOutputStream();
 
 			sendTo(outputStream);
 
-			InputStream inputStream = httpConnection.getInputStream();
+			final InputStream inputStream = httpConnection.getInputStream();
 
 			httpResponse = HttpResponse.readFrom(inputStream);
 
 			httpResponse.assignHttpRequest(this);
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
-		boolean keepAlive = httpResponse.isConnectionPersistent();
+		final boolean keepAlive = httpResponse.isConnectionPersistent();
 
 		if (!keepAlive) {
 			// closes connection if keep alive is false, or if counter reached 0
@@ -931,11 +932,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// form
 
-		Buffer formBuffer = formBuffer();
+		final Buffer formBuffer = formBuffer();
 
 		// query string
 
-		String queryString = queryString();
+		final String queryString = queryString();
 
 		// user-agent
 
@@ -952,7 +953,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// BUILD OUT
 
-		Buffer request = new Buffer();
+		final Buffer request = new Buffer();
 
 		request.append(method)
 			.append(SPACE)
@@ -979,14 +980,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Assumes input stream is in ISO_8859_1 encoding.
 	 */
 	public static HttpRequest readFrom(final InputStream in) {
-		return readFrom(in, StringPool.ISO_8859_1);
+		return readFrom(in, StandardCharsets.ISO_8859_1.name());
 	}
 
 	public static HttpRequest readFrom(final InputStream in, final String encoding) {
-		BufferedReader reader;
+		final BufferedReader reader;
 		try {
 			reader = new BufferedReader(new InputStreamReader(in, encoding));
-		} catch (UnsupportedEncodingException uneex) {
+		} catch (final UnsupportedEncodingException uneex) {
 			return null;
 		}
 
@@ -996,12 +997,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		final String line;
 		try {
 			line = reader.readLine();
-		} catch (IOException ioex) {
+		} catch (final IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
 		if (!StringUtil.isBlank(line)) {
-			String[] s = StringUtil.splitc(line, ' ');
+			final String[] s = StringUtil.splitc(line, ' ');
 
 			httpRequest.method(s[0]);
 			httpRequest.path(s[1]);
