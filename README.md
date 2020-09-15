@@ -14,12 +14,27 @@
 
 ## 👋 Hello!
 
-Welcome to **Jodd** - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less. Keep in mind that Jodd is mostly developed and maintained by a _single_ person: I can only do so much.
+Welcome to **Jodd** - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less.
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
 
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
+
+## ‼️ The Future and Versions
+
+**v6** is the maintained version, working on Java 8 and 11. Only few components are promoted to v6:
+
++ [jodd-util](https://github.com/oblac/jodd-util)
++ [jodd-mail](https://github.com/oblac/jodd-mail)
++ [jodd-json](https://github.com/oblac/jodd-json)
++ [jodd-lagarto](https://github.com/oblac/jodd-lagarto)
+
+The decision which component is promoted is based on the Maven Central Repo statistics. 
+
+**v5** contains remaining libraries and frameworks. They are in low-maintenance mode.
+
+Sorry, I can only do so much.
 
 ## :zap: Jodd
 
