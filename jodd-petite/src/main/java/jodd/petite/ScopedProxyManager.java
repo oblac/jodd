@@ -25,8 +25,6 @@
 
 package jodd.petite;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.petite.proxetta.ProxettaBeanDefinition;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.Proxetta;
@@ -37,6 +35,8 @@ import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.TypeCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

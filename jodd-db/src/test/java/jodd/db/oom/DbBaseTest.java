@@ -29,11 +29,11 @@ import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.exception.UncheckedException;
-import jodd.log.LoggerFactory;
-import jodd.log.impl.NOPLogger;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Abstract common DB integration test class.
@@ -45,7 +45,7 @@ public abstract class DbBaseTest {
 	protected CoreConnectionPool connectionPool;
 	protected DbOom dbOom;
 
-	protected void init(DbAccess db) {
+	protected void init(final DbAccess db) {
 		initDbOom();
 		db.initConnectionPool(connectionPool);
 		dbOom.connect();
@@ -53,23 +53,11 @@ public abstract class DbBaseTest {
 	}
 
 	private void initDbOom() {
-		LoggerFactory.setLoggerProvider(name -> new NOPLogger("") {
-			@Override
-			public boolean isWarnEnabled() {
-				return true;
-			}
-
-			@Override
-			public void warn(final String message) {
-				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
-			}
-
-			@Override
-			public void warn(final String message, final Throwable throwable) {
-				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
-			}
-		});
 		connectionPool = new CoreConnectionPool();
+		// TODO: 15/09/2020 detect warnings somehow
+		final Logger mock = Mockito.mock(Logger.class);
+		doThrow(RuntimeException.class).when(mock).warn(Mockito.anyString());
+		doThrow(RuntimeException.class).when(mock).warn(Mockito.anyString(), Mockito.any(Throwable.class));
 		dbOom = DbOom.create().withConnectionProvider(connectionPool).get();
 	}
 
@@ -81,9 +69,9 @@ public abstract class DbBaseTest {
 		public abstract String getTableName();
 
 		public final void createTables() {
-			DbSession session = new DbSession(connectionPool);
+			final DbSession session = new DbSession(connectionPool);
 
-			DbQuery query = new DbQuery(DbOom.get(), session, createTableSql());
+			final DbQuery query = new DbQuery(DbOom.get(), session, createTableSql());
 			query.executeUpdate();
 
 			session.closeSession();
@@ -91,9 +79,9 @@ public abstract class DbBaseTest {
 		}
 
 		protected void close() {
-			DbSession session = new DbSession(connectionPool);
+			final DbSession session = new DbSession(connectionPool);
 
-			DbQuery query = new DbQuery(DbOom.get(), session, "drop table " + getTableName());
+			final DbQuery query = new DbQuery(DbOom.get(), session, "drop table " + getTableName());
 			query.executeUpdate();
 
 			session.closeSession();

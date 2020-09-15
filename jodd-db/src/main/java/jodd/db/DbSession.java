@@ -26,8 +26,8 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -86,8 +86,8 @@ public class DbSession implements AutoCloseable {
 		SQLException sqlException = null;
 
 		if (queries != null) {
-			for (DbQueryBase query : queries) {
-				SQLException sex = query.closeQuery();
+			for (final DbQueryBase query : queries) {
+				final SQLException sex = query.closeQuery();
 				if (sex != null) {
 					if (sqlException == null) {
 						sqlException = sex;
@@ -183,7 +183,7 @@ public class DbSession implements AutoCloseable {
 			txActive = false;	// txAction should already be false
 			try {
 				connection.setAutoCommit(true);
-			} catch (SQLException sex) {
+			} catch (final SQLException sex) {
 				throw new DbSqlException("Failed to open non-TX connection", sex);
 			}
 		}
@@ -217,7 +217,7 @@ public class DbSession implements AutoCloseable {
 				connection.setTransactionIsolation(txMode.getIsolation());
 			}
 			connection.setReadOnly(txMode.isReadOnly());
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException("Open TX failed", sex);
 		}
 	}
@@ -229,7 +229,7 @@ public class DbSession implements AutoCloseable {
 		txActive = false;
 		try {
 			connection.setAutoCommit(true);
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException("Close TX failed", sex);
 		}
 	}
@@ -256,7 +256,7 @@ public class DbSession implements AutoCloseable {
 		assertTxIsActive();
 		try {
 			connection.commit();
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException("Commit TX failed", sex);
 		} finally {
 			closeTx();
@@ -273,7 +273,7 @@ public class DbSession implements AutoCloseable {
 
 		try {
 			connection.rollback();
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException("Rollback TX failed", sex);
 		} finally {
 			closeTx();

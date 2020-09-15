@@ -29,14 +29,14 @@ import jodd.asm7.ClassReader;
 import jodd.asm7.ClassWriter;
 import jodd.io.FileUtil;
 import jodd.io.IOUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 import jodd.util.DefineClass;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;

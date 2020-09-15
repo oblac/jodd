@@ -25,8 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
@@ -35,6 +33,8 @@ import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.util.ClassUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -199,7 +199,7 @@ public class MadvocController extends MadvocControllerCfg implements MadvocCompo
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
 
-		log.debug(() -> "Result type: " + actionResult.getClass().getSimpleName());
+		log.debug("Result type: " + actionResult.getClass().getSimpleName());
 
 		actionResult.render(actionRequest, actionRequest.getActionResult());
 	}
@@ -212,7 +212,7 @@ public class MadvocController extends MadvocControllerCfg implements MadvocCompo
 	protected Object createAction(final Class actionClass) {
 		try {
 			return ClassUtil.newInstance(actionClass);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException("Invalid Madvoc action", ex);
 		}
 	}

@@ -26,15 +26,15 @@
 package jodd.joy.auth;
 
 import jodd.json.JsonObject;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.Request;
+import jodd.madvoc.result.HttpStatus;
 import jodd.madvoc.result.JsonResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
-import jodd.net.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

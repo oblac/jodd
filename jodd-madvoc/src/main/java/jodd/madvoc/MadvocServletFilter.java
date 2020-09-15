@@ -25,10 +25,10 @@
 
 package jodd.madvoc;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -98,23 +98,23 @@ public class MadvocServletFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
+		final HttpServletRequest request = (HttpServletRequest) req;
+		final HttpServletResponse response = (HttpServletResponse) res;
 
 		String actionPath = DispatcherUtil.getServletPath(request);
 
 		try {
-			MadvocResponseWrapper madvocResponse = new MadvocResponseWrapper(response);
+			final MadvocResponseWrapper madvocResponse = new MadvocResponseWrapper(response);
 
 			actionPath = madvocController.invoke(actionPath, request, madvocResponse);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			log.error("Invoking action path failed: " + actionPath, ex);
 
 			throw new ServletException(ex);
 		}
 		if (actionPath != null) {	// action path is not consumed
 
-			boolean pathProcessed = processUnhandledPath(actionPath, req, res);
+			final boolean pathProcessed = processUnhandledPath(actionPath, req, res);
 
 			if (!pathProcessed) {
 				chain.doFilter(request, response);

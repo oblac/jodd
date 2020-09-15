@@ -29,7 +29,6 @@ import jodd.exception.ExceptionUtil;
 import jodd.json.JsonSerializer;
 import jodd.madvoc.meta.RenderWith;
 import jodd.util.StringPool;
-import jodd.net.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +79,7 @@ public class JsonResult {
 		final ArrayList<String> details = new ArrayList<>();
 
 		final StackTraceElement[] ste = ExceptionUtil.getStackTrace(exception, null, null);
-		for (StackTraceElement stackTraceElement : ste) {
+		for (final StackTraceElement stackTraceElement : ste) {
 			details.add(stackTraceElement.toString());
 		}
 

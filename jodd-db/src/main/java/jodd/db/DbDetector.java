@@ -38,8 +38,8 @@ import jodd.db.servers.PostgreSqlDbServer;
 import jodd.db.servers.SQLiteDbServer;
 import jodd.db.servers.SqlServerDbServer;
 import jodd.db.servers.SybaseDbServer;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -83,7 +83,7 @@ public class DbDetector {
 		try {
 			log.info("Detecting database...");
 
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			final DatabaseMetaData databaseMetaData = connection.getMetaData();
 			dbName = databaseMetaData.getDatabaseProductName();
 			dbMajorVersion = databaseMetaData.getDatabaseMajorVersion();
 			final int dbMinorVersion = databaseMetaData.getDatabaseMinorVersion();
@@ -91,8 +91,8 @@ public class DbDetector {
 
 			log.info("Database: " + dbName + " v" + dbMajorVersion + "." + dbMinorVersion);
 		}
-		catch (SQLException sex) {
-			String msg = sex.getMessage();
+		catch (final SQLException sex) {
+			final String msg = sex.getMessage();
 
 			if (msg.contains("explicitly set for database: DB2")) {
 				return new Db2DbServer();

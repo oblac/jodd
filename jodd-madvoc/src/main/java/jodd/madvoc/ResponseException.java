@@ -25,7 +25,7 @@
 
 package jodd.madvoc;
 
-import jodd.net.HttpStatus;
+import jodd.madvoc.result.HttpStatus;
 
 public class ResponseException extends MadvocException {
 

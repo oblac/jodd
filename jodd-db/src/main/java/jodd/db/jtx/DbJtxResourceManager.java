@@ -25,13 +25,13 @@
 
 package jodd.db.jtx;
 
+import jodd.db.DbSession;
+import jodd.db.connection.ConnectionProvider;
+import jodd.jtx.JtxException;
 import jodd.jtx.JtxResourceManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.jtx.JtxException;
-import jodd.db.connection.ConnectionProvider;
-import jodd.db.DbSession;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Database {@link jodd.jtx.JtxResourceManager} manages life-cycle of {@link jodd.db.DbSession} resources.
@@ -66,7 +66,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	 * {@inheritDoc}
 	 */
 	public DbSession beginTransaction(final JtxTransactionMode jtxMode, final boolean active) {
-		DbSession session = new DbSession(connectionProvider);
+		final DbSession session = new DbSession(connectionProvider);
 		if (active) {
 			log.debug("begin jtx");
 
@@ -97,7 +97,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 
 				resource.rollbackTransaction();
 			}
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new JtxException(ex);
 		} finally {
 			resource.closeSession();

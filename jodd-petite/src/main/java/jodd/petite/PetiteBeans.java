@@ -30,8 +30,6 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.CtorInjectionPoint;
 import jodd.petite.def.DestroyMethodPoint;
@@ -48,6 +46,8 @@ import jodd.props.Props;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.TypeCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

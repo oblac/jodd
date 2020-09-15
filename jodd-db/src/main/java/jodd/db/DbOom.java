@@ -35,8 +35,8 @@ import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.EmptyQueryMap;
 import jodd.db.querymap.QueryMap;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Starting class that all DBOOM starts from.

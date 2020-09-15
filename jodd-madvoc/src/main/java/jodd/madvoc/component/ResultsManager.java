@@ -25,8 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionRuntime;
@@ -35,6 +33,8 @@ import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
 import jodd.util.TypeCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;

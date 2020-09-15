@@ -29,8 +29,6 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassScanner;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionConfigManager;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
@@ -39,6 +37,8 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -100,7 +100,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			log.info("Scanning...");
 
 			classScanner.start();
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException("Scan classpath error", ex);
 		}
 
@@ -136,14 +136,14 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			if (entryName.endsWith(actionClassSuffix)) {
 				try {
 					acceptActionClass(classPathEntry.loadClass());
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					log.debug("Invalid Madvoc action, ignoring: " + entryName);
 				}
 			}
 			else if (classPathEntry.isTypeSignatureInUse(MADVOC_COMPONENT_ANNOTATION)) {
 				try {
 					acceptMadvocComponentClass(classPathEntry.loadClass());
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					log.debug("Invalid Madvoc component ignoring: {}" + entryName);
 				}
 			}
@@ -178,12 +178,12 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			if (clazz.isPrimitive()) {
 				return false;
 			}
-			int modifiers = clazz.getModifiers();
+			final int modifiers = clazz.getModifiers();
 			if (Modifier.isAbstract(modifiers)) {
 				return false;
 			}
 			return true;
-		} catch (Throwable ignore) {
+		} catch (final Throwable ignore) {
 			return false;
 		}
 	}
@@ -209,10 +209,10 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			return;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
-		MethodDescriptor[] allMethodDescriptors = cd.getAllMethodDescriptors();
-		for (MethodDescriptor methodDescriptor : allMethodDescriptors) {
+		final MethodDescriptor[] allMethodDescriptors = cd.getAllMethodDescriptors();
+		for (final MethodDescriptor methodDescriptor : allMethodDescriptors) {
 			if (!methodDescriptor.isPublic()) {
 				continue;
 			}

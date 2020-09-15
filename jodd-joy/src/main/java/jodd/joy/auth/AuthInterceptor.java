@@ -28,9 +28,9 @@ package jodd.joy.auth;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.HttpStatus;
 import jodd.madvoc.result.JsonResult;
 import jodd.servlet.ServletUtil;
-import jodd.net.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 

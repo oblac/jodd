@@ -25,12 +25,12 @@
 
 package jodd.madvoc.component;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.mutable.MutableInteger;
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -68,12 +68,12 @@ public class MadvocContainer {
 	 * @see #registerComponentInstance(Object)
 	 */
 	public void registerComponent(final Class component) {
-		String name = resolveBaseComponentName(component);
+		final String name = resolveBaseComponentName(component);
 		registerComponent(name, component);
 	}
 
 	public <T> void registerComponent(final Class<T> component, final Consumer<T> consumer) {
-		String name = resolveBaseComponentName(component);
+		final String name = resolveBaseComponentName(component);
 		registerComponent(name, component, consumer);
 	}
 
@@ -81,7 +81,7 @@ public class MadvocContainer {
 	 * Registers Madvoc component with given name.
 	 */
 	public void registerComponent(final String name, final Class component) {
-		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
+		log.debug("Madvoc WebApp component: [" + name + "] --> " + component.getName());
 
 		madpc.removeBean(name);
 		madpc.registerPetiteBean(component, name, null, null, false, null);
@@ -91,7 +91,7 @@ public class MadvocContainer {
 	 * Registers Madvoc component with given name.
 	 */
 	public <T> void registerComponent(final String name, final Class<T> component, final Consumer<T> consumer) {
-		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
+		log.debug("Madvoc WebApp component: [" + name + "] --> " + component.getName());
 
 		madpc.removeBean(name);
 		madpc.registerPetiteBean(component, name, null, null, false, consumer);
@@ -104,8 +104,8 @@ public class MadvocContainer {
 	 * @see #registerComponentInstance(String, Object)
 	 */
 	public void registerComponentInstance(final Object componentInstance) {
-		Class component = componentInstance.getClass();
-		String name = resolveBaseComponentName(component);
+		final Class component = componentInstance.getClass();
+		final String name = resolveBaseComponentName(component);
 		registerComponentInstance(name, componentInstance);
 	}
 
@@ -116,7 +116,7 @@ public class MadvocContainer {
 	 * USE injection, unless you are absolutely sure it works.
 	 */
 	public void registerComponentInstance(final String name, final Object componentInstance) {
-		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + componentInstance.getClass().getName());
+		log.debug("Madvoc WebApp component: [" + name + "] --> " + componentInstance.getClass().getName());
 
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);
@@ -134,14 +134,14 @@ public class MadvocContainer {
 		final Set<String> existing = new HashSet<>();
 
 		while (true) {
-			MutableInteger newCount = MutableInteger.of(0);
+			final MutableInteger newCount = MutableInteger.of(0);
 
 			madpc.forEachBeanType(listenerType, name -> {
 				if (existing.add(name)) {
 					// name not found, fire!
 					newCount.value++;
 
-					Object listener = lookupComponent(name);
+					final Object listener = lookupComponent(name);
 					if (listener != null) {
 						MadvocComponentLifecycle.invoke(listener, listenerType);
 					}
@@ -161,7 +161,7 @@ public class MadvocContainer {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T lookupComponent(final Class<T> component) {
-		String name = resolveBaseComponentName(component);
+		final String name = resolveBaseComponentName(component);
 		return (T) madpc.getBean(name);
 	}
 
@@ -169,7 +169,7 @@ public class MadvocContainer {
 	 * Returns existing component. Throws an exception if component is not registered.
 	 */
 	public <T> T requestComponent(final Class<T> component) {
-		T existingComponent = lookupComponent(component);
+		final T existingComponent = lookupComponent(component);
 		if (existingComponent == null) {
 			throw new MadvocException("Madvoc component not found: " + component.getName());
 		}
@@ -180,7 +180,7 @@ public class MadvocContainer {
 	 * Returns existing component. Throws an exception if component is not registered.
 	 */
 	public <T> T requestComponent(final String componentName) {
-		T existingComponent = (T) lookupComponent(componentName);
+		final T existingComponent = (T) lookupComponent(componentName);
 		if (existingComponent == null) {
 			throw new MadvocException("Madvoc component not found: " + componentName);
 		}
@@ -203,7 +203,7 @@ public class MadvocContainer {
 	private String resolveBaseComponentName(Class component) {
 		Class lastComponent = component;
 		while (true) {
-			Class superClass = component.getSuperclass();
+			final Class superClass = component.getSuperclass();
 			if (superClass.equals(Object.class)) {
 				break;
 			}

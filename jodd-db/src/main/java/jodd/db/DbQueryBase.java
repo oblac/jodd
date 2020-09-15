@@ -27,8 +27,8 @@ package jodd.db;
 
 import jodd.db.debug.LoggableCallableStatement;
 import jodd.db.debug.LoggablePreparedStatement;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -268,7 +268,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 					}
 				}
 			}
-			catch (SQLException sex) {
+			catch (final SQLException sex) {
 				throw new DbSqlException(this, "Error creating callable statement", sex);
 			}
 
@@ -322,7 +322,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 					}
 				}
 			}
-			catch (SQLException sex) {
+			catch (final SQLException sex) {
 				throw new DbSqlException(this, "Error creating prepared statement", sex);
 			}
 
@@ -339,7 +339,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			} else {
 				statement = connection.createStatement(type.value(), concurrencyType.value());
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "Error creating statement", sex);
 		}
 	}
@@ -383,7 +383,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			for (final ResultSet rs : resultSets) {
 				try {
 					rs.close();
-				} catch (SQLException sex) {
+				} catch (final SQLException sex) {
 					if (sqlException == null) {
 						sqlException = sex;
 					} else {
@@ -418,7 +418,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (statement != null) {
 			try {
 				statement.close();
-			} catch (SQLException sex) {
+			} catch (final SQLException sex) {
 				if (sqlException == null) {
 					sqlException = sex;
 				} else {
@@ -462,7 +462,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		}
 		try {
 			rs.close();
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "Close result set error", sex);
 		} finally {
 			totalOpenResultSetCount--;
@@ -623,7 +623,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (statement != null) {
 			try {
 				statement.setFetchSize(fetchSize);
-			} catch (SQLException sex) {
+			} catch (final SQLException sex) {
 				throw new DbSqlException(this, "Unable to set fetch size: " + fetchSize, sex);
 			}
 		}
@@ -651,7 +651,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (statement != null) {
 			try {
 				statement.setMaxRows(maxRows);
-			} catch (SQLException sex) {
+			} catch (final SQLException sex) {
 				throw new DbSqlException(this, "Unable to set max rows: " + maxRows, sex);
 			}
 		}
@@ -692,7 +692,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				rs = preparedStatement.executeQuery();
 			}
 			rs.setFetchSize(fetchSize);
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			DbUtil.close(rs);
 			throw new DbSqlException(this, "Query execution failed", sex);
 		}
@@ -715,7 +715,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		}
 		try {
 			callableStatement.execute();
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			DbUtil.close(callableStatement);
 			throw new DbSqlException(this, "Query execution failed", sex);
 		}
@@ -762,7 +762,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			} else {
 				result = preparedStatement.executeUpdate();
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "Query execution failed", sex);
 		}
 		if (closeQuery) {
@@ -813,7 +813,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			}
 
 			return firstLong;
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "Count query failed", sex);
 		} finally {
 			DbUtil.close(rs);
@@ -842,7 +842,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				}
 				list.add(t);
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(sex);
 		} finally {
 			DbUtil.close(resultSet);
@@ -861,7 +861,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			if (resultSet.next()) {
 				return queryMapper.process(resultSet);
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(sex);
 		} finally {
 			DbUtil.close(resultSet);
@@ -886,7 +886,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				}
 				set.add(t);
 			}
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(sex);
 		} finally {
 			DbUtil.close(resultSet);
@@ -907,7 +907,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		final ResultSet rs;
 		try {
 			rs = statement.getGeneratedKeys();
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "No generated keys", sex);
 		}
 		saveResultSet(rs);
@@ -923,7 +923,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		final ResultSet rs = getGeneratedColumns();
 		try {
 			return DbUtil.getFirstLong(rs);
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "No generated key as long", sex);
 		} finally {
 			DbUtil.close(rs);
@@ -937,7 +937,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		final ResultSet rs = getGeneratedColumns();
 		try {
 			return DbUtil.getFirstObject(rs);
-		} catch (SQLException sex) {
+		} catch (final SQLException sex) {
 			throw new DbSqlException(this, "No generated key as long", sex);
 		} finally {
 			DbUtil.close(rs);

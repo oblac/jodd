@@ -25,8 +25,8 @@
 
 package jodd.db;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Returns {@link DbSession} assigned to current thread.

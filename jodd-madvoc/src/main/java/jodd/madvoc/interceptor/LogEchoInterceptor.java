@@ -25,8 +25,8 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Echo interceptor that outputs to logger.

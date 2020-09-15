@@ -28,8 +28,8 @@ package jodd.jtx.worker;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Lean transaction worker helps dealing transactions when they were requested
@@ -72,8 +72,8 @@ public class LeanJtxWorker {
 		if (txMode == null) {
 			return null;
 		}
-		JtxTransaction currentTx = txManager.getTransaction();
-		JtxTransaction requestedTx = txManager.requestTransaction(txMode, scope);
+		final JtxTransaction currentTx = txManager.getTransaction();
+		final JtxTransaction requestedTx = txManager.requestTransaction(txMode, scope);
 		if (currentTx == requestedTx) {
 			return null;
 		}

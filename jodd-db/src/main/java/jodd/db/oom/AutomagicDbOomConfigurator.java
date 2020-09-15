@@ -27,9 +27,9 @@ package jodd.db.oom;
 
 import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.util.Consumers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 

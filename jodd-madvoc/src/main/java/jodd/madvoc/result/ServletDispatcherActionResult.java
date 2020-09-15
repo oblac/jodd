@@ -25,11 +25,11 @@
 
 package jodd.madvoc.result;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -56,10 +56,10 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	 */
 	@Override
 	protected void renderView(final ActionRequest actionRequest, final String target) throws Exception {
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		final HttpServletRequest request = actionRequest.getHttpServletRequest();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher(target);
+		final RequestDispatcher dispatcher = request.getRequestDispatcher(target);
 		if (dispatcher == null) {
 			response.sendError(SC_NOT_FOUND, "Result not found: " + target);	// should never happened
 			return;
@@ -109,7 +109,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 
 		try {
 			return servletContext.getResource(target) != null;
-		} catch (MalformedURLException ignore) {
+		} catch (final MalformedURLException ignore) {
 			return false;
 		}
 	}

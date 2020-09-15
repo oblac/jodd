@@ -23,68 +23,43 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.log;
+package jodd.madvoc.util;
 
-import jodd.log.impl.NOPLogger;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
- * Logger factory.
+ * Holder for a class and optional consumer of it's instance.
+ * Useful when class is instantiated later.
  */
-public final class LoggerFactory {
+public class ClassConsumer<T> implements Consumer<T> {
+	private final Class<T> type;
+	private final Consumer<T> consumer;
 
-	static {
-		setLoggerProvider(NOPLogger.PROVIDER);
+	public static <R> ClassConsumer<R> of(final Class<R> type) {
+		return new ClassConsumer<>(type, null);
 	}
 
-	private static Function<String, Logger> loggerProvider;
+	public static <R> ClassConsumer<R> of(final Class<R> type, final Consumer<R> consumer) {
+		return new ClassConsumer<>(type, consumer);
+	}
 
-	private static Map<String, Logger> loggers = new HashMap<>();
+	public ClassConsumer(final Class<T> type, final Consumer<T> consumer) {
+		this.type = type;
+		this.consumer = consumer;
+	}
 
-	/**
-	 * Sets {@link LoggerProvider} instance used for creating new {@link Logger}s.
-	 */
-	public static void setLoggerProvider(final LoggerProvider loggerProvider) {
-		LoggerFactory.loggerProvider = loggerProvider::createLogger;
-		if (loggers != null) {
-			loggers.clear();
+	public Class<T> type() {
+		return type;
+	}
+
+	public Consumer<T> consumer() {
+		return consumer;
+	}
+
+	@Override
+	public void accept(final T instance) {
+		if (consumer != null) {
+			consumer.accept(instance);
 		}
 	}
-
-	/**
-	 * Returns logger for given class by simply using the class name.
-	 * @see #getLogger(String)
-	 */
-	public static Logger getLogger(final Class clazz) {
-		return getLogger(clazz.getName());
-	}
-
-	/**
-	 * Enables cache. Previous cache is removed.
-	 */
-	public static void enableCache() {
-		loggers = new HashMap<>();
-	}
-
-	/**
-	 * Disables the cache.
-	 */
-	public static void disableCache() {
-		loggers = null;
-	}
-
-	/**
-	 * Returns logger for given name. Repeated calls to this method with the
-	 * same argument should return the very same instance of the logger.
-	 */
-	public static Logger getLogger(final String name) {
-		if (loggers == null) {
-			return loggerProvider.apply(name);
-		}
-		return loggers.computeIfAbsent(name, loggerProvider);
-	}
-
 }

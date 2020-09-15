@@ -25,12 +25,12 @@
 
 package jodd.madvoc;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.props.Props;
 import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 

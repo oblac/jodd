@@ -26,10 +26,10 @@
 package jodd.petite;
 
 import jodd.io.findfile.ClassScanner;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.petite.meta.PetiteBean;
 import jodd.util.Consumers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 

@@ -11,7 +11,7 @@ dependencies {
 	api project(':jodd-jtx')
 	api project(':jodd-db')
 	api project(':jodd-proxetta')
-	api project(':jodd-log')
+	api 'org.slf4j:slf4j-api:1.7.30'
 	api project(':jodd-decora')
 	api project(':jodd-http')
 	api project(':jodd-servlet')

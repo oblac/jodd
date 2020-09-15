@@ -27,11 +27,11 @@ package jodd.db.oom;
 
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 import jodd.util.TypeCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

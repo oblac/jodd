@@ -25,13 +25,13 @@
 
 package jodd.madvoc.component;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ResultPath;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mapper from action results paths to result path. Certain set of results
@@ -56,7 +56,7 @@ public class ResultMapper extends ResultMapperCfg {
 	protected String lookupAlias(final String alias) {
 		String value = actionsManager.lookupPathAlias(alias);
 		if (value == null) {
-			ActionRuntime cfg = actionsManager.lookup(alias);
+			final ActionRuntime cfg = actionsManager.lookup(alias);
 			if (cfg != null) {
 				value = cfg.getActionPath();
 			}
@@ -77,7 +77,7 @@ public class ResultMapper extends ResultMapperCfg {
 				// alias markers not found
 				if (i == 0) {
 					// try whole string as an alias
-					String alias = lookupAlias(value);
+					final String alias = lookupAlias(value);
 					return (alias != null ? alias : value);
 				} else {
 					result.append(value.substring(i));
@@ -88,11 +88,11 @@ public class ResultMapper extends ResultMapperCfg {
 			// alias marked found
 			result.append(value.substring(i, ndx));
 			ndx++;
-			int ndx2 = value.indexOf('>', ndx);
-			String aliasName = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
+			final int ndx2 = value.indexOf('>', ndx);
+			final String aliasName = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
 
 			// process alias
-			String alias = lookupAlias(aliasName);
+			final String alias = lookupAlias(aliasName);
 			if (alias != null) {
 				result.append(alias);
 			}
@@ -133,7 +133,7 @@ public class ResultMapper extends ResultMapperCfg {
 			// [*] absolute paths
 			if (StringUtil.startsWithChar(value, '/')) {
 				absolutePath = true;
-				int dotNdx = value.indexOf("..");
+				final int dotNdx = value.indexOf("..");
 				if (dotNdx != -1) {
 					path = value.substring(0, dotNdx);
 					value = value.substring(dotNdx + 2);
@@ -148,7 +148,7 @@ public class ResultMapper extends ResultMapperCfg {
 					if (value.charAt(i) != '#') {
 						break;
 					}
-					int dotNdx = MadvocUtil.lastIndexOfSlashDot(path);
+					final int dotNdx = MadvocUtil.lastIndexOfSlashDot(path);
 					if (dotNdx != -1) {
 						// dot found
 						path = path.substring(0, dotNdx);
@@ -164,7 +164,7 @@ public class ResultMapper extends ResultMapperCfg {
 					if (StringUtil.startsWithChar(value, '.')) {
 						value = value.substring(1);
 					} else {
-						int dotNdx = value.indexOf("..");
+						final int dotNdx = value.indexOf("..");
 						if (dotNdx != -1) {
 							path += '.' + value.substring(0, dotNdx);
 							value = value.substring(dotNdx + 2);

@@ -26,14 +26,14 @@
 package jodd.petite;
 
 import jodd.bean.BeanUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.MethodInjectionPoint;
 import jodd.petite.def.ProviderDefinition;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 

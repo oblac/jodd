@@ -30,14 +30,14 @@ import jodd.io.IOUtil;
 import jodd.lagarto.TagVisitor;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.visitor.TagWriter;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.net.MimeTypes;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.lagarto.SimpleLagartoServletFilter;
 import jodd.time.TimeUtil;
 import jodd.util.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;

@@ -31,11 +31,14 @@ import jodd.db.DbThreadSession;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
-import jodd.log.LoggerFactory;
 import jodd.util.SystemUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Abstract base test class for working with databases.
@@ -48,13 +51,16 @@ public abstract class DbTestBase {
 
 	@BeforeEach
 	protected void setUp() throws Exception {
+		// TODO: 15/09/2020 detect warnings somehow
+		final Logger mock = Mockito.mock(Logger.class);
+		doThrow(RuntimeException.class).when(mock).warn(Mockito.anyString());
+		doThrow(RuntimeException.class).when(mock).warn(Mockito.anyString(), Mockito.any(Throwable.class));
+
 		final DbPropsQueryMap queryMap = new DbPropsQueryMap();
 
 		if (SystemUtil.info().isJavaVersion(9)) {
 			queryMap.props().load(this.getClass().getClassLoader().getResourceAsStream("queries.sql.props"));
 		}
-
-		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {
 			return;
 		}

@@ -27,14 +27,12 @@ package jodd.joy;
 
 import jodd.Jodd;
 import jodd.chalk.Chalk256;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
-import jodd.log.LoggerProvider;
-import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
 import jodd.util.Consumers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.Objects;
@@ -99,18 +97,6 @@ public class JoddJoy {
 	public JoddJoy setApplicationName(final String name) {
 		Objects.requireNonNull(name);
 		this.appName = name;
-		return this;
-	}
-
-	// ---------------------------------------------------------------- logger
-
-	private Supplier<LoggerProvider> loggerProviderSupplier;
-
-	/**
-	 * Configures the logger provider.
-	 */
-	public JoddJoy withLoggerProvider(final Supplier<LoggerProvider> loggerProviderSupplier) {
-		this.loggerProviderSupplier = loggerProviderSupplier;
 		return this;
 	}
 
@@ -218,23 +204,11 @@ public class JoddJoy {
 	 * Joy components.
 	 */
 	public JoddJoyRuntime start(final ServletContext servletContext) {
-		LoggerProvider loggerProvider = null;
-
-		if (loggerProviderSupplier != null) {
-			loggerProvider = loggerProviderSupplier.get();
-		}
-		if (loggerProvider == null) {
-			loggerProvider = SimpleLogger.PROVIDER;
-		}
-
-		LoggerFactory.setLoggerProvider(loggerProvider);
 		log = LoggerFactory.getLogger(JoddJoy.class);
 
 		printLogo();
 
 		log.info("Ah, Joy!");
-		log.info("Logging using: " + loggerProvider.getClass().getSimpleName());
-
 
 		joyPropsConsumers.accept(joyProps);
 		joyProxettaConsumers.accept(joyProxetta);

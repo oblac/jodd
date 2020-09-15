@@ -25,8 +25,6 @@
 
 package jodd.madvoc;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionConfigManager;
 import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionMethodParser;
@@ -52,9 +50,11 @@ import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.component.ServletContextProvider;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.util.ClassConsumer;
 import jodd.props.Props;
-import jodd.util.ClassConsumer;
 import jodd.util.Consumers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;

@@ -27,14 +27,14 @@ package jodd.madvoc.component;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.RouteChunk;
 import jodd.madvoc.config.Routes;
 import jodd.petite.meta.PetiteInject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class ActionsManager extends ActionsManagerCfg {
 	 * Resolves action method for given action class ane method name.
 	 */
 	public Method resolveActionMethod(final Class<?> actionClass, final String methodName) {
-		MethodDescriptor methodDescriptor = ClassIntrospector.get().lookup(actionClass).getMethodDescriptor(methodName, false);
+		final MethodDescriptor methodDescriptor = ClassIntrospector.get().lookup(actionClass).getMethodDescriptor(methodName, false);
 		if (methodDescriptor == null) {
 			throw new MadvocException("Public method not found: " + actionClass.getSimpleName() + "#" + methodName);
 		}
@@ -115,7 +115,7 @@ public class ActionsManager extends ActionsManagerCfg {
 	 * @see #registerAction(Class, Method, ActionDefinition)
 	 */
 	public ActionRuntime registerAction(final Class actionClass, final String actionMethodName, final ActionDefinition actionDefinition) {
-		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
+		final Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
 		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
 
@@ -146,7 +146,7 @@ public class ActionsManager extends ActionsManagerCfg {
 		final String actionPath = actionRuntime.getActionPath();
 		final String method = actionRuntime.getActionMethod();
 
-		log.debug(() -> "Madvoc action: " + ifNotNull(method, m -> m + " ") + actionRuntime.getActionPath() + " => " + actionRuntime.createActionString());
+		log.debug("Madvoc action: " + ifNotNull(method, m -> m + " ") + actionRuntime.getActionPath() + " => " + actionRuntime.createActionString());
 
 		final RouteChunk routeChunk = routes.registerPath(method, actionPath);
 

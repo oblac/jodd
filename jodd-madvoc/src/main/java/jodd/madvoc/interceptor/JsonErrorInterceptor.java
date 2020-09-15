@@ -25,12 +25,12 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ResponseException;
+import jodd.madvoc.result.HttpStatus;
 import jodd.madvoc.result.JsonResult;
-import jodd.net.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Interceptor of REST actions. Catches exceptions, logs the errors and returns exception information in the body.
@@ -43,10 +43,10 @@ public class JsonErrorInterceptor implements ActionInterceptor {
 		try {
 			return actionRequest.invoke();
 		}
-		catch (ResponseException rex) {
+		catch (final ResponseException rex) {
 			return JsonResult.of(HttpStatus.of(rex.getStatus(), rex.getMessage()));
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			log.error("Action execution failed:", ex);
 			return JsonResult.of(ex);
 		}

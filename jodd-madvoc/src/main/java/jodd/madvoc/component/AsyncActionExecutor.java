@@ -26,10 +26,10 @@
 package jodd.madvoc.component;
 
 import jodd.exception.ExceptionUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
@@ -66,14 +66,14 @@ public class AsyncActionExecutor extends AsyncActionExecutorCfg {
 
 		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		log.debug(() -> "Async call to: " + actionRequest);
+		log.debug("Async call to: " + actionRequest);
 
 		final AsyncContext asyncContext = servletRequest.startAsync();
 
 		executorService.submit(() -> {
 			try {
 				actionRequest.invoke();
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				log.error("Invoking async action path failed: " , ExceptionUtil.unwrapThrowable(ex));
 			} finally {
 				asyncContext.complete();

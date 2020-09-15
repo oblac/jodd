@@ -9,7 +9,7 @@ dependencies {
 	api project(':jodd-petite')
 	api project(':jodd-proxetta')
 	api 'org.jodd:jodd-json:6.0.1'
-	implementation project(':jodd-log')
+	api 'org.slf4j:slf4j-api:1.7.30'
 
 	provided lib.servlet
 	provided lib.jsp

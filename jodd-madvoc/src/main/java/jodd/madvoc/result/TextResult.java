@@ -26,7 +26,6 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.meta.RenderWith;
-import jodd.net.HttpStatus;
 import jodd.net.MimeTypes;
 
 import java.util.Objects;

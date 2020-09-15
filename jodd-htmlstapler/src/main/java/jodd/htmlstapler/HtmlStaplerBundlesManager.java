@@ -30,8 +30,6 @@ import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.DigestEngine;
@@ -40,6 +38,8 @@ import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;

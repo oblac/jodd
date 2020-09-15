@@ -25,8 +25,6 @@
 
 package jodd.madvoc.result;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.component.ResultMapper;
@@ -35,6 +33,8 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -114,11 +114,11 @@ public abstract class AbstractTemplateViewActionResult implements ActionResult {
 	 * Locates the target file from action path and the result value.
 	 */
 	protected String resolveTarget(final ActionRequest actionRequest, final String resultValue) {
-		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+		final String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
-		ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
+		final ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
 
-		String actionPath = resultPath.path();
+		final String actionPath = resultPath.path();
 		String path = actionPath;
 		String value = resultPath.value();
 
@@ -134,7 +134,7 @@ public abstract class AbstractTemplateViewActionResult implements ActionResult {
 			if (value != null) {
 				if (path == null) {
 					// only value remains
-					int lastSlashNdx = actionPath.lastIndexOf('/');
+					final int lastSlashNdx = actionPath.lastIndexOf('/');
 					if (lastSlashNdx != -1) {
 						target = actionPath.substring(0, lastSlashNdx + 1) + value;
 					} else {
@@ -168,7 +168,7 @@ public abstract class AbstractTemplateViewActionResult implements ActionResult {
 				return null;
 			}
 
-			int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(path);
+			final int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(path);
 			if (dotNdx == -1) {
 				path = null;
 			} else {

@@ -25,9 +25,9 @@
 
 package jodd.joy.i18n;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.util.ResourceBundleMessageResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +87,7 @@ public class LocalizationUtil {
 		if (log.isDebugEnabled()) {
 			log.debug("Locale stored to session: " + localeCode);
 		}
-		Locale locale = Locale.forLanguageTag(localeCode);
+		final Locale locale = Locale.forLanguageTag(localeCode);
 		session.setAttribute(SESSION_LOCALE_ATTR, locale);
 	}
 
@@ -95,30 +95,30 @@ public class LocalizationUtil {
 	 * Returns current locale from session.
 s	 */
 	public static Locale getSessionLocale(final HttpSession session) {
-		Locale locale = (Locale) session.getAttribute(SESSION_LOCALE_ATTR);
+		final Locale locale = (Locale) session.getAttribute(SESSION_LOCALE_ATTR);
 		return locale == null ? MESSAGE_RESOLVER.getFallbackLocale() : locale;
 	}
 
 	// ---------------------------------------------------------------- delegates
 
 	public static String findMessage(final HttpServletRequest request, final String key) {
-		String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
-		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
+		final String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
+		final Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
 	public static String findMessage(final String bundleName, final HttpServletRequest request, final String key) {
-		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
+		final Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
 	public static String findMessage(final HttpServletRequest request, final Locale locale, final String key) {
-		String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
+		final String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
 	public static String findDefaultMessage(final HttpServletRequest request, final String key) {
-		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
+		final Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findDefaultMessage(locale, key);
 	}
 
@@ -138,18 +138,18 @@ s	 */
 	protected static void clearResourceBundleCache() {
 		try {
 			clearMap(ResourceBundle.class, null, "cacheList");
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			log.warn("Unable to clear resource bundle cache", ex);
 		}
 	}
 
 	private static void clearMap(final Class mapClass, final Object map, final String fieldName) throws Exception {
-		Field field = mapClass.getDeclaredField(fieldName);
+		final Field field = mapClass.getDeclaredField(fieldName);
 		field.setAccessible(true);
-		Object cache = field.get(map);
+		final Object cache = field.get(map);
 		synchronized (cache) {
-			Class ccl = cache.getClass();
-			Method clearMethod = ccl.getMethod("clear");
+			final Class ccl = cache.getClass();
+			final Method clearMethod = ccl.getMethod("clear");
 			clearMethod.invoke(cache);
 		}
 	}

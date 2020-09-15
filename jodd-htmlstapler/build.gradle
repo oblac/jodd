@@ -5,7 +5,7 @@ dependencies {
 	api project(':jodd-core')
 
 	api project(':jodd-servlet')
-	implementation project(':jodd-log')
+	api 'org.slf4j:slf4j-api:1.7.30'
 
 	api 'org.jodd:jodd-lagarto:6.0.0'
 

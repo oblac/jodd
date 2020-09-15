@@ -8,7 +8,7 @@ dependencies {
 	api project(':jodd-proxetta')
 	api project(':jodd-servlet'), optional
 
-	implementation project(':jodd-log')
+	api 'org.slf4j:slf4j-api:1.7.30'
 
 	provided lib.servlet, optional
 

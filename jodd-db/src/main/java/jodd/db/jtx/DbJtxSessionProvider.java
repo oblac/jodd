@@ -29,8 +29,8 @@ import jodd.db.DbSession;
 import jodd.db.DbSessionProvider;
 import jodd.db.DbSqlException;
 import jodd.jtx.JtxTransactionManager;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Returns session from the db {@link JtxTransactionManager transaction manager},
