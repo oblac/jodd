@@ -25,8 +25,8 @@
 
 package jodd.servlet.upload;
 
-import jodd.io.upload.FileUpload;
-import jodd.io.upload.FileUploadFactory;
+import jodd.http.upload.FileUpload;
+import jodd.http.upload.FileUploadFactory;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,10 +135,10 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 		if (mreq == null) {
 			return super.getParameterMap();
 		}
-		Map<String, String[]> map = new HashMap<>();
-		Enumeration enumeration = getParameterNames();
+		final Map<String, String[]> map = new HashMap<>();
+		final Enumeration enumeration = getParameterNames();
 		while (enumeration.hasMoreElements()) {
-			String name = (String) enumeration.nextElement();
+			final String name = (String) enumeration.nextElement();
 			map.put(name, this.getParameterValues(name));
 		}
 		return map;

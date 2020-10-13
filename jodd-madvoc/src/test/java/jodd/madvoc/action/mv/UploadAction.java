@@ -25,7 +25,7 @@
 
 package jodd.madvoc.action.mv;
 
-import jodd.io.upload.FileUpload;
+import jodd.http.upload.FileUpload;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;

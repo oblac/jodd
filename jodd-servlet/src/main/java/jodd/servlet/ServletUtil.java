@@ -26,9 +26,9 @@
 package jodd.servlet;
 
 import jodd.core.JoddCore;
+import jodd.http.upload.FileUpload;
 import jodd.io.FileNameUtil;
 import jodd.io.IOUtil;
-import jodd.io.upload.FileUpload;
 import jodd.net.MimeTypes;
 import jodd.net.URLCoder;
 import jodd.servlet.upload.MultipartRequest;

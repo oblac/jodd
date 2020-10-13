@@ -25,7 +25,7 @@
 
 package jodd.madvoc.action.mv;
 
-import jodd.io.upload.FileUpload;
+import jodd.http.upload.FileUpload;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
@@ -48,14 +48,14 @@ public class UserAction {
     public String importList() throws IOException {
 		stuff = "";
 
-		for (FileUpload uploadFile : uploadFiles) {
+		for (final FileUpload uploadFile : uploadFiles) {
 			stuff += uploadFile.getFileContent().length;
 			stuff += uploadFile.getSize();
 			stuff += uploadFile.getHeader().getFileName();
 			stuff += " ";
 		}
 
-		for (String uploadFileName : uploadFileNames) {
+		for (final String uploadFileName : uploadFileNames) {
 			stuff += uploadFileName;
 			stuff += " ";
 		}

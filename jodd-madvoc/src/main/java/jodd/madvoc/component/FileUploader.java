@@ -25,8 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.io.upload.FileUploadFactory;
-import jodd.io.upload.impl.AdaptiveFileUploadFactory;
+
+import jodd.http.upload.FileUploadFactory;
+import jodd.http.upload.impl.AdaptiveFileUploadFactory;
 
 import java.util.function.Supplier;
 

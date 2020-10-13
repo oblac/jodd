@@ -25,7 +25,7 @@
 
 package jodd.madvoc.scope;
 
-import jodd.io.upload.FileUpload;
+import jodd.http.upload.FileUpload;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.config.Targets;

@@ -4,7 +4,7 @@ ext.moduleDescription = 'Jodd Joy is set of Jodd extensions that makes developme
 
 dependencies {
 	api project(':jodd-core')
-	api project(':jodd-props')
+
 	api project(':jodd-petite')
 	api project(':jodd-madvoc')
 	api project(':jodd-vtor')
@@ -13,17 +13,17 @@ dependencies {
 	api project(':jodd-proxetta')
 	api 'org.slf4j:slf4j-api:1.7.30'
 	api project(':jodd-decora')
-	api project(':jodd-http')
 	api project(':jodd-servlet')
 
-	api 'org.jodd:jodd-mail:6.0.1'
+	api 'org.jodd:jodd-mail:6.0.2'
+	api 'org.jodd:jodd-props:6.0.1'
+	api 'org.jodd:jodd-http:6.0.2'
 
 	api 'org.mindrot:jbcrypt:0.4'
 
 	provided lib.servlet
 	provided lib.jsp
 
-	testImplementation project(':jodd-http')
 //	testCompile project(':jodd-db').sourceSets.test.output
 	testImplementation lib.junit5
 	testImplementation lib.hsqldb

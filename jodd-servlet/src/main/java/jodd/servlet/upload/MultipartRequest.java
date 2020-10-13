@@ -26,8 +26,8 @@
 package jodd.servlet.upload;
 
 import jodd.core.JoddCore;
-import jodd.io.upload.FileUploadFactory;
-import jodd.io.upload.MultipartStreamParser;
+import jodd.http.upload.FileUploadFactory;
+import jodd.http.upload.MultipartStreamParser;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +60,7 @@ public class MultipartRequest extends MultipartStreamParser {
 
 	// ---------------------------------------------------------------- properties
 
-	private HttpServletRequest request;
+	private final HttpServletRequest request;
 	private String characterEncoding;
 
 	/**
@@ -164,10 +164,10 @@ public class MultipartRequest extends MultipartStreamParser {
 		if (ServletUtil.isMultipartRequest(request)) {
 			parseRequestStream(request.getInputStream(), characterEncoding);
 		} else {
-			Enumeration names = request.getParameterNames();
+			final Enumeration names = request.getParameterNames();
 			while (names.hasMoreElements()) {
-				String paramName = (String) names.nextElement();
-				String[] values = request.getParameterValues(paramName);
+				final String paramName = (String) names.nextElement();
+				final String[] values = request.getParameterValues(paramName);
 
 				putParameters(paramName, values);
 			}

@@ -25,14 +25,19 @@
 
 package jodd.madvoc;
 
+import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
+import jodd.io.findfile.ClassScanner;
 import jodd.props.Props;
 import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
+import jodd.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Maintain the lifecycle of a Madvoc {@link WebApp}.
@@ -245,12 +250,35 @@ public class Madvoc {
 			log.info("Loading Madvoc parameters from: " + Converter.get().toString(patterns));
 		}
 		try {
-			return new Props().loadFromClasspath(patterns);
+			final Props props = new Props();
+			loadFromClasspath(props, patterns);
+			return props;
 		} catch (final Exception ex) {
 			throw new MadvocException("Unable to load Madvoc parameters from: " +
 					Converter.get().toString(patterns) + ".properties': " + ex.toString(), ex);
 		}
 	}
+
+	private void loadFromClasspath(final Props props, final String... patterns) {
+		ClassScanner.create()
+				.registerEntryConsumer(entryData -> {
+					String usedEncoding = JoddCore.encoding;
+					if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+						usedEncoding = StandardCharsets.ISO_8859_1.name();
+					}
+
+					final String encoding = usedEncoding;
+					UncheckedException.runAndWrapException(() -> props.load(entryData.openInputStream(), encoding));
+				})
+				.includeResources(true)
+				.ignoreException(true)
+				.excludeCommonJars()
+				.excludeAllEntries(true)
+				.includeEntries(patterns)
+				.scanDefaultClasspath()
+				.start();
+	}
+
 
 
 	/**

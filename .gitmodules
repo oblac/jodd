@@ -10,3 +10,9 @@
 [submodule "jodd-json"]
 	path = jodd-json
 	url = https://github.com/oblac/jodd-json
+[submodule "jodd-http"]
+	path = jodd-http
+	url = https://github.com/oblac/jodd-http
+[submodule "jodd-props"]
+	path = jodd-props
+	url = https://github.com/oblac/jodd-props

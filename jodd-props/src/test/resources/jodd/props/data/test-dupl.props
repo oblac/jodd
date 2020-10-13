@@ -1,7 +1,0 @@
-foo=one
-foo=two
-foo:three
-
-bar<prof>=here
-bar<prof>=there
-bar<prof>=everywhere

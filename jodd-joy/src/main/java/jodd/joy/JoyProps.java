@@ -25,8 +25,13 @@
 
 package jodd.joy;
 
+import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
+import jodd.io.findfile.ClassScanner;
 import jodd.props.Props;
+import jodd.util.StringUtil;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,8 +60,8 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 
 	// ---------------------------------------------------------------- config
 
-	private List<String> propsNamePatterns = new ArrayList<>();
-	private List<String> propsProfiles = new ArrayList<>();
+	private final List<String> propsNamePatterns = new ArrayList<>();
+	private final List<String> propsProfiles = new ArrayList<>();
 
 	/**
 	 * Adds props files or patterns.
@@ -115,7 +120,7 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 
 		final long startTime = System.currentTimeMillis();
 
-		props.loadFromClasspath(patterns);
+		loadFromClasspath(props, patterns);
 
 		log.debug("Props scanning completed in " + (System.currentTimeMillis() - startTime) + "ms.");
 
@@ -123,6 +128,27 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 
 		log.info("PROPS OK!");
 	}
+
+	private void loadFromClasspath(final Props props, final String... patterns) {
+		ClassScanner.create()
+				.registerEntryConsumer(entryData -> {
+					String usedEncoding = JoddCore.encoding;
+					if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+						usedEncoding = StandardCharsets.ISO_8859_1.name();
+					}
+
+					final String encoding = usedEncoding;
+					UncheckedException.runAndWrapException(() -> props.load(entryData.openInputStream(), encoding));
+				})
+				.includeResources(true)
+				.ignoreException(true)
+				.excludeCommonJars()
+				.excludeAllEntries(true)
+				.includeEntries(patterns)
+				.scanDefaultClasspath()
+				.start();
+	}
+
 
 	/**
 	 * Creates new {@link Props} with default configuration.

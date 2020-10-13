@@ -25,7 +25,13 @@
 
 package jodd.db.querymap;
 
+import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
+import jodd.io.findfile.ClassScanner;
 import jodd.props.Props;
+import jodd.util.StringUtil;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * {@link jodd.db.querymap.QueryMap} implementation based on
@@ -57,7 +63,7 @@ public class DbPropsQueryMap implements QueryMap {
 	@Override
 	public void reload() {
 		props = new Props();
-		props.loadFromClasspath(patterns);
+		loadFromClasspath(props, patterns);
 	}
 
 	@Override
@@ -74,5 +80,25 @@ public class DbPropsQueryMap implements QueryMap {
 	@Override
 	public String getQuery(final String key) {
 		return props.getValue(key);
+	}
+
+	private void loadFromClasspath(final Props props, final String... patterns) {
+		ClassScanner.create()
+				.registerEntryConsumer(entryData -> {
+					String usedEncoding = JoddCore.encoding;
+					if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+						usedEncoding = StandardCharsets.ISO_8859_1.name();
+					}
+
+					final String encoding = usedEncoding;
+					UncheckedException.runAndWrapException(() -> props.load(entryData.openInputStream(), encoding));
+				})
+				.includeResources(true)
+				.ignoreException(true)
+				.excludeCommonJars()
+				.excludeAllEntries(true)
+				.includeEntries(patterns)
+				.scanDefaultClasspath()
+				.start();
 	}
 }
