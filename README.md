@@ -29,6 +29,8 @@ Version **v6** is the maintained version, working on Java 8 and 11. Only few com
 + [jodd-mail](https://github.com/oblac/jodd-mail) ⭐
 + [jodd-json](https://github.com/oblac/jodd-json) ⭐
 + [jodd-lagarto](https://github.com/oblac/jodd-lagarto) ⭐
++ [jodd-http](https://github.com/oblac/jodd-http) ⭐
++ [jodd-props](https://github.com/oblac/jodd-props) ⭐
 
 The decision which component is promoted is based on the Maven Central Repo statistics. 
 
@@ -46,7 +48,7 @@ _Use what you like._ **Thank you.** 🙏
 
 + `jodd-json` - JSON parser and serializer. ⭐
 + `jodd-lagarto` - HTML parser with `Jerry` and `CSSelly` and `Form` tag. ⭐
-+ `jodd-http` - tiny HTTP client.
++ `jodd-http` - tiny HTTP client. ⭐
 + `jodd-mail` - for easier email sending. ⭐
 
 **Micro-frameworks**:
@@ -71,7 +73,7 @@ _Use what you like._ **Thank you.** 🙏
 
 + `jodd-core` - contains many every-day utilities. ⭐
 + `jodd-bean` - our infamous `BeanUtil`, type inspectors and converters. ⭐
-+ `jodd-props` - is the super-replacement for Java `Properties`.
++ `jodd-props` - is the super-replacement for Java `Properties`. ⭐
 + `jodd-servlet` - with many servlet utilities, including nice tag library.
 
 Read more in our [official documentation](http://jodd.org/doc).
