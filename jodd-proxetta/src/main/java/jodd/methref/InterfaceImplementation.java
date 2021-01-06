@@ -25,8 +25,6 @@
 
 package jodd.methref;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class InterfaceImplementation<C> {
@@ -42,18 +40,11 @@ public class InterfaceImplementation<C> {
 
 	@SuppressWarnings("unchecked")
 	public C createInstanceFor(final Methref m) {
-		return (C) Proxy.newProxyInstance(target.getClassLoader(), new Class[]{target}, new InvocationHandler() {
-			final Methref methref = m;
-			@Override
-			public Object invoke(final Object proxy, final Method method, final Object[] args) {
-				final String method_name = method.getName();
-				m.lastName(method_name);
-				if (method.getReturnType().isPrimitive()) {
-					return 0;
-				}
-				return null;
-			}
-		});
+		return (C) Proxy.newProxyInstance(
+				target.getClassLoader(),
+				new Class[]{target},
+				new InterfaceMethodInvocationHandler(m)
+		);
 	}
 
 }
