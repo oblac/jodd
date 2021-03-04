@@ -16,3 +16,12 @@
 [submodule "jodd-props"]
 	path = jodd-props
 	url = https://github.com/oblac/jodd-props
+[submodule "jodd-proxetta"]
+	path = jodd-proxetta
+	url = https://github.com/oblac/jodd-proxetta
+[submodule "jodd-petite"]
+	path = jodd-petite
+	url = https://github.com/oblac/jodd-petite
+[submodule "jodd-db"]
+	path = jodd-db
+	url = https://github.com/oblac/jodd-db
