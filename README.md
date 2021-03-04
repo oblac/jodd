@@ -21,9 +21,9 @@ Welcome to the **Jodd** - a unique, alternative world of Java :) You can find he
 Check the official web-site: https://jodd.org
 
 
-## ‼️ The Future and Jodd Versions
+## ‼️ The Future and Jodd Versions ‼️
 
-Version **v6** is the maintained version, working on Java 8 and 11. Only few components are promoted to v6:
+Version **v6** is the maintained version, working on Java 8 and 11. the following components are promoted to v6:
 
 + [jodd-util](https://github.com/oblac/jodd-util) ⭐
 + [jodd-mail](https://github.com/oblac/jodd-mail) ⭐
@@ -31,6 +31,9 @@ Version **v6** is the maintained version, working on Java 8 and 11. Only few com
 + [jodd-lagarto](https://github.com/oblac/jodd-lagarto) ⭐
 + [jodd-http](https://github.com/oblac/jodd-http) ⭐
 + [jodd-props](https://github.com/oblac/jodd-props) ⭐
++ [jodd-petite](https://github.com/oblac/jodd-petite) ⭐
++ [jodd-proxetta](https://github.com/oblac/jodd-proxetta) ⭐
++ [jodd-db](https://github.com/oblac/jodd-db) ⭐
 
 The decision which component is promoted is based on the Maven Central Repo statistics. 
 
@@ -54,10 +57,10 @@ _Use what you like._ **Thank you.** 🙏
 **Micro-frameworks**:
 
 + `jodd-madvoc` - slick MVC framework.
-+ `jodd-petite` - pragmatic DI container.
-+ `jodd-proxetta` - dynamic proxies and `Paramo`.
-+ `jodd-db` - thin database layer and object mapper.
-+ `jodd-jtx` - transactions management.
++ `jodd-petite` - pragmatic DI container. ⭐
++ `jodd-proxetta` - dynamic proxies and `Paramo`. ⭐
++ `jodd-db` - thin database layer and object mapper. ⭐
++ `jodd-jtx` - transactions management. ⭐
 
 **Less used tools**:
 

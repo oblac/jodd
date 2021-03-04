@@ -1,1 +1,0 @@
-girlCount=select count(*) from GIRL

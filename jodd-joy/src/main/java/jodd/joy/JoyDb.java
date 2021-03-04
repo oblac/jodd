@@ -223,8 +223,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 			final AutomagicDbOomConfigurator automagicDbOomConfigurator =
 				new AutomagicDbOomConfigurator(dbEntityManager, true);
 
-			automagicDbOomConfigurator.registerAsConsumer(
-				joyScannerSupplier.get().getClassScanner());
+			automagicDbOomConfigurator.configure();
 		}
 
 		dbEntityManagerConsumers.accept(dbEntityManager);
