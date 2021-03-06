@@ -9,9 +9,6 @@
 [![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](https://stackoverflow.com/questions/tagged/jodd)
 [![BSD License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](https://jodd.org/license.html)
 
-
-> Produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
-
 ## 👋 Hello!
 
 Welcome to the **Jodd** - a unique, alternative world of Java :) You can find here some micro-frameworks and some handy tools. Nothing more, nothing less.
@@ -20,10 +17,9 @@ Welcome to the **Jodd** - a unique, alternative world of Java :) You can find he
 
 Check the official web-site: https://jodd.org
 
+## ‼️ THIS IS THE OLD REPO. USE NEW JODD REPOS FOR v6+ ‼️
 
-## ‼️ The Future and Jodd Versions ‼️
-
-Version **v6** is the maintained version, working on Java 8 and 11. the following components are promoted to v6:
+**Jodd v6** is the maintained version, working on Java 8 and 11. The following components are promoted to v6:
 
 + [jodd-util](https://github.com/oblac/jodd-util) ⭐
 + [jodd-mail](https://github.com/oblac/jodd-mail) ⭐
@@ -40,6 +36,8 @@ The decision which component is promoted is based on the Maven Central Repo stat
 Version **v5** contains remaining libraries and frameworks. They are in maintenance mode.
 
 Sorry, I can only do so much.
+
+---
 
 ## :zap: Jodd
 
