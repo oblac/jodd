@@ -29,7 +29,9 @@ import jodd.exception.UncheckedException;
 import jodd.joy.servers.TomcatTestServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 class JoySuiteTomcatTest extends JoyTestBase {
 
 	public static boolean isRunning;
@@ -70,7 +72,7 @@ class JoySuiteTomcatTest extends JoyTestBase {
 		try {
 			server.start();
 			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UncheckedException(e);
 		}
 	}
@@ -87,7 +89,7 @@ class JoySuiteTomcatTest extends JoyTestBase {
 		}
 		try {
 			server.stop();
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 		} finally {
 			System.out.println("Tomcat test server stopped");
 			server = null;
