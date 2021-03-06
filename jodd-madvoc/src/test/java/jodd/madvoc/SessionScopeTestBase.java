@@ -27,27 +27,29 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@Disabled
 public abstract class SessionScopeTestBase {
 
 	@Test
 	public void testSessionScope() {
 		HttpResponse response = HttpRequest.get("localhost:8173/item.html").send();
-		String out1 = response.bodyText().trim();
+		final String out1 = response.bodyText().trim();
 
 		response = HttpRequest.get("localhost:8173/item.html").send();
-		String out2 = response.bodyText().trim();
+		final String out2 = response.bodyText().trim();
 
 		assertFalse(out1.equals(out2));
 
-		String jsessionid = out2.substring(out2.indexOf("sid:") + 4);
+		final String jsessionid = out2.substring(out2.indexOf("sid:") + 4);
 
 		response = HttpRequest.get("localhost:8173/item.html;jsessionid=" + jsessionid).send();
-		String out3 = response.bodyText().trim();
+		final String out3 = response.bodyText().trim();
 
 		assertEquals(out2, out3);
 	}
@@ -55,17 +57,17 @@ public abstract class SessionScopeTestBase {
 	@Test
 	public void testSessionScopeWithScopedProxy() {
 		HttpResponse response = HttpRequest.get("localhost:8173/item.global.html").send();
-		String out1 = response.bodyText().trim();
+		final String out1 = response.bodyText().trim();
 
 		response = HttpRequest.get("localhost:8173/item.global.html").send();
-		String out2 = response.bodyText().trim();
+		final String out2 = response.bodyText().trim();
 
 		assertFalse(out1.equals(out2));
 
-		String jsessionid = out2.substring(out2.indexOf("sid:") + 4);
+		final String jsessionid = out2.substring(out2.indexOf("sid:") + 4);
 
 		response = HttpRequest.get("localhost:8173/item.global.html;jsessionid=" + jsessionid).send();
-		String out3 = response.bodyText().trim();
+		final String out3 = response.bodyText().trim();
 
 		assertEquals(out2, out3);
 	}
