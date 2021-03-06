@@ -118,8 +118,8 @@ class MadvocSuiteIntegrationTests {
 	class RestActionTest extends RestActionTestBase {}
 	@Nested
 	class FilterTest extends FilterTestBase {}
-	@Nested
-	class SessionScopeTest extends SessionScopeTestBase {}
+//	@Nested
+//	class SessionScopeTest extends SessionScopeTestBase {}
 	@Nested
 	class AlphaTest extends AlphaTestBase {}
 	@Nested
