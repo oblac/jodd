@@ -26,9 +26,14 @@
 package jodd.joy.page;
 
 import jodd.joy.page.db.HsqlDbPager;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class DbPagerTest {
 
@@ -38,19 +43,23 @@ class DbPagerTest {
 		}
 	}
 
-	@Test
-	void testHsqlDbPager() {
+	@ParameterizedTest
+	@MethodSource("sqlProvider")
+	void testHsqlDbPager(String query, String expected){
 		MyHsqlDbPager hsqlDbPager = new MyHsqlDbPager();
 
-		String sql = hsqlDbPager.buildCountSql2("select * from User u where u.id > 10");
-		assertEquals("select count(*) from User u where u.id > 10", sql);
+		String sql = hsqlDbPager.buildCountSql2(query);
+		assertEquals(expected, sql);
+	}
 
-		sql = hsqlDbPager.buildCountSql2("select u.id, (select name from Club where...) as cname from User u where u.id > 10");
-		assertEquals("select count(*) from User u where u.id > 10", sql);
-
-		sql = hsqlDbPager.buildCountSql2(
-				"select u.id, (select name from Club where...) as cname," +
-				" (select id from Town...) as townId from User u where u.id > 10");
-		assertEquals("select count(*) from User u where u.id > 10", sql);
+	static Stream<Arguments> sqlProvider() {
+		return Stream.of(
+				arguments("select * from User u where u.id > 10",
+						"select count(*) from User u where u.id > 10"),
+				arguments("select u.id, (select name from Club where...) as cname from User u where u.id > 10",
+						"select count(*) from User u where u.id > 10"),
+				arguments("select u.id, (select name from Club where...) as cname," +
+						" (select id from Town...) as townId from User u where u.id > 10",
+						"select count(*) from User u where u.id > 10"));
 	}
 }
