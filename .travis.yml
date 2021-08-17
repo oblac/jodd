@@ -6,6 +6,7 @@ jdk:
 #  - openjdk11
 
 matrix:
+  fast_finish: true
   allow_failures:
     - jdk: openjdk11
 
@@ -23,3 +24,8 @@ after_success:
 
 #after_failure:
 #  - TERM=dumb ./gradlew build testAll --stacktrace
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
