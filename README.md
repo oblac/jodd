@@ -2,9 +2,6 @@
 <br>
 
 [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
-[![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
-[![codecov](https://codecov.io/gh/oblac/jodd/branch/master/graph/badge.svg)](https://codecov.io/gh/oblac/jodd)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd)
 [![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](https://stackoverflow.com/questions/tagged/jodd)
 [![BSD License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](https://jodd.org/license.html)
 
@@ -16,7 +13,7 @@ Welcome to the **Jodd** - a unique, alternative world of Java :) You can find he
 
 The official web-site: https://jodd.org
 
-## ‼️ THIS IS THE OLD REPO. USE NEW JODD REPOS FOR v6+ ‼️
+# ‼️ THIS IS THE OLD REPO. PLEASE USE NEW JODD REPOS FOR v6+ ‼️
 
 **Jodd v6** is the maintained version, working on Java 8 and 11. The following components are promoted to version 6:
 
