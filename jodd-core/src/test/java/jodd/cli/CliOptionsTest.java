@@ -25,6 +25,7 @@
 
 package jodd.cli;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -131,5 +132,19 @@ class CliOptionsTest {
 		cli.accept("-a=1", "--foo=F");
 		assertEquals("[1, F]", out.toString());
 		out.clear();
+	}
+
+	@Test
+	void testToString() throws Exception {
+		final List<String> out = new ArrayList<>();
+		final Cli cli = new Cli();
+		cli.option().shortName("a").hasArg().with(out::add);
+		cli.option().longName("foo").hasArg().with(out::add);
+		cli.printUsage("cmd");
+		cli.accept("-a", "1", "--foo", "F");
+		out.clear();
+		cli.accept("-a=1", "--foo=F");
+		out.clear();
+		Assertions.assertEquals("--foo", cli.option().longName("foo").hasArg().with(out::add).toString());
 	}
 }
