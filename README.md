@@ -13,7 +13,7 @@ Welcome to the **Jodd** - a unique, alternative world of Java :) You can find he
 
 The official web-site: https://jodd.org
 
-# ‼️ THIS IS THE OLD REPO. USE NEW JODD REPOS FOR v6+ ‼️
+# ‼️ THIS IS THE OLD MONOREPO. USE NEW JODD REPOS FOR v6+ ‼️
 
 **Jodd v6** is the maintained version, working on Java 8 and 11. The following components are promoted to version 6:
 
