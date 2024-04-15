@@ -25,6 +25,7 @@
 
 package jodd.servlet;
 
+import io.github.pixee.security.Newlines;
 import jodd.util.StringPool;
 
 import javax.servlet.RequestDispatcher;
@@ -170,7 +171,7 @@ public class DispatcherUtil {
 			url = ServletUtil.getContextPath(request) + url;
 		}
 		response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		response.setHeader("Location", url);
+		response.setHeader("Location", Newlines.stripAll(url));
 	}
 
 

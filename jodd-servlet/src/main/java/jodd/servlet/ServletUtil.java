@@ -25,6 +25,7 @@
 
 package jodd.servlet;
 
+import io.github.pixee.security.Newlines;
 import jodd.core.JoddCore;
 import jodd.http.upload.FileUpload;
 import jodd.io.FileNameUtil;
@@ -145,7 +146,7 @@ public class ServletUtil {
 	 * Sends correct headers to require basic authentication for the given realm.
 	 */
 	public static void requireAuthentication(final HttpServletResponse resp, final String realm) throws IOException {
-		resp.setHeader(WWW_AUTHENTICATE, "Basic realm=\"" + realm + '\"');
+		resp.setHeader(WWW_AUTHENTICATE, Newlines.stripAll("Basic realm=\"" + realm + '\"'));
 		resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
@@ -200,7 +201,7 @@ public class ServletUtil {
 			final String encodedFileName = URLCoder.encode(name);
 
 			response.setHeader(CONTENT_DISPOSITION,
-				"attachment;filename=\"" + name + "\";filename*=utf8''" + encodedFileName);
+				Newlines.stripAll("attachment;filename=\"" + name + "\";filename*=utf8''" + encodedFileName));
 		}
 	}
 

@@ -25,6 +25,7 @@
 
 package jodd.madvoc.scope;
 
+import io.github.pixee.security.Newlines;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 
@@ -81,7 +82,7 @@ public class HeaderScope implements MadvocScope {
 		targets.forEachTargetAndOut(this, (target, out) -> {
 			final String value = (String) target.readValue(out);
 			if (value != null) {
-				servletResponse.setHeader(out.name(), value);
+				servletResponse.setHeader(out.name(), Newlines.stripAll(value));
 			}
 		});
 	}

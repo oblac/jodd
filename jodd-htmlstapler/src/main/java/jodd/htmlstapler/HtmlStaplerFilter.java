@@ -25,6 +25,7 @@
 
 package jodd.htmlstapler;
 
+import io.github.pixee.security.Newlines;
 import jodd.bean.BeanUtil;
 import jodd.io.IOUtil;
 import jodd.lagarto.TagVisitor;
@@ -202,11 +203,11 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			throw new IOException("bundle not found: " + bundleId);
 		}
 
-		servletResponse.setHeader("Content-Length", String.valueOf(file.length()));
-		servletResponse.setHeader("Last-Modified", TimeUtil.formatHttpDate(file.lastModified()));
+		servletResponse.setHeader("Content-Length", Newlines.stripAll(String.valueOf(file.length())));
+		servletResponse.setHeader("Last-Modified", Newlines.stripAll(TimeUtil.formatHttpDate(file.lastModified())));
 
 		if (cacheMaxAge > 0) {
-			servletResponse.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+			servletResponse.setHeader("Cache-Control", Newlines.stripAll("max-age=" + cacheMaxAge));
 		}
 
 		sendBundleFile(servletResponse, file);
